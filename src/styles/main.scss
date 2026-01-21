@@ -1,0 +1,18 @@
+@use "./tokens";
+@use "./fonts";
+@use "./ui";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+a {
+  color: inherit;
+}
