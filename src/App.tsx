@@ -1,5 +1,5 @@
 import { Link, Route, Routes, useParams } from "react-router-dom";
-import { appRegistry, flattenScreens } from "./apps/registry";
+import { appRegistry, flattenScreens } from "./web/registry";
 import "./styles/app.scss";
 
 const screenList = flattenScreens();
