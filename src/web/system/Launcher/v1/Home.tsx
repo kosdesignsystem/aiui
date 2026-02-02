@@ -3,7 +3,7 @@ export default function LauncherHome() {
     <section className="screen">
       <h2>Launcher · v1</h2>
       <p>Веб-представление для быстрого просмотра в браузере.</p>
-      <p>Flutter-источник: apps/system/Launcher/v1.</p>
+      <p>Flutter-источник: flutter/system/Launcher/v1.</p>
     </section>
   );
 }

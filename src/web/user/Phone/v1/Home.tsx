@@ -3,7 +3,7 @@ export default function PhoneHome() {
     <section className="screen">
       <h2>Phone · v1</h2>
       <p>Веб-представление для быстрого просмотра в браузере.</p>
-      <p>Flutter-источник: apps/user/Phone/v1.</p>
+      <p>Flutter-источник: flutter/user/Phone/v1.</p>
     </section>
   );
 }

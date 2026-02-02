@@ -3,7 +3,7 @@ export default function ContactsHome() {
     <section className="screen">
       <h2>Contacts · v1</h2>
       <p>Веб-представление для быстрого просмотра в браузере.</p>
-      <p>Flutter-источник: apps/user/Contacts/v1.</p>
+      <p>Flutter-источник: flutter/user/Contacts/v1.</p>
     </section>
   );
 }

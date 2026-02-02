@@ -3,7 +3,7 @@ export default function OpenAppsHome() {
     <section className="screen">
       <h2>Open Apps · v1</h2>
       <p>Веб-представление для быстрого просмотра в браузере.</p>
-      <p>Flutter-источник: apps/system/OpenApps/v1.</p>
+      <p>Flutter-источник: flutter/system/OpenApps/v1.</p>
     </section>
   );
 }

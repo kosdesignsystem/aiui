@@ -3,7 +3,7 @@ export default function QuickSettingsHome() {
     <section className="screen">
       <h2>Quick Settings · v1</h2>
       <p>Веб-представление для быстрого просмотра в браузере.</p>
-      <p>Flutter-источник: apps/system/QuickSettings/v1.</p>
+      <p>Flutter-источник: flutter/system/QuickSettings/v1.</p>
     </section>
   );
 }
