@@ -4,6 +4,7 @@ import KeyboardHome from "./system/Keyboard/v1/Home";
 import OpenAppsHome from "./system/OpenApps/v1/Home";
 import ContactsHome from "./user/Contacts/v1/Home";
 import PhoneHome from "./user/Phone/v1/Home";
+import RemindersHome from "./user/Reminders/v1";
 
 export type ScreenDefinition = {
   id: string;
@@ -87,6 +88,17 @@ export const appRegistry: AppDefinition[] = [
       {
         id: "v1",
         screens: [{ id: "home", title: "Home", Component: PhoneHome }],
+      },
+    ],
+  },
+  {
+    id: "Reminders",
+    type: "user",
+    title: "Напоминания",
+    versions: [
+      {
+        id: "v1",
+        screens: [{ id: "home", title: "Home", Component: RemindersHome }],
       },
     ],
   },

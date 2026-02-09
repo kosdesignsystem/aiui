@@ -1,0 +1,9 @@
+.device-statusbar {
+	height: 40px;
+	background: linear-gradient(
+		180deg,
+		rgba(8, 12, 18, 0.85),
+		rgba(15, 19, 26, 0.7)
+	);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}

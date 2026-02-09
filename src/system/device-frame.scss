@@ -1,0 +1,74 @@
+.device-mockup {
+	position: relative;
+	width: 360px;
+	height: 800px;
+	border-radius: 44px;
+	background: linear-gradient(160deg, #1a202b 0%, #0d1117 55%, #0a0d12 100%);
+	outline: 2px solid #202734;
+	box-shadow:
+		0 28px 60px rgba(0, 0, 0, 0.6),
+		inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.device-screen {
+	position: absolute;
+	inset: 36px 14px 20px;
+	border-radius: 32px;
+	background: #0f131a;
+	overflow: hidden;
+	display: grid;
+	grid-template-rows: 40px 1fr 52px;
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.device-content {
+	min-height: 0;
+	overflow: hidden;
+}
+
+.device-camera {
+	position: absolute;
+	top: 16px;
+	left: 18px;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background: radial-gradient(
+		circle at 30% 30%,
+		#5c6b82 0%,
+		#1b2331 45%,
+		#0c111b 100%
+	);
+	box-shadow: 0 0 0 2px rgba(6, 9, 14, 0.9);
+}
+
+.device-side {
+	position: absolute;
+	top: 120px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.device-side span {
+	width: 6px;
+	border-radius: 999px;
+	background: linear-gradient(180deg, #323a48, #1b212c);
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.device-side-left {
+	left: -6px;
+}
+
+.device-side-left span {
+	height: 46px;
+}
+
+.device-side-right {
+	right: -6px;
+}
+
+.device-side-right span {
+	height: 32px;
+}

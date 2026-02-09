@@ -1,0 +1,47 @@
+.device-navbar {
+	height: 52px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 32px;
+	background: linear-gradient(
+		0deg,
+		rgba(10, 13, 19, 0.95),
+		rgba(17, 21, 28, 0.8)
+	);
+	border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-button {
+	display: inline-block;
+	width: 22px;
+	height: 22px;
+	border-radius: 6px;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	opacity: 0.75;
+}
+
+.nav-back {
+	transform: rotate(45deg);
+	width: 16px;
+	height: 16px;
+	border-radius: 2px;
+	border-left: 2px solid rgba(255, 255, 255, 0.55);
+	border-bottom: 2px solid rgba(255, 255, 255, 0.55);
+	border-top: 0;
+	border-right: 0;
+}
+
+.nav-home {
+	width: 18px;
+	height: 18px;
+	border-radius: 4px;
+	border: 2px solid rgba(255, 255, 255, 0.55);
+}
+
+.nav-overview {
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	border: 2px solid rgba(255, 255, 255, 0.45);
+}
