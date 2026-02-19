@@ -1,0 +1,70 @@
+.ui-showcase-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ui-color-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+}
+
+.quote-day {
+  display: grid;
+  align-content: start;
+  gap: 20px;
+  width: 100%;
+  max-width: 360px;
+  height: 100%;
+  min-height: 100%;
+  padding: 40px 20px 52px;
+  margin: 0 auto;
+  background:
+    radial-gradient(circle at 16% 14%, rgba(255, 255, 255, 0.2), transparent 45%),
+    linear-gradient(180deg, #16213f 0%, #10172b 58%, #0e1424 100%);
+}
+
+.quote-day-hero {
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(3px);
+}
+
+.quote-day-path {
+  margin: 0;
+  color: #adc0eb;
+  font-size: 12px;
+}
+
+.quote-day-hero h2 {
+  margin: 8px 0 4px;
+  font-size: 28px;
+}
+
+.quote-day-date {
+  margin: 0;
+  color: #d9e4ff;
+}
+
+.quote-day-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.quote-day-actions button {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  background: #ffcf66;
+  color: #1f1400;
+  cursor: pointer;
+}
+
+.quote-day-actions small {
+  color: #acc2ee;
+}

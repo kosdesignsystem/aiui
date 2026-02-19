@@ -1,0 +1,48 @@
+.football-stars-card {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.football-stars-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.football-stars-card-head h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.football-stars-card-head span {
+  border-radius: 999px;
+  background: rgba(131, 255, 188, 0.18);
+  color: #95ffcb;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.football-stars-club {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.football-stars-achievements {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  color: var(--color-text);
+}
+
+.football-stars-achievements li {
+  font-size: 13px;
+}

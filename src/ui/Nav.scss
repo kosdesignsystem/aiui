@@ -1,0 +1,45 @@
+.ui-nav {
+  margin-top: 10px;
+  padding: 8px 12px 0;
+}
+
+.ui-nav__track {
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  background: var(--color-background);
+  padding: 6px;
+  display: grid;
+  gap: 6px;
+}
+
+.ui-nav__track[data-variant="text"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ui-nav__track[data-variant="icon"],
+.ui-nav__track[data-variant="icon-label"] {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.ui-nav__item {
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--color-primary);
+  min-height: 44px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.ui-nav__item.is-active {
+  background: var(--color-secondary);
+}
+
+.ui-nav__label {
+  font-size: 12px;
+}

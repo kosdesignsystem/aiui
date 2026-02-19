@@ -31,10 +31,9 @@ function Home() {
 }
 
 function AppScreen() {
-	const { type, appId, versionId, screenId } = useParams();
+	const { appId, versionId, screenId } = useParams();
 	const match = screenList.find(
 		(item) =>
-			item.app.type === type &&
 			item.app.id === appId &&
 			item.version.id === versionId &&
 			item.screen.id === screenId,
@@ -91,7 +90,7 @@ function Navigation() {
 					{app.versions.map((version) => (
 						<ul key={version.id}>
 							{version.screens.map((screen) => {
-								const routePath = `/apps/${app.type}/${app.id}/${version.id}/${screen.id}`;
+								const routePath = `/app/${app.id}/${version.id}/${screen.id}`;
 
 								return (
 									<li key={screen.id} className="sidebar-item">
@@ -135,7 +134,7 @@ export default function App() {
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route
-					path="/apps/:type/:appId/:versionId/:screenId"
+					path="/app/:appId/:versionId/:screenId"
 					element={<AppScreen />}
 				/>
 				<Route

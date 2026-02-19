@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import "./List.scss";
 
 export type ListProps = {
   title?: ReactNode;
@@ -12,4 +13,12 @@ export function List({ title, children }: ListProps) {
       <div className="ui-list__content">{children}</div>
     </section>
   );
+}
+
+export type ListContainerProps = {
+  children: ReactNode;
+};
+
+export function ListContainer({ children }: ListContainerProps) {
+  return <div className="ui-list-container">{children}</div>;
 }

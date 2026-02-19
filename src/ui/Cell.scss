@@ -1,0 +1,35 @@
+.ui-cell {
+  display: flex;
+  width: 100%;
+  border: none;
+  text-align: left;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--color-background);
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.ui-cell__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.ui-cell__title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.ui-cell__subtitle {
+  color: var(--color-muted);
+  font-size: 14px;
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+.ui-cell__trailing {
+  display: inline-flex;
+  align-items: center;
+}

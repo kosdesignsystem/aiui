@@ -1,11 +1,6 @@
-import LauncherHome from "./system/Launcher/v1/Home";
-import QuickSettingsHome from "./system/QuickSettings/v1/Home";
-import KeyboardHome from "./system/Keyboard/v1/Home";
-import OpenAppsHome from "./system/OpenApps/v1/Home";
-import ContactsHome from "./user/Contacts/v1/Home";
-import PhoneHome from "./user/Phone/v1/Home";
-import RemindersHome from "./user/Reminders/v1";
-import DelaHome from "./user/Dela/v1";
+import DelaHome from "./Dela/v1";
+import FootballStarsHome from "./FootballStars/v1";
+import QuoteDayHome from "./QuoteDay/v1";
 
 export type ScreenDefinition = {
   id: string;
@@ -20,97 +15,38 @@ export type AppVersionDefinition = {
 
 export type AppDefinition = {
   id: string;
-  type: "system" | "user";
   title: string;
   versions: AppVersionDefinition[];
 };
 
 export const appRegistry: AppDefinition[] = [
   {
-    id: "Launcher",
-    type: "system",
-    title: "Launcher",
-    versions: [
-      {
-        id: "v1",
-        screens: [{ id: "home", title: "Home", Component: LauncherHome }],
-      },
-    ],
-  },
-  {
-    id: "QuickSettings",
-    type: "system",
-    title: "Quick Settings",
-    versions: [
-      {
-        id: "v1",
-        screens: [{ id: "home", title: "Home", Component: QuickSettingsHome }],
-      },
-    ],
-  },
-  {
-    id: "Keyboard",
-    type: "system",
-    title: "Keyboard",
-    versions: [
-      {
-        id: "v1",
-        screens: [{ id: "home", title: "Home", Component: KeyboardHome }],
-      },
-    ],
-  },
-  {
-    id: "OpenApps",
-    type: "system",
-    title: "Open Apps",
-    versions: [
-      {
-        id: "v1",
-        screens: [{ id: "home", title: "Home", Component: OpenAppsHome }],
-      },
-    ],
-  },
-  {
-    id: "Contacts",
-    type: "user",
-    title: "Contacts",
-    versions: [
-      {
-        id: "v1",
-        screens: [{ id: "home", title: "Home", Component: ContactsHome }],
-      },
-    ],
-  },
-  {
-    id: "Phone",
-    type: "user",
-    title: "Phone",
-    versions: [
-      {
-        id: "v1",
-        screens: [{ id: "home", title: "Home", Component: PhoneHome }],
-      },
-    ],
-  },
-  {
-    id: "Reminders",
-    type: "user",
-    title: "Напоминания",
-    versions: [
-      {
-        id: "v1",
-        screens: [{ id: "home", title: "Home", Component: RemindersHome }],
-      },
-    ],
-  },
-  {
     id: "Dela",
-    type: "user",
     title: "Дела",
     versions: [
       {
         id: "v1",
         screens: [{ id: "home", title: "Home", Component: DelaHome }],
+      },
+    ],
+  },
+  {
+    id: "QuoteDay",
+    title: "Цитата дня",
+    versions: [
+      {
+        id: "v1",
+        screens: [{ id: "home", title: "Home", Component: QuoteDayHome }],
+      },
+    ],
+  },
+  {
+    id: "FootballStars",
+    title: "Футболисты",
+    versions: [
+      {
+        id: "v1",
+        screens: [{ id: "home", title: "Home", Component: FootballStarsHome }],
       },
     ],
   },
@@ -123,7 +59,7 @@ export const flattenScreens = () =>
         app,
         version,
         screen,
-        path: `/apps/${app.type}/${app.id}/${version.id}/${screen.id}`,
+        path: `/app/${app.id}/${version.id}/${screen.id}`,
       })),
     ),
   );

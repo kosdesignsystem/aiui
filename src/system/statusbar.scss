@@ -1,9 +1,65 @@
 .device-statusbar {
 	height: 40px;
-	background: linear-gradient(
-		180deg,
-		rgba(8, 12, 18, 0.85),
-		rgba(15, 19, 26, 0.7)
-	);
-	border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+	padding: 0 14px 0 16px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	background: var(--overlay-dark);
+	border-bottom: 1px solid var(--content-border);
+	backdrop-filter: blur(8px);
+}
+
+.device-statusbar__time {
+	font-family: var(--font-family-base);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 16px;
+	letter-spacing: 0.01em;
+	color: var(--content-primary);
+	white-space: nowrap;
+}
+
+.device-statusbar__indicators {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin-left: auto;
+	min-width: 0;
+}
+
+.device-statusbar__icon {
+	display: block;
+	width: 14px;
+	height: 14px;
+	object-fit: contain;
+	filter: brightness(0) invert(1);
+	opacity: 0.94;
+	flex: 0 0 auto;
+}
+
+.device-statusbar__icon--dimmed {
+	opacity: 0.58;
+}
+
+.device-statusbar__battery-value {
+	font-family: var(--font-family-base);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 16px;
+	color: var(--content-primary);
+	min-width: 30px;
+	text-align: right;
+}
+
+.device-statusbar__battery-value.is-warning {
+	color: var(--system-warning-primary);
+}
+
+.device-statusbar__battery-value.is-critical {
+	color: var(--system-error-primary);
+}
+
+.device-statusbar--power-save {
+	background: var(--overlay-light);
 }

@@ -1,0 +1,11 @@
+.ui-app {
+  width: min(360px, 100%);
+  height: min(800px, 100%);
+  margin: 0 auto;
+  background: var(--color-secondary);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  overflow: hidden;
+}

@@ -1,0 +1,28 @@
+.ui-list {
+  width: 100%;
+  padding: 12px;
+}
+
+.ui-list + .ui-list {
+  border-top: 1px solid var(--color-border);
+}
+
+.ui-list__content {
+  display: grid;
+  gap: 4px;
+}
+
+.ui-list__title {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.ui-list-container {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--color-secondary);
+}

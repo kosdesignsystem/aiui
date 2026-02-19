@@ -1,0 +1,40 @@
+.football-stars {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  max-width: 360px;
+  height: 100%;
+  min-height: 100%;
+  padding: 40px 16px 52px;
+  margin: 0 auto;
+  overflow-y: auto;
+}
+
+.football-stars-hero {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(62, 170, 255, 0.28), rgba(83, 244, 170, 0.18));
+}
+
+.football-stars-hero h2 {
+  margin: 0;
+}
+
+.football-stars-path {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
+.football-stars-subtitle {
+  margin: 0;
+  color: var(--color-text);
+  opacity: 0.88;
+}
+
+.football-stars-list {
+  display: grid;
+  gap: 12px;
+}

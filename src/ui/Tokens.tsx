@@ -9,11 +9,7 @@ export type ThemeProviderProps = {
 
 export function ThemeProvider({ theme = "dark", children }: ThemeProviderProps) {
   useEffect(() => {
-    if (theme === "light") {
-      document.documentElement.setAttribute("data-theme", "light");
-    } else {
-      document.documentElement.removeAttribute("data-theme");
-    }
+    document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
   return <>{children}</>;

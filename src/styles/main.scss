@@ -1,16 +1,23 @@
 @use "./tokens";
 @use "./fonts";
-@use "./ui";
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
 }
 
 body {
   margin: 0;
-  font-family: "Inter", system-ui, sans-serif;
-  background: var(--color-bg);
-  color: var(--color-text);
+  font-family: var(--font-family-base);
+  background: var(--background-primary);
+  color: var(--content-primary);
 }
 
 a {

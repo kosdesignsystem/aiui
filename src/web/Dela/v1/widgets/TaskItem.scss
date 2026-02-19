@@ -1,0 +1,53 @@
+.dela-task {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dela-task.is-complete {
+  opacity: 0.72;
+}
+
+.dela-check {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--color-text);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dela-task.is-complete .dela-check {
+  background: #65e6ad;
+  color: #0d1512;
+}
+
+.dela-task-body {
+  display: grid;
+  gap: 4px;
+}
+
+.dela-task-title {
+  font-weight: 600;
+}
+
+.dela-task-note {
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
+.dela-task-action {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--color-text);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 12px;
+}

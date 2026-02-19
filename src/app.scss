@@ -2,24 +2,31 @@
 	display: grid;
 	grid-template-columns: 280px 1fr;
 	min-height: 100vh;
+	background: var(--background-primary);
+	color: var(--content-primary);
 }
 
 .wrapper {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	background: var(--background-primary);
 }
 
 .sidebar {
-	background: var(--color-surface);
+	background: var(--background-secondary);
 	padding: 24px;
-	border-right: 1px solid rgba(255, 255, 255, 0.08);
+	border-right: 1px solid var(--content-border);
 	overflow-y: auto;
 }
 
 .sidebar h2 {
 	margin: 0 0 16px;
+	font-family: var(--font-family-base);
 	font-size: 20px;
+	font-weight: 600;
+	line-height: 28px;
+	color: var(--content-primary);
 }
 
 .sidebar section {
@@ -28,8 +35,11 @@
 
 .sidebar h3 {
 	margin: 0 0 8px;
+	font-family: var(--font-family-base);
 	font-size: 14px;
-	color: var(--color-muted);
+	font-weight: 500;
+	line-height: 20px;
+	color: var(--content-secondary);
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
 }
@@ -52,15 +62,18 @@
 }
 
 .sidebar a {
-	text-decoration: none;
 	display: block;
 	padding: 8px 12px;
 	border-radius: 8px;
-	background: rgba(255, 255, 255, 0.04);
+	background: var(--content-background);
+	color: var(--content-primary);
+	text-decoration: none;
+	transition: background 0.2s ease, color 0.2s ease;
 }
 
 .sidebar a:hover {
-	background: rgba(255, 255, 255, 0.1);
+	background: var(--accent-background);
+	color: var(--accent-primary);
 }
 
 .copy-button {
@@ -70,11 +83,11 @@
 	width: 34px;
 	height: 34px;
 	border-radius: 8px;
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	background: rgba(255, 255, 255, 0.04);
-	color: rgba(255, 255, 255, 0.7);
+	border: 1px solid var(--content-border);
+	background: var(--content-background);
+	color: var(--content-sub-primary);
 	cursor: pointer;
-	transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
+	transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .copy-button svg {
@@ -83,11 +96,43 @@
 }
 
 .copy-button:hover {
-	background: rgba(255, 255, 255, 0.12);
-	color: rgba(255, 255, 255, 0.95);
-	border-color: rgba(255, 255, 255, 0.2);
+	background: var(--accent-background);
+	color: var(--accent-primary);
+	border-color: var(--accent-border);
 }
 
 .copy-button:active {
 	transform: translateY(1px);
+}
+
+.copy-button:focus-visible {
+	outline: 2px solid var(--accent-primary);
+	outline-offset: 2px;
+}
+
+.home h1 {
+	margin-top: 0;
+	font-family: var(--font-family-base);
+	font-size: 40px;
+	font-weight: 600;
+	line-height: 48px;
+	color: var(--content-primary);
+}
+
+.home p {
+	font-family: var(--font-family-base);
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 24px;
+	color: var(--content-secondary);
+}
+
+.back-link {
+	text-decoration: none;
+	color: var(--accent-primary);
+}
+
+.screen {
+	background: var(--background-secondary);
+	color: var(--content-primary);
 }

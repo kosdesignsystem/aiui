@@ -1,7 +1,207 @@
 @font-face {
-  font-family: "Inter";
-  src: url("../assets/fonts/Inter-Regular.woff2") format("woff2");
+  font-family: "Kaspersky Sans Text";
+  src: url("../assets/fonts/KasperskySansText-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaspersky Sans Text";
+  src: url("../assets/fonts/KasperskySansText-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaspersky Sans Text";
+  src: url("../assets/fonts/KasperskySansText-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaspersky Sans Text Clock";
+  src: url("../assets/fonts/KasperskySansTextClock-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaspersky Sans Text Clock";
+  src: url("../assets/fonts/KasperskySansTextClock-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaspersky Sans Text Clock";
+  src: url("../assets/fonts/KasperskySansTextClock-SemiBold.otf")
+    format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaspersky Sans Text Clock";
+  src: url("../assets/fonts/KasperskySansTextClock-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaspersky Sans Text Clock";
+  src: url("../assets/fonts/KasperskySansTextClock-ExtraBold.otf")
+    format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaspersky Sans Mono";
+  src: url("../assets/fonts/KasperskySansMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaspersky Sans Mono";
+  src: url("../assets/fonts/KasperskySansMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaspersky Sans Mono";
+  src: url("../assets/fonts/KasperskySansMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-family-sans-text: "Kaspersky Sans Text", system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-family-clock: "Kaspersky Sans Text Clock", system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-family-mono: "Kaspersky Sans Mono", ui-monospace, "SFMono-Regular",
+    "Menlo", "Consolas", monospace;
+  --font-family-base: var(--font-family-sans-text);
+}
+
+@mixin typography-token($weight, $size, $line-height) {
+  font-style: normal;
+  font-weight: $weight;
+  font-size: #{$size}px;
+  line-height: #{$line-height}px;
+}
+
+.ui-text {
+  font-family: var(--font-family-base);
+  font-style: normal;
+}
+
+.text-semi-bold-52 {
+  @include typography-token(600, 52, 64);
+}
+
+.text-semi-bold-48 {
+  @include typography-token(600, 48, 60);
+}
+
+.text-semi-bold-40 {
+  @include typography-token(600, 40, 48);
+}
+
+.text-semi-bold-32 {
+  @include typography-token(600, 32, 40);
+}
+
+.text-semi-bold-24 {
+  @include typography-token(600, 24, 30);
+}
+
+.text-semi-bold-20 {
+  @include typography-token(600, 20, 28);
+}
+
+.text-semi-bold-16 {
+  @include typography-token(600, 16, 24);
+}
+
+.text-semi-bold-14 {
+  @include typography-token(600, 14, 20);
+}
+
+.text-medium-32 {
+  @include typography-token(500, 32, 40);
+}
+
+.text-medium-24 {
+  @include typography-token(500, 24, 30);
+}
+
+.text-medium-20 {
+  @include typography-token(500, 20, 28);
+}
+
+.text-medium-18 {
+  @include typography-token(500, 18, 24);
+}
+
+.text-medium-16 {
+  @include typography-token(500, 16, 20);
+}
+
+.text-medium-14 {
+  @include typography-token(500, 14, 18);
+}
+
+.text-medium-12 {
+  @include typography-token(500, 12, 16);
+}
+
+.text-regular-24 {
+  @include typography-token(400, 24, 30);
+}
+
+.text-regular-20 {
+  @include typography-token(400, 20, 26);
+}
+
+.text-regular-18 {
+  @include typography-token(400, 18, 24);
+}
+
+.text-regular-16 {
+  @include typography-token(400, 16, 20);
+}
+
+.text-regular-14 {
+  @include typography-token(400, 14, 20);
+}
+
+.text-regular-12 {
+  @include typography-token(400, 12, 16);
+}
+
+.ui-text-family-sans-text {
+  font-family: var(--font-family-sans-text);
+}
+
+.ui-text-family-clock {
+  font-family: var(--font-family-clock);
+}
+
+.ui-text-family-mono {
+  font-family: var(--font-family-mono);
 }
