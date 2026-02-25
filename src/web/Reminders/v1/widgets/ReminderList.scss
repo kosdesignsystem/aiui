@@ -1,0 +1,52 @@
+.reminders-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reminders-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 6px;
+  border-radius: 16px;
+  border: 1px solid var(--content-border);
+  background: var(--reminders-card-background);
+}
+
+.reminders-item__toggle {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  border: 1px solid var(--content-border);
+  background: transparent;
+  color: var(--content-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.reminders-item__toggle.is-done {
+  background: var(--system-success-background);
+  border-color: var(--system-success-primary);
+  color: var(--system-success-primary);
+}
+
+.reminders-item__title {
+  flex: 1;
+}
+
+.reminders-item__title.is-done {
+  color: var(--content-secondary);
+  text-decoration: line-through;
+}
+
+.reminders-empty {
+  padding: 8px 12px 12px;
+}

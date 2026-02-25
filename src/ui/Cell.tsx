@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactNode } from "react";
+import { ReactNode } from "react";
 import "./Cell.scss";
 
 export type CellProps = {
@@ -6,18 +6,24 @@ export type CellProps = {
   subtitle?: ReactNode;
   leading?: ReactNode;
   trailing?: ReactNode;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
-export function Cell({ title, subtitle, leading, trailing, onClick }: CellProps) {
+export function Cell({
+  title,
+  subtitle,
+  leading,
+  trailing,
+}: CellProps) {
   return (
-    <button type="button" className="ui-cell" onClick={onClick}>
-      {leading && <div className="ui-cell__leading">{leading}</div>}
-      <div className="ui-cell__content">
-        <div className="ui-cell__title">{title}</div>
-        {subtitle && <div className="ui-cell__subtitle">{subtitle}</div>}
+    <div className="ui-cell-shell">
+      <div className="ui-cell">
+        <div className="ui-cell__leading">{leading}</div>
+        <div className="ui-cell__content">
+          <div className="ui-cell__title">{title}</div>
+          <div className="ui-cell__subtitle">{subtitle}</div>
+        </div>
+        <div className="ui-cell__trailing">{trailing}</div>
       </div>
-      {trailing && <div className="ui-cell__trailing">{trailing}</div>}
-    </button>
+    </div>
   );
 }

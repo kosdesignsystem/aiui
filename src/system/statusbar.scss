@@ -1,23 +1,23 @@
 .device-statusbar {
+	z-index: 1;
+	width: 360px;
 	height: 40px;
-	padding: 0 14px 0 16px;
+	padding: 0 24px 0 48px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 10px;
-	background: var(--overlay-dark);
-	border-bottom: 1px solid var(--content-border);
-	backdrop-filter: blur(8px);
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 .device-statusbar__time {
 	font-family: var(--font-family-base);
-	font-size: 12px;
+	font-size: 14px;
 	font-weight: 500;
-	line-height: 16px;
-	letter-spacing: 0.01em;
+	line-height: 20px;
 	color: var(--content-primary);
-	white-space: nowrap;
 }
 
 .device-statusbar__indicators {
@@ -44,9 +44,9 @@
 
 .device-statusbar__battery-value {
 	font-family: var(--font-family-base);
-	font-size: 12px;
+	font-size: 14px;
 	font-weight: 500;
-	line-height: 16px;
+	line-height: 20px;
 	color: var(--content-primary);
 	min-width: 30px;
 	text-align: right;

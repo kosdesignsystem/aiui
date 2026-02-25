@@ -110,6 +110,22 @@
   font-style: normal;
 }
 
+.ui-text-color-primary {
+  color: var(--content-primary);
+}
+
+.ui-text-color-secondary {
+  color: var(--content-secondary);
+}
+
+.ui-text-color-disabled {
+  color: var(--content-disabled);
+}
+
+.ui-text-color-accent {
+  color: var(--accent-primary);
+}
+
 .text-semi-bold-52 {
   @include typography-token(600, 52, 64);
 }

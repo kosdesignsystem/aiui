@@ -1,0 +1,16 @@
+.reminders-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+}
+
+.reminders-summary__item {
+  border: 1px solid var(--content-border);
+  border-radius: 16px;
+  background: var(--reminders-card-background);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}

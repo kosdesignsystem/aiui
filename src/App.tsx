@@ -1,5 +1,7 @@
 import { Link, Route, Routes, useParams } from "react-router-dom";
+import { useState } from "react";
 import { DeviceFrame } from "./system/DeviceFrame";
+import { ThemeName, ThemeProvider } from "./ui/Tokens";
 import { appRegistry, flattenScreens } from "./web/registry";
 import "./app.scss";
 
@@ -60,7 +62,12 @@ function AppScreen() {
 	);
 }
 
-function Navigation() {
+type NavigationProps = {
+	theme: ThemeName;
+	onToggleTheme: () => void;
+};
+
+function Navigation({ theme, onToggleTheme }: NavigationProps) {
 	const copyToClipboard = async (text: string) => {
 		if (navigator.clipboard?.writeText) {
 			try {
@@ -83,7 +90,17 @@ function Navigation() {
 
 	return (
 		<nav className="sidebar">
-			<h2>Apps</h2>
+			<div className="sidebar-header">
+				<h2>Apps</h2>
+				<button
+					type="button"
+					className="theme-switch"
+					onClick={onToggleTheme}
+				>
+					Тема: {theme}
+				</button>
+			</div>
+
 			{appRegistry.map((app) => (
 				<section key={app.id}>
 					<h3>{app.title}</h3>
@@ -127,26 +144,35 @@ function Navigation() {
 }
 
 export default function App() {
-	return (
-		<div className="layout">
-			<Navigation />
+	const [theme, setTheme] = useState<ThemeName>("dark");
 
-			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route
-					path="/app/:appId/:versionId/:screenId"
-					element={<AppScreen />}
-				/>
-				<Route
-					path="*"
-					element={
-						<div className="screen">
-							<h2>Маршрут не найден</h2>
-							<Link to="/">Вернуться на главную</Link>
-						</div>
+	return (
+		<ThemeProvider theme={theme}>
+			<div className="layout">
+				<Navigation
+					theme={theme}
+					onToggleTheme={() =>
+						setTheme((prev) => (prev === "dark" ? "light" : "dark"))
 					}
 				/>
-			</Routes>
-		</div>
+
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route
+						path="/app/:appId/:versionId/:screenId"
+						element={<AppScreen />}
+					/>
+					<Route
+						path="*"
+						element={
+							<div className="screen">
+								<h2>Маршрут не найден</h2>
+								<Link to="/">Вернуться на главную</Link>
+							</div>
+						}
+					/>
+				</Routes>
+			</div>
+		</ThemeProvider>
 	);
 }

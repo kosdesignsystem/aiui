@@ -1,6 +1,5 @@
-import DelaHome from "./Dela/v1";
-import FootballStarsHome from "./FootballStars/v1";
-import QuoteDayHome from "./QuoteDay/v1";
+import DefaultApp from "./Default/v1";
+import RemindersMainScreen from "./Reminders/v1";
 
 export type ScreenDefinition = {
   id: string;
@@ -21,32 +20,22 @@ export type AppDefinition = {
 
 export const appRegistry: AppDefinition[] = [
   {
-    id: "Dela",
-    title: "Дела",
+    id: "Default",
+    title: "Default",
     versions: [
       {
         id: "v1",
-        screens: [{ id: "home", title: "Home", Component: DelaHome }],
+        screens: [{ id: "app", title: "App", Component: DefaultApp }],
       },
     ],
   },
   {
-    id: "QuoteDay",
-    title: "Цитата дня",
+    id: "Reminders",
+    title: "Напоминания",
     versions: [
       {
         id: "v1",
-        screens: [{ id: "home", title: "Home", Component: QuoteDayHome }],
-      },
-    ],
-  },
-  {
-    id: "FootballStars",
-    title: "Футболисты",
-    versions: [
-      {
-        id: "v1",
-        screens: [{ id: "home", title: "Home", Component: FootballStarsHome }],
+        screens: [{ id: "main", title: "Главный экран", Component: RemindersMainScreen }],
       },
     ],
   },

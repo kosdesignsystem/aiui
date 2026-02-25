@@ -1,0 +1,26 @@
+.reminders-composer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px 12px;
+}
+
+.reminders-composer__input {
+  flex: 1;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid var(--content-border);
+  background: var(--reminders-card-background);
+  color: var(--content-primary);
+  padding: 0 14px;
+  font-size: 16px;
+  outline: none;
+}
+
+.reminders-composer__input::placeholder {
+  color: var(--content-secondary);
+}
+
+.reminders-composer__input:focus {
+  border-color: var(--accent-primary);
+}

@@ -1,14 +1,23 @@
+.ui-cell-shell {
+  width: 100%;
+}
+
 .ui-cell {
   display: flex;
+  align-items: center;
   width: 100%;
-  border: none;
-  text-align: left;
+  min-height: 56px;
   gap: 12px;
-  padding: 12px;
-  border-radius: 12px;
-  background: var(--color-background);
-  color: var(--color-primary);
-  cursor: pointer;
+  padding: 6px;
+  border-radius: 16px;
+  background: var(--background-primary);
+}
+
+.ui-cell__leading {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ui-cell__content {
@@ -16,20 +25,9 @@
   min-width: 0;
 }
 
-.ui-cell__title {
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
-.ui-cell__subtitle {
-  color: var(--color-muted);
-  font-size: 14px;
-  margin-top: 2px;
-  line-height: 1.3;
-}
-
 .ui-cell__trailing {
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
 }
