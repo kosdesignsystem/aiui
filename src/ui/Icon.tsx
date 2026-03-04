@@ -1,5 +1,3 @@
-import { ImgHTMLAttributes } from "react";
-
 const iconModules = import.meta.glob("../assets/icons/*.svg", {
   eager: true,
   import: "default",
@@ -20,16 +18,37 @@ export const iconNames = Object.keys(icons).sort();
 
 export type IconName = string;
 
-export type IconProps = ImgHTMLAttributes<HTMLImageElement> & {
+export type IconProps = {
   name: IconName;
+  alt?: string;
+  width?: number;
+  height?: number;
+  "aria-hidden"?: boolean | "true" | "false";
 };
 
-export function Icon({ name, ...props }: IconProps) {
+export function Icon({
+  name,
+  alt,
+  width = 24,
+  height = 24,
+  "aria-hidden": ariaHidden = false,
+}: IconProps) {
   const src = icons[name] ?? icons.placeholder ?? null;
 
   if (!src) {
     return null;
   }
 
-  return <img src={src} width={24} height={24} alt={props.alt ?? name} {...props} />;
+  const isAriaHidden = ariaHidden === true || ariaHidden === "true";
+  const resolvedAlt = alt ?? (isAriaHidden ? "" : name);
+
+  return (
+    <img
+      src={src}
+      width={width}
+      height={height}
+      alt={resolvedAlt}
+      aria-hidden={ariaHidden}
+    />
+  );
 }

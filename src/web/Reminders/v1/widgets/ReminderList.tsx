@@ -47,13 +47,9 @@ export function ReminderList({
             {item.completed ? <Icon name="done" width={16} height={16} alt="" /> : null}
           </button>
 
-          <Text
-            as="span"
-            variant="regular-16"
-            className={`reminders-item__title${item.completed ? " is-done" : ""}`}
-          >
-            {item.title}
-          </Text>
+          <span className={`reminders-item__title${item.completed ? " is-done" : ""}`}>
+            <Text variant="regular-16">{item.title}</Text>
+          </span>
 
           <IconButton
             type="button"

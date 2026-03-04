@@ -1,52 +1,36 @@
-import { Link, Route, Routes, useParams } from "react-router-dom";
-import { useState } from "react";
-import { DeviceFrame } from "./system/DeviceFrame";
-import { ThemeName, ThemeProvider } from "./ui/Tokens";
-import { appRegistry, flattenScreens } from "./web/registry";
-import "./app.scss";
+import { Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { DeviceFrame } from './system/DeviceFrame';
+import { ThemeName, ThemeProvider } from './ui/Tokens';
+import { IconButton } from './ui/IconButton';
+import { Icon } from './ui/Icon';
+import { List, ListContainer } from './ui/List';
+import { Cell } from './ui/Cell';
+import { Header } from './ui/Header';
+import { appRegistry, flattenScreens } from './web/registry';
+import { Text } from './ui/Fonts';
+import { Avatar } from './ui/Avatar';
+import './app.scss';
 
 const screenList = flattenScreens();
-
-function Home() {
-	return (
-		<div className="home">
-			<h1>AIUI Prototype Lab</h1>
-			<p>
-				Выберите приложение и версию, чтобы открыть конкретный экран для
-				прототипирования.
-			</p>
-			<ul className="screen-grid">
-				{screenList.map((item) => (
-					<li key={item.path}>
-						<Link to={item.path}>
-							<strong>{item.app.title}</strong>
-							<span>
-								{item.version.id} · {item.screen.title}
-							</span>
-							<small>{item.path}</small>
-						</Link>
-					</li>
-				))}
-			</ul>
-		</div>
-	);
-}
+const defaultScreenPath = screenList[0]?.path;
 
 function AppScreen() {
 	const { appId, versionId, screenId } = useParams();
 	const match = screenList.find(
 		(item) =>
-			item.app.id === appId &&
-			item.version.id === versionId &&
-			item.screen.id === screenId,
+			item.app.id === appId && item.version.id === versionId && item.screen.id === screenId,
 	);
 
 	if (!match) {
+		if (defaultScreenPath) {
+			return <Navigate to={defaultScreenPath} replace />;
+		}
+
 		return (
 			<div className="screen">
 				<h2>Экран не найден</h2>
-				<p>Проверьте маршрут или выберите экран из списка.</p>
-				<Link to="/">Вернуться на главную</Link>
+				<p>Проверьте маршрут или добавьте экран в реестр.</p>
 			</div>
 		);
 	}
@@ -68,6 +52,8 @@ type NavigationProps = {
 };
 
 function Navigation({ theme, onToggleTheme }: NavigationProps) {
+	const navigate = useNavigate();
+
 	const copyToClipboard = async (text: string) => {
 		if (navigator.clipboard?.writeText) {
 			try {
@@ -78,97 +64,102 @@ function Navigation({ theme, onToggleTheme }: NavigationProps) {
 			}
 		}
 
-		const textarea = document.createElement("textarea");
+		const textarea = document.createElement('textarea');
 		textarea.value = text;
-		textarea.style.position = "fixed";
-		textarea.style.opacity = "0";
+		textarea.style.position = 'fixed';
+		textarea.style.opacity = '0';
 		document.body.appendChild(textarea);
 		textarea.select();
-		document.execCommand("copy");
+		document.execCommand('copy');
 		document.body.removeChild(textarea);
 	};
 
 	return (
 		<nav className="sidebar">
-			<div className="sidebar-header">
-				<h2>Apps</h2>
-				<button
-					type="button"
-					className="theme-switch"
-					onClick={onToggleTheme}
-				>
-					Тема: {theme}
-				</button>
-			</div>
+			<Header
+				title="AI UI"
+				button={{
+					type: 'button',
+					variant: 'ghost',
+					onClick: onToggleTheme,
+					label: `Тема: ${theme}`,
+				}}
+			/>
 
-			{appRegistry.map((app) => (
-				<section key={app.id}>
-					<h3>{app.title}</h3>
-					{app.versions.map((version) => (
-						<ul key={version.id}>
-							{version.screens.map((screen) => {
+			<ListContainer>
+				{appRegistry.map((app) => (
+					<List key={app.id} title={app.title}>
+						{app.versions.map((version) =>
+							version.screens.map((screen) => {
 								const routePath = `/app/${app.id}/${version.id}/${screen.id}`;
 
 								return (
-									<li key={screen.id} className="sidebar-item">
-										<Link to={routePath}>
-											{version.id} · {screen.title}
-										</Link>
-										<button
-											type="button"
-											className="copy-button"
-											aria-label="Копировать путь"
-											title="Копировать путь"
-											onClick={() => copyToClipboard(routePath)}
-										>
-										<svg
-											viewBox="0 0 24 24"
-											aria-hidden="true"
-											focusable="false"
-										>
-											<path
-												d="M16 3H8a2 2 0 0 0-2 2v10h2V5h8V3zm2 4H12a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 14h-6V9h6v12z"
-												fill="currentColor"
-											/>
-										</svg>
-										</button>
-									</li>
+									<Cell
+										key={`${app.id}-${version.id}-${screen.id}`}
+										onClick={() => navigate(routePath)}
+										leading={<Avatar text={version.id} />}
+										title={<Text variant="regular-18">{screen.title}</Text>}
+										trailing={
+											<IconButton
+												type="button"
+												aria-label="Копировать путь"
+												title="Копировать путь"
+												onClick={(event) => {
+													event.stopPropagation();
+													void copyToClipboard(routePath);
+												}}
+												onKeyDown={(event) => event.stopPropagation()}
+											>
+												<Icon name="copy" alt="" aria-hidden="true" />
+											</IconButton>
+										}
+									/>
 								);
-							})}
-						</ul>
-					))}
-				</section>
-			))}
+							}),
+						)}
+					</List>
+				))}
+			</ListContainer>
 		</nav>
 	);
 }
 
 export default function App() {
-	const [theme, setTheme] = useState<ThemeName>("dark");
+	const [theme, setTheme] = useState<ThemeName>('dark');
 
 	return (
 		<ThemeProvider theme={theme}>
 			<div className="layout">
 				<Navigation
 					theme={theme}
-					onToggleTheme={() =>
-						setTheme((prev) => (prev === "dark" ? "light" : "dark"))
-					}
+					onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
 				/>
 
 				<Routes>
-					<Route path="/" element={<Home />} />
 					<Route
-						path="/app/:appId/:versionId/:screenId"
-						element={<AppScreen />}
+						path="/"
+						element={
+							defaultScreenPath ? (
+								<Navigate to={defaultScreenPath} replace />
+							) : (
+								<div className="screen">
+									<h2>Нет доступных экранов</h2>
+									<p>Добавьте экран в `appRegistry`.</p>
+								</div>
+							)
+						}
 					/>
+					<Route path="/app/:appId/:versionId/:screenId" element={<AppScreen />} />
 					<Route
 						path="*"
 						element={
-							<div className="screen">
-								<h2>Маршрут не найден</h2>
-								<Link to="/">Вернуться на главную</Link>
-							</div>
+							defaultScreenPath ? (
+								<Navigate to={defaultScreenPath} replace />
+							) : (
+								<div className="screen">
+									<h2>Маршрут не найден</h2>
+								</div>
+							)
 						}
 					/>
 				</Routes>

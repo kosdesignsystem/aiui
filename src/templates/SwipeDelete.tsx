@@ -166,58 +166,60 @@ export function SwipeDeleteTemplate() {
       </div>
 
       <div className="calls-template__body">
-        <ListContainer className="calls-template__list">
-          {groupedCalls.map((grouped) => (
-            <List key={grouped.group} title={grouped.group}>
-              {grouped.items.map((call) => (
-                <Cell
-                  key={call.id}
-                  className="calls-row"
-                  title={call.title}
-                  subtitle={call.subtitle}
-                  leading={
-                    <span className={directionClassName(call.direction)} aria-hidden="true">
-                      <span className="call-direction-badge__glyph">{directionGlyph(call.direction)}</span>
-                    </span>
-                  }
-                  trailing={
-                    <button
-                      type="button"
-                      className="calls-info-button"
-                      aria-label={`Подробности: ${call.title}`}
-                      onPointerDown={(event) => {
-                        event.stopPropagation();
-                      }}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                      }}
-                    />
-                  }
-                  offsetX={getOffsetById(call.id)}
-                  dragging={dragState?.id === call.id}
-                  rightActions={
-                    <button
-                      type="button"
-                      className="calls-delete-reveal"
-                      aria-label={`Удалить ${call.title}`}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        requestDelete(call.id);
-                      }}
-                    >
-                      <Icon name="delete" width={20} height={20} alt="" />
-                    </button>
-                  }
-                  onPointerDown={(event) => handlePointerDown(call.id, event)}
-                  onPointerMove={(event) => handlePointerMove(call.id, event)}
-                  onPointerUp={(event) => finishPointer(call.id, event)}
-                  onPointerCancel={(event) => finishPointer(call.id, event)}
-                  onClick={() => handleCellClick(call.id)}
-                />
-              ))}
-            </List>
-          ))}
-        </ListContainer>
+        <div className="calls-template__list">
+          <ListContainer>
+            {groupedCalls.map((grouped) => (
+              <List key={grouped.group} title={grouped.group}>
+                {grouped.items.map((call) => (
+                  <Cell
+                    key={call.id}
+                    className="calls-row"
+                    title={call.title}
+                    subtitle={call.subtitle}
+                    leading={
+                      <span className={directionClassName(call.direction)} aria-hidden="true">
+                        <span className="call-direction-badge__glyph">{directionGlyph(call.direction)}</span>
+                      </span>
+                    }
+                    trailing={
+                      <button
+                        type="button"
+                        className="calls-info-button"
+                        aria-label={`Подробности: ${call.title}`}
+                        onPointerDown={(event) => {
+                          event.stopPropagation();
+                        }}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                        }}
+                      />
+                    }
+                    offsetX={getOffsetById(call.id)}
+                    dragging={dragState?.id === call.id}
+                    rightActions={
+                      <button
+                        type="button"
+                        className="calls-delete-reveal"
+                        aria-label={`Удалить ${call.title}`}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          requestDelete(call.id);
+                        }}
+                      >
+                        <Icon name="delete" width={20} height={20} alt="" />
+                      </button>
+                    }
+                    onPointerDown={(event) => handlePointerDown(call.id, event)}
+                    onPointerMove={(event) => handlePointerMove(call.id, event)}
+                    onPointerUp={(event) => finishPointer(call.id, event)}
+                    onPointerCancel={(event) => finishPointer(call.id, event)}
+                    onClick={() => handleCellClick(call.id)}
+                  />
+                ))}
+              </List>
+            ))}
+          </ListContainer>
+        </div>
       </div>
 
       <footer className="calls-template__footer">

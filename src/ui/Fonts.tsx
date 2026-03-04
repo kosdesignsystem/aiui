@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
+import { ReactNode } from "react";
 
 export const textVariantsByFamily = {
   semiBold: [
@@ -70,35 +70,33 @@ const variantClass = {
 export type FontVariant = keyof typeof variantClass;
 export type FontFamily = keyof typeof fontFamilies;
 export type TextColor = keyof typeof textColorClass;
+export type TextTag = "span" | "p" | "div" | "label";
 
-export type TextProps<T extends ElementType = "span"> = {
-  as?: T;
+export type TextProps = {
+  as?: TextTag;
   family?: FontFamily;
   variant?: FontVariant;
   color?: TextColor;
   children: ReactNode;
-  className?: string;
-} & Omit<ComponentPropsWithoutRef<T>, "as" | "children" | "className" | "color">;
+};
 
-export function Text<T extends ElementType = "span">({
+export function Text({
   as,
   family = "sansText",
   variant = "regular-16",
   color,
   children,
-  className,
-  ...props
-}: TextProps<T>) {
+}: TextProps) {
   const Component = as ?? "span";
   const familyToken = fontFamilies[family];
   const fontClass = variantClass[variant];
   const colorClass = color ? textColorClass[color] : "";
-  const classes = ["ui-text", familyToken, fontClass, colorClass, className]
+  const classes = ["ui-text", familyToken, fontClass, colorClass]
     .filter(Boolean)
     .join(" ");
 
   return (
-    <Component className={classes} {...props}>
+    <Component className={classes}>
       {children}
     </Component>
   );

@@ -1,33 +1,42 @@
 .ui-cell-shell {
-  width: 100%;
+	width: 100%;
+}
+
+.ui-cell-shell.is-interactive {
+	cursor: pointer;
+}
+
+.ui-cell-shell.is-interactive:focus-visible {
+	outline: 2px solid var(--accent-primary);
+	outline-offset: 2px;
+	border-radius: 16px;
 }
 
 .ui-cell {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-height: 56px;
-  gap: 12px;
-  padding: 6px;
-  border-radius: 16px;
-  background: var(--background-primary);
+	display: flex;
+	align-items: center;
+	width: 100%;
+	min-height: 56px;
+	gap: 12px;
+	padding: 6px;
+	border-radius: 16px;
 }
 
 .ui-cell__leading {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .ui-cell__content {
-  flex: 1;
-  min-width: 0;
+	flex: 1;
+	min-width: 0;
 }
 
 .ui-cell__trailing {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 }

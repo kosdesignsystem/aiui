@@ -1,0 +1,65 @@
+.icon-grid-screen {
+  min-height: 100%;
+  padding: 14px 12px 20px;
+  background: #ffffff;
+  font-family: var(--font-family-base);
+}
+
+.icon-grid-path {
+  margin: 0;
+  color: #6f7682;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.icon-grid-count {
+  margin: 4px 0 12px;
+  color: #171b22;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.icon-grid-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.icon-grid-screen--app-icon .icon-grid-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.icon-grid-item {
+  min-height: 86px;
+  border-radius: 10px;
+  border: 1px solid #e5e8ec;
+  background: #f8f9fb;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.icon-grid-icon {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-grid-screen--app-icon .icon-grid-icon {
+  min-height: 48px;
+}
+
+.icon-grid-name {
+  color: #3a404a;
+  font-size: 10px;
+  line-height: 12px;
+  word-break: break-word;
+}

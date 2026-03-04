@@ -29,13 +29,21 @@
 }
 
 .device-statusbar__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 14px;
+	height: 14px;
+	filter: brightness(0) invert(1);
+	opacity: 0.94;
+	flex: 0 0 auto;
+}
+
+.device-statusbar__icon > img {
 	display: block;
 	width: 14px;
 	height: 14px;
 	object-fit: contain;
-	filter: brightness(0) invert(1);
-	opacity: 0.94;
-	flex: 0 0 auto;
 }
 
 .device-statusbar__icon--dimmed {

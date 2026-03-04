@@ -303,55 +303,57 @@ export function MultiplySelectTemplate() {
       </div>
 
       <div className="calls-template__body" ref={bodyRef}>
-        <ListContainer className="calls-template__list">
-          {groupedCalls.map((grouped) => (
-            <List key={grouped.group} title={grouped.group}>
-              {grouped.items.map((call) => {
-                const gestureOffset = gestureState?.id === call.id ? gestureState.offset : 0;
-                const isSelectPreview = !selectionMode && gestureOffset > 0;
-                const isSelected = selectedSet.has(call.id);
-                const rowClassName = `calls-row${selectionMode ? " is-select-mode" : ""}`;
+        <div className="calls-template__list">
+          <ListContainer>
+            {groupedCalls.map((grouped) => (
+              <List key={grouped.group} title={grouped.group}>
+                {grouped.items.map((call) => {
+                  const gestureOffset = gestureState?.id === call.id ? gestureState.offset : 0;
+                  const isSelectPreview = !selectionMode && gestureOffset > 0;
+                  const isSelected = selectedSet.has(call.id);
+                  const rowClassName = `calls-row${selectionMode ? " is-select-mode" : ""}`;
 
-                return (
-                  <Cell
-                    key={call.id}
-                    className={rowClassName}
-                    title={call.title}
-                    subtitle={call.subtitle}
-                    selected={isSelected}
-                    active={isSelectPreview}
-                    offsetX={gestureOffset}
-                    dragging={gestureState?.id === call.id}
-                    leftActions={<span className="calls-select-preview" aria-hidden="true" />}
-                    leading={
-                      <span className={directionClassName(call.direction)} aria-hidden="true">
-                        <span className="call-direction-badge__glyph">{directionGlyph(call.direction)}</span>
-                      </span>
-                    }
-                    trailing={
-                      <button
-                        type="button"
-                        className="calls-info-button"
-                        aria-label={`Подробности: ${call.title}`}
-                        onPointerDown={(event) => {
-                          event.stopPropagation();
-                        }}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                        }}
-                      />
-                    }
-                    onClick={() => handleCellClick(call.id)}
-                    onPointerDown={(event) => handlePointerDown(call.id, event)}
-                    onPointerMove={(event) => handlePointerMove(call.id, event)}
-                    onPointerUp={(event) => finishGesture(call.id, event)}
-                    onPointerCancel={(event) => finishGesture(call.id, event)}
-                  />
-                );
-              })}
-            </List>
-          ))}
-        </ListContainer>
+                  return (
+                    <Cell
+                      key={call.id}
+                      className={rowClassName}
+                      title={call.title}
+                      subtitle={call.subtitle}
+                      selected={isSelected}
+                      active={isSelectPreview}
+                      offsetX={gestureOffset}
+                      dragging={gestureState?.id === call.id}
+                      leftActions={<span className="calls-select-preview" aria-hidden="true" />}
+                      leading={
+                        <span className={directionClassName(call.direction)} aria-hidden="true">
+                          <span className="call-direction-badge__glyph">{directionGlyph(call.direction)}</span>
+                        </span>
+                      }
+                      trailing={
+                        <button
+                          type="button"
+                          className="calls-info-button"
+                          aria-label={`Подробности: ${call.title}`}
+                          onPointerDown={(event) => {
+                            event.stopPropagation();
+                          }}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                          }}
+                        />
+                      }
+                      onClick={() => handleCellClick(call.id)}
+                      onPointerDown={(event) => handlePointerDown(call.id, event)}
+                      onPointerMove={(event) => handlePointerMove(call.id, event)}
+                      onPointerUp={(event) => finishGesture(call.id, event)}
+                      onPointerCancel={(event) => finishGesture(call.id, event)}
+                    />
+                  );
+                })}
+              </List>
+            ))}
+          </ListContainer>
+        </div>
       </div>
 
       {selectionMode ? (

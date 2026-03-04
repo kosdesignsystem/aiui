@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { KeyboardEvent, ReactNode } from "react";
 import "./Cell.scss";
 
 export type CellProps = {
@@ -6,6 +6,7 @@ export type CellProps = {
   subtitle?: ReactNode;
   leading?: ReactNode;
   trailing?: ReactNode;
+  onClick?: () => void;
 };
 
 export function Cell({
@@ -13,9 +14,29 @@ export function Cell({
   subtitle,
   leading,
   trailing,
+  onClick,
 }: CellProps) {
+  const isInteractive = typeof onClick === "function";
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!onClick) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onClick();
+    }
+  };
+
   return (
-    <div className="ui-cell-shell">
+    <div
+      className={`ui-cell-shell${isInteractive ? " is-interactive" : ""}`}
+      role={isInteractive ? "button" : undefined}
+      tabIndex={isInteractive ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+    >
       <div className="ui-cell">
         <div className="ui-cell__leading">{leading}</div>
         <div className="ui-cell__content">

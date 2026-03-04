@@ -1,4 +1,3 @@
-import { HTMLAttributes } from "react";
 import { Icon, type IconName } from "./Icon";
 import "./Avatar.scss";
 
@@ -39,11 +38,12 @@ export const avatarBackgroundTokens = [
 
 export type AvatarBackground = (typeof avatarBackgroundTokens)[number];
 
-export type AvatarProps = HTMLAttributes<HTMLSpanElement> & {
+export type AvatarProps = {
   size?: number;
   src?: string;
   alt?: string;
   iconName?: IconName;
+  text?: string;
   background?: AvatarBackground;
 };
 
@@ -51,28 +51,35 @@ export function Avatar({
   size = 44,
   src,
   alt = "avatar",
-  iconName = "placeholder",
+  iconName,
+  text,
   background = "content-background",
-  className,
-  style,
-  ...props
 }: AvatarProps) {
-  const classes = ["ui-avatar", className].filter(Boolean).join(" ");
+  const textContent = text?.trim();
+  const hasImage = Boolean(src);
+  const hasIcon = !hasImage && Boolean(iconName);
+  const hasText = !hasImage && !hasIcon && Boolean(textContent);
+  const fallbackIcon = iconName ?? "placeholder";
 
   return (
     <span
-      {...props}
-      className={classes}
-      style={{ width: size, height: size, background: `var(--${background})`, ...style }}
+      className="ui-avatar"
+      style={{ width: size, height: size, background: `var(--${background})` }}
       aria-label={alt}
     >
-      {src ? (
+      {hasImage ? (
         <span className="ui-avatar__image">
           <img src={src} alt={alt} />
         </span>
+      ) : hasIcon ? (
+        <span className="ui-avatar__fallback" aria-hidden="true">
+          <Icon name={fallbackIcon} width={24} height={24} alt="" />
+        </span>
+      ) : hasText ? (
+        <span className="ui-avatar__fallback ui-avatar__text">{textContent}</span>
       ) : (
-        <span className="ui-avatar__icon" aria-hidden="true">
-          <Icon name={iconName} width={24} height={24} alt="" />
+        <span className="ui-avatar__fallback" aria-hidden="true">
+          <Icon name={fallbackIcon} width={24} height={24} alt="" />
         </span>
       )}
     </span>

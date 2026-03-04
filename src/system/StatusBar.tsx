@@ -37,36 +37,19 @@ export function StatusBar() {
 			<span className="device-statusbar__time">{clock}</span>
 			<div className="device-statusbar__indicators">
 				{state.extras.map((icon) => (
-					<Icon
-						key={icon.name}
-						name={icon.name}
-						alt=""
-						width={14}
-						height={14}
-						className={iconClassName(icon)}
-					/>
+					<span key={icon.name} className={iconClassName(icon)}>
+						<Icon name={icon.name} alt="" width={14} height={14} />
+					</span>
 				))}
-				<Icon
-					name={state.cellular.name}
-					alt=""
-					width={14}
-					height={14}
-					className={iconClassName(state.cellular)}
-				/>
-				<Icon
-					name={state.wifi.name}
-					alt=""
-					width={14}
-					height={14}
-					className={iconClassName(state.wifi)}
-				/>
-				<Icon
-					name={state.battery.name}
-					alt=""
-					width={14}
-					height={14}
-					className={iconClassName(state.battery)}
-				/>
+				<span className={iconClassName(state.cellular)}>
+					<Icon name={state.cellular.name} alt="" width={14} height={14} />
+				</span>
+				<span className={iconClassName(state.wifi)}>
+					<Icon name={state.wifi.name} alt="" width={14} height={14} />
+				</span>
+				<span className={iconClassName(state.battery)}>
+					<Icon name={state.battery.name} alt="" width={14} height={14} />
+				</span>
 				<span
 					className={`device-statusbar__battery-value${
 						state.batteryTone ? ` is-${state.batteryTone}` : ""

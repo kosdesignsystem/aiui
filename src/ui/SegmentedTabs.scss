@@ -1,0 +1,45 @@
+.ui-segmented-tabs {
+	width: 100%;
+	height: 72px;
+	padding: 0 20px 16px 20px;
+	display: flex;
+	align-items: stretch;
+	gap: 16px;
+}
+
+.ui-segmented-tabs__list {
+	flex: 1;
+	min-width: 0;
+	border-radius: 12px;
+	border: 1px solid var(--content-border);
+	display: flex;
+	align-items: stretch;
+}
+
+.ui-segmented-tabs__tab {
+	border: 0;
+	border-radius: 12px;
+	background: transparent;
+	min-width: 100px;
+	max-width: 100%;
+	flex: 0 1 auto;
+	padding: 16px 20px;
+	height: 100%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.ui-segmented-tabs__tab.is-active {
+	background: var(--content-background);
+	outline: 1px solid var(--content-border);
+}
+
+.ui-segmented-tabs__tab:focus-visible {
+	outline: 2px solid var(--accent-primary);
+	outline-offset: -2px;
+}
