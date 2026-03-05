@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { DeviceFrame } from './system/DeviceFrame';
 import { ThemeName, ThemeProvider } from './ui/Tokens';
@@ -11,6 +11,7 @@ import { appRegistry, flattenScreens } from './web/registry';
 import { Text } from './ui/Fonts';
 import { Avatar } from './ui/Avatar';
 import './app.scss';
+import { Button } from './ui/Button';
 
 const screenList = flattenScreens();
 const defaultScreenPath = screenList[0]?.path;
@@ -53,6 +54,7 @@ type NavigationProps = {
 
 function Navigation({ theme, onToggleTheme }: NavigationProps) {
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	const copyToClipboard = async (text: string) => {
 		if (navigator.clipboard?.writeText) {
@@ -78,12 +80,11 @@ function Navigation({ theme, onToggleTheme }: NavigationProps) {
 		<nav className="sidebar">
 			<Header
 				title="AI UI"
-				button={{
-					type: 'button',
-					variant: 'ghost',
-					onClick: onToggleTheme,
-					label: `Тема: ${theme}`,
-				}}
+				button={
+					<Button variant={'primary'} size={44} type={'button'} onClick={onToggleTheme}>
+						{`Тема: ${theme}`}
+					</Button>
+				}
 			/>
 
 			<ListContainer>
@@ -92,16 +93,19 @@ function Navigation({ theme, onToggleTheme }: NavigationProps) {
 						{app.versions.map((version) =>
 							version.screens.map((screen) => {
 								const routePath = `/app/${app.id}/${version.id}/${screen.id}`;
+								const isActive = location.pathname === routePath;
 
 								return (
 									<Cell
 										key={`${app.id}-${version.id}-${screen.id}`}
+										variant={isActive ? 'primary' : 'default'}
 										onClick={() => navigate(routePath)}
 										leading={<Avatar text={version.id} />}
 										title={<Text variant="regular-18">{screen.title}</Text>}
 										trailing={
 											<IconButton
 												type="button"
+												variant="primary"
 												aria-label="Копировать путь"
 												title="Копировать путь"
 												onClick={(event) => {
@@ -110,7 +114,11 @@ function Navigation({ theme, onToggleTheme }: NavigationProps) {
 												}}
 												onKeyDown={(event) => event.stopPropagation()}
 											>
-												<Icon name="copy" alt="" aria-hidden="true" />
+												<Icon
+													name="copy-outline"
+													alt=""
+													aria-hidden="true"
+												/>
 											</IconButton>
 										}
 									/>

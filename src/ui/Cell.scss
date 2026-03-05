@@ -13,6 +13,8 @@
 }
 
 .ui-cell {
+	--ui-cell-background: transparent;
+
 	display: flex;
 	align-items: center;
 	width: 100%;
@@ -20,6 +22,19 @@
 	gap: 12px;
 	padding: 6px;
 	border-radius: 16px;
+	background: var(--ui-cell-background);
+}
+
+.ui-cell-shell--accent .ui-cell {
+	--ui-cell-background: var(--accent-primary);
+}
+
+.ui-cell-shell--primary .ui-cell {
+	--ui-cell-background: var(--content-background);
+}
+
+.ui-cell-shell--default .ui-cell {
+	--ui-cell-background: transparent;
 }
 
 .ui-cell__leading {
