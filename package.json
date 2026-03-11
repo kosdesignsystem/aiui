@@ -4,8 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "icons:build": "node ./scripts/build-icons.mjs",
+    "dev": "npm run icons:build && vite",
+    "build": "npm run icons:build && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
