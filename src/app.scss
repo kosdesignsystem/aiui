@@ -1,9 +1,15 @@
 .layout {
 	display: grid;
 	grid-template-columns: 280px 1fr;
-	min-height: 100vh;
+	height: 100vh;
+	max-height: 100vh;
+	overflow: hidden;
 	background: var(--background-primary);
 	color: var(--content-primary);
+}
+
+.layout > * {
+	min-height: 0;
 }
 
 .wrapper {
@@ -14,8 +20,15 @@
 }
 
 .sidebar {
+	display: flex;
+	flex-direction: column;
 	background: var(--background-secondary);
 	border-right: 1px solid var(--content-border);
+}
+
+.sidebar .ui-list-container {
+	flex: 1;
+	min-height: 0;
 	overflow-y: auto;
 }
 

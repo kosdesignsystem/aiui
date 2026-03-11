@@ -1,0 +1,39 @@
+.calls-screen {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.calls-screen__search {
+	padding: 0 20px 12px;
+}
+
+.calls-screen__search .ui-search-bar {
+	padding: 0;
+	background: transparent;
+}
+
+.calls-screen__search .ui-search-bar__field {
+	min-height: 56px;
+}
+
+.calls-screen__search-content {
+	min-height: 100%;
+}
+
+.calls-screen__search-empty {
+	min-height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding: 24px;
+}
+
+.calls-screen__contact {
+	display: inline;
+}
+
+.calls-screen__match {
+	color: var(--accent-primary);
+}

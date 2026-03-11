@@ -1,0 +1,13 @@
+.reminders-main__composer {
+	padding: 0 12px 8px;
+}
+
+.reminders-main__actions {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.reminders-main__title--completed {
+	text-decoration: line-through;
+}

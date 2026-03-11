@@ -19,8 +19,7 @@
 	--system-error-primary: hsl(353 88% 56%);
 	--system-error-background: hsl(353 88% 56% / 16%);
 	--system-warning-primary: hsl(42 89% 55%);
-	--sustem-warning-background: hsl(42 89% 55% / 16%);
-	--system-warning-background: var(--sustem-warning-background);
+	--system-warning-background: hsl(42 89% 55% / 16%);
 
 	--background-primary: hsl(0 0% 2%);
 	--background-secondary: hsl(0 0% 8%);
@@ -55,12 +54,11 @@
 	--accent-background: hsl(213 88% 56% / 4%);
 
 	--system-success-primary: hsl(163 70% 47%);
-	--system-success-background: hsl(163 70% 47% / 16%);
+	--system-success-background: hsl(163 70% 47% / 8%);
 	--system-error-primary: hsl(353 88% 56%);
-	--system-error-background: hsl(353 88% 56% / 16%);
+	--system-error-background: hsl(353 88% 56% / 8%);
 	--system-warning-primary: hsl(42 89% 55%);
-	--sustem-warning-background: hsl(42 89% 55% / 16%);
-	--system-warning-background: var(--sustem-warning-background);
+	--system-warning-background: hsl(42 89% 55% / 8%);
 
 	--background-primary: hsl(0 0% 100%);
 	--background-secondary: hsl(220 23% 97%);

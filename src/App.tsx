@@ -9,7 +9,6 @@ import { Cell } from './ui/Cell';
 import { Header } from './ui/Header';
 import { appRegistry, flattenScreens } from './web/registry';
 import { Text } from './ui/Fonts';
-import { Avatar } from './ui/Avatar';
 import './app.scss';
 import { Button } from './ui/Button';
 
@@ -17,11 +16,8 @@ const screenList = flattenScreens();
 const defaultScreenPath = screenList[0]?.path;
 
 function AppScreen() {
-	const { appId, versionId, screenId } = useParams();
-	const match = screenList.find(
-		(item) =>
-			item.app.id === appId && item.version.id === versionId && item.screen.id === screenId,
-	);
+	const { appId, screenId } = useParams();
+	const match = screenList.find((item) => item.app.id === appId && item.screen.id === screenId);
 
 	if (!match) {
 		if (defaultScreenPath) {
@@ -89,42 +85,35 @@ function Navigation({ theme, onToggleTheme }: NavigationProps) {
 
 			<ListContainer>
 				{appRegistry.map((app) => (
-					<List key={app.id} title={app.title}>
-						{app.versions.map((version) =>
-							version.screens.map((screen) => {
-								const routePath = `/app/${app.id}/${version.id}/${screen.id}`;
-								const isActive = location.pathname === routePath;
+					<List key={app.id} title={app.title} collapsible>
+						{app.screens.map((screen) => {
+							const routePath = `/app/${app.id}/${screen.id}`;
+							const isActive = location.pathname === routePath;
 
-								return (
-									<Cell
-										key={`${app.id}-${version.id}-${screen.id}`}
-										variant={isActive ? 'primary' : 'default'}
-										onClick={() => navigate(routePath)}
-										leading={<Avatar text={version.id} />}
-										title={<Text variant="regular-18">{screen.title}</Text>}
-										trailing={
-											<IconButton
-												type="button"
-												variant="primary"
-												aria-label="Копировать путь"
-												title="Копировать путь"
-												onClick={(event) => {
-													event.stopPropagation();
-													void copyToClipboard(routePath);
-												}}
-												onKeyDown={(event) => event.stopPropagation()}
-											>
-												<Icon
-													name="copy-outline"
-													alt=""
-													aria-hidden="true"
-												/>
-											</IconButton>
-										}
-									/>
-								);
-							}),
-						)}
+							return (
+								<Cell
+									key={`${app.id}-${screen.id}`}
+									variant={isActive ? 'primary' : 'default'}
+									onClick={() => navigate(routePath)}
+									title={<Text variant="regular-18">{screen.title}</Text>}
+									trailing={
+										<IconButton
+											type="button"
+											variant="secondary"
+											aria-label="Копировать путь"
+											title="Копировать путь"
+											onClick={(event) => {
+												event.stopPropagation();
+												void copyToClipboard(routePath);
+											}}
+											onKeyDown={(event) => event.stopPropagation()}
+										>
+											<Icon name="copy-outline" alt="" aria-hidden="true" />
+										</IconButton>
+									}
+								/>
+							);
+						})}
 					</List>
 				))}
 			</ListContainer>
@@ -157,7 +146,7 @@ export default function App() {
 							)
 						}
 					/>
-					<Route path="/app/:appId/:versionId/:screenId" element={<AppScreen />} />
+					<Route path="/app/:appId/:screenId" element={<AppScreen />} />
 					<Route
 						path="*"
 						element={

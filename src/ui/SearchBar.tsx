@@ -11,7 +11,9 @@ import "./SearchBar.scss";
 export type SearchBarProps = {
   leftButton?: ReactNode;
   rightButton?: ReactNode;
+  fieldRightButton?: ReactNode;
   hideSearchIcon?: boolean;
+  autoFocus?: boolean;
   value?: string;
   defaultValue?: string;
   placeholder?: string;
@@ -32,7 +34,9 @@ export type SearchBarProps = {
 export function SearchBar({
   leftButton,
   rightButton,
+  fieldRightButton,
   hideSearchIcon = false,
+  autoFocus = false,
   value,
   defaultValue,
   placeholder = "Поиск",
@@ -72,6 +76,7 @@ export function SearchBar({
           type={type}
           id={id}
           name={name}
+          autoFocus={autoFocus}
           autoComplete={autoComplete}
           disabled={disabled}
           readOnly={readOnly}
@@ -85,6 +90,9 @@ export function SearchBar({
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledBy}
         />
+        {fieldRightButton ? (
+          <span className="ui-search-bar__field-action">{fieldRightButton}</span>
+        ) : null}
       </label>
 
       {rightButton ? <div className="ui-search-bar__action">{rightButton}</div> : null}
