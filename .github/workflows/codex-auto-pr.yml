@@ -1,0 +1,121 @@
+name: Codex Auto PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: "Что нужно изменить в репозитории"
+        required: true
+        type: string
+      pr_title:
+        description: "Заголовок PR"
+        required: true
+        default: "Codex: automated update"
+        type: string
+      base_branch:
+        description: "Базовая ветка для PR"
+        required: true
+        default: "main"
+        type: string
+      model:
+        description: "Модель Codex"
+        required: true
+        default: "gpt-5.2-codex"
+        type: string
+      effort:
+        description: "Уровень effort: low, medium или high"
+        required: true
+        default: "medium"
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  codex-auto-pr:
+    runs-on: ubuntu-latest
+    outputs:
+      final_message: ${{ steps.run_codex.outputs.final-message }}
+      pull_request_url: ${{ steps.create_pr.outputs.pull-request-url }}
+      pull_request_number: ${{ steps.create_pr.outputs.pull-request-number }}
+
+    steps:
+      - name: Checkout base branch
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.base_branch }}
+          fetch-depth: 0
+
+      - name: Run Codex
+        id: run_codex
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          model: ${{ inputs.model }}
+          effort: ${{ inputs.effort }}
+          sandbox: workspace-write
+          safety-strategy: drop-sudo
+          codex-args: --full-auto
+          output-file: codex-output.md
+          prompt: |
+            You are modifying this repository in a GitHub Actions workflow.
+
+            Goal:
+            ${{ inputs.prompt }}
+
+            Constraints:
+            - Work only in this repository checkout.
+            - Make the smallest complete change that satisfies the request.
+            - Preserve the existing style and architecture.
+            - Update docs only if the code change requires it.
+            - Do not merge, release, or modify GitHub workflow settings outside the requested task.
+            - If the request is ambiguous, choose the safest minimal interpretation.
+            - Before finishing, run lightweight verification commands when they are relevant and available.
+            - Stop after editing files and leave the repo ready for a pull request.
+
+      - name: Create pull request
+        id: create_pr
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: ${{ inputs.base_branch }}
+          branch: codex/auto-pr
+          branch-suffix: timestamp
+          delete-branch: true
+          commit-message: ${{ inputs.pr_title }}
+          title: ${{ inputs.pr_title }}
+          body: |
+            Created automatically from a GitHub Actions manual run.
+
+            Prompt:
+            ${{ inputs.prompt }}
+
+            Codex final message:
+            ${{ steps.run_codex.outputs.final-message }}
+
+      - name: Add run summary
+        env:
+          CODEX_PROMPT: ${{ inputs.prompt }}
+          CODEX_FINAL_MESSAGE: ${{ steps.run_codex.outputs.final-message }}
+          CODEX_PR_URL: ${{ steps.create_pr.outputs.pull-request-url }}
+        run: |
+          {
+            echo "## Codex Auto PR"
+            echo
+            echo "- Base branch: \`${{ inputs.base_branch }}\`"
+            echo "- Model: \`${{ inputs.model }}\`"
+            echo "- Effort: \`${{ inputs.effort }}\`"
+            echo
+            if [ -n "$CODEX_PR_URL" ]; then
+              echo "- Pull request: $CODEX_PR_URL"
+            else
+              echo "- Pull request: no changes detected, PR was not created"
+            fi
+            echo
+            echo "### Prompt"
+            printf '%s\n' "$CODEX_PROMPT"
+            echo
+            echo "### Codex final message"
+            printf '%s\n' "$CODEX_FINAL_MESSAGE"
+          } >> "$GITHUB_STEP_SUMMARY"

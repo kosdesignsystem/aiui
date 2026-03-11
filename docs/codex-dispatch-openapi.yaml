@@ -1,0 +1,63 @@
+openapi: 3.1.0
+info:
+  title: Codex PR Dispatch Bridge
+  version: 1.0.0
+  description: Trigger a GitHub Actions workflow that runs Codex and opens a pull request.
+servers:
+  - url: https://YOUR-BRIDGE-DOMAIN
+paths:
+  /healthz:
+    get:
+      operationId: getBridgeHealth
+      summary: Check bridge health
+      responses:
+        "200":
+          description: Bridge is healthy
+  /dispatch:
+    post:
+      operationId: dispatchCodexPullRequest
+      summary: Create a Codex-driven pull request
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - prompt
+              properties:
+                prompt:
+                  type: string
+                  description: Natural-language task for Codex.
+                prTitle:
+                  type: string
+                  description: Title for the resulting pull request.
+                baseBranch:
+                  type: string
+                  description: Base branch for the pull request.
+                model:
+                  type: string
+                  description: Codex model name.
+                effort:
+                  type: string
+                  enum:
+                    - low
+                    - medium
+                    - high
+                  description: Reasoning effort passed to Codex.
+      responses:
+        "202":
+          description: Workflow dispatch accepted
+        "400":
+          description: Missing or invalid input
+        "401":
+          description: Missing or invalid bearer token
+        "500":
+          description: GitHub dispatch failed
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

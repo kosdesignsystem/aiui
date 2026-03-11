@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "icons:build": "node ./scripts/build-icons.mjs",
+    "bridge:codex-pr": "node ./scripts/codex-dispatch-bridge.mjs",
     "dev": "npm run icons:build && vite",
     "build": "npm run icons:build && vite build",
     "preview": "vite preview"
