@@ -6,76 +6,37 @@ import { View } from '../../ui/View';
 import { chatByContact, familyContacts, FamilyContact } from './model';
 import './screen.scss';
 
-type ScreenMode = 'contacts' | 'chat' | 'call';
-
 export function KidCallsScreen() {
-	const [mode, setMode] = useState<ScreenMode>('contacts');
-	const [selectedContactId, setSelectedContactId] = useState(familyContacts[0]?.id ?? '');
+	const [activeContactId, setActiveContactId] = useState(familyContacts[0]?.id);
+	const [chatContactId, setChatContactId] = useState<string | null>(null);
 	const [callStatus, setCallStatus] = useState('');
 
-	const selectedContact = familyContacts.find((contact) => contact.id === selectedContactId) ?? null;
+	const chatContact = familyContacts.find((contact) => contact.id === chatContactId);
 	const chatMessages = useMemo(() => {
-		if (!selectedContactId) {
+		if (!chatContactId) {
 			return [];
 		}
 
-		return chatByContact[selectedContactId] ?? [];
-	}, [selectedContactId]);
+		return chatByContact[chatContactId] ?? [];
+	}, [chatContactId]);
 
 	const handleCardTap = (contact: FamilyContact) => {
-		setSelectedContactId(contact.id);
+		setActiveContactId(contact.id);
 		setCallStatus(`Звоним: ${contact.name}...`);
-		setMode('call');
 	};
 
-	if (mode === 'call' && selectedContact) {
-		return (
-			<App>
-				<div className="kid-calls-screen kid-calls-screen--call">
-					<div className="kid-calls-screen__call-photo-wrap">
-						<img
-							className="kid-calls-screen__call-photo"
-							src={selectedContact.photo}
-							alt={`Фото контакта ${selectedContact.name}`}
-						/>
-						<div className="kid-calls-screen__call-overlay">
-							<Text variant="semi-20" color="primary">
-								{selectedContact.name}
-							</Text>
-							<Text variant="regular-14" color="primary">
-								{callStatus || 'Соединение...'}
-							</Text>
-							<div className="kid-calls-screen__call-actions">
-								<button
-									type="button"
-									className="kid-calls-screen__overlay-button"
-									onClick={() => setMode('contacts')}
-								>
-									Завершить
-								</button>
-								<button
-									type="button"
-									className="kid-calls-screen__overlay-button"
-									onClick={() => setMode('chat')}
-								>
-									Открыть чат
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</App>
-		);
-	}
-
-	if (mode === 'chat' && selectedContact) {
+	if (chatContact) {
 		return (
 			<App>
 				<div className="kid-calls-screen kid-calls-screen--chat">
 					<Header
-						title={`Чат: ${selectedContact.name}`}
+						title={`Чат: ${chatContact.name}`}
 						button={
-							<button type="button" className="kid-calls-screen__back" onClick={() => setMode('contacts')}>
+							<button
+								type="button"
+								className="kid-calls-screen__back"
+								onClick={() => setChatContactId(null)}
+							>
 								Назад
 							</button>
 						}
@@ -119,7 +80,9 @@ export function KidCallsScreen() {
 							{familyContacts.map((contact) => (
 								<article
 									key={contact.id}
-									className="kid-calls-screen__contact"
+									className={`kid-calls-screen__contact${
+										activeContactId === contact.id ? ' is-active' : ''
+									}`}
 									style={{ '--contact-color': contact.color } as CSSProperties}
 								>
 									<button
@@ -136,21 +99,14 @@ export function KidCallsScreen() {
 										<button
 											type="button"
 											className="kid-calls-screen__mini-action"
-											onClick={() => {
-												setSelectedContactId(contact.id);
-												setCallStatus(`Видео звонок: ${contact.name}`);
-												setMode('call');
-											}}
+											onClick={() => setCallStatus(`Видео звонок: ${contact.name}`)}
 										>
 											📹 Видео
 										</button>
 										<button
 											type="button"
 											className="kid-calls-screen__mini-action"
-											onClick={() => {
-												setSelectedContactId(contact.id);
-												setMode('chat');
-											}}
+											onClick={() => setChatContactId(contact.id)}
 										>
 											💬 Чат
 										</button>
@@ -158,6 +114,14 @@ export function KidCallsScreen() {
 								</article>
 							))}
 						</div>
+
+						{callStatus ? (
+							<div className="kid-calls-screen__status">
+								<Text variant="regular-14" color="primary">
+									{callStatus}
+								</Text>
+							</div>
+						) : null}
 
 						<button type="button" className="kid-calls-screen__sos-button">
 							🆘 SOS
