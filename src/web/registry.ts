@@ -2,6 +2,7 @@ import CallsMainPage from "./Calls/main";
 import CallsMissedPage from "./Calls/missed";
 import CallsSearchPage from "./Calls/search";
 import FilesMainPage from "./Files/main";
+import KidCallsMainPage from "./KidCalls/main";
 import NotesCreatePage from "./Notes/create";
 import NotesEmptyPage from "./Notes/empty";
 import NotesFavoritesPage from "./Notes/favorites";
@@ -36,6 +37,11 @@ export const appRegistry: AppDefinition[] = [
     id: "Files",
     title: "Файлы",
     screens: [{ id: "main", title: "Главный экран", Component: FilesMainPage }],
+  },
+  {
+    id: "KidCalls",
+    title: "Детские звонки",
+    screens: [{ id: "main", title: "Смарт-часы 5+", Component: KidCallsMainPage }],
   },
   {
     id: "Notes",

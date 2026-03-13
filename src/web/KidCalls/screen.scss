@@ -1,0 +1,169 @@
+.kid-calls-screen {
+	height: 100%;
+	background:
+		radial-gradient(circle at 50% 15%, rgb(108 61 214 / 35%), transparent 52%),
+		linear-gradient(165deg, #120b41 0%, #07062f 52%, #03021d 100%);
+}
+
+.kid-calls-screen__content {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	min-height: 100%;
+	padding: 4px 16px 16px;
+}
+
+.kid-calls-screen__contacts {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 10px;
+}
+
+.kid-calls-screen__contact {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	min-height: 156px;
+	padding: 12px;
+	border: none;
+	border-radius: 22px;
+	background: linear-gradient(150deg, rgb(40 44 104 / 80%), rgb(20 20 65 / 92%));
+	box-shadow: inset 0 0 0 1px rgb(126 126 255 / 20%);
+	color: #f5f4ff;
+}
+
+.kid-calls-screen__contact.is-active {
+	background: var(--contact-color);
+	color: #ffffff;
+	box-shadow: 0 0 24px color-mix(in srgb, var(--contact-color) 55%, transparent);
+}
+
+.kid-calls-screen__contact-main {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	align-items: flex-start;
+}
+
+.kid-calls-screen__contact-emoji {
+	font-size: 32px;
+	line-height: 1;
+}
+
+.kid-calls-screen__name {
+	font-size: 22px;
+	font-weight: 700;
+}
+
+.kid-calls-screen__card-actions {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 6px;
+}
+
+.kid-calls-screen__mini-action {
+	border: none;
+	border-radius: 12px;
+	padding: 8px 6px;
+	font-size: 12px;
+	font-weight: 700;
+	background: rgb(4 7 32 / 34%);
+	color: inherit;
+}
+
+.kid-calls-screen__status {
+	padding: 10px 12px;
+	border-radius: 14px;
+	background: rgb(25 29 84 / 65%);
+	box-shadow: inset 0 0 0 1px rgb(119 122 255 / 24%);
+}
+
+.kid-calls-screen__sos-button {
+	margin-top: auto;
+	border: none;
+	border-radius: 24px;
+	padding: 14px;
+	font-size: 22px;
+	font-weight: 800;
+	background: linear-gradient(90deg, #ff2f8d 0%, #ff4e95 100%);
+	color: #fff;
+	box-shadow: 0 10px 24px rgb(255 47 141 / 45%);
+}
+
+.kid-calls-screen--chat .ui-header__title {
+	font-size: 26px;
+}
+
+.kid-calls-screen__back {
+	border: none;
+	border-radius: 14px;
+	padding: 8px 12px;
+	background: rgb(56 65 146 / 44%);
+	color: #fff;
+	font-weight: 600;
+}
+
+.kid-calls-screen__chat-layout {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	gap: 10px;
+	padding: 6px 14px 14px;
+}
+
+.kid-calls-screen__chat-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	flex: 1;
+	overflow: auto;
+	padding-right: 4px;
+}
+
+.kid-calls-screen__bubble {
+	max-width: 85%;
+	padding: 10px 12px;
+	border-radius: 14px 14px 14px 4px;
+	background: rgb(34 40 111 / 82%);
+	color: #f7f6ff;
+	font-size: 14px;
+	line-height: 1.25;
+}
+
+.kid-calls-screen__bubble span {
+	display: block;
+	margin-top: 4px;
+	font-size: 11px;
+	opacity: 0.7;
+}
+
+.kid-calls-screen__bubble.is-child {
+	align-self: flex-end;
+	border-radius: 14px 14px 4px;
+	background: linear-gradient(120deg, #ff2f90, #a36bff);
+}
+
+.kid-calls-screen__composer {
+	display: grid;
+	grid-template-columns: 1fr 52px;
+	gap: 8px;
+	padding-top: 4px;
+}
+
+.kid-calls-screen__composer input {
+	border: none;
+	border-radius: 14px;
+	padding: 0 12px;
+	height: 48px;
+	background: rgb(23 27 79 / 78%);
+	color: #fff;
+	font-size: 14px;
+}
+
+.kid-calls-screen__composer button {
+	border: none;
+	border-radius: 14px;
+	background: linear-gradient(130deg, #4f86ff, #8f6fff);
+	color: #fff;
+	font-size: 24px;
+}
