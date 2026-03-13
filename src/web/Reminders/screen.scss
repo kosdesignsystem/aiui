@@ -1,0 +1,51 @@
+.reminders-screen {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.reminders-screen__content {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 16px;
+}
+
+.reminders-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.reminders-row {
+	display: grid;
+	grid-template-columns: 26px minmax(0, 1fr) auto;
+	gap: 10px;
+	align-items: start;
+	padding: 12px;
+	border-radius: 12px;
+	background: var(--background-primary);
+	border: 1px solid var(--content-border);
+}
+
+.reminders-row__check {
+	width: 22px;
+	height: 22px;
+	border-radius: 6px;
+	border: 1px solid var(--content-border);
+	background: var(--background-secondary);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.reminders-row__check.is-done {
+	background: var(--accent-primary);
+	border-color: transparent;
+}
+
+.reminders-row__content {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
