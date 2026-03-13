@@ -32,10 +32,10 @@ function ToggleRow({
 	return (
 		<label className="password-generator__toggle-row">
 			<div className="password-generator__toggle-meta">
-				<Text as="span" variant="medium-32" color="accent">
+				<Text as="span" variant="medium-20" color="accent">
 					{icon}
 				</Text>
-				<Text as="span" variant="regular-24" color="primary">
+				<Text as="span" variant="regular-20" color="primary">
 					{label}
 				</Text>
 			</div>
@@ -70,12 +70,12 @@ export function PasswordGeneratorScreen({
 				<Header title="Генератор паролей" />
 				<View>
 					<div className="password-generator__content">
-						<Text as="p" variant="medium-32" color="primary">
+						<Text as="p" variant="medium-24" color="primary">
 							Сгенерировать случайный пароль
 						</Text>
 
 						<section className="password-generator__section">
-							<Text as="p" variant="medium-24" color="primary">
+							<Text as="p" variant="medium-20" color="primary">
 								Уровень надежности
 							</Text>
 							<div className="password-generator__security" role="tablist" aria-label="Уровень надежности">
@@ -88,7 +88,7 @@ export function PasswordGeneratorScreen({
 											className={`password-generator__security-tab${isActive ? ' is-active' : ''}`}
 											onClick={() => onApplySecurityLevel(level.id)}
 										>
-											<Text variant="medium-20" color={isActive ? 'primary' : 'secondary'}>
+											<Text variant="medium-18" color={isActive ? 'primary' : 'secondary'}>
 												{level.label}
 											</Text>
 										</button>
@@ -98,9 +98,14 @@ export function PasswordGeneratorScreen({
 						</section>
 
 						<section className="password-generator__section">
-							<Text as="p" variant="medium-24" color="primary">
-								Длина пароля: {options.length}
-							</Text>
+							<div className="password-generator__length-head">
+								<Text as="p" variant="medium-20" color="primary">
+									Длина пароля
+								</Text>
+								<Text as="p" variant="medium-20" color="primary">
+									{options.length}
+								</Text>
+							</div>
 							<input
 								type="range"
 								min={6}
@@ -111,7 +116,7 @@ export function PasswordGeneratorScreen({
 							/>
 						</section>
 
-						<section className="password-generator__options">
+						<section className="password-generator__options" aria-label="Параметры генерации">
 							<ToggleRow
 								icon="Aa"
 								label="Заглавные буквы"
@@ -139,17 +144,17 @@ export function PasswordGeneratorScreen({
 						</section>
 
 						<section className="password-generator__result-card">
-							<Text as="p" variant="regular-24" color="secondary">
+							<Text as="p" variant="regular-16" color="secondary">
 								Сгенерированный пароль
 							</Text>
 							<div className="password-generator__password-row">
-								<Text as="p" variant="regular-24" color="primary" family="mono">
+								<Text as="p" variant="regular-20" color="primary" family="mono">
 									{password || 'Нажмите «Сгенерировать новый»'}
 								</Text>
 								<Button
 									type="button"
 									size={44}
-									variant="link"
+									variant="secondary"
 									onClick={onCopyPassword}
 									disabled={!password}
 									aria-label={copyLabel}
@@ -164,10 +169,10 @@ export function PasswordGeneratorScreen({
 						</Button>
 
 						<div className="password-generator__footer-actions">
-							<Button type="button" size={52} variant="link">
+							<Button type="button" size={52} variant="secondary">
 								Отмена
 							</Button>
-							<Button type="button" size={52} variant="accent" disabled>
+							<Button type="button" size={52} variant="primary" disabled>
 								ОК
 							</Button>
 						</div>
