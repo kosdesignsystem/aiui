@@ -6,6 +6,7 @@ import NotesCreatePage from "./Notes/create";
 import NotesEmptyPage from "./Notes/empty";
 import NotesFavoritesPage from "./Notes/favorites";
 import NotesMainPage from "./Notes/main";
+import RemindersMainPage from "./Reminders/main";
 import SettingsMainPage from "./Settings/main";
 import SettingsSecurityPage from "./Settings/security";
 
@@ -45,6 +46,11 @@ export const appRegistry: AppDefinition[] = [
       { id: "favorites", title: "Избранные", Component: NotesFavoritesPage },
       { id: "create", title: "Создание заметки", Component: NotesCreatePage },
     ],
+  },
+  {
+    id: "Reminders",
+    title: "Напоминания",
+    screens: [{ id: "main", title: "Список задач", Component: RemindersMainPage }],
   },
   {
     id: "Settings",
