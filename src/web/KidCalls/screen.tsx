@@ -11,7 +11,6 @@ export function KidCallsScreen() {
 	const [chatContactId, setChatContactId] = useState<string | null>(null);
 	const [callStatus, setCallStatus] = useState('');
 
-	const activeContact = familyContacts.find((contact) => contact.id === activeContactId);
 	const chatContact = familyContacts.find((contact) => contact.id === chatContactId);
 	const chatMessages = useMemo(() => {
 		if (!chatContactId) {
@@ -30,7 +29,18 @@ export function KidCallsScreen() {
 		return (
 			<App>
 				<div className="kid-calls-screen kid-calls-screen--chat">
-					<Header title={`Чат: ${chatContact.name}`} button={<button type="button" className="kid-calls-screen__back" onClick={() => setChatContactId(null)}>Назад</button>} />
+					<Header
+						title={`Чат: ${chatContact.name}`}
+						button={
+							<button
+								type="button"
+								className="kid-calls-screen__back"
+								onClick={() => setChatContactId(null)}
+							>
+								Назад
+							</button>
+						}
+					/>
 					<View>
 						<div className="kid-calls-screen__chat-layout">
 							<div className="kid-calls-screen__chat-list">
@@ -49,7 +59,9 @@ export function KidCallsScreen() {
 
 							<div className="kid-calls-screen__composer">
 								<input type="text" value="Напиши сообщение..." readOnly />
-								<button type="button">🎤</button>
+								<button type="button" aria-label="Записать голосовое">
+									🎤
+								</button>
 							</div>
 						</div>
 					</View>
@@ -66,44 +78,40 @@ export function KidCallsScreen() {
 					<div className="kid-calls-screen__content">
 						<div className="kid-calls-screen__contacts" role="list">
 							{familyContacts.map((contact) => (
-								<button
+								<article
 									key={contact.id}
-									type="button"
 									className={`kid-calls-screen__contact${
 										activeContactId === contact.id ? ' is-active' : ''
 									}`}
-									onClick={() => handleCardTap(contact)}
 									style={{ '--contact-color': contact.color } as CSSProperties}
 								>
-									<div className="kid-calls-screen__contact-main">
+									<button
+										type="button"
+										className="kid-calls-screen__card-main"
+										onClick={() => handleCardTap(contact)}
+									>
 										<span className="kid-calls-screen__contact-emoji" aria-hidden="true">
 											{contact.emoji}
 										</span>
 										<span className="kid-calls-screen__name">{contact.name}</span>
-									</div>
+									</button>
 									<div className="kid-calls-screen__card-actions">
 										<button
 											type="button"
 											className="kid-calls-screen__mini-action"
-											onClick={(event) => {
-												event.stopPropagation();
-												setCallStatus(`Видео звонок: ${contact.name}`);
-											}}
+											onClick={() => setCallStatus(`Видео звонок: ${contact.name}`)}
 										>
 											📹 Видео
 										</button>
 										<button
 											type="button"
 											className="kid-calls-screen__mini-action"
-											onClick={(event) => {
-												event.stopPropagation();
-												setChatContactId(contact.id);
-											}}
+											onClick={() => setChatContactId(contact.id)}
 										>
 											💬 Чат
 										</button>
 									</div>
-								</button>
+								</article>
 							))}
 						</div>
 

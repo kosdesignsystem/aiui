@@ -25,24 +25,30 @@
 	justify-content: space-between;
 	min-height: 156px;
 	padding: 12px;
-	border: none;
 	border-radius: 22px;
 	background: linear-gradient(150deg, rgb(40 44 104 / 80%), rgb(20 20 65 / 92%));
 	box-shadow: inset 0 0 0 1px rgb(126 126 255 / 20%);
 	color: #f5f4ff;
 }
 
-.kid-calls-screen__contact.is-active {
-	background: var(--contact-color);
-	color: #ffffff;
-	box-shadow: 0 0 24px color-mix(in srgb, var(--contact-color) 55%, transparent);
-}
-
-.kid-calls-screen__contact-main {
+.kid-calls-screen__card-main {
 	display: flex;
 	flex-direction: column;
 	gap: 6px;
 	align-items: flex-start;
+	justify-content: flex-start;
+	min-height: 76px;
+	border: none;
+	background: transparent;
+	padding: 0;
+	color: inherit;
+	text-align: left;
+}
+
+.kid-calls-screen__contact.is-active {
+	background: var(--contact-color);
+	color: #ffffff;
+	box-shadow: 0 0 24px color-mix(in srgb, var(--contact-color) 55%, transparent);
 }
 
 .kid-calls-screen__contact-emoji {
