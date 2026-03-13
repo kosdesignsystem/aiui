@@ -7,59 +7,124 @@
 .password-generator__content {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: 16px;
 	padding: 16px;
 }
 
-.password-generator__result-card {
+.password-generator__section {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
-	padding: 12px;
-	border-radius: 12px;
-	background: var(--background-primary);
-	border: 1px solid var(--content-border);
+	gap: 12px;
 }
 
-.password-generator__password {
-	word-break: break-all;
-	min-height: 44px;
-}
-
-.password-generator__actions {
+.password-generator__security {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 8px;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	border: 1px solid var(--accent-primary);
+	border-radius: 14px;
+	overflow: hidden;
 }
 
-.password-generator__list {
+.password-generator__security-tab {
+	border: 0;
+	background: transparent;
+	height: 52px;
+	padding: 0 8px;
+	cursor: pointer;
+}
+
+.password-generator__security-tab.is-active {
+	background: var(--accent-primary);
+}
+
+.password-generator__range {
+	width: 100%;
+	accent-color: var(--accent-primary);
+}
+
+.password-generator__options {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
-	padding: 10px;
-}
-
-.password-generator__length-row {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-}
-
-.password-generator__length-head {
-	display: flex;
-	justify-content: space-between;
-	gap: 8px;
+	padding-top: 6px;
 }
 
 .password-generator__toggle-row {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 8px;
+	gap: 12px;
+}
+
+.password-generator__toggle-meta {
+	display: inline-flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.password-generator__switch-wrap {
+	position: relative;
+	display: inline-flex;
+	width: 52px;
+	height: 32px;
 }
 
 .password-generator__switch {
-	width: 18px;
-	height: 18px;
-	accent-color: var(--accent-primary);
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	margin: 0;
+	cursor: pointer;
+}
+
+.password-generator__switch-ui {
+	position: relative;
+	display: inline-block;
+	width: 52px;
+	height: 32px;
+	border-radius: 16px;
+	border: 1px solid var(--content-secondary);
+	background: transparent;
+	transition: background-color 0.2s ease;
+}
+
+.password-generator__switch-ui::after {
+	content: '';
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: var(--content-secondary);
+	transition: transform 0.2s ease;
+}
+
+.password-generator__switch:checked + .password-generator__switch-ui {
+	background: var(--accent-primary);
+	border-color: var(--accent-primary);
+}
+
+.password-generator__switch:checked + .password-generator__switch-ui::after {
+	transform: translateX(20px);
+	background: var(--content-constant);
+}
+
+.password-generator__result-card {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.password-generator__password-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.password-generator__footer-actions {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
 }
