@@ -9,14 +9,20 @@ import './screen.scss';
 
 type RemindersScreenProps = {
 	tasks: ReminderTask[];
+	onToggleTask: (taskId: string) => void;
 };
 
-function ReminderRow({ task }: { task: ReminderTask }) {
+function ReminderRow({ task, onToggleTask }: { task: ReminderTask; onToggleTask: (taskId: string) => void }) {
 	return (
 		<div className="reminders-row" role="listitem">
-			<div className={`reminders-row__check ${task.done ? 'is-done' : ''}`} aria-hidden="true">
+			<button
+				type="button"
+				className={`reminders-row__check ${task.done ? 'is-done' : ''}`}
+				onClick={() => onToggleTask(task.id)}
+				aria-label={`${task.done ? 'Снять отметку' : 'Отметить как выполненную'}: ${task.title}`}
+			>
 				{task.done ? <Icon name="done" width={16} height={16} alt="" aria-hidden="true" /> : null}
-			</div>
+			</button>
 
 			<div className="reminders-row__content">
 				<Text as="p" variant="medium-18" color="primary">
@@ -26,16 +32,19 @@ function ReminderRow({ task }: { task: ReminderTask }) {
 				<Text as="p" variant="regular-14" color="secondary">
 					{task.details}
 				</Text>
-			</div>
 
-			<Text as="p" variant="regular-14" color="secondary">
-				{task.timeLabel}
-			</Text>
+				<Text as="p" variant="regular-14" color="secondary">
+					{task.timeLabel}
+				</Text>
+			</div>
 		</div>
 	);
 }
 
-export function RemindersMainScreen({ tasks }: RemindersScreenProps) {
+export function RemindersMainScreen({ tasks, onToggleTask }: RemindersScreenProps) {
+	const completedCount = tasks.filter((task) => task.done).length;
+	const completedPercent = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
+
 	return (
 		<App>
 			<div className="reminders-screen">
@@ -47,11 +56,15 @@ export function RemindersMainScreen({ tasks }: RemindersScreenProps) {
 							Задачи по посадке винограда
 						</Text>
 
+						<Text as="p" variant="regular-14" color="secondary">
+							Выполнено: {completedPercent}%
+						</Text>
+
 						<ListContainer>
 							<List>
 								<div role="list" className="reminders-list">
 									{tasks.map((task) => (
-										<ReminderRow key={task.id} task={task} />
+										<ReminderRow key={task.id} task={task} onToggleTask={onToggleTask} />
 									))}
 								</div>
 							</List>
