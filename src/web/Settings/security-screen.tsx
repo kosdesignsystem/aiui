@@ -184,6 +184,32 @@ export function SettingsSecurityScreen() {
 							</Text>
 						}
 					/>
+					<Cell
+						leading={
+							<Avatar background="accent-background">
+								<Icon
+									name="lock-outline"
+									alt=""
+									width={20}
+									height={20}
+									aria-hidden="true"
+									colorToken="accent-primary"
+								/>
+							</Avatar>
+						}
+						title={<Text variant="regular-18">Шифрование устройства</Text>}
+						subtitle={
+							<Text variant="regular-14" color="secondary">
+								Шифрование диска включено по умолчанию и всегда активно — данные на
+								телефоне защищены
+							</Text>
+						}
+						trailing={
+							<Text variant="medium-14" color="accent">
+								Включено
+							</Text>
+						}
+					/>
 				</List>
 
 				<List title="Доступ к устройству">
