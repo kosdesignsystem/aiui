@@ -1,0 +1,96 @@
+.kid-calls-screen {
+	height: 100%;
+}
+
+.kid-calls-screen__content {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 4px 20px 20px;
+}
+
+.kid-calls-screen__contacts {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+}
+
+.kid-calls-screen__contact {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+	min-height: 106px;
+	border: 0;
+	border-radius: 24px;
+	padding: 10px 8px;
+	background: color-mix(in srgb, var(--contact-color) 25%, var(--surface-primary));
+	color: var(--content-primary);
+	box-shadow: inset 0 0 0 2px transparent;
+}
+
+.kid-calls-screen__contact.is-active {
+	box-shadow: inset 0 0 0 3px var(--accent-primary);
+	transform: scale(1.02);
+}
+
+.kid-calls-screen__emoji {
+	font-size: 34px;
+	line-height: 1;
+}
+
+.kid-calls-screen__name {
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.kid-calls-screen__hint {
+	font-size: 12px;
+	line-height: 1.2;
+	text-align: center;
+	color: var(--content-secondary);
+}
+
+.kid-calls-screen__call-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 12px;
+	border-radius: 20px;
+	background: var(--content-background);
+}
+
+.kid-calls-screen__active {
+	font-size: 14px;
+	color: var(--content-secondary);
+}
+
+.kid-calls-screen__call-button {
+	border: none;
+	border-radius: 22px;
+	padding: 14px;
+	font-size: 22px;
+	font-weight: 700;
+	background: var(--accent-primary);
+	color: var(--content-on-accent);
+}
+
+.kid-calls-screen__actions {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
+}
+
+.kid-calls-screen__action-pill {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+	border: none;
+	border-radius: 16px;
+	padding: 10px 6px;
+	font-size: 14px;
+	font-weight: 600;
+	background: var(--surface-secondary);
+	color: var(--content-primary);
+}
