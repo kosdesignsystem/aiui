@@ -212,6 +212,66 @@ export function SettingsSecurityScreen() {
 					/>
 				</List>
 
+				<List title="Как защищены ваши данные">
+					<Cell
+						leading={
+							<Avatar>
+								<Icon name="shield-done" alt="" width={20} height={20} aria-hidden="true" />
+							</Avatar>
+						}
+						title={<Text variant="regular-18">Данные на устройстве</Text>}
+						subtitle={
+							<Text variant="regular-14" color="secondary">
+								Фото, документы и сообщения зашифрованы алгоритмом AES-256 и
+								расшифровываются только после вашей авторизации
+							</Text>
+						}
+						trailing={
+							<Text variant="medium-14" color="accent">
+								AES-256
+							</Text>
+						}
+					/>
+					<Cell
+						leading={
+							<Avatar>
+								<Icon name="wifi-lock" alt="" width={20} height={20} aria-hidden="true" />
+							</Avatar>
+						}
+						title={<Text variant="regular-18">Передача данных</Text>}
+						subtitle={
+							<Text variant="regular-14" color="secondary">
+								Соединения с сервисами выполняются через защищенный канал TLS, чтобы
+								данные нельзя было перехватить в сети
+							</Text>
+						}
+						trailing={
+							<Text variant="medium-14" color="accent">
+								TLS 1.3
+							</Text>
+						}
+					/>
+					<Cell
+						leading={
+							<Avatar>
+								<Icon name="archive-outline" alt="" width={20} height={20} aria-hidden="true" />
+							</Avatar>
+						}
+						title={<Text variant="regular-18">Резервные копии</Text>}
+						subtitle={
+							<Text variant="regular-14" color="secondary">
+								Ключ шифрования хранится отдельно, поэтому доступ к копиям возможен
+								только с вашим паролем восстановления
+							</Text>
+						}
+						trailing={
+							<Text variant="medium-14" color="accent">
+								E2E
+							</Text>
+						}
+					/>
+				</List>
+
 				<List title="Доступ к устройству">
 					<SecurityToggleCell
 						icon="persone-circle-outline"
