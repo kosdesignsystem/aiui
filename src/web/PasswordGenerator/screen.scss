@@ -48,7 +48,7 @@
 	outline-offset: -2px;
 }
 
-.password-generator__toggle-row {
+.password-generator__toggle-meta {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -73,18 +73,14 @@
 .password-generator__toggle-meta {
 	display: flex;
 	align-items: center;
-	min-height: 56px;
-	gap: 14px;
-	padding: 6px;
-	border-radius: 16px;
+	padding: 0;
 }
 
-.password-generator__toggle-meta {
-	display: flex;
-	align-items: center;
+.password-generator__toggle-row .ui-cell {
+	min-height: 56px;
 	gap: 12px;
-	min-width: 0;
-	flex: 1;
+	padding: 6px;
+	border-radius: 16px;
 }
 
 .password-generator__switch-wrap {

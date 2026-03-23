@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { App } from '../../ui/App';
 import { Button } from '../../ui/Button';
+import { Cell } from '../../ui/Cell';
 import { Text } from '../../ui/Fonts';
 import { Header } from '../../ui/Header';
 import { View } from '../../ui/View';
@@ -31,18 +32,24 @@ function ToggleRow({
 }) {
 	return (
 		<label className="password-generator__toggle-row">
-			<div className="password-generator__toggle-meta">
-				<Text as="span" variant="medium-20" color="accent">
-					{icon}
-				</Text>
-				<Text as="span" variant="regular-20" color="primary">
-					{label}
-				</Text>
-			</div>
-			<span className="password-generator__switch-wrap">
-				<input type="checkbox" checked={checked} onChange={onChange} className="password-generator__switch" />
-				<span className="password-generator__switch-ui" aria-hidden="true" />
-			</span>
+			<Cell
+				leading={
+					<Text as="span" variant="medium-20" color="accent">
+						{icon}
+					</Text>
+				}
+				title={
+					<Text as="span" variant="regular-18" color="primary">
+						{label}
+					</Text>
+				}
+				trailing={
+					<span className="password-generator__switch-wrap">
+						<input type="checkbox" checked={checked} onChange={onChange} className="password-generator__switch" />
+						<span className="password-generator__switch-ui" aria-hidden="true" />
+					</span>
+				}
+			/>
 		</label>
 	);
 }
@@ -98,7 +105,7 @@ export function PasswordGeneratorScreen({
 	return (
 		<App>
 			<div className="password-generator">
-				<Header title="Генератор паролей" />
+				<Header title="Create password" />
 				<View>
 					<div className="password-generator__content">
 						<section className="password-generator__section">
@@ -123,10 +130,10 @@ export function PasswordGeneratorScreen({
 
 						<section className="password-generator__section">
 							<div className="password-generator__length-head">
-								<Text as="p" variant="medium-20" color="primary">
+								<Text as="span" variant="medium-20" color="primary">
 									Длина пароля
 								</Text>
-								<Text as="p" variant="medium-20" color="primary">
+								<Text as="span" variant="medium-20" color="primary">
 									{options.length}
 								</Text>
 							</div>
