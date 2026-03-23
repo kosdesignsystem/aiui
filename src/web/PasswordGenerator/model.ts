@@ -6,12 +6,38 @@ export type PasswordOptions = {
 	includeSymbols: boolean;
 };
 
+export type SecurityLevel = 'weak' | 'medium' | 'strong';
+
 export const defaultPasswordOptions: PasswordOptions = {
 	length: 16,
 	includeUppercase: true,
 	includeLowercase: true,
 	includeDigits: true,
 	includeSymbols: false,
+};
+
+export const securityLevelPresets: Record<SecurityLevel, PasswordOptions> = {
+	weak: {
+		length: 8,
+		includeUppercase: false,
+		includeLowercase: true,
+		includeDigits: true,
+		includeSymbols: false,
+	},
+	medium: {
+		length: 12,
+		includeUppercase: true,
+		includeLowercase: true,
+		includeDigits: true,
+		includeSymbols: false,
+	},
+	strong: {
+		length: 16,
+		includeUppercase: true,
+		includeLowercase: true,
+		includeDigits: true,
+		includeSymbols: true,
+	},
 };
 
 const CHARSETS = {
@@ -25,6 +51,18 @@ const getRandomIndex = (max: number) => {
 	const random = crypto.getRandomValues(new Uint32Array(1))[0];
 	return random % max;
 };
+
+export function getSecurityLevel(options: PasswordOptions): SecurityLevel {
+	if (options.length >= 14 && options.includeUppercase && options.includeLowercase && options.includeDigits && options.includeSymbols) {
+		return 'strong';
+	}
+
+	if (options.length >= 10 && options.includeUppercase && options.includeLowercase && options.includeDigits) {
+		return 'medium';
+	}
+
+	return 'weak';
+}
 
 export function generatePassword(options: PasswordOptions): string {
 	const groups: string[] = [];
