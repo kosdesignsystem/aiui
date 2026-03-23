@@ -4,6 +4,8 @@ import { Button } from '../../ui/Button';
 import { Cell } from '../../ui/Cell';
 import { Text } from '../../ui/Fonts';
 import { Header } from '../../ui/Header';
+import { Icon } from '../../ui/Icon';
+import { List, ListContainer } from '../../ui/List';
 import { Nav } from '../../ui/Nav';
 import { View } from '../../ui/View';
 import { getSecurityLevel, PasswordOptions, SecurityLevel } from './model';
@@ -266,35 +268,48 @@ export function PasswordGeneratorScreen({
 								</Button>
 							</>
 						) : (
-							<section className="password-generator__saved-list" aria-label="Сохраненные пароли">
-								{savedPasswords.length === 0 ? (
-									<Text as="p" variant="regular-16" color="secondary">
-										Пока нет сохраненных паролей
-									</Text>
-								) : (
-									savedPasswords.map((item) => (
+							<ListContainer>
+								<List title="Сохраненные пароли">
+									{savedPasswords.length === 0 ? (
 										<Cell
-											key={item.id}
-											title={<Text variant="regular-18">{item.service || 'Без названия'}</Text>}
-											subtitle={<Text variant="regular-14" color="secondary">{item.login || 'Без логина'}</Text>}
-											trailing={<Text variant="medium-14" color="accent">Открыть</Text>}
-											onClick={() => onOpenEditSheet(item.id)}
+											title={<Text variant="medium-18">Пусто</Text>}
+											subtitle={<Text variant="regular-14" color="secondary">Сохраните пароль с вкладки генератора</Text>}
 										/>
-									))
-								)}
-							</section>
+									) : (
+										savedPasswords.map((item) => (
+											<Cell
+												key={item.id}
+												title={<Text variant="regular-18">{item.service || 'Без названия'}</Text>}
+												subtitle={<Text variant="regular-14" color="secondary">{item.login || 'Без логина'}</Text>}
+												trailing={<Icon name="chevron-right" width={20} height={20} aria-hidden colorToken="content-secondary" />}
+												onClick={() => onOpenEditSheet(item.id)}
+											/>
+										))
+									)}
+								</List>
+							</ListContainer>
 						)}
 					</div>
 				</View>
 
-				<div className="password-generator__tabs">
-					<Nav
-						items={[
-							{ id: 'generate', label: 'Генератор', active: activeTab === 'generate', onClick: () => onTabChange('generate') },
-							{ id: 'saved', label: 'Сохраненные', active: activeTab === 'saved', onClick: () => onTabChange('saved') },
-						]}
-					/>
-				</div>
+				<Nav
+					items={[
+						{
+							id: 'generate',
+							label: 'Генератор',
+							active: activeTab === 'generate',
+							onClick: () => onTabChange('generate'),
+							icon: <Icon name="lock-outline" width={20} height={20} aria-hidden colorToken={activeTab === 'generate' ? 'content-primary' : 'content-secondary'} />,
+						},
+						{
+							id: 'saved',
+							label: 'Сохраненные',
+							active: activeTab === 'saved',
+							onClick: () => onTabChange('saved'),
+							icon: <Icon name="copy-outline" width={20} height={20} aria-hidden colorToken={activeTab === 'saved' ? 'content-primary' : 'content-secondary'} />,
+						},
+					]}
+				/>
 
 				{isSheetOpen ? (
 					<div className="password-generator__sheet-backdrop" role="dialog" aria-modal="true" aria-label="Редактирование пароля">

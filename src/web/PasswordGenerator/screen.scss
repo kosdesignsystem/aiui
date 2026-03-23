@@ -54,8 +54,7 @@
 	accent-color: var(--accent-primary);
 }
 
-.password-generator__options,
-.password-generator__saved-list {
+.password-generator__options {
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
@@ -198,11 +197,6 @@
 		opacity: 1;
 		transform: translate(-50%, -50%) scale(1.1);
 	}
-}
-
-.password-generator__tabs {
-	border-top: 1px solid var(--content-border);
-	background: var(--background-primary);
 }
 
 .password-generator__sheet-backdrop {
