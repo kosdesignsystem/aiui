@@ -129,14 +129,14 @@ export function PasswordGeneratorScreen({
 						</section>
 
 						<section className="password-generator__section">
-							<div className="password-generator__length-head">
-								<Text as="span" variant="medium-20" color="primary">
-									Длина пароля
-								</Text>
-								<Text as="span" variant="medium-20" color="primary">
-									{options.length}
-								</Text>
-							</div>
+							<Cell
+								title={<Text variant="medium-18">Длина пароля</Text>}
+								trailing={
+									<Text variant="medium-18" color="primary">
+										{options.length}
+									</Text>
+								}
+							/>
 							<input
 								type="range"
 								min={6}
