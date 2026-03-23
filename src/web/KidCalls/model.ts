@@ -1,20 +1,37 @@
 export type FamilyContact = {
 	id: string;
 	name: string;
-	relation: string;
 	emoji: string;
 	color: string;
 };
 
+export type ChatMessage = {
+	id: string;
+	from: 'child' | 'contact';
+	text: string;
+	time: string;
+};
+
 export const familyContacts: FamilyContact[] = [
-	{ id: 'mom', name: 'Мама', relation: 'Всегда на связи', emoji: '👩', color: '#FF8FA3' },
-	{ id: 'dad', name: 'Папа', relation: 'Позвонить после садика', emoji: '👨', color: '#75A8FF' },
-	{ id: 'grandma', name: 'Бабушка', relation: 'Почитать сказку', emoji: '👵', color: '#9E88FF' },
-	{ id: 'grandpa', name: 'Дедушка', relation: 'Пожелать спокойной ночи', emoji: '👴', color: '#6FD6AE' },
+	{ id: 'mom', name: 'Мама', emoji: '👩', color: '#ff5da2' },
+	{ id: 'dad', name: 'Папа', emoji: '👨', color: '#4da6ff' },
+	{ id: 'grandma', name: 'Бабушка', emoji: '👵', color: '#9f74ff' },
+	{ id: 'petya', name: 'Петя', emoji: '🧒', color: '#55d3ae' },
 ];
 
-export const safetyActions = [
-	{ id: 'voice', label: 'Голосовое', icon: '🎤' },
-	{ id: 'video', label: 'Видео', icon: '📹' },
-	{ id: 'help', label: 'SOS', icon: '🆘' },
-];
+export const chatByContact: Record<string, ChatMessage[]> = {
+	mom: [
+		{ id: 'm1', from: 'contact', text: 'Привет, солнышко! Как дела?', time: '15:12' },
+		{ id: 'm2', from: 'child', text: 'Хорошо 😊', time: '15:13' },
+	],
+	dad: [
+		{ id: 'd1', from: 'contact', text: 'Я уже еду домой', time: '16:45' },
+		{ id: 'd2', from: 'child', text: 'Жду тебя!', time: '16:46' },
+	],
+	grandma: [
+		{ id: 'g1', from: 'contact', text: 'Почитаем сказку вечером?', time: '18:10' },
+	],
+	petya: [
+		{ id: 'p1', from: 'contact', text: 'Пойдём гулять завтра?', time: '14:01' },
+	],
+};
