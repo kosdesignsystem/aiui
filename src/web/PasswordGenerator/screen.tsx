@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import { App } from '../../ui/App';
 import { Button } from '../../ui/Button';
 import { Text } from '../../ui/Fonts';
@@ -56,12 +57,43 @@ export function PasswordGeneratorScreen({
 	onApplySecurityLevel,
 	copyLabel,
 }: PasswordGeneratorScreenProps) {
+	const [isPasswordRevealed, setIsPasswordRevealed] = useState(false);
 	const currentLevel = getSecurityLevel(options);
+
+	const spoilerParticles = useMemo(
+		() =>
+			Array.from({ length: 110 }, (_, index) => ({
+				id: index,
+				x: Math.random() * 100,
+				y: Math.random() * 100,
+				size: Math.random() * 2 + 1,
+				delay: Math.random() * 0.24,
+			})),
+		[password],
+	);
+
+	useEffect(() => {
+		setIsPasswordRevealed(false);
+	}, [password]);
+
 	const levels: Array<{ id: SecurityLevel; label: string }> = [
 		{ id: 'weak', label: 'Слабый' },
 		{ id: 'medium', label: 'Средний' },
 		{ id: 'strong', label: 'Сильный' },
 	];
+
+	const handlePasswordClick = () => {
+		if (!password) {
+			return;
+		}
+
+		if (!isPasswordRevealed) {
+			setIsPasswordRevealed(true);
+			return;
+		}
+
+		onCopyPassword();
+	};
 
 	return (
 		<App>
@@ -138,14 +170,38 @@ export function PasswordGeneratorScreen({
 						<section className="password-generator__result-card">
 							<button
 								type="button"
-								onClick={onCopyPassword}
+								onClick={handlePasswordClick}
 								disabled={!password}
 								className="password-generator__password-touch"
-								aria-label={copyLabel}
+								aria-label={isPasswordRevealed ? copyLabel : 'Показать пароль'}
 							>
-								<Text as="p" variant="regular-20" color="primary" family="mono">
-									{password || 'Нажмите «Сгенерировать новый»'}
-								</Text>
+								{password ? (
+									isPasswordRevealed ? (
+										<Text as="p" variant="regular-20" color="primary" family="mono">
+											{password}
+										</Text>
+									) : (
+										<span className="password-generator__spoiler" aria-hidden="true">
+											{spoilerParticles.map((particle) => (
+												<span
+													key={particle.id}
+													className="password-generator__spoiler-particle"
+													style={{
+														left: `${particle.x}%`,
+														top: `${particle.y}%`,
+														width: `${particle.size}px`,
+														height: `${particle.size}px`,
+														animationDelay: `${particle.delay}s`,
+													}}
+												/>
+											))}
+										</span>
+									)
+								) : (
+									<Text as="p" variant="regular-20" color="primary" family="mono">
+										Нажмите «Сгенерировать новый»
+									</Text>
+								)}
 							</button>
 						</section>
 

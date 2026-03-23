@@ -48,7 +48,7 @@
 	outline-offset: -2px;
 }
 
-.password-generator__options {
+.password-generator__toggle-row {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -63,24 +63,26 @@
 .password-generator__options {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
-	padding: 14px 16px;
+	gap: 4px;
+	padding: 10px;
 	border-radius: 16px;
 	border: 1px solid var(--content-border);
 	background: var(--content-background);
 }
 
-.password-generator__toggle-row {
+.password-generator__toggle-meta {
 	display: flex;
 	align-items: center;
+	min-height: 56px;
 	gap: 14px;
-	padding: 4px 0;
+	padding: 6px;
+	border-radius: 16px;
 }
 
 .password-generator__toggle-meta {
 	display: flex;
 	align-items: center;
-	gap: 14px;
+	gap: 12px;
 	min-width: 0;
 	flex: 1;
 }
@@ -88,8 +90,8 @@
 .password-generator__switch-wrap {
 	position: relative;
 	display: inline-flex;
-	width: 48px;
-	height: 30px;
+	width: 52px;
+	height: 32px;
 	margin-left: auto;
 	flex-shrink: 0;
 }
@@ -105,9 +107,9 @@
 .password-generator__switch-ui {
 	position: relative;
 	display: inline-block;
-	width: 48px;
-	height: 30px;
-	border-radius: 15px;
+	width: 52px;
+	height: 32px;
+	border-radius: 16px;
 	border: 1px solid var(--content-secondary);
 	background: transparent;
 	transition: background-color 0.2s ease;
@@ -116,8 +118,8 @@
 .password-generator__switch-ui::after {
 	content: '';
 	position: absolute;
-	top: 4px;
-	left: 4px;
+	top: 5px;
+	left: 5px;
 	width: 20px;
 	height: 20px;
 	border-radius: 50%;
@@ -136,7 +138,7 @@
 }
 
 .password-generator__switch:checked + .password-generator__switch-ui::after {
-	transform: translateX(18px);
+	transform: translateX(20px);
 	background: var(--content-constant);
 }
 
@@ -149,6 +151,7 @@
 
 .password-generator__password-touch {
 	width: 100%;
+	min-height: 34px;
 	padding: 0;
 	border: 0;
 	background: transparent;
@@ -168,4 +171,34 @@
 	outline: 2px solid var(--accent-primary);
 	outline-offset: 2px;
 	border-radius: 8px;
+}
+
+.password-generator__spoiler {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 30px;
+	border-radius: 8px;
+	background: var(--background-secondary);
+	overflow: hidden;
+}
+
+.password-generator__spoiler-particle {
+	position: absolute;
+	border-radius: 50%;
+	background: var(--content-constant);
+	opacity: 0.92;
+	transform: translate(-50%, -50%);
+	animation: password-spoiler-float 1.9s ease-in-out infinite alternate;
+}
+
+@keyframes password-spoiler-float {
+	0% {
+		opacity: 0.35;
+		transform: translate(-50%, -50%) scale(0.85);
+	}
+	100% {
+		opacity: 1;
+		transform: translate(-50%, -50%) scale(1.1);
+	}
 }
