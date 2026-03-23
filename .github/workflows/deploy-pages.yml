@@ -1,27 +1,31 @@
-name: Deploy to GitHub Pages
+name: Deploy GitHub Pages
 
 on:
   push:
     branches:
       - main
+      - core
+      - member/NC
+      - member/AE
+      - member/MK
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: gh-pages-site
+  cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout source branch
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -29,28 +33,105 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Resolve deployment path
+        shell: bash
+        run: |
+          case "${GITHUB_REF_NAME}" in
+            main)
+              echo "SITE_PATH=" >> "$GITHUB_ENV"
+              echo "VITE_BASE_PATH=/aiui/" >> "$GITHUB_ENV"
+              ;;
+            core)
+              echo "SITE_PATH=core" >> "$GITHUB_ENV"
+              echo "VITE_BASE_PATH=/aiui/core/" >> "$GITHUB_ENV"
+              ;;
+            member/NC)
+              echo "SITE_PATH=nc" >> "$GITHUB_ENV"
+              echo "VITE_BASE_PATH=/aiui/nc/" >> "$GITHUB_ENV"
+              ;;
+            member/AE)
+              echo "SITE_PATH=ae" >> "$GITHUB_ENV"
+              echo "VITE_BASE_PATH=/aiui/ae/" >> "$GITHUB_ENV"
+              ;;
+            member/MK)
+              echo "SITE_PATH=mk" >> "$GITHUB_ENV"
+              echo "VITE_BASE_PATH=/aiui/mk/" >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo "Unsupported branch: ${GITHUB_REF_NAME}" >&2
+              exit 1
+              ;;
+          esac
+
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build site
+        env:
+          VITE_BASE_PATH: ${{ env.VITE_BASE_PATH }}
         run: npm run build
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Checkout gh-pages branch
+        id: gh_pages_checkout
+        continue-on-error: true
+        uses: actions/checkout@v4
         with:
-          path: ./dist
+          ref: gh-pages
+          path: site
+          fetch-depth: 1
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      - name: Initialize gh-pages branch
+        if: steps.gh_pages_checkout.outcome == 'failure'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          mkdir -p site
+          cd site
+          git init
+          git checkout --orphan gh-pages
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Update published files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cd site
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          touch .nojekyll
+
+          if [ -z "${SITE_PATH}" ]; then
+            rsync -av --delete \
+              --exclude ".git/" \
+              --exclude "core/" \
+              --exclude "nc/" \
+              --exclude "ae/" \
+              --exclude "mk/" \
+              ../dist/ ./
+          else
+            mkdir -p "${SITE_PATH}"
+            rsync -av --delete ../dist/ "${SITE_PATH}/"
+          fi
+
+      - name: Commit and push site updates
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cd site
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No site changes to publish"
+            exit 0
+          fi
+
+          TARGET="${SITE_PATH:-root}"
+          git commit -m "Deploy ${GITHUB_REF_NAME} to ${TARGET}"
+          git push origin HEAD:gh-pages
