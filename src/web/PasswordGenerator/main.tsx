@@ -1,5 +1,11 @@
 import { useMemo, useState } from 'react';
-import { defaultPasswordOptions, generatePassword, PasswordOptions } from './model';
+import {
+	defaultPasswordOptions,
+	generatePassword,
+	PasswordOptions,
+	securityLevelPresets,
+	SecurityLevel,
+} from './model';
 import { PasswordGeneratorScreen } from './screen';
 
 export default function PasswordGeneratorMainPage() {
@@ -35,6 +41,10 @@ export default function PasswordGeneratorMainPage() {
 		window.setTimeout(() => setCopyLabel('Копировать'), 1400);
 	};
 
+	const handleApplySecurityLevel = (level: SecurityLevel) => {
+		setOptions(securityLevelPresets[level]);
+	};
+
 	return (
 		<PasswordGeneratorScreen
 			password={password}
@@ -43,6 +53,7 @@ export default function PasswordGeneratorMainPage() {
 			onToggleOption={handleToggleOption}
 			onRegenerate={() => setRefreshKey((prev) => prev + 1)}
 			onCopyPassword={() => void handleCopyPassword()}
+			onApplySecurityLevel={handleApplySecurityLevel}
 			copyLabel={copyLabel}
 		/>
 	);
