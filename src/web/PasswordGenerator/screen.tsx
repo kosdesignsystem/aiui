@@ -105,7 +105,7 @@ export function PasswordGeneratorScreen({
 	return (
 		<App>
 			<div className="password-generator">
-				<Header title="Create password" />
+				<Header title="Password" />
 				<View>
 					<div className="password-generator__content">
 						<section className="password-generator__section">
@@ -184,9 +184,11 @@ export function PasswordGeneratorScreen({
 							>
 								{password ? (
 									isPasswordRevealed ? (
-										<Text as="p" variant="regular-20" color="primary" family="mono">
-											{password}
-										</Text>
+										<span className="password-generator__password-value">
+											<Text as="span" variant="regular-20" color="primary" family="mono">
+												{password}
+											</Text>
+										</span>
 									) : (
 										<span className="password-generator__spoiler" aria-hidden="true">
 											{spoilerParticles.map((particle) => (
@@ -205,9 +207,11 @@ export function PasswordGeneratorScreen({
 										</span>
 									)
 								) : (
-									<Text as="p" variant="regular-20" color="primary" family="mono">
-										Нажмите «Сгенерировать новый»
-									</Text>
+									<span className="password-generator__password-value">
+										<Text as="span" variant="regular-20" color="primary" family="mono">
+											Нажмите «Сгенерировать новый»
+										</Text>
+									</span>
 								)}
 							</button>
 						</section>
