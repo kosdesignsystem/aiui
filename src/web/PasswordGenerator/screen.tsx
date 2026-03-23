@@ -70,9 +70,6 @@ export function PasswordGeneratorScreen({
 				<View>
 					<div className="password-generator__content">
 						<section className="password-generator__section">
-							<Text as="p" variant="medium-20" color="primary">
-								Уровень надежности
-							</Text>
 							<div className="password-generator__security" role="tablist" aria-label="Уровень надежности">
 								{levels.map((level) => {
 									const isActive = currentLevel === level.id;

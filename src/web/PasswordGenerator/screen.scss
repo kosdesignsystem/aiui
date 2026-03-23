@@ -14,7 +14,7 @@
 .password-generator__section {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 12px;
 }
 
 .password-generator__security {
@@ -48,20 +48,11 @@
 	outline-offset: -2px;
 }
 
-.password-generator__range {
-	width: 100%;
-	accent-color: var(--accent-primary);
-}
-
 .password-generator__options {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 8px;
-	padding: 6px 12px;
-	border-radius: 16px;
-	border: 1px solid var(--content-border);
-	background: var(--content-background);
+	gap: 12px;
 }
 
 .password-generator__range {
@@ -72,8 +63,8 @@
 .password-generator__options {
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
-	padding: 6px 12px;
+	gap: 10px;
+	padding: 14px 16px;
 	border-radius: 16px;
 	border: 1px solid var(--content-border);
 	background: var(--content-background);
@@ -82,15 +73,16 @@
 .password-generator__toggle-row {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	gap: 12px;
-	padding: 6px 0;
+	gap: 14px;
+	padding: 4px 0;
 }
 
 .password-generator__toggle-meta {
-	display: inline-flex;
+	display: flex;
 	align-items: center;
-	gap: 12px;
+	gap: 14px;
+	min-width: 0;
+	flex: 1;
 }
 
 .password-generator__switch-wrap {
@@ -98,6 +90,8 @@
 	display: inline-flex;
 	width: 48px;
 	height: 30px;
+	margin-left: auto;
+	flex-shrink: 0;
 }
 
 .password-generator__switch {
