@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DeviceFrame } from './system/DeviceFrame';
 import { ThemeName, ThemeProvider } from './ui/Tokens';
 import { IconButton } from './ui/IconButton';
@@ -14,8 +14,21 @@ import { Button } from './ui/Button';
 
 const screenList = flattenScreens();
 const defaultScreenPath = screenList[0]?.path;
+const mobileMediaQuery = '(max-width: 768px), (hover: none) and (pointer: coarse)';
 
-function AppScreen() {
+function getIsMobileViewport() {
+	if (typeof window === 'undefined' || !window.matchMedia) {
+		return false;
+	}
+
+	return window.matchMedia(mobileMediaQuery).matches;
+}
+
+type AppScreenProps = {
+	isMobile?: boolean;
+};
+
+function AppScreen({ isMobile = false }: AppScreenProps) {
 	const { appId, screenId } = useParams();
 	const match = screenList.find((item) => item.app.id === appId && item.screen.id === screenId);
 
@@ -34,6 +47,10 @@ function AppScreen() {
 
 	const ScreenComponent = match.screen.Component;
 
+	if (isMobile) {
+		return <ScreenComponent />;
+	}
+
 	return (
 		<div className="wrapper">
 			<DeviceFrame>
@@ -46,9 +63,10 @@ function AppScreen() {
 type NavigationProps = {
 	theme: ThemeName;
 	onToggleTheme: () => void;
+	onNavigate?: () => void;
 };
 
-function Navigation({ theme, onToggleTheme }: NavigationProps) {
+function Navigation({ theme, onToggleTheme, onNavigate }: NavigationProps) {
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -94,7 +112,10 @@ function Navigation({ theme, onToggleTheme }: NavigationProps) {
 								<Cell
 									key={`${app.id}-${screen.id}`}
 									variant={isActive ? 'primary' : 'default'}
-									onClick={() => navigate(routePath)}
+									onClick={() => {
+										navigate(routePath);
+										onNavigate?.();
+									}}
 									title={<Text variant="regular-18">{screen.title}</Text>}
 									trailing={
 										<IconButton
@@ -123,43 +144,136 @@ function Navigation({ theme, onToggleTheme }: NavigationProps) {
 
 export default function App() {
 	const [theme, setTheme] = useState<ThemeName>('dark');
+	const [isMobile, setIsMobile] = useState(getIsMobileViewport);
+	const [isNavigationVisible, setIsNavigationVisible] = useState(false);
+	const longPressTimerRef = useRef<number | null>(null);
+
+	useEffect(() => {
+		if (typeof window === 'undefined' || !window.matchMedia) {
+			return undefined;
+		}
+
+		const mediaQuery = window.matchMedia(mobileMediaQuery);
+		const handleChange = (event: MediaQueryListEvent | MediaQueryList) => {
+			setIsMobile(event.matches);
+
+			if (event.matches) {
+				setIsNavigationVisible(false);
+			}
+		};
+
+		handleChange(mediaQuery);
+
+		if (typeof mediaQuery.addEventListener === 'function') {
+			mediaQuery.addEventListener('change', handleChange);
+
+			return () => mediaQuery.removeEventListener('change', handleChange);
+		}
+
+		mediaQuery.addListener(handleChange);
+
+		return () => mediaQuery.removeListener(handleChange);
+	}, []);
+
+	useEffect(() => {
+		if (!isMobile || typeof document === 'undefined') {
+			return undefined;
+		}
+
+		const clearLongPressTimer = () => {
+			if (longPressTimerRef.current !== null) {
+				window.clearTimeout(longPressTimerRef.current);
+				longPressTimerRef.current = null;
+			}
+		};
+
+		const handleTouchStart = (event: TouchEvent) => {
+			if (event.touches.length !== 2 || isNavigationVisible) {
+				clearLongPressTimer();
+				return;
+			}
+
+			clearLongPressTimer();
+			longPressTimerRef.current = window.setTimeout(() => {
+				setIsNavigationVisible(true);
+				longPressTimerRef.current = null;
+			}, 650);
+		};
+
+		const handleTouchMove = (event: TouchEvent) => {
+			if (event.touches.length !== 2) {
+				clearLongPressTimer();
+			}
+		};
+
+		document.addEventListener('touchstart', handleTouchStart, { passive: true });
+		document.addEventListener('touchmove', handleTouchMove, { passive: true });
+		document.addEventListener('touchend', clearLongPressTimer, { passive: true });
+		document.addEventListener('touchcancel', clearLongPressTimer, { passive: true });
+
+		return () => {
+			clearLongPressTimer();
+			document.removeEventListener('touchstart', handleTouchStart);
+			document.removeEventListener('touchmove', handleTouchMove);
+			document.removeEventListener('touchend', clearLongPressTimer);
+			document.removeEventListener('touchcancel', clearLongPressTimer);
+		};
+	}, [isMobile, isNavigationVisible]);
 
 	return (
 		<ThemeProvider theme={theme}>
-			<div className="layout">
-				<Navigation
-					theme={theme}
-					onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
-				/>
+			<div className={`layout${isMobile ? ' layout--mobile' : ''}`}>
+				{isMobile && isNavigationVisible ? (
+					<button
+						className="layout__backdrop"
+						type="button"
+						aria-label="Скрыть навигацию"
+						onClick={() => setIsNavigationVisible(false)}
+					/>
+				) : null}
 
-				<Routes>
-					<Route
-						path="/"
-						element={
-							defaultScreenPath ? (
-								<Navigate to={defaultScreenPath} replace />
-							) : (
-								<div className="screen">
-									<h2>Нет доступных экранов</h2>
-									<p>Добавьте экран в `appRegistry`.</p>
-								</div>
-							)
-						}
+				{(!isMobile || isNavigationVisible) && (
+					<Navigation
+						theme={theme}
+						onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+						onNavigate={() => {
+							if (isMobile) {
+								setIsNavigationVisible(false);
+							}
+						}}
 					/>
-					<Route path="/app/:appId/:screenId" element={<AppScreen />} />
-					<Route
-						path="*"
-						element={
-							defaultScreenPath ? (
-								<Navigate to={defaultScreenPath} replace />
-							) : (
-								<div className="screen">
-									<h2>Маршрут не найден</h2>
-								</div>
-							)
-						}
-					/>
-				</Routes>
+				)}
+
+				<main className="layout__content">
+					<Routes>
+						<Route
+							path="/"
+							element={
+								defaultScreenPath ? (
+									<Navigate to={defaultScreenPath} replace />
+								) : (
+									<div className="screen">
+										<h2>Нет доступных экранов</h2>
+										<p>Добавьте экран в `appRegistry`.</p>
+									</div>
+								)
+							}
+						/>
+						<Route path="/app/:appId/:screenId" element={<AppScreen isMobile={isMobile} />} />
+						<Route
+							path="*"
+							element={
+								defaultScreenPath ? (
+									<Navigate to={defaultScreenPath} replace />
+								) : (
+									<div className="screen">
+										<h2>Маршрут не найден</h2>
+									</div>
+								)
+							}
+						/>
+					</Routes>
+				</main>
 			</div>
 		</ThemeProvider>
 	);
