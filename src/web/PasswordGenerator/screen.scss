@@ -48,59 +48,20 @@
 	outline-offset: -2px;
 }
 
-.password-generator__switch-wrap {
-	position: relative;
-	display: inline-flex;
-	width: 52px;
-	height: 32px;
+.password-generator__range {
+	width: 100%;
+	accent-color: var(--accent-primary);
 }
 
-.password-generator__switch {
-	position: absolute;
-	inset: 0;
-	opacity: 0;
-	margin: 0;
-	cursor: pointer;
-}
-
-.password-generator__switch-ui {
-	position: relative;
-	display: inline-block;
-	width: 52px;
-	height: 32px;
-	border-radius: 16px;
-	border: 1px solid var(--content-secondary);
-	background: transparent;
-	transition: background-color 0.2s ease;
-}
-
-.password-generator__switch-ui::after {
-	content: '';
-	position: absolute;
-	top: 5px;
-	left: 5px;
-	width: 20px;
-	height: 20px;
-	border-radius: 50%;
-	background: var(--content-secondary);
-	transition: transform 0.2s ease;
-}
-
-.password-generator__switch:checked + .password-generator__switch-ui {
-	background: var(--accent-primary);
-	border-color: var(--accent-primary);
-}
-
-.password-generator__switch:checked + .password-generator__switch-ui::after {
-	transform: translateX(20px);
-	background: var(--content-constant);
-}
-
-.password-generator__result-card {
+.password-generator__options {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 8px;
+	padding: 6px 12px;
+	border-radius: 16px;
+	border: 1px solid var(--content-border);
+	background: var(--content-background);
 }
 
 .password-generator__range {
@@ -186,28 +147,31 @@
 }
 
 .password-generator__result-card {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
 	padding: 10px 12px;
 	border-radius: 16px;
 	border: 1px solid var(--content-border);
 	background: var(--content-background);
 }
 
-.password-generator__password-row {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) auto;
-	align-items: center;
-	gap: 8px;
+.password-generator__password-touch {
+	width: 100%;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	text-align: left;
+	cursor: pointer;
 }
 
-.password-generator__password-row .ui-text {
+.password-generator__password-touch .ui-text {
 	overflow-wrap: anywhere;
 }
 
-.password-generator__footer-actions {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 12px;
+.password-generator__password-touch:disabled {
+	cursor: default;
+}
+
+.password-generator__password-touch:focus-visible {
+	outline: 2px solid var(--accent-primary);
+	outline-offset: 2px;
+	border-radius: 8px;
 }

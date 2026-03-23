@@ -2,7 +2,6 @@ import { App } from '../../ui/App';
 import { Button } from '../../ui/Button';
 import { Text } from '../../ui/Fonts';
 import { Header } from '../../ui/Header';
-import { Icon } from '../../ui/Icon';
 import { View } from '../../ui/View';
 import { getSecurityLevel, PasswordOptions, SecurityLevel } from './model';
 import './screen.scss';
@@ -70,10 +69,6 @@ export function PasswordGeneratorScreen({
 				<Header title="Генератор паролей" />
 				<View>
 					<div className="password-generator__content">
-						<Text as="p" variant="medium-24" color="primary">
-							Сгенерировать случайный пароль
-						</Text>
-
 						<section className="password-generator__section">
 							<Text as="p" variant="medium-20" color="primary">
 								Уровень надежности
@@ -144,38 +139,32 @@ export function PasswordGeneratorScreen({
 						</section>
 
 						<section className="password-generator__result-card">
-							<Text as="p" variant="regular-16" color="secondary">
-								Сгенерированный пароль
-							</Text>
-							<div className="password-generator__password-row">
+							<button
+								type="button"
+								onClick={onCopyPassword}
+								disabled={!password}
+								className="password-generator__password-touch"
+								aria-label={copyLabel}
+							>
 								<Text as="p" variant="regular-20" color="primary" family="mono">
 									{password || 'Нажмите «Сгенерировать новый»'}
 								</Text>
-								<Button
-									type="button"
-									size={44}
-									variant="secondary"
-									onClick={onCopyPassword}
-									disabled={!password}
-									aria-label={copyLabel}
-								>
-									<Icon name="copy-outline" width={24} height={24} alt="" aria-hidden="true" />
-								</Button>
-							</div>
+							</button>
 						</section>
 
 						<Button type="button" size={60} variant="success" onClick={onRegenerate}>
 							Сгенерировать новый
 						</Button>
 
-						<div className="password-generator__footer-actions">
-							<Button type="button" size={52} variant="secondary">
-								Отмена
-							</Button>
-							<Button type="button" size={52} variant="primary" disabled>
-								ОК
-							</Button>
-						</div>
+						<Button
+							type="button"
+							size={52}
+							variant="primary"
+							onClick={onCopyPassword}
+							disabled={!password}
+						>
+							{copyLabel}
+						</Button>
 					</div>
 				</View>
 			</div>
