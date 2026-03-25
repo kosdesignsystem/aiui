@@ -1,6 +1,7 @@
 import CallsMainPage from "./Calls/main";
 import CallsMissedPage from "./Calls/missed";
 import CallsSearchPage from "./Calls/search";
+import KidCallsMainPage from "./KidCalls/main";
 
 export type ScreenDefinition = {
   id: string;
@@ -23,6 +24,11 @@ export const appRegistry: AppDefinition[] = [
       { id: "missed", title: "Пропущенные", Component: CallsMissedPage },
       { id: "search", title: "Поиск", Component: CallsSearchPage },
     ],
+  },
+  {
+    id: "KidCalls",
+    title: "Детские звонки",
+    screens: [{ id: "main", title: "Смарт-часы 5+", Component: KidCallsMainPage }],
   },
 ];
 
