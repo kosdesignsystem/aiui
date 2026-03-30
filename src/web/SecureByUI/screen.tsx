@@ -149,30 +149,42 @@ export function SecureByUIScreen() {
 							aria-label="Закрыть информационную шторку"
 						/>
 						<div className="secure-ui__policy-sheet">
-							<div className="secure-ui__policy-icon-wrap" aria-hidden="true">
-								<Icon name="shield-done" width={26} height={26} colorToken="accent-primary" />
+							<div className="secure-ui__policy-head">
+								<div className="secure-ui__policy-icon-wrap" aria-hidden="true">
+									<Icon name="shield-done" width={26} height={26} colorToken="accent-primary" />
+								</div>
+
+								<Text as="p" variant="semiBold-24" color="primary">
+									Файл защищён политикой безопасности
+								</Text>
+
+								<Text as="p" variant="regular-16" color="secondary">
+									Этот файл нельзя отправить в выбранное приложение, так как он содержит
+									конфиденциальные данные.
+								</Text>
 							</div>
-
-							<Text as="p" variant="semiBold-20" color="primary">
-								Файл защищён политикой безопасности
-							</Text>
-
-							<Text as="p" variant="regular-16" color="secondary">
-								Этот файл нельзя отправить в выбранное приложение, так как он содержит
-								конфиденциальные данные.
-							</Text>
 							<Text as="p" variant="regular-16" color="secondary">
 								Выберите безопасный способ отправки:
 							</Text>
 
 							<List>
 								<Cell
-									title={<Text variant="regular-18">📩 Корпоративный Squadus</Text>}
+									title={<Text variant="regular-18">Корпоративный Squadus</Text>}
 									onClick={() => undefined}
+									leading={
+										<Avatar size={48} background="accent-background">
+											<Icon name="message-send" width={22} height={22} colorToken="accent-primary" />
+										</Avatar>
+									}
 								/>
 								<Cell
-									title={<Text variant="regular-18">📧 Корпоративная почта</Text>}
+									title={<Text variant="regular-18">Корпоративная почта</Text>}
 									onClick={() => undefined}
+									leading={
+										<Avatar size={48} background="accent-background">
+											<Icon name="at" width={22} height={22} colorToken="accent-primary" />
+										</Avatar>
+									}
 								/>
 							</List>
 
