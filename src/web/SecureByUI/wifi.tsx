@@ -68,6 +68,7 @@ function WifiRow({ item, onClick }: { item: WifiItem; onClick?: () => void }) {
 export default function SecureByUIWifiPage() {
 	const [isPolicySheetMounted, setIsPolicySheetMounted] = useState(false);
 	const [isPolicySheetVisible, setIsPolicySheetVisible] = useState(false);
+	const [isWifiEnabled, setIsWifiEnabled] = useState(true);
 	const hideTimerRef = useRef<number | null>(null);
 
 	const openPolicySheet = () => {
@@ -102,20 +103,25 @@ export default function SecureByUIWifiPage() {
 			<section className="secure-ui secure-ui__wifi-page" aria-label="Secure by UI - Wi-Fi">
 				<header className="secure-ui__wifi-topbar">
 					<button type="button" className="secure-ui__wifi-nav-button" aria-label="Назад">
-						<Icon name="arrow-left" width={36} height={36} aria-hidden />
+						<Icon name="arrow-left" width={28} height={28} aria-hidden />
 					</button>
-					<Text variant="semiBold-40">Wi‑Fi</Text>
+					<Text variant="semiBold-32">Wi‑Fi</Text>
 					<button type="button" className="secure-ui__wifi-nav-button" aria-label="Обновить">
-						<Icon name="arrow-history" width={36} height={36} aria-hidden />
+						<Icon name="arrow-history" width={28} height={28} aria-hidden />
 					</button>
 				</header>
 
-				<section className="secure-ui__wifi-switch" aria-label="Wi-Fi включён">
-					<Text variant="medium-20">Включено</Text>
-					<div className="secure-ui__wifi-switch-control" aria-hidden>
+				<button
+					type="button"
+					className={`secure-ui__wifi-switch${isWifiEnabled ? ' is-on' : ''}`}
+					aria-label={`Wi-Fi ${isWifiEnabled ? 'включён' : 'выключен'}`}
+					onClick={() => setIsWifiEnabled((value) => !value)}
+				>
+					<Text variant="medium-20">{isWifiEnabled ? 'Включено' : 'Выключено'}</Text>
+					<div className="secure-ui__wifi-switch-control">
 						<div className="secure-ui__wifi-switch-thumb" />
 					</div>
-				</section>
+				</button>
 
 				<div className="secure-ui__wifi-lists">
 					<List>

@@ -37,7 +37,7 @@ export function WifiPolicySheetContent({ onCancel }: WifiPolicySheetContentProps
 					onClick={() => undefined}
 						title={
 							<Text variant="medium-18" color="primary">
-								Kaspersky Secure Network (KI Corp)
+								Kaspersky Secure Network
 							</Text>
 						}
 					subtitle={
