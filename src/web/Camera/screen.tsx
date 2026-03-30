@@ -14,6 +14,14 @@ type FaceOval = {
 	height: number;
 };
 
+type RoiFocus = {
+	left: number;
+	top: number;
+	width: number;
+	height: number;
+	key: number;
+};
+
 type MediaPipeFaceDetection = {
 	boundingBox?: {
 		originX: number;
@@ -136,6 +144,9 @@ export function CameraScreen() {
 	const [latestPhotoUrl, setLatestPhotoUrl] = useState<string | null>(null);
 	const [latestPhotoBlob, setLatestPhotoBlob] = useState<Blob | null>(null);
 	const [isSwitchingCamera, setIsSwitchingCamera] = useState(false);
+	const [roiFocus, setRoiFocus] = useState<RoiFocus | null>(null);
+	const [shouldUseFlash, setShouldUseFlash] = useState(false);
+	const [hasTorch, setHasTorch] = useState(false);
 
 	const [cameraStatus, setCameraStatus] = useState<CameraStatus>('loading');
 	const [cameraError, setCameraError] = useState('');
@@ -228,6 +239,64 @@ export function CameraScreen() {
 			isCancelled = true;
 		};
 	}, [cameraFacing, selectedDeviceId]);
+
+
+	useEffect(() => {
+		const track = streamRef.current?.getVideoTracks()[0];
+		if (!track) {
+			setHasTorch(false);
+			return;
+		}
+
+		const capabilities = track.getCapabilities?.();
+		setHasTorch(Boolean(capabilities && 'torch' in capabilities));
+	}, [cameraStatus, selectedDeviceId]);
+
+	useEffect(() => {
+		if (cameraStatus !== 'ready' || !videoRef.current) {
+			setShouldUseFlash(false);
+			return;
+		}
+
+		let timer: number | null = null;
+		const canvas = document.createElement('canvas');
+		canvas.width = 24;
+		canvas.height = 24;
+		const context = canvas.getContext('2d', { willReadFrequently: true });
+
+		const measureBrightness = () => {
+			if (!videoRef.current || !context || videoRef.current.readyState < 2) {
+				return;
+			}
+
+			context.drawImage(videoRef.current, 0, 0, 24, 24);
+			const pixels = context.getImageData(0, 0, 24, 24).data;
+			let luma = 0;
+			for (let i = 0; i < pixels.length; i += 4) {
+				luma += 0.2126 * pixels[i] + 0.7152 * pixels[i + 1] + 0.0722 * pixels[i + 2];
+			}
+			const avg = luma / (pixels.length / 4);
+			setShouldUseFlash(avg < 72);
+		};
+
+		measureBrightness();
+		timer = window.setInterval(measureBrightness, 1100);
+
+		return () => {
+			if (timer !== null) {
+				window.clearInterval(timer);
+			}
+		};
+	}, [cameraStatus, selectedDeviceId]);
+
+	useEffect(() => {
+		const shouldEnableTorch = flashMode === 'on' || (flashMode === 'auto' && shouldUseFlash);
+		if (!hasTorch) {
+			return;
+		}
+
+		void applyTorchMode(shouldEnableTorch && flashMode === 'on');
+	}, [flashMode, hasTorch, shouldUseFlash]);
 
 	useEffect(() => {
 		if (cameraStatus !== 'ready' || !videoRef.current || !previewRef.current) {
@@ -350,6 +419,45 @@ export function CameraScreen() {
 		setCameraFacing((value) => (value === 'rear' ? 'front' : 'rear'));
 	};
 
+
+	const applyTorchMode = async (enabled: boolean) => {
+		const track = streamRef.current?.getVideoTracks()[0];
+		if (!track) {
+			return;
+		}
+
+		try {
+			await track.applyConstraints({ advanced: [{ torch: enabled }] as MediaTrackConstraintSet[] });
+		} catch {
+			// iOS/Safari may silently ignore torch constraints on unsupported hardware.
+		}
+	};
+
+	const triggerHardwareFlash = async () => {
+		if (!hasTorch) {
+			return;
+		}
+
+		await applyTorchMode(true);
+		await new Promise((resolve) => window.setTimeout(resolve, 120));
+		await applyTorchMode(false);
+	};
+
+	const handlePreviewTapFocus = (event: React.PointerEvent<HTMLElement>) => {
+		if (!previewRef.current) {
+			return;
+		}
+
+		const rect = previewRef.current.getBoundingClientRect();
+		const width = 132;
+		const height = 96;
+		const left = Math.min(Math.max(event.clientX - rect.left - width / 2, 8), rect.width - width - 8);
+		const top = Math.min(Math.max(event.clientY - rect.top - height / 2, 8), rect.height - height - 8);
+
+		setRoiFocus({ left, top, width, height, key: Date.now() });
+		window.setTimeout(() => setRoiFocus(null), 900);
+	};
+
 	const updateThumbnail = (blob: Blob) => {
 		const photoUrl = URL.createObjectURL(blob);
 
@@ -382,12 +490,19 @@ export function CameraScreen() {
 		document.body.removeChild(link);
 	};
 
-	const handleTakePhoto = () => {
+	const handleTakePhoto = async () => {
 		if (!videoRef.current || videoRef.current.readyState < 2) {
 			return;
 		}
 
 		const video = videoRef.current;
+
+		const shouldFlashNow = flashMode === 'on' || (flashMode === 'auto' && shouldUseFlash);
+		if (shouldFlashNow) {
+			await triggerHardwareFlash();
+			setIsShutterActive(true);
+		}
+
 		const canvas = document.createElement('canvas');
 		canvas.width = video.videoWidth;
 		canvas.height = video.videoHeight;
@@ -431,7 +546,7 @@ export function CameraScreen() {
 						<button
 							type="button"
 							aria-label="Переключить вспышку"
-							className={`camera-screen__icon-button${flashMode !== 'off' ? ' is-active' : ''}`}
+							className={`camera-screen__icon-button${flashMode !== 'off' ? ' is-active' : ''}${flashMode === 'auto' && shouldUseFlash ? ' is-warning' : ''}`}
 							onClick={() => setFlashMode((value) => cycleInList(flashModes, value))}
 						>
 							<Icon name="light-mode-100-outline" width={22} height={22} alt="" aria-hidden="true" />
@@ -447,8 +562,15 @@ export function CameraScreen() {
 					</div>
 				</header>
 
-				<section className="camera-screen__preview" ref={previewRef} aria-label="Предпросмотр камеры">
+				<section className="camera-screen__preview" ref={previewRef} aria-label="Предпросмотр камеры" onPointerDown={handlePreviewTapFocus}>
 					<video ref={videoRef} className="camera-screen__video" autoPlay muted playsInline />
+					{roiFocus ? (
+						<div
+							key={roiFocus.key}
+							className="camera-screen__roi-focus"
+							style={{ left: `${roiFocus.left}px`, top: `${roiFocus.top}px`, width: `${roiFocus.width}px`, height: `${roiFocus.height}px` }}
+						/>
+					) : null}
 					{faces.map((face) => (
 						<div
 							key={`${face.id}-${focusAnimationKey}`}
@@ -507,7 +629,7 @@ export function CameraScreen() {
 					) : (
 						<div className="camera-screen__thumb-placeholder" aria-hidden="true" />
 					)}
-					<button type="button" className="camera-screen__shutter" aria-label="Сделать фото" onClick={handleTakePhoto} />
+					<button type="button" className="camera-screen__shutter" aria-label="Сделать фото" onClick={() => void handleTakePhoto()} />
 					<button
 						type="button"
 						className={`camera-screen__switch${isSwitchingCamera ? ' is-rotating' : ''}`}

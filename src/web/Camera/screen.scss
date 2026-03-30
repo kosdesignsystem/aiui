@@ -79,6 +79,21 @@
 }
 
 
+
+.camera-screen__roi-focus {
+	position: absolute;
+	border: 3px solid #ffee3a;
+	border-radius: 14px;
+	background: transparent;
+	pointer-events: none;
+	z-index: 4;
+	animation: face-focus 420ms ease-in-out;
+}
+
+.camera-screen__icon-button.is-warning {
+	box-shadow: 0 0 0 1px rgb(255 214 10 / 58%);
+}
+
 .camera-screen__face-oval {
 	position: absolute;
 	border: 3px solid #ffee3a;
