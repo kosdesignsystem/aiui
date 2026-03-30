@@ -120,12 +120,17 @@ function mapFaceToPreview(
 	const offsetX = (containerWidth - renderWidth) / 2;
 	const offsetY = (containerHeight - renderHeight) / 2;
 
+	const rawWidth = box.width * scale;
+	const rawHeight = box.height * scale;
+	const ovalHeight = rawHeight * 1.12;
+	const ovalWidth = rawWidth * 0.88;
+
 	return {
 		id: '',
-		left: box.x * scale + offsetX,
-		top: box.y * scale + offsetY,
-		width: box.width * scale,
-		height: box.height * scale,
+		left: box.x * scale + offsetX + (rawWidth - ovalWidth) / 2,
+		top: box.y * scale + offsetY - (ovalHeight - rawHeight) / 2,
+		width: ovalWidth,
+		height: ovalHeight,
 	};
 }
 
@@ -148,6 +153,8 @@ export function CameraScreen() {
 	const [isShutterActive, setIsShutterActive] = useState(false);
 	const [advanced, setAdvanced] = useState<AdvancedConfig>(initialAdvanced);
 	const [latestPhotoUrl, setLatestPhotoUrl] = useState<string | null>(null);
+	const [latestPhotoBlob, setLatestPhotoBlob] = useState<Blob | null>(null);
+	const [isSwitchingCamera, setIsSwitchingCamera] = useState(false);
 
 	const [cameraStatus, setCameraStatus] = useState<CameraStatus>('loading');
 	const [cameraError, setCameraError] = useState('');
@@ -352,6 +359,9 @@ export function CameraScreen() {
 	};
 
 	const switchCameraDevice = () => {
+		setIsSwitchingCamera(true);
+		window.setTimeout(() => setIsSwitchingCamera(false), 260);
+
 		if (videoDevices.length > 1) {
 			const currentIndex = videoDevices.findIndex((item) => item.deviceId === selectedDeviceId);
 			const nextDevice = videoDevices[(currentIndex + 1) % videoDevices.length] ?? videoDevices[0];
@@ -362,7 +372,7 @@ export function CameraScreen() {
 		setCameraFacing((value) => (value === 'rear' ? 'front' : 'rear'));
 	};
 
-	const savePhotoToDevice = (blob: Blob) => {
+	const updateThumbnail = (blob: Blob) => {
 		const photoUrl = URL.createObjectURL(blob);
 
 		if (lastPhotoUrlRef.current) {
@@ -370,11 +380,23 @@ export function CameraScreen() {
 		}
 
 		lastPhotoUrlRef.current = photoUrl;
+		setLatestPhotoBlob(blob);
 		setLatestPhotoUrl(photoUrl);
+	};
+
+	const handleSaveLatestPhoto = () => {
+		if (!latestPhotoBlob || !latestPhotoUrl) {
+			return;
+		}
+
+		const shouldSave = window.confirm('Сохранить последний снимок на устройство?');
+		if (!shouldSave) {
+			return;
+		}
 
 		const timestamp = new Date().toISOString().replace(/[.:]/g, '-');
 		const link = document.createElement('a');
-		link.href = photoUrl;
+		link.href = latestPhotoUrl;
 		link.download = `camera-shot-${timestamp}.jpg`;
 		link.rel = 'noopener';
 		document.body.appendChild(link);
@@ -405,7 +427,7 @@ export function CameraScreen() {
 					return;
 				}
 
-				savePhotoToDevice(blob);
+				updateThumbnail(blob);
 				setShotCount((value) => value + 1);
 				setIsShutterActive(true);
 				window.setTimeout(() => setIsShutterActive(false), 170);
@@ -496,12 +518,27 @@ export function CameraScreen() {
 				</div>
 
 				<footer className="camera-screen__controls">
-					<button type="button" className="camera-screen__thumb" aria-label="Открыть последнюю фотографию" title={`Сделано фото: ${shotCount}`}>
-						{latestPhotoUrl ? <img src={latestPhotoUrl} alt="Последний снимок" /> : <Text variant="regular-12" color="primary">{shotCount}</Text>}
-					</button>
+					{latestPhotoUrl ? (
+						<button
+							type="button"
+							className="camera-screen__thumb"
+							aria-label="Сохранить последнюю фотографию"
+							title={`Сделано фото: ${shotCount}`}
+							onClick={handleSaveLatestPhoto}
+						>
+							<img src={latestPhotoUrl} alt="Последний снимок" />
+						</button>
+					) : (
+						<div className="camera-screen__thumb-placeholder" aria-hidden="true" />
+					)}
 					<button type="button" className="camera-screen__shutter" aria-label="Сделать фото" onClick={handleTakePhoto} />
-					<button type="button" className="camera-screen__switch" aria-label="Переключить камеру" onClick={switchCameraDevice}>
-						<Icon name="switches" width={30} height={30} alt="" aria-hidden="true" />
+					<button
+						type="button"
+						className={`camera-screen__switch${isSwitchingCamera ? ' is-rotating' : ''}`}
+						aria-label="Переключить камеру"
+						onClick={switchCameraDevice}
+					>
+						<Icon name="arrow-loop" width={30} height={30} alt="" aria-hidden="true" />
 					</button>
 				</footer>
 

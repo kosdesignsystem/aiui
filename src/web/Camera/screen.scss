@@ -205,6 +205,7 @@
 
 .camera-screen__thumb {
 	border-radius: 18px;
+	padding: 5px;
 	background:
 		radial-gradient(circle at 65% 20%, rgb(255 170 179 / 50%), transparent 28%),
 		linear-gradient(180deg, #67a5cf 0%, #8ea8c2 62%, #20566d 100%);
@@ -220,10 +221,27 @@
 
 
 .camera-screen__thumb img {
-	width: 100%;
-	height: 100%;
+	width: calc(100% - 10px);
+	height: calc(100% - 10px);
 	object-fit: cover;
-	border-radius: 18px;
+	border-radius: 14px;
+	box-shadow: 0 0 0 1px rgb(255 255 255 / 18%);
+}
+
+
+.camera-screen__thumb-placeholder {
+	width: 68px;
+	height: 68px;
+	justify-self: center;
+}
+
+.camera-screen__switch.is-rotating .ui-icon {
+	animation: camera-switch-rotate 260ms ease;
+}
+
+@keyframes camera-switch-rotate {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(180deg); }
 }
 
 .camera-screen__panel {
