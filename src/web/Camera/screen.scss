@@ -83,7 +83,7 @@
 	position: absolute;
 	border: 3px solid #ffee3a;
 	border-radius: 50%;
-	box-shadow: 0 0 0 1px rgb(255 238 58 / 28%);
+	background: transparent;
 	pointer-events: none;
 	z-index: 3;
 	animation: face-focus 420ms ease-in-out;
@@ -171,6 +171,7 @@
 	color: #fff;
 	font-size: 14px;
 	font-weight: 700;
+	padding: 0;
 }
 
 .camera-screen__chip.is-active {
@@ -199,13 +200,13 @@
 	height: 68px;
 	border: none;
 	border-radius: 50%;
+	background: transparent;
 	background: rgb(255 255 255 / 14%);
 	color: #fff;
 }
 
 .camera-screen__thumb {
 	border-radius: 18px;
-	padding: 5px;
 	background:
 		radial-gradient(circle at 65% 20%, rgb(255 170 179 / 50%), transparent 28%),
 		linear-gradient(180deg, #67a5cf 0%, #8ea8c2 62%, #20566d 100%);
@@ -215,17 +216,17 @@
 	width: 92px;
 	height: 92px;
 	border-radius: 50%;
+	background: transparent;
 	border: 8px solid rgb(255 255 255 / 20%);
 	background: #fff;
 }
 
 
 .camera-screen__thumb img {
-	width: calc(100% - 10px);
-	height: calc(100% - 10px);
+	width: 100%;
+	height: 100%;
 	object-fit: cover;
-	border-radius: 14px;
-	box-shadow: 0 0 0 1px rgb(255 255 255 / 18%);
+	border-radius: 18px;
 }
 
 

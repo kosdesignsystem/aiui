@@ -4,15 +4,6 @@ import { Text } from '../../ui/Fonts';
 import { Icon } from '../../ui/Icon';
 import './screen.scss';
 
-type AdvancedConfig = {
-	iso: '100' | '200' | '400' | '800';
-	ev: '-1' | '0' | '+1';
-	timer: 'Off' | '3s' | '10s';
-	hdr: 'Off' | 'Auto' | 'On';
-	grid: '3×3' | '4×4' | 'Off';
-	raw: 'Off' | 'On';
-};
-
 type CameraStatus = 'loading' | 'ready' | 'error';
 
 type FaceOval = {
@@ -60,15 +51,6 @@ const flashModes = ['off', 'auto', 'on'] as const;
 const whiteBalanceModes = ['Авто', 'День', 'Облачно'] as const;
 const ratioModes = ['4:3', '16:9', '1:1'] as const;
 const focusModes = ['AF', 'MF'] as const;
-
-const initialAdvanced: AdvancedConfig = {
-	iso: '100',
-	ev: '0',
-	timer: 'Off',
-	hdr: 'Auto',
-	grid: '3×3',
-	raw: 'Off',
-};
 
 function cycleInList<T extends string>(list: readonly T[], value: T): T {
 	const index = list.indexOf(value);
@@ -151,7 +133,6 @@ export function CameraScreen() {
 	const [cameraFacing, setCameraFacing] = useState<'rear' | 'front'>('rear');
 	const [shotCount, setShotCount] = useState(0);
 	const [isShutterActive, setIsShutterActive] = useState(false);
-	const [advanced, setAdvanced] = useState<AdvancedConfig>(initialAdvanced);
 	const [latestPhotoUrl, setLatestPhotoUrl] = useState<string | null>(null);
 	const [latestPhotoBlob, setLatestPhotoBlob] = useState<Blob | null>(null);
 	const [isSwitchingCamera, setIsSwitchingCamera] = useState(false);
@@ -354,9 +335,6 @@ export function CameraScreen() {
 		};
 	}, [cameraStatus]);
 
-	const updateAdvanced = <K extends keyof AdvancedConfig>(key: K, nextValue: AdvancedConfig[K]) => {
-		setAdvanced((current) => ({ ...current, [key]: nextValue }));
-	};
 
 	const switchCameraDevice = () => {
 		setIsSwitchingCamera(true);
@@ -498,24 +476,22 @@ export function CameraScreen() {
 					</div>
 				</section>
 
-				<div className="camera-screen__quick-settings" role="list">
-					<button type="button" className="camera-screen__chip" role="listitem" onClick={() => setFocusMode((value) => cycleInList(focusModes, value))}>
-						<Icon name="cursor-outline" width={16} height={16} alt="" aria-hidden="true" />
-						<span>{focusMode}</span>
-					</button>
-					<button type="button" className="camera-screen__chip" role="listitem" onClick={() => setWhiteBalance((value) => cycleInList(whiteBalanceModes, value))}>
-						<Icon name="light-mode-50-outline" width={16} height={16} alt="" aria-hidden="true" />
-						<span>{whiteBalance}</span>
-					</button>
-					<button type="button" className={`camera-screen__chip${brightnessBoost ? ' is-active' : ''}`} role="listitem" onClick={() => setBrightnessBoost((value) => !value)}>
-						<Icon name="brightness-outline" width={16} height={16} alt="" aria-hidden="true" />
-						<span>{brightnessBoost ? 'Свет+' : 'Свет'}</span>
-					</button>
-					<button type="button" className="camera-screen__chip" role="listitem" onClick={() => setRatio((value) => cycleInList(ratioModes, value))}>
-						<Icon name="open-in-full" width={16} height={16} alt="" aria-hidden="true" />
-						<span>{ratio}</span>
-					</button>
-				</div>
+				{isPanelOpen ? (
+					<div className="camera-screen__quick-settings" role="list">
+						<button type="button" className="camera-screen__chip" role="listitem" aria-label="Фокус AF/MF" onClick={() => setFocusMode((value) => cycleInList(focusModes, value))}>
+							<Icon name="cursor-outline" width={16} height={16} alt="" aria-hidden="true" />
+						</button>
+						<button type="button" className="camera-screen__chip" role="listitem" aria-label="Баланс белого" onClick={() => setWhiteBalance((value) => cycleInList(whiteBalanceModes, value))}>
+							<Icon name="light-mode-50-outline" width={16} height={16} alt="" aria-hidden="true" />
+						</button>
+						<button type="button" className={`camera-screen__chip${brightnessBoost ? ' is-active' : ''}`} role="listitem" aria-label="Свет" onClick={() => setBrightnessBoost((value) => !value)}>
+							<Icon name="brightness-outline" width={16} height={16} alt="" aria-hidden="true" />
+						</button>
+						<button type="button" className="camera-screen__chip" role="listitem" aria-label="Соотношение сторон" onClick={() => setRatio((value) => cycleInList(ratioModes, value))}>
+							<Icon name="open-in-full" width={16} height={16} alt="" aria-hidden="true" />
+						</button>
+					</div>
+				) : null}
 
 				<footer className="camera-screen__controls">
 					{latestPhotoUrl ? (
@@ -542,48 +518,6 @@ export function CameraScreen() {
 					</button>
 				</footer>
 
-				{isPanelOpen ? (
-					<section className="camera-screen__panel">
-						<Text as="p" variant="medium-16" color="primary">Дополнительные настройки</Text>
-						<Text as="p" variant="regular-12" color="secondary">{cameraLabel}</Text>
-						<div className="camera-screen__panel-grid">
-							<button type="button" className="camera-screen__panel-item" onClick={() => updateAdvanced('iso', cycleInList(['100', '200', '400', '800'], advanced.iso))}>
-								<Icon name="light-mode-0-outline" width={16} height={16} alt="" aria-hidden="true" />
-								<span>ISO</span>
-								<strong>{advanced.iso}</strong>
-							</button>
-							<button type="button" className="camera-screen__panel-item" onClick={() => updateAdvanced('ev', cycleInList(['-1', '0', '+1'], advanced.ev))}>
-								<Icon name="plus-minus" width={16} height={16} alt="" aria-hidden="true" />
-								<span>Эксп.</span>
-								<strong>{advanced.ev}</strong>
-							</button>
-							<button type="button" className="camera-screen__panel-item" onClick={() => updateAdvanced('timer', cycleInList(['Off', '3s', '10s'], advanced.timer))}>
-								<Icon name="clock-outline" width={16} height={16} alt="" aria-hidden="true" />
-								<span>Таймер</span>
-								<strong>{advanced.timer}</strong>
-							</button>
-							<button type="button" className="camera-screen__panel-item" onClick={() => updateAdvanced('hdr', cycleInList(['Off', 'Auto', 'On'], advanced.hdr))}>
-								<Icon name="image-outline" width={16} height={16} alt="" aria-hidden="true" />
-								<span>HDR</span>
-								<strong>{advanced.hdr}</strong>
-							</button>
-							<button type="button" className="camera-screen__panel-item" onClick={() => {
-								const next = cycleInList(['3×3', '4×4', 'Off'], advanced.grid);
-								updateAdvanced('grid', next);
-								setIsGridEnabled(next !== 'Off');
-							}}>
-								<Icon name="apps" width={16} height={16} alt="" aria-hidden="true" />
-								<span>Сетка</span>
-								<strong>{advanced.grid}</strong>
-							</button>
-							<button type="button" className="camera-screen__panel-item" onClick={() => updateAdvanced('raw', cycleInList(['Off', 'On'], advanced.raw))}>
-								<Icon name="file-outline" width={16} height={16} alt="" aria-hidden="true" />
-								<span>RAW</span>
-								<strong>{advanced.raw}</strong>
-							</button>
-						</div>
-					</section>
-				) : null}
 			</div>
 		</App>
 	);
