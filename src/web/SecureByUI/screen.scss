@@ -113,7 +113,7 @@
 	width: 100%;
 	border-radius: 28px 28px 0 0;
 	background: var(--background-modal);
-	padding: 18px 16px 12px;
+	padding: 24px 16px 12px;
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
@@ -142,8 +142,8 @@
 	max-width: 300px;
 }
 .secure-ui__policy-icon-wrap {
-	width: 48px;
-	height: 48px;
+	width: 56px;
+	height: 56px;
 	border-radius: 14px;
 	background: var(--accent-background);
 	display: inline-flex;
@@ -168,4 +168,9 @@
 
 .secure-ui__policy-sheet .ui-cell-shell.is-interactive:hover .ui-cell {
 	background: var(--content-background);
+}
+
+
+.secure-ui__policy-sheet.is-dragging {
+	transition: none;
 }

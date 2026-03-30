@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { TouchEvent, useEffect, useRef, useState } from 'react';
 import { AppIcon } from '../../ui/AppIcon';
 import { Avatar } from '../../ui/Avatar';
 import { Cell } from '../../ui/Cell';
@@ -28,7 +28,10 @@ const SHEET_ANIMATION_MS = 280;
 export function SecureByUIScreen() {
 	const [isMessengerSheetMounted, setIsMessengerSheetMounted] = useState(false);
 	const [isMessengerSheetVisible, setIsMessengerSheetVisible] = useState(false);
+	const [dragOffset, setDragOffset] = useState(0);
+	const [isDraggingSheet, setIsDraggingSheet] = useState(false);
 	const hideTimerRef = useRef<number | null>(null);
+	const touchStartYRef = useRef<number | null>(null);
 
 	const openMessengerSheet = () => {
 		if (hideTimerRef.current !== null) {
@@ -36,17 +39,52 @@ export function SecureByUIScreen() {
 			hideTimerRef.current = null;
 		}
 
+		setDragOffset(0);
+		setIsDraggingSheet(false);
 		setIsMessengerSheetMounted(true);
 		window.requestAnimationFrame(() => setIsMessengerSheetVisible(true));
 	};
 
 	const closeMessengerSheet = () => {
+		setDragOffset(0);
+		setIsDraggingSheet(false);
 		setIsMessengerSheetVisible(false);
 
 		hideTimerRef.current = window.setTimeout(() => {
 			setIsMessengerSheetMounted(false);
 			hideTimerRef.current = null;
 		}, SHEET_ANIMATION_MS);
+	};
+
+	const handleSheetTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+		touchStartYRef.current = event.touches[0]?.clientY ?? null;
+		setIsDraggingSheet(false);
+	};
+
+	const handleSheetTouchMove = (event: TouchEvent<HTMLDivElement>) => {
+		if (touchStartYRef.current === null) {
+			return;
+		}
+
+		const currentY = event.touches[0]?.clientY ?? touchStartYRef.current;
+		const nextOffset = Math.max(0, currentY - touchStartYRef.current);
+
+		if (nextOffset > 0) {
+			setIsDraggingSheet(true);
+			setDragOffset(nextOffset);
+		}
+	};
+
+	const handleSheetTouchEnd = () => {
+		touchStartYRef.current = null;
+
+		if (dragOffset > 90) {
+			closeMessengerSheet();
+			return;
+		}
+
+		setIsDraggingSheet(false);
+		setDragOffset(0);
 	};
 
 	useEffect(() => {
@@ -148,10 +186,17 @@ export function SecureByUIScreen() {
 							onClick={closeMessengerSheet}
 							aria-label="Закрыть информационную шторку"
 						/>
-						<div className="secure-ui__policy-sheet">
+						<div
+							className={`secure-ui__policy-sheet${isDraggingSheet ? ' is-dragging' : ''}`}
+							onTouchStart={handleSheetTouchStart}
+							onTouchMove={handleSheetTouchMove}
+							onTouchEnd={handleSheetTouchEnd}
+							onTouchCancel={handleSheetTouchEnd}
+							style={isDraggingSheet ? { transform: `translateY(${dragOffset}px)` } : undefined}
+						>
 							<div className="secure-ui__policy-head">
 								<div className="secure-ui__policy-icon-wrap" aria-hidden="true">
-									<Icon name="shield-done" width={26} height={26} colorToken="accent-primary" />
+									<Icon name="shield-done" width={30} height={30} colorToken="accent-primary" />
 								</div>
 
 								<Text as="p" variant="semiBold-24" color="primary">
@@ -160,12 +205,9 @@ export function SecureByUIScreen() {
 
 								<Text as="p" variant="regular-16" color="secondary">
 									Этот файл нельзя отправить в выбранное приложение, так как он содержит
-									конфиденциальные данные.
+									конфиденциальные данные. Выберите безопасный способ отправки:
 								</Text>
 							</div>
-							<Text as="p" variant="regular-16" color="secondary">
-								Выберите безопасный способ отправки:
-							</Text>
 
 							<List>
 								<Cell
