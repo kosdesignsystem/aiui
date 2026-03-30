@@ -15,9 +15,29 @@ type AdvancedConfig = {
 
 type CameraStatus = 'loading' | 'ready' | 'error';
 
+type FaceOval = {
+	id: string;
+	left: number;
+	top: number;
+	width: number;
+	height: number;
+};
+
+type FaceDetectorConstructor = new (options?: {
+	fastMode?: boolean;
+	maxDetectedFaces?: number;
+}) => {
+	detect: (input: HTMLVideoElement) => Promise<Array<{ boundingBox: DOMRectReadOnly }>>;
+};
+
+type ExtendedWindow = Window & {
+	FaceDetector?: FaceDetectorConstructor;
+};
+
 const PANEL_PEEK = 34;
 const PANEL_HEIGHT = 236;
 const SWIPE_THRESHOLD = 0.28;
+const FACE_FOCUS_COOLDOWN = 1200;
 
 const flashModes = ['off', 'auto', 'on'] as const;
 const whiteBalanceModes = ['Авто', 'День', 'Облачно'] as const;
@@ -67,9 +87,40 @@ function getPreferredDeviceId(
 	return foundDevice?.deviceId ?? devices[0].deviceId;
 }
 
+function mapFaceToPreview(
+	box: DOMRectReadOnly,
+	video: HTMLVideoElement,
+	preview: HTMLDivElement,
+): FaceOval {
+	const containerWidth = preview.clientWidth;
+	const containerHeight = preview.clientHeight;
+	const sourceWidth = video.videoWidth;
+	const sourceHeight = video.videoHeight;
+
+	if (!containerWidth || !containerHeight || !sourceWidth || !sourceHeight) {
+		return { id: '', left: 0, top: 0, width: 0, height: 0 };
+	}
+
+	const scale = Math.max(containerWidth / sourceWidth, containerHeight / sourceHeight);
+	const renderWidth = sourceWidth * scale;
+	const renderHeight = sourceHeight * scale;
+	const offsetX = (containerWidth - renderWidth) / 2;
+	const offsetY = (containerHeight - renderHeight) / 2;
+
+	return {
+		id: '',
+		left: box.x * scale + offsetX,
+		top: box.y * scale + offsetY,
+		width: box.width * scale,
+		height: box.height * scale,
+	};
+}
+
 export function CameraScreen() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
 	const streamRef = useRef<MediaStream | null>(null);
+	const previewRef = useRef<HTMLDivElement | null>(null);
+	const lastFocusAtRef = useRef(0);
 
 	const [isPanelOpen, setIsPanelOpen] = useState(false);
 	const [dragOffset, setDragOffset] = useState(0);
@@ -90,6 +141,10 @@ export function CameraScreen() {
 	const [cameraError, setCameraError] = useState('');
 	const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
 	const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
+
+	const [faces, setFaces] = useState<FaceOval[]>([]);
+	const [focusAnimationKey, setFocusAnimationKey] = useState(0);
+	const [isFaceDetectionAvailable, setIsFaceDetectionAvailable] = useState(true);
 
 	const hiddenOffset = PANEL_HEIGHT - PANEL_PEEK;
 	const panelOffset = useMemo(() => {
@@ -181,6 +236,75 @@ export function CameraScreen() {
 		};
 	}, [cameraFacing, selectedDeviceId]);
 
+	useEffect(() => {
+		if (cameraStatus !== 'ready' || !videoRef.current || !previewRef.current) {
+			setFaces([]);
+			return;
+		}
+
+		const Detector = (window as ExtendedWindow).FaceDetector;
+
+		if (!Detector) {
+			setIsFaceDetectionAvailable(false);
+			setFaces([]);
+			return;
+		}
+
+		setIsFaceDetectionAvailable(true);
+		const detector = new Detector({ fastMode: true, maxDetectedFaces: 5 });
+		let isCancelled = false;
+		let frameHandle = 0;
+		let lastDetectionAt = 0;
+
+		const runDetection = async (timestamp: number) => {
+			if (isCancelled || !videoRef.current || !previewRef.current) {
+				return;
+			}
+
+			if (timestamp - lastDetectionAt < 230) {
+				frameHandle = window.requestAnimationFrame(runDetection);
+				return;
+			}
+
+			lastDetectionAt = timestamp;
+
+			if (videoRef.current.readyState < 2) {
+				frameHandle = window.requestAnimationFrame(runDetection);
+				return;
+			}
+
+			try {
+				const result = await detector.detect(videoRef.current);
+				if (isCancelled || !videoRef.current || !previewRef.current) {
+					return;
+				}
+
+				const nextFaces = result.map((face, index) => {
+					const mapped = mapFaceToPreview(face.boundingBox, videoRef.current!, previewRef.current!);
+					return { ...mapped, id: `${index}` };
+				});
+
+				setFaces(nextFaces);
+
+				if (nextFaces.length > 0 && timestamp - lastFocusAtRef.current > FACE_FOCUS_COOLDOWN) {
+					setFocusAnimationKey((value) => value + 1);
+					lastFocusAtRef.current = timestamp;
+				}
+			} catch {
+				setFaces([]);
+			}
+
+			frameHandle = window.requestAnimationFrame(runDetection);
+		};
+
+		frameHandle = window.requestAnimationFrame(runDetection);
+
+		return () => {
+			isCancelled = true;
+			window.cancelAnimationFrame(frameHandle);
+		};
+	}, [cameraStatus]);
+
 	const handleDragStart = (clientY: number) => {
 		setDragStartY(clientY);
 		setDragOffset(0);
@@ -261,8 +385,20 @@ export function CameraScreen() {
 					</div>
 				</header>
 
-				<section className="camera-screen__preview" aria-label="Предпросмотр камеры">
+				<section className="camera-screen__preview" ref={previewRef} aria-label="Предпросмотр камеры">
 					<video ref={videoRef} className="camera-screen__video" autoPlay muted playsInline />
+					{faces.map((face) => (
+						<div
+							key={`${face.id}-${focusAnimationKey}`}
+							className="camera-screen__face-oval"
+							style={{
+								left: `${face.left}px`,
+								top: `${face.top}px`,
+								width: `${face.width}px`,
+								height: `${face.height}px`,
+							}}
+						/>
+					))}
 					{cameraStatus === 'loading' ? (
 						<div className="camera-screen__overlay">
 							<Text variant="regular-14" color="primary">
@@ -283,6 +419,11 @@ export function CameraScreen() {
 						<Text variant="regular-12" color="primary">
 							{statusText}
 						</Text>
+						{!isFaceDetectionAvailable ? (
+							<Text as="p" variant="regular-12" color="secondary">
+								FaceDetector API недоступен в этом браузере
+							</Text>
+						) : null}
 					</div>
 				</section>
 

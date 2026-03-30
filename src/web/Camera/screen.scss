@@ -78,12 +78,45 @@
 	background: rgb(47 11 20 / 72%);
 }
 
+
+.camera-screen__face-oval {
+	position: absolute;
+	border: 3px solid #ffee3a;
+	border-radius: 50%;
+	box-shadow: 0 0 0 1px rgb(255 238 58 / 28%);
+	pointer-events: none;
+	z-index: 3;
+	animation: face-focus 420ms ease-in-out;
+	transform-origin: center;
+}
+
+@keyframes face-focus {
+	0% {
+		transform: scale(1);
+		opacity: 1;
+	}
+	22% {
+		transform: scale(0.95);
+		opacity: 0.25;
+	}
+	44% {
+		opacity: 1;
+	}
+	66% {
+		opacity: 0.25;
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
 .camera-screen__flash {
 	position: absolute;
 	inset: 0;
 	background: rgb(255 255 255 / 55%);
 	animation: camera-flash 170ms ease;
-	z-index: 3;
+	z-index: 5;
 }
 
 @keyframes camera-flash {
@@ -107,7 +140,7 @@
 
 .camera-screen__status-pill {
 	position: absolute;
-	z-index: 4;
+	z-index: 6;
 	left: 12px;
 	right: 12px;
 	top: 12px;
