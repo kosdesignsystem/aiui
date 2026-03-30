@@ -218,6 +218,14 @@
 	background: #fff;
 }
 
+
+.camera-screen__thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 18px;
+}
+
 .camera-screen__panel {
 	position: absolute;
 	left: 0;
@@ -237,15 +245,6 @@
 	margin: 0 0 10px;
 }
 
-.camera-screen__panel-handle {
-	display: block;
-	width: 64px;
-	height: 8px;
-	margin: 0 auto 10px;
-	border: none;
-	border-radius: 999px;
-	background: rgb(255 255 255 / 38%);
-}
 
 .camera-screen__panel-grid {
 	display: grid;
