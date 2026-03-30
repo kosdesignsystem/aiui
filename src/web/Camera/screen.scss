@@ -1,0 +1,295 @@
+.camera-screen {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	color: #fff;
+	background: #040512;
+	overflow: hidden;
+	touch-action: manipulation;
+	user-select: none;
+}
+
+.camera-screen__top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px;
+	background: rgb(4 6 22 / 95%);
+}
+
+.camera-screen__top-right {
+	display: flex;
+	gap: 8px;
+}
+
+.camera-screen__icon-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 42px;
+	height: 42px;
+	border: none;
+	border-radius: 12px;
+	background: rgb(255 255 255 / 12%);
+	color: #fff;
+}
+
+.camera-screen__icon-button.is-active {
+	background: rgb(78 121 255 / 70%);
+}
+
+.camera-screen__icon-button .ui-icon {
+	opacity: 0.95;
+}
+
+.camera-screen__preview {
+	position: relative;
+	flex: 1;
+	background: #101226;
+}
+
+
+.camera-screen__video {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	background: #101226;
+}
+
+.camera-screen__overlay {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 16px;
+	text-align: center;
+	background: rgb(6 9 30 / 60%);
+	z-index: 2;
+}
+
+.camera-screen__overlay.is-error {
+	background: rgb(47 11 20 / 72%);
+}
+
+
+.camera-screen__face-oval {
+	position: absolute;
+	border: 3px solid #ffee3a;
+	border-radius: 50%;
+	box-shadow: 0 0 0 1px rgb(255 238 58 / 28%);
+	pointer-events: none;
+	z-index: 3;
+	animation: face-focus 420ms ease-in-out;
+	transform-origin: center;
+}
+
+@keyframes face-focus {
+	0% {
+		transform: scale(1);
+		opacity: 1;
+	}
+	22% {
+		transform: scale(0.95);
+		opacity: 0.25;
+	}
+	44% {
+		opacity: 1;
+	}
+	66% {
+		opacity: 0.25;
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+.camera-screen__flash {
+	position: absolute;
+	inset: 0;
+	background: rgb(255 255 255 / 55%);
+	animation: camera-flash 170ms ease;
+	z-index: 5;
+}
+
+@keyframes camera-flash {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+.camera-screen__grid {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background-image:
+		linear-gradient(to right, rgb(255 255 255 / 30%) 1px, transparent 1px),
+		linear-gradient(to bottom, rgb(255 255 255 / 30%) 1px, transparent 1px);
+	background-size: 33.333% 33.333%;
+}
+
+.camera-screen__status-pill {
+	position: absolute;
+	z-index: 6;
+	left: 12px;
+	right: 12px;
+	top: 12px;
+	padding: 6px 10px;
+	border-radius: 12px;
+	background: rgb(3 6 28 / 62%);
+	backdrop-filter: blur(2px);
+}
+
+.camera-screen__quick-settings {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 8px;
+	padding: 10px 16px;
+	background: rgb(4 6 22 / 95%);
+}
+
+.camera-screen__chip {
+	display: inline-flex;
+	gap: 6px;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	border-radius: 12px;
+	height: 36px;
+	padding: 0 6px;
+	background: rgb(255 255 255 / 10%);
+	color: #fff;
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.camera-screen__chip.is-active {
+	background: rgb(78 121 255 / 70%);
+}
+
+.camera-screen__chip .ui-icon {
+	opacity: 0.75;
+}
+
+.camera-screen__controls {
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	align-items: center;
+	padding: 16px;
+	background: rgb(4 6 22 / 98%);
+}
+
+.camera-screen__thumb,
+.camera-screen__switch {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	justify-self: center;
+	width: 68px;
+	height: 68px;
+	border: none;
+	border-radius: 50%;
+	background: rgb(255 255 255 / 14%);
+	color: #fff;
+}
+
+.camera-screen__thumb {
+	border-radius: 18px;
+	padding: 5px;
+	background:
+		radial-gradient(circle at 65% 20%, rgb(255 170 179 / 50%), transparent 28%),
+		linear-gradient(180deg, #67a5cf 0%, #8ea8c2 62%, #20566d 100%);
+}
+
+.camera-screen__shutter {
+	width: 92px;
+	height: 92px;
+	border-radius: 50%;
+	border: 8px solid rgb(255 255 255 / 20%);
+	background: #fff;
+}
+
+
+.camera-screen__thumb img {
+	width: calc(100% - 10px);
+	height: calc(100% - 10px);
+	object-fit: cover;
+	border-radius: 14px;
+	box-shadow: 0 0 0 1px rgb(255 255 255 / 18%);
+}
+
+
+.camera-screen__thumb-placeholder {
+	width: 68px;
+	height: 68px;
+	justify-self: center;
+}
+
+.camera-screen__switch.is-rotating .ui-icon {
+	animation: camera-switch-rotate 260ms ease;
+}
+
+@keyframes camera-switch-rotate {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(180deg); }
+}
+
+.camera-screen__panel {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 8px 16px 18px;
+	background: linear-gradient(180deg, rgb(11 14 39 / 98%), rgb(5 7 24 / 98%));
+	border-top-left-radius: 24px;
+	border-top-right-radius: 24px;
+	transition: transform 220ms ease;
+	touch-action: none;
+}
+
+.camera-screen__panel > .ui-text {
+	display: block;
+	text-align: center;
+	margin: 0 0 10px;
+}
+
+
+.camera-screen__panel-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
+}
+
+.camera-screen__panel-item {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	align-items: flex-start;
+	justify-content: center;
+	min-height: 60px;
+	padding: 8px;
+	border: none;
+	border-radius: 12px;
+	background: rgb(255 255 255 / 10%);
+	color: #fff;
+	font-size: 12px;
+}
+
+.camera-screen__panel-item .ui-icon {
+	opacity: 0.75;
+}
+
+.camera-screen__panel-item strong {
+	font-size: 13px;
+	font-weight: 700;
+}
