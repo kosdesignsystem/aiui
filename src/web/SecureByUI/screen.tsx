@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AppIcon } from '../../ui/AppIcon';
 import { Avatar } from '../../ui/Avatar';
 import { Cell } from '../../ui/Cell';
@@ -6,6 +6,7 @@ import { Text } from '../../ui/Fonts';
 import { Icon } from '../../ui/Icon';
 import { List } from '../../ui/List';
 import { App } from '../../ui/App';
+import { Button } from '../../ui/Button';
 import './screen.scss';
 
 type ActionItem = {
@@ -22,8 +23,39 @@ const ACTIONS: ActionItem[] = [
 	{ id: 'delete', label: 'Удалить', icon: 'delete-outline' },
 ];
 
+const SHEET_ANIMATION_MS = 280;
+
 export function SecureByUIScreen() {
-	const [isMessengerSheetOpen, setIsMessengerSheetOpen] = useState(false);
+	const [isMessengerSheetMounted, setIsMessengerSheetMounted] = useState(false);
+	const [isMessengerSheetVisible, setIsMessengerSheetVisible] = useState(false);
+	const hideTimerRef = useRef<number | null>(null);
+
+	const openMessengerSheet = () => {
+		if (hideTimerRef.current !== null) {
+			window.clearTimeout(hideTimerRef.current);
+			hideTimerRef.current = null;
+		}
+
+		setIsMessengerSheetMounted(true);
+		window.requestAnimationFrame(() => setIsMessengerSheetVisible(true));
+	};
+
+	const closeMessengerSheet = () => {
+		setIsMessengerSheetVisible(false);
+
+		hideTimerRef.current = window.setTimeout(() => {
+			setIsMessengerSheetMounted(false);
+			hideTimerRef.current = null;
+		}, SHEET_ANIMATION_MS);
+	};
+
+	useEffect(() => {
+		return () => {
+			if (hideTimerRef.current !== null) {
+				window.clearTimeout(hideTimerRef.current);
+			}
+		};
+	}, []);
 
 	return (
 		<App>
@@ -76,7 +108,7 @@ export function SecureByUIScreen() {
 									title={<Text variant="regular-18">{action.label}</Text>}
 									onClick={() => {
 										if (action.id === 'messenger') {
-											setIsMessengerSheetOpen(true);
+											openMessengerSheet();
 										}
 									}}
 									leading={
@@ -103,41 +135,50 @@ export function SecureByUIScreen() {
 					</div>
 				</div>
 
-				{isMessengerSheetOpen ? (
-					<div className="secure-ui__policy-backdrop" role="dialog" aria-modal="true" aria-label="Ограничение отправки">
+				{isMessengerSheetMounted ? (
+					<div
+						className={`secure-ui__policy-backdrop${isMessengerSheetVisible ? ' is-visible' : ''}`}
+						role="dialog"
+						aria-modal="true"
+						aria-label="Ограничение отправки"
+					>
 						<button
 							type="button"
 							className="secure-ui__policy-dismiss"
-							onClick={() => setIsMessengerSheetOpen(false)}
+							onClick={closeMessengerSheet}
 							aria-label="Закрыть информационную шторку"
 						/>
 						<div className="secure-ui__policy-sheet">
-							<Text as="p" variant="medium-20" color="primary">
-								Интерфейс не даёт совершить действие по умолчанию:
+							<div className="secure-ui__policy-icon-wrap" aria-hidden="true">
+								<Icon name="shield-done" width={26} height={26} colorToken="accent-primary" />
+							</div>
+
+							<Text as="p" variant="semiBold-20" color="primary">
+								Файл защищён политикой безопасности
 							</Text>
-							<ul className="secure-ui__policy-list">
-								<li>блокирует отправку в небезопасное приложение</li>
-								<li>показывает причину: «данные защищены политикой»</li>
-								<li>предлагает безопасный канал (корпоративный чат / почта)</li>
-							</ul>
+
+							<Text as="p" variant="regular-16" color="secondary">
+								Этот файл нельзя отправить в выбранное приложение, так как он содержит
+								конфиденциальные данные.
+							</Text>
+							<Text as="p" variant="regular-16" color="secondary">
+								Выберите безопасный способ отправки:
+							</Text>
+
 							<List>
 								<Cell
-									title={<Text variant="regular-18">Корпоративный чат</Text>}
-									leading={
-										<Avatar size={48} background="accent-background">
-											<Icon name="message-send" width={22} height={22} colorToken="accent-primary" />
-										</Avatar>
-									}
+									title={<Text variant="regular-18">📩 Корпоративный Squadus</Text>}
+									onClick={() => undefined}
 								/>
 								<Cell
-									title={<Text variant="regular-18">Корпоративная почта</Text>}
-									leading={
-										<Avatar size={48} background="accent-background">
-											<Icon name="at" width={22} height={22} colorToken="accent-primary" />
-										</Avatar>
-									}
+									title={<Text variant="regular-18">📧 Корпоративная почта</Text>}
+									onClick={() => undefined}
 								/>
 							</List>
+
+							<Button size={52} variant="primary" onClick={closeMessengerSheet}>
+								Отмена
+							</Button>
 						</div>
 					</div>
 				) : null}

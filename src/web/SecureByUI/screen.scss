@@ -91,9 +91,14 @@
 	position: absolute;
 	inset: 0;
 	z-index: 5;
-	background: var(--overlay-dark);
+	background: rgb(0 0 0 / 0%);
 	display: flex;
 	align-items: flex-end;
+	transition: background-color 0.28s ease;
+}
+
+.secure-ui__policy-backdrop.is-visible {
+	background: var(--overlay-dark);
 }
 
 .secure-ui__policy-dismiss {
@@ -112,17 +117,34 @@
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
+	transform: translateY(100%);
+	opacity: 0;
+	transition:
+		transform 0.28s ease,
+		opacity 0.28s ease;
 }
 
-.secure-ui__policy-list {
+.secure-ui__policy-backdrop.is-visible .secure-ui__policy-sheet {
+	transform: translateY(0);
+	opacity: 1;
+}
+
+.secure-ui__policy-icon-wrap {
+	width: 48px;
+	height: 48px;
+	border-radius: 14px;
+	background: var(--accent-background);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.secure-ui__policy-sheet > .ui-text:first-of-type {
 	margin: 0;
-	padding-left: 20px;
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	color: var(--content-primary);
-	font-size: 16px;
-	line-height: 22px;
+}
+
+.secure-ui__policy-sheet .ui-text {
+	margin: 0;
 }
 
 .secure-ui__policy-sheet .ui-list {
@@ -130,4 +152,8 @@
 	border: 1px solid var(--content-border);
 	border-radius: 18px;
 	background: var(--background-primary);
+}
+
+.secure-ui__policy-sheet .ui-cell-shell.is-interactive:hover .ui-cell {
+	background: var(--content-background);
 }
