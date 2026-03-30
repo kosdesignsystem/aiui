@@ -205,9 +205,13 @@ export function SecureByUIScreen() {
 
 								<Text as="p" variant="regular-16" color="secondary">
 									Этот файл нельзя отправить в выбранное приложение, так как он содержит
-									конфиденциальные данные. Выберите безопасный способ отправки:
+									конфиденциальные данные.
 								</Text>
 							</div>
+
+							<Text as="p" variant="regular-16" color="secondary">
+								Выберите безопасный способ отправки:
+							</Text>
 
 							<List>
 								<Cell
