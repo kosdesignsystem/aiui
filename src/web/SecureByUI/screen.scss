@@ -101,6 +101,11 @@
 	background: var(--overlay-dark);
 }
 
+.secure-ui__policy-backdrop--static {
+	position: absolute;
+	pointer-events: auto;
+}
+
 .secure-ui__policy-dismiss {
 	position: absolute;
 	inset: 0;
@@ -151,9 +156,6 @@
 	justify-content: center;
 }
 
-.secure-ui__policy-sheet > .ui-text:first-of-type {
-	margin: 0;
-}
 
 .secure-ui__policy-sheet .ui-text {
 	margin: 0;

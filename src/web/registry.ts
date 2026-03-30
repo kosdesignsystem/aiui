@@ -3,6 +3,7 @@ import CallsMissedPage from './Calls/missed';
 import CallsSearchPage from './Calls/search';
 import PasswordGeneratorMainPage from './PasswordGenerator/main';
 import SecureByUIMainPage from './SecureByUI/main';
+import SecureByUIPolicyPage from './SecureByUI/policy';
 
 export type ScreenDefinition = {
   id: string;
@@ -29,7 +30,10 @@ export const appRegistry: AppDefinition[] = [
   {
     id: 'SecureByUI',
     title: 'Secure by UI',
-    screens: [{ id: 'main', title: 'Главный экран', Component: SecureByUIMainPage }],
+    screens: [
+      { id: 'main', title: 'Главный экран', Component: SecureByUIMainPage },
+      { id: 'policy', title: 'Шторка политики', Component: SecureByUIPolicyPage },
+    ],
   },
   {
     id: 'PasswordGenerator',
