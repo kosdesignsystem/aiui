@@ -42,7 +42,7 @@ export function WifiPolicySheetContent({ onCancel }: WifiPolicySheetContentProps
 					}
 					subtitle={
 						<Text variant="regular-14" color="accent">
-							Подключено
+							Безопасная сеть
 						</Text>
 					}
 					leading={
