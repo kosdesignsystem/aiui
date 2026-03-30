@@ -146,6 +146,13 @@
 .secure-ui__policy-head .ui-text {
 	max-width: 100%;
 }
+
+.secure-ui__policy-copy {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
 .secure-ui__policy-icon-wrap {
 	width: 56px;
 	height: 56px;
