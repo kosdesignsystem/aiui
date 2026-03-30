@@ -27,31 +27,31 @@ function WifiRow({ item }: { item: WifiItem }) {
 	return (
 		<Cell
 			onClick={() => undefined}
-			title={<Text variant="regular-24">{item.name}</Text>}
+			title={<Text variant="medium-18">{item.name}</Text>}
 			subtitle={
 				item.isConnected ? (
-					<Text variant="regular-16" color="accent">
+					<Text variant="regular-14" color="accent">
 						Подключено
 					</Text>
 				) : undefined
 			}
 			leading={
 				<span className="secure-ui__wifi-leading">
-					<Icon
-						name={item.secured ? 'wifi-lock' : 'wifi'}
-						width={34}
-						height={34}
-						colorToken={item.isConnected ? 'accent-primary' : 'content-tertiary'}
-						aria-hidden
-					/>
-				</span>
-			}
-			trailing={
-				<Avatar size={56} background="background-primary">
-					<Icon name="status-info-outline" width={30} height={30} colorToken="content-primary" aria-hidden />
-				</Avatar>
-			}
-		/>
+						<Icon
+							name={item.secured ? 'wifi-lock' : 'wifi'}
+							width={28}
+							height={28}
+							colorToken={item.isConnected ? 'accent-primary' : 'content-tertiary'}
+							aria-hidden
+						/>
+					</span>
+				}
+				trailing={
+					<Avatar size={44} background="background-primary">
+						<Icon name="status-info-outline" width={22} height={22} colorToken="content-primary" aria-hidden />
+					</Avatar>
+				}
+			/>
 	);
 }
 
@@ -70,7 +70,7 @@ export default function SecureByUIWifiPage() {
 				</header>
 
 				<section className="secure-ui__wifi-switch" aria-label="Wi-Fi включён">
-					<Text variant="regular-24">Включено</Text>
+					<Text variant="medium-20">Включено</Text>
 					<div className="secure-ui__wifi-switch-control" aria-hidden>
 						<div className="secure-ui__wifi-switch-thumb" />
 					</div>
@@ -81,7 +81,7 @@ export default function SecureByUIWifiPage() {
 						<WifiRow item={{ id: 'corp', name: 'KI Corp', secured: true, isConnected: true }} />
 					</List>
 
-					<Text variant="regular-16" color="secondary">
+					<Text variant="regular-20" color="secondary">
 						Доступные сети
 					</Text>
 
