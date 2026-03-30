@@ -138,13 +138,13 @@
 .secure-ui__policy-head {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
-	text-align: center;
+	align-items: flex-start;
+	text-align: left;
 	gap: 10px;
 }
 
 .secure-ui__policy-head .ui-text {
-	max-width: 300px;
+	max-width: 100%;
 }
 .secure-ui__policy-icon-wrap {
 	width: 56px;
