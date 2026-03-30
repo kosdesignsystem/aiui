@@ -23,15 +23,35 @@ type FaceOval = {
 	height: number;
 };
 
-type FaceDetectorConstructor = new (options?: {
-	fastMode?: boolean;
-	maxDetectedFaces?: number;
-}) => {
-	detect: (input: HTMLVideoElement) => Promise<Array<{ boundingBox: DOMRectReadOnly }>>;
+type MediaPipeFaceDetection = {
+	boundingBox?: {
+		originX: number;
+		originY: number;
+		width: number;
+		height: number;
+	};
 };
 
-type ExtendedWindow = Window & {
-	FaceDetector?: FaceDetectorConstructor;
+type MediaPipeFaceDetector = {
+	detectForVideo: (video: HTMLVideoElement, timestampMs: number) => { detections: MediaPipeFaceDetection[] };
+	close?: () => void;
+};
+
+type MediaPipeVisionModule = {
+	FilesetResolver: {
+		forVisionTasks: (wasmPath: string) => Promise<unknown>;
+	};
+	FaceDetector: {
+		createFromOptions: (
+			vision: unknown,
+			options: {
+				baseOptions: { modelAssetPath: string; delegate?: 'GPU' | 'CPU' };
+				runningMode: 'VIDEO';
+				minDetectionConfidence?: number;
+				minSuppressionThreshold?: number;
+			},
+		) => Promise<MediaPipeFaceDetector>;
+	};
 };
 
 const PANEL_PEEK = 34;
@@ -242,22 +262,13 @@ export function CameraScreen() {
 			return;
 		}
 
-		const Detector = (window as ExtendedWindow).FaceDetector;
-
-		if (!Detector) {
-			setIsFaceDetectionAvailable(false);
-			setFaces([]);
-			return;
-		}
-
-		setIsFaceDetectionAvailable(true);
-		const detector = new Detector({ fastMode: true, maxDetectedFaces: 5 });
 		let isCancelled = false;
 		let frameHandle = 0;
+		let detector: MediaPipeFaceDetector | null = null;
 		let lastDetectionAt = 0;
 
-		const runDetection = async (timestamp: number) => {
-			if (isCancelled || !videoRef.current || !previewRef.current) {
+		const runDetection = (timestamp: number) => {
+			if (isCancelled || !videoRef.current || !previewRef.current || !detector) {
 				return;
 			}
 
@@ -274,15 +285,27 @@ export function CameraScreen() {
 			}
 
 			try {
-				const result = await detector.detect(videoRef.current);
-				if (isCancelled || !videoRef.current || !previewRef.current) {
-					return;
-				}
+				const output = detector.detectForVideo(videoRef.current, timestamp);
+				const nextFaces = (output.detections ?? [])
+					.map((face, index) => {
+						if (!face.boundingBox || !videoRef.current || !previewRef.current) {
+							return null;
+						}
 
-				const nextFaces = result.map((face, index) => {
-					const mapped = mapFaceToPreview(face.boundingBox, videoRef.current!, previewRef.current!);
-					return { ...mapped, id: `${index}` };
-				});
+						const mapped = mapFaceToPreview(
+							new DOMRectReadOnly(
+								face.boundingBox.originX,
+								face.boundingBox.originY,
+								face.boundingBox.width,
+								face.boundingBox.height,
+							),
+							videoRef.current,
+							previewRef.current,
+						);
+
+						return { ...mapped, id: `${index}` };
+					})
+					.filter((face): face is FaceOval => face !== null);
 
 				setFaces(nextFaces);
 
@@ -297,11 +320,45 @@ export function CameraScreen() {
 			frameHandle = window.requestAnimationFrame(runDetection);
 		};
 
-		frameHandle = window.requestAnimationFrame(runDetection);
+		const initMediaPipe = async () => {
+			try {
+				const visionModule = (await import(
+					/* @vite-ignore */ 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14'
+				)) as MediaPipeVisionModule;
+				const vision = await visionModule.FilesetResolver.forVisionTasks(
+					'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm',
+				);
+
+				detector = await visionModule.FaceDetector.createFromOptions(vision, {
+					baseOptions: {
+						modelAssetPath:
+							'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/latest/blaze_face_short_range.tflite',
+						delegate: 'GPU',
+					},
+					runningMode: 'VIDEO',
+					minDetectionConfidence: 0.52,
+					minSuppressionThreshold: 0.3,
+				});
+
+				if (isCancelled) {
+					detector?.close?.();
+					return;
+				}
+
+				setIsFaceDetectionAvailable(true);
+				frameHandle = window.requestAnimationFrame(runDetection);
+			} catch {
+				setFaces([]);
+				setIsFaceDetectionAvailable(false);
+			}
+		};
+
+		void initMediaPipe();
 
 		return () => {
 			isCancelled = true;
 			window.cancelAnimationFrame(frameHandle);
+			detector?.close?.();
 		};
 	}, [cameraStatus]);
 
