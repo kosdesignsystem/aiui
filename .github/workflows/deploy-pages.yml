@@ -86,6 +86,26 @@ jobs:
           REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           SITE_REPO_DIR="${RUNNER_TEMP}/gh-pages-site"
 
+          sync_site_dir() {
+            if [ -z "${SITE_PATH}" ]; then
+              find . -mindepth 1 -maxdepth 1 \
+                ! -name ".git" \
+                ! -name ".nojekyll" \
+                ! -name "core" \
+                ! -name "nc" \
+                ! -name "ae" \
+                ! -name "mk" \
+                -exec rm -rf {} +
+              rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" ./
+            else
+              rm -rf "${SITE_PATH}"
+              mkdir -p "${SITE_PATH}"
+              rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" "${SITE_PATH}/"
+            fi
+
+            touch .nojekyll
+          }
+
           rm -rf "${SITE_REPO_DIR}"
 
           if git ls-remote --exit-code --heads "${REPO_URL}" gh-pages >/dev/null 2>&1; then
@@ -101,21 +121,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if [ -z "${SITE_PATH}" ]; then
-            rsync -av --delete \
-              --exclude ".git/" \
-              --exclude ".nojekyll" \
-              --exclude "core/" \
-              --exclude "nc/" \
-              --exclude "ae/" \
-              --exclude "mk/" \
-              "${GITHUB_WORKSPACE}/dist/" ./
-          else
-            mkdir -p "${SITE_PATH}"
-            rsync -av --delete "${GITHUB_WORKSPACE}/dist/" "${SITE_PATH}/"
-          fi
-
-          touch .nojekyll
+          sync_site_dir
           git add -A
 
           if git diff --cached --quiet; then
@@ -137,6 +143,26 @@ jobs:
           SITE_REPO_DIR="${RUNNER_TEMP}/gh-pages-site"
           cd "${SITE_REPO_DIR}"
 
+          sync_site_dir() {
+            if [ -z "${SITE_PATH}" ]; then
+              find . -mindepth 1 -maxdepth 1 \
+                ! -name ".git" \
+                ! -name ".nojekyll" \
+                ! -name "core" \
+                ! -name "nc" \
+                ! -name "ae" \
+                ! -name "mk" \
+                -exec rm -rf {} +
+              rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" ./
+            else
+              rm -rf "${SITE_PATH}"
+              mkdir -p "${SITE_PATH}"
+              rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" "${SITE_PATH}/"
+            fi
+
+            touch .nojekyll
+          }
+
           for attempt in 1 2 3 4 5; do
             if git push origin HEAD:gh-pages; then
               exit 0
@@ -148,6 +174,15 @@ jobs:
             fi
 
             git fetch origin gh-pages
-            git rebase origin/gh-pages
+            git reset --hard origin/gh-pages
+            sync_site_dir
+            git add -A
+
+            if git diff --cached --quiet; then
+              echo "No changes to redeploy after refreshing gh-pages"
+              exit 0
+            fi
+
+            git commit -m "Deploy ${GITHUB_REF_NAME} to ${SITE_LABEL}"
             sleep $((attempt * 5))
           done

@@ -130,7 +130,6 @@ export function CameraScreen() {
 	const previewRef = useRef<HTMLDivElement | null>(null);
 	const lastFocusAtRef = useRef(0);
 	const lastPhotoUrlRef = useRef<string | null>(null);
-	const cameraRequestIdRef = useRef(0);
 
 	const [isPanelOpen, setIsPanelOpen] = useState(false);
 	const [flashMode, setFlashMode] = useState<(typeof flashModes)[number]>('off');
@@ -145,7 +144,6 @@ export function CameraScreen() {
 	const [latestPhotoUrl, setLatestPhotoUrl] = useState<string | null>(null);
 	const [latestPhotoBlob, setLatestPhotoBlob] = useState<Blob | null>(null);
 	const [isSwitchingCamera, setIsSwitchingCamera] = useState(false);
-	const [isCameraSwitchingBusy, setIsCameraSwitchingBusy] = useState(false);
 	const [roiFocus, setRoiFocus] = useState<RoiFocus | null>(null);
 	const [shouldUseFlash, setShouldUseFlash] = useState(false);
 	const [hasTorch, setHasTorch] = useState(false);
@@ -187,7 +185,6 @@ export function CameraScreen() {
 
 	useEffect(() => {
 		if (!navigator.mediaDevices?.getUserMedia) {
-			setIsCameraSwitchingBusy(false);
 			setCameraStatus('error');
 			setCameraError('Браузер не поддерживает getUserMedia.');
 			return;
@@ -196,7 +193,6 @@ export function CameraScreen() {
 		let isCancelled = false;
 
 		const startCamera = async () => {
-			const requestId = ++cameraRequestIdRef.current;
 			setCameraStatus('loading');
 			setCameraError('');
 
@@ -210,7 +206,7 @@ export function CameraScreen() {
 						: { facingMode: { ideal: cameraFacing === 'front' ? 'user' : 'environment' } },
 				});
 
-				if (isCancelled || requestId !== cameraRequestIdRef.current) {
+				if (isCancelled) {
 					stream.getTracks().forEach((track) => track.stop());
 					return;
 				}
@@ -225,23 +221,10 @@ export function CameraScreen() {
 				const devices = await navigator.mediaDevices.enumerateDevices();
 				const cameras = devices.filter((item) => item.kind === 'videoinput');
 				setVideoDevices(cameras);
-
-				if (!selectedDeviceId) {
-					const preferred = getPreferredDeviceId(cameras, cameraFacing, null);
-					if (preferred) {
-						setSelectedDeviceId(preferred);
-					}
-				}
-
+				setSelectedDeviceId((current) => getPreferredDeviceId(cameras, cameraFacing, current));
 				setCameraStatus('ready');
-				setIsCameraSwitchingBusy(false);
 			} catch (error) {
-				if (requestId !== cameraRequestIdRef.current) {
-					return;
-				}
-
 				setCameraStatus('error');
-				setIsCameraSwitchingBusy(false);
 				setCameraError(
 					error instanceof Error
 						? `Нет доступа к камере: ${error.message}`
@@ -399,7 +382,7 @@ export function CameraScreen() {
 					minSuppressionThreshold: 0.3,
 				});
 
-				if (isCancelled || requestId !== cameraRequestIdRef.current) {
+				if (isCancelled) {
 					detector?.close?.();
 					return;
 				}
@@ -423,28 +406,13 @@ export function CameraScreen() {
 
 
 	const switchCameraDevice = () => {
-		if (isCameraSwitchingBusy) {
-			return;
-		}
-
-		setIsCameraSwitchingBusy(true);
 		setIsSwitchingCamera(true);
 		window.setTimeout(() => setIsSwitchingCamera(false), 260);
 
 		if (videoDevices.length > 1) {
-			setSelectedDeviceId((current) => {
-				if (!videoDevices.length) {
-					return current;
-				}
-
-				if (!current) {
-					return videoDevices[0].deviceId;
-				}
-
-				const currentIndex = videoDevices.findIndex((item) => item.deviceId === current);
-				const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % videoDevices.length;
-				return videoDevices[nextIndex].deviceId;
-			});
+			const currentIndex = videoDevices.findIndex((item) => item.deviceId === selectedDeviceId);
+			const nextDevice = videoDevices[(currentIndex + 1) % videoDevices.length] ?? videoDevices[0];
+			setSelectedDeviceId(nextDevice.deviceId);
 			return;
 		}
 
@@ -667,7 +635,6 @@ export function CameraScreen() {
 						className={`camera-screen__switch${isSwitchingCamera ? ' is-rotating' : ''}`}
 						aria-label="Переключить камеру"
 						onClick={switchCameraDevice}
-						disabled={isCameraSwitchingBusy}
 					>
 						<Icon name="arrow-loop" width={30} height={30} alt="" aria-hidden="true" />
 					</button>
