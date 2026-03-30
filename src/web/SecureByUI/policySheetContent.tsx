@@ -27,9 +27,11 @@ export function SecurePolicySheetContent({ onCancel }: SecurePolicySheetContentP
 				</Text>
 			</div>
 
-			<Text as="p" variant="regular-16" color="secondary">
-				Выберите безопасный способ отправки:
-			</Text>
+			<div className="secure-ui__policy-intro-gap">
+				<Text as="p" variant="regular-16" color="secondary">
+					Выберите безопасный способ отправки:
+				</Text>
+			</div>
 
 			<List>
 				<Cell

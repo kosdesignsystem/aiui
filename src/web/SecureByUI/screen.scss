@@ -161,11 +161,20 @@
 	margin: 0;
 }
 
+.secure-ui__policy-intro-gap {
+	margin-top: 6px;
+}
+
 .secure-ui__policy-sheet .ui-list {
-	padding: 8px;
-	border: 1px solid var(--content-border);
-	border-radius: 18px;
-	background: var(--background-primary);
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+}
+
+.secure-ui__policy-sheet .ui-cell {
+	min-height: 68px;
+	padding: 6px 4px;
 }
 
 .secure-ui__policy-sheet .ui-cell-shell.is-interactive:hover .ui-cell {
