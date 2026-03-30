@@ -185,3 +185,116 @@
 .secure-ui__policy-sheet.is-dragging {
 	transition: none;
 }
+
+.secure-ui__wifi-page {
+	padding: 6px 0 20px;
+	background: var(--background-secondary);
+	overflow-y: auto;
+}
+
+.secure-ui__wifi-topbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 16px;
+	min-height: 64px;
+}
+
+.secure-ui__wifi-nav-button {
+	width: 40px;
+	height: 40px;
+	border: 0;
+	background: transparent;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--content-primary);
+}
+
+.secure-ui__wifi-switch {
+	margin: 26px 16px 20px;
+	padding: 10px 22px;
+	min-height: 86px;
+	border-radius: 24px;
+	background: var(--content-background);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.secure-ui__wifi-switch-control {
+	width: 82px;
+	height: 52px;
+	background: var(--accent-primary);
+	border-radius: 999px;
+	padding: 4px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.secure-ui__wifi-switch-thumb {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: var(--background-primary);
+}
+
+.secure-ui__wifi-lists {
+	padding: 0 16px 22px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.secure-ui__wifi-lists .ui-list {
+	background: transparent;
+	border: 0;
+	padding: 0;
+}
+
+.secure-ui__wifi-lists .ui-list__content {
+	gap: 14px;
+}
+
+.secure-ui__wifi-lists .ui-cell {
+	min-height: 76px;
+	padding: 0;
+	gap: 14px;
+}
+
+.secure-ui__wifi-lists .ui-cell__leading {
+	width: 68px;
+	display: flex;
+	justify-content: flex-start;
+}
+
+.secure-ui__wifi-lists .ui-cell__trailing {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.secure-ui__wifi-lists .ui-cell-shell.is-interactive:hover .ui-cell {
+	background: var(--content-background);
+	border-radius: 16px;
+}
+
+.secure-ui__wifi-leading {
+	width: 48px;
+	height: 48px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.secure-ui__wifi-more {
+	border: 0;
+	background: transparent;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	height: 48px;
+	color: var(--content-primary);
+	align-self: center;
+}

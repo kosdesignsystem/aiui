@@ -4,6 +4,7 @@ import CallsSearchPage from './Calls/search';
 import PasswordGeneratorMainPage from './PasswordGenerator/main';
 import SecureByUIMainPage from './SecureByUI/main';
 import SecureByUIPolicyPage from './SecureByUI/policy';
+import SecureByUIWifiPage from './SecureByUI/wifi';
 
 export type ScreenDefinition = {
   id: string;
@@ -33,6 +34,7 @@ export const appRegistry: AppDefinition[] = [
     screens: [
       { id: 'main', title: 'Главный экран', Component: SecureByUIMainPage },
       { id: 'policy', title: 'Шторка политики', Component: SecureByUIPolicyPage },
+      { id: 'wifi', title: 'Wi‑Fi экран', Component: SecureByUIWifiPage },
     ],
   },
   {
