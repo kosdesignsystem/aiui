@@ -35,11 +35,11 @@ export function WifiPolicySheetContent({ onCancel }: WifiPolicySheetContentProps
 			<List>
 				<Cell
 					onClick={() => undefined}
-					title={
-						<Text variant="medium-18" color="primary">
-							Подключиться к Kaspersky Secure Network (KI Corp)
-						</Text>
-					}
+						title={
+							<Text variant="medium-18" color="primary">
+								Kaspersky Secure Network (KI Corp)
+							</Text>
+						}
 					subtitle={
 						<Text variant="regular-14" color="accent">
 							Безопасная сеть
