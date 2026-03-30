@@ -1,7 +1,10 @@
-import CallsMainPage from "./Calls/main";
-import CallsMissedPage from "./Calls/missed";
-import CallsSearchPage from "./Calls/search";
-import PasswordGeneratorMainPage from "./PasswordGenerator/main";
+import CallsMainPage from './Calls/main';
+import CallsMissedPage from './Calls/missed';
+import CallsSearchPage from './Calls/search';
+import PasswordGeneratorMainPage from './PasswordGenerator/main';
+import SecureByUIMainPage from './SecureByUI/main';
+import SecureByUIPolicyPage from './SecureByUI/policy';
+import SecureByUIWifiPage from './SecureByUI/wifi';
 
 export type ScreenDefinition = {
   id: string;
@@ -17,18 +20,27 @@ export type AppDefinition = {
 
 export const appRegistry: AppDefinition[] = [
   {
-    id: "Calls",
-    title: "Звонки",
+    id: 'Calls',
+    title: 'Звонки',
     screens: [
-      { id: "main", title: "Главный экран", Component: CallsMainPage },
-      { id: "missed", title: "Пропущенные", Component: CallsMissedPage },
-      { id: "search", title: "Поиск", Component: CallsSearchPage },
+      { id: 'main', title: 'Главный экран', Component: CallsMainPage },
+      { id: 'missed', title: 'Пропущенные', Component: CallsMissedPage },
+      { id: 'search', title: 'Поиск', Component: CallsSearchPage },
     ],
   },
   {
-    id: "PasswordGenerator",
-    title: "Генератор паролей",
-    screens: [{ id: "main", title: "Главный экран", Component: PasswordGeneratorMainPage }],
+    id: 'SecureByUI',
+    title: 'Secure by UI',
+    screens: [
+      { id: 'main', title: 'Главный экран', Component: SecureByUIMainPage },
+      { id: 'policy', title: 'Шторка политики', Component: SecureByUIPolicyPage },
+      { id: 'wifi', title: 'Wi‑Fi экран', Component: SecureByUIWifiPage },
+    ],
+  },
+  {
+    id: 'PasswordGenerator',
+    title: 'Генератор паролей',
+    screens: [{ id: 'main', title: 'Главный экран', Component: PasswordGeneratorMainPage }],
   },
 ];
 
