@@ -1,6 +1,8 @@
 import CallsMainPage from "./Calls/main";
 import CallsMissedPage from "./Calls/missed";
 import CallsSearchPage from "./Calls/search";
+import GalleryAlbumsPage from "./Gallery/albums";
+import GalleryAllPage from "./Gallery/all";
 
 export type ScreenDefinition = {
   id: string;
@@ -22,6 +24,14 @@ export const appRegistry: AppDefinition[] = [
       { id: "main", title: "Главный экран", Component: CallsMainPage },
       { id: "missed", title: "Пропущенные", Component: CallsMissedPage },
       { id: "search", title: "Поиск", Component: CallsSearchPage },
+    ],
+  },
+  {
+    id: "Gallery",
+    title: "Галерея",
+    screens: [
+      { id: "all", title: "Все фото", Component: GalleryAllPage },
+      { id: "albums", title: "Альбомы", Component: GalleryAlbumsPage },
     ],
   },
 ];
