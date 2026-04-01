@@ -70,14 +70,22 @@
 1. Откройте репозиторий на GitHub.
 2. Перейдите в `Settings` -> `Pages`.
 3. В блоке `Build and deployment` выберите `Source: GitHub Actions`.
-4. Убедитесь, что основная ветка называется `main`.
-5. Запушьте изменения в `main`.
+4. Убедитесь, что push делается в правильную ветку: `main`, `core` или нужную `member/*`.
+5. Перед push проверьте `src/web/registry.ts`, если в вашей ветке должен быть свой набор приложений.
+6. Запушьте изменения в нужную ветку.
 
-После этого workflow `Deploy to GitHub Pages` соберет проект и опубликует его по адресу:
+После этого workflow `Deploy to GitHub Pages` соберет проект и опубликует его по адресу ветки:
 
 - `https://kosdesignsystem.github.io/aiui/`
+- `https://kosdesignsystem.github.io/aiui/core/`
+- `https://kosdesignsystem.github.io/aiui/nc/`
+- `https://kosdesignsystem.github.io/aiui/ae/`
+- `https://kosdesignsystem.github.io/aiui/mk/`
 
 Важно:
 
 - Для GitHub Pages в проекте уже настроен корректный `base` путь.
 - Роутинг работает через `HashRouter`, поэтому дополнительные настройки `404.html` не нужны.
+- Если в разных ветках должен быть разный набор приложений, проверяйте `src/web/registry.ts` после каждого merge из `main` или `core`.
+- Если страница открывается, но приложение пустое, проверьте, что опубликованный `index.html` ссылается на существующие JS/CSS-файлы в `assets/`.
+- Подробный чеклист: `docs/branch-release-checklist.md`.
