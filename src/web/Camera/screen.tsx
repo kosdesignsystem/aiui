@@ -65,31 +65,6 @@ function cycleInList<T extends string>(list: readonly T[], value: T): T {
 	return list[(index + 1) % list.length];
 }
 
-function getPreferredDeviceId(
-	devices: MediaDeviceInfo[],
-	cameraFacing: 'rear' | 'front',
-	currentDeviceId: string | null,
-) {
-	if (devices.length === 0) {
-		return null;
-	}
-
-	if (currentDeviceId && devices.some((item) => item.deviceId === currentDeviceId)) {
-		return currentDeviceId;
-	}
-
-	const priorityKeywords = cameraFacing === 'front'
-		? ['front', 'user', 'facetime']
-		: ['back', 'rear', 'environment'];
-
-	const foundDevice = devices.find((device) => {
-		const label = device.label.toLowerCase();
-		return priorityKeywords.some((keyword) => label.includes(keyword));
-	});
-
-	return foundDevice?.deviceId ?? devices[0].deviceId;
-}
-
 function mapFaceToPreview(
 	box: DOMRectReadOnly,
 	video: HTMLVideoElement,
@@ -130,6 +105,7 @@ export function CameraScreen() {
 	const previewRef = useRef<HTMLDivElement | null>(null);
 	const lastFocusAtRef = useRef(0);
 	const lastPhotoUrlRef = useRef<string | null>(null);
+	const cameraRequestIdRef = useRef(0);
 
 	const [isPanelOpen, setIsPanelOpen] = useState(false);
 	const [flashMode, setFlashMode] = useState<(typeof flashModes)[number]>('off');
@@ -144,27 +120,19 @@ export function CameraScreen() {
 	const [latestPhotoUrl, setLatestPhotoUrl] = useState<string | null>(null);
 	const [latestPhotoBlob, setLatestPhotoBlob] = useState<Blob | null>(null);
 	const [isSwitchingCamera, setIsSwitchingCamera] = useState(false);
+	const [isCameraSwitchingBusy, setIsCameraSwitchingBusy] = useState(false);
+	const [switchPhase, setSwitchPhase] = useState<'out' | 'in' | null>(null);
 	const [roiFocus, setRoiFocus] = useState<RoiFocus | null>(null);
 	const [shouldUseFlash, setShouldUseFlash] = useState(false);
 	const [hasTorch, setHasTorch] = useState(false);
 
 	const [cameraStatus, setCameraStatus] = useState<CameraStatus>('loading');
 	const [cameraError, setCameraError] = useState('');
-	const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
-	const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
 
 	const [faces, setFaces] = useState<FaceOval[]>([]);
 	const [focusAnimationKey, setFocusAnimationKey] = useState(0);
 	const [isFaceDetectionAvailable, setIsFaceDetectionAvailable] = useState(true);
 
-	const cameraLabel = useMemo(() => {
-		if (!selectedDeviceId) {
-			return 'Авто';
-		}
-
-		const device = videoDevices.find((item) => item.deviceId === selectedDeviceId);
-		return device?.label || 'Камера';
-	}, [selectedDeviceId, videoDevices]);
 
 	const statusText = useMemo(() => {
 		const flashLabel = flashMode === 'off' ? 'Flash Off' : flashMode === 'auto' ? 'Flash Auto' : 'Flash On';
@@ -185,6 +153,7 @@ export function CameraScreen() {
 
 	useEffect(() => {
 		if (!navigator.mediaDevices?.getUserMedia) {
+			setIsCameraSwitchingBusy(false);
 			setCameraStatus('error');
 			setCameraError('Браузер не поддерживает getUserMedia.');
 			return;
@@ -193,6 +162,7 @@ export function CameraScreen() {
 		let isCancelled = false;
 
 		const startCamera = async () => {
+			const requestId = ++cameraRequestIdRef.current;
 			setCameraStatus('loading');
 			setCameraError('');
 
@@ -201,12 +171,12 @@ export function CameraScreen() {
 
 				const stream = await navigator.mediaDevices.getUserMedia({
 					audio: false,
-					video: selectedDeviceId
-						? { deviceId: { exact: selectedDeviceId } }
-						: { facingMode: { ideal: cameraFacing === 'front' ? 'user' : 'environment' } },
+					video: {
+						facingMode: { ideal: cameraFacing === 'front' ? 'user' : 'environment' },
+					},
 				});
 
-				if (isCancelled) {
+				if (isCancelled || requestId !== cameraRequestIdRef.current) {
 					stream.getTracks().forEach((track) => track.stop());
 					return;
 				}
@@ -218,13 +188,15 @@ export function CameraScreen() {
 					await videoRef.current.play().catch(() => undefined);
 				}
 
-				const devices = await navigator.mediaDevices.enumerateDevices();
-				const cameras = devices.filter((item) => item.kind === 'videoinput');
-				setVideoDevices(cameras);
-				setSelectedDeviceId((current) => getPreferredDeviceId(cameras, cameraFacing, current));
 				setCameraStatus('ready');
+				setIsCameraSwitchingBusy(false);
 			} catch (error) {
+				if (requestId !== cameraRequestIdRef.current) {
+					return;
+				}
+
 				setCameraStatus('error');
+				setIsCameraSwitchingBusy(false);
 				setCameraError(
 					error instanceof Error
 						? `Нет доступа к камере: ${error.message}`
@@ -238,7 +210,7 @@ export function CameraScreen() {
 		return () => {
 			isCancelled = true;
 		};
-	}, [cameraFacing, selectedDeviceId]);
+	}, [cameraFacing]);
 
 
 	useEffect(() => {
@@ -250,7 +222,7 @@ export function CameraScreen() {
 
 		const capabilities = track.getCapabilities?.();
 		setHasTorch(Boolean(capabilities && 'torch' in capabilities));
-	}, [cameraStatus, selectedDeviceId]);
+	}, [cameraStatus, cameraFacing]);
 
 	useEffect(() => {
 		if (cameraStatus !== 'ready' || !videoRef.current) {
@@ -287,7 +259,7 @@ export function CameraScreen() {
 				window.clearInterval(timer);
 			}
 		};
-	}, [cameraStatus, selectedDeviceId]);
+	}, [cameraStatus, cameraFacing]);
 
 	useEffect(() => {
 		const shouldEnableTorch = flashMode === 'on' || (flashMode === 'auto' && shouldUseFlash);
@@ -382,7 +354,7 @@ export function CameraScreen() {
 					minSuppressionThreshold: 0.3,
 				});
 
-				if (isCancelled) {
+				if (isCancelled || requestId !== cameraRequestIdRef.current) {
 					detector?.close?.();
 					return;
 				}
@@ -406,19 +378,36 @@ export function CameraScreen() {
 
 
 	const switchCameraDevice = () => {
-		setIsSwitchingCamera(true);
-		window.setTimeout(() => setIsSwitchingCamera(false), 260);
-
-		if (videoDevices.length > 1) {
-			const currentIndex = videoDevices.findIndex((item) => item.deviceId === selectedDeviceId);
-			const nextDevice = videoDevices[(currentIndex + 1) % videoDevices.length] ?? videoDevices[0];
-			setSelectedDeviceId(nextDevice.deviceId);
+		if (isCameraSwitchingBusy) {
 			return;
 		}
 
-		setCameraFacing((value) => (value === 'rear' ? 'front' : 'rear'));
+		setIsCameraSwitchingBusy(true);
+		setIsSwitchingCamera(true);
+		setSwitchPhase('out');
+
+		// Phase 1: squeeze animation (200ms), then switch facing mode for phase 2 expansion.
+		window.setTimeout(() => {
+			setCameraFacing((value) => (value === 'rear' ? 'front' : 'rear'));
+		}, 200);
 	};
 
+
+
+	useEffect(() => {
+		if (!isCameraSwitchingBusy || cameraStatus !== 'ready' || switchPhase !== 'out') {
+			return;
+		}
+
+		setSwitchPhase('in');
+		const timer = window.setTimeout(() => {
+			setSwitchPhase(null);
+			setIsCameraSwitchingBusy(false);
+			setIsSwitchingCamera(false);
+		}, 100);
+
+		return () => window.clearTimeout(timer);
+	}, [cameraStatus, isCameraSwitchingBusy, switchPhase]);
 
 	const applyTorchMode = async (enabled: boolean) => {
 		const track = streamRef.current?.getVideoTracks()[0];
@@ -562,8 +551,14 @@ export function CameraScreen() {
 					</div>
 				</header>
 
-				<section className="camera-screen__preview" ref={previewRef} aria-label="Предпросмотр камеры" onPointerDown={handlePreviewTapFocus}>
+				<section
+					className={`camera-screen__preview${switchPhase === "out" ? " is-switching-out" : ""}${switchPhase === "in" ? " is-switching-in" : ""}`}
+					ref={previewRef}
+					aria-label="Предпросмотр камеры"
+					onPointerDown={handlePreviewTapFocus}
+				>
 					<video ref={videoRef} className="camera-screen__video" autoPlay muted playsInline />
+						{switchPhase ? <div className="camera-screen__switch-overlay" aria-hidden="true" /> : null}
 					{roiFocus ? (
 						<div
 							key={roiFocus.key}
@@ -635,6 +630,7 @@ export function CameraScreen() {
 						className={`camera-screen__switch${isSwitchingCamera ? ' is-rotating' : ''}`}
 						aria-label="Переключить камеру"
 						onClick={switchCameraDevice}
+						disabled={isCameraSwitchingBusy}
 					>
 						<Icon name="arrow-loop" width={30} height={30} alt="" aria-hidden="true" />
 					</button>
