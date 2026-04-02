@@ -47,48 +47,6 @@
 	position: relative;
 	flex: 1;
 	background: #101226;
-	transform-origin: center center;
-}
-
-
-.camera-screen__preview.is-switching-out {
-	animation: camera-switch-out 200ms ease-out forwards;
-}
-
-.camera-screen__preview.is-switching-in {
-	animation: camera-switch-in 100ms ease-out forwards;
-}
-
-.camera-screen__switch-overlay {
-	position: absolute;
-	inset: 0;
-	background: rgb(33 37 41 / 60%);
-	backdrop-filter: blur(24px);
-	z-index: 7;
-	pointer-events: none;
-}
-
-.camera-screen__preview.is-switching-out .camera-screen__video,
-.camera-screen__preview.is-switching-in .camera-screen__video {
-	opacity: 0.6;
-}
-
-@keyframes camera-switch-out {
-	0% {
-		transform: scaleX(1);
-	}
-	100% {
-		transform: scaleX(0.08);
-	}
-}
-
-@keyframes camera-switch-in {
-	0% {
-		transform: scaleX(0.08);
-	}
-	100% {
-		transform: scaleX(1);
-	}
 }
 
 
