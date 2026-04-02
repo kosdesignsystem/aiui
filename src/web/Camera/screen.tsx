@@ -558,8 +558,7 @@ export function CameraScreen() {
 					onPointerDown={handlePreviewTapFocus}
 				>
 					<video ref={videoRef} className="camera-screen__video" autoPlay muted playsInline />
-						{switchPhase ? <div className="camera-screen__switch-overlay" aria-hidden="true" /> : null}
-					{roiFocus ? (
+											{roiFocus ? (
 						<div
 							key={roiFocus.key}
 							className="camera-screen__roi-focus"
@@ -611,19 +610,15 @@ export function CameraScreen() {
 				) : null}
 
 				<footer className="camera-screen__controls">
-					{latestPhotoUrl ? (
-						<button
-							type="button"
-							className="camera-screen__thumb"
-							aria-label="Сохранить последнюю фотографию"
-							title={`Сделано фото: ${shotCount}`}
-							onClick={handleSaveLatestPhoto}
-						>
-							<img src={latestPhotoUrl} alt="Последний снимок" />
-						</button>
-					) : (
-						<div className="camera-screen__thumb-placeholder" aria-hidden="true" />
-					)}
+					<button
+						type="button"
+						className={`camera-screen__thumb${latestPhotoUrl ? ' has-photo' : ''}`}
+						aria-label="Сохранить последнюю фотографию"
+						title={latestPhotoUrl ? `Сделано фото: ${shotCount}` : 'Снимков пока нет'}
+						onClick={latestPhotoUrl ? handleSaveLatestPhoto : undefined}
+					>
+						{latestPhotoUrl ? <img src={latestPhotoUrl} alt="Последний снимок" /> : null}
+					</button>
 					<button type="button" className="camera-screen__shutter" aria-label="Сделать фото" onClick={() => void handleTakePhoto()} />
 					<button
 						type="button"

@@ -59,19 +59,7 @@
 	animation: camera-switch-in 100ms ease-out forwards;
 }
 
-.camera-screen__switch-overlay {
-	position: absolute;
-	inset: 0;
-	background: rgb(33 37 41 / 60%);
-	backdrop-filter: blur(24px);
-	z-index: 7;
-	pointer-events: none;
-}
 
-.camera-screen__preview.is-switching-out .camera-screen__video,
-.camera-screen__preview.is-switching-in .camera-screen__video {
-	opacity: 0.6;
-}
 
 @keyframes camera-switch-out {
 	0% {
@@ -264,9 +252,17 @@
 
 .camera-screen__thumb {
 	border-radius: 18px;
-	background:
-		radial-gradient(circle at 65% 20%, rgb(255 170 179 / 50%), transparent 28%),
-		linear-gradient(180deg, #67a5cf 0%, #8ea8c2 62%, #20566d 100%);
+	background: transparent;
+	opacity: 0;
+	transition: opacity 180ms ease-out;
+	overflow: hidden;
+	padding: 0;
+	pointer-events: none;
+}
+
+.camera-screen__thumb.has-photo {
+	opacity: 1;
+	pointer-events: auto;
 }
 
 .camera-screen__shutter {
@@ -284,13 +280,7 @@
 	height: 100%;
 	object-fit: cover;
 	border-radius: 18px;
-}
-
-
-.camera-screen__thumb-placeholder {
-	width: 68px;
-	height: 68px;
-	justify-self: center;
+	display: block;
 }
 
 .camera-screen__switch.is-rotating .ui-icon {
