@@ -3,6 +3,7 @@ import CallsMissedPage from "./Calls/missed";
 import CallsSearchPage from "./Calls/search";
 import KidCallsMainPage from "./KidCalls/main";
 import CameraMainPage from "./Camera/main";
+import CalculatorMainPage from "./Calculator/main";
 
 export type ScreenDefinition = {
   id: string;
@@ -35,6 +36,11 @@ export const appRegistry: AppDefinition[] = [
     id: "Camera",
     title: "Камера",
     screens: [{ id: "main", title: "Мобильная камера", Component: CameraMainPage }],
+  },
+  {
+    id: "Calculator",
+    title: "Калькулятор",
+    screens: [{ id: "main", title: "Базовый", Component: CalculatorMainPage }],
   },
 ];
 
