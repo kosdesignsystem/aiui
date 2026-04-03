@@ -1,7 +1,8 @@
 import CallsMainPage from "./Calls/main";
 import CallsMissedPage from "./Calls/missed";
 import CallsSearchPage from "./Calls/search";
-import PasswordGeneratorMainPage from "./PasswordGenerator/main";
+import KidCallsMainPage from "./KidCalls/main";
+import CameraMainPage from "./Camera/main";
 
 export type ScreenDefinition = {
   id: string;
@@ -26,9 +27,14 @@ export const appRegistry: AppDefinition[] = [
     ],
   },
   {
-    id: "PasswordGenerator",
-    title: "Генератор паролей",
-    screens: [{ id: "main", title: "Главный экран", Component: PasswordGeneratorMainPage }],
+    id: "KidCalls",
+    title: "Детские звонки",
+    screens: [{ id: "main", title: "Смарт-часы 5+", Component: KidCallsMainPage }],
+  },
+  {
+    id: "Camera",
+    title: "Камера",
+    screens: [{ id: "main", title: "Мобильная камера", Component: CameraMainPage }],
   },
 ];
 
