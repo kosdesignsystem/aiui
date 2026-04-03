@@ -1,3 +1,4 @@
+import ComponentsViewPage from "./Components/view";
 import CallsMainPage from "./Calls/main";
 import CallsMissedPage from "./Calls/missed";
 import CallsSearchPage from "./Calls/search";
@@ -15,6 +16,13 @@ export type AppDefinition = {
 };
 
 export const appRegistry: AppDefinition[] = [
+  {
+    id: "Components",
+    title: "Компоненты",
+    screens: [
+      { id: "view", title: "View", Component: ComponentsViewPage },
+    ],
+  },
   {
     id: "Calls",
     title: "Звонки",
