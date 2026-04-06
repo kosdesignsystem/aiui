@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, MouseEvent, ReactNode, useState } from 'react';
 import { App } from '../../ui/App';
 import { Button } from '../../ui/Button';
 import { Cell } from '../../ui/Cell';
@@ -7,128 +7,146 @@ import { Header } from '../../ui/Header';
 import { Icon } from '../../ui/Icon';
 import { IconButton } from '../../ui/IconButton';
 import { List, ListContainer } from '../../ui/List';
+import { Nav } from '../../ui/Nav';
 import { SearchBar, SearchBarButton } from '../../ui/SearchBar';
-import { type SegmentedTab, SegmentedTabs } from '../../ui/SegmentedTabs';
+import { ScreenScaffold } from '../../ui/ScreenScaffold';
+import { type Tab, Tabs } from '../../ui/Tabs';
+import { Switch } from '../../ui/Switch';
 import { View } from '../../ui/View';
 import './view.scss';
 
-type TopActionsVariant = 'tabs' | 'icons';
-type BottomActionsVariant = 'buttons-with-icon' | 'buttons-only' | 'search';
+type TopActionsVariant = 'icons' | 'tabs';
+type BottomActionsVariant = 'buttons' | 'navigation' | 'search';
 type SideButtonPosition = 'none' | 'left' | 'right';
+type ControlTabs =
+	| readonly [Tab, Tab]
+	| readonly [Tab, Tab, Tab];
 
-type ControlOption = {
-	value: string;
-	label: string;
+type InfoItem = {
+	id: string;
+	title: string;
+	subtitle: string;
+	icon: string;
 };
 
-const topTabs: readonly [SegmentedTab, SegmentedTab, SegmentedTab] = [
+type SelectionSettingProps = {
+	label: string;
+	description?: string;
+	tabs: ControlTabs;
+	value: string;
+	onChange: (nextValue: string) => void;
+};
+
+type ToggleCellProps = {
+	label: string;
+	description?: string;
+	checked: boolean;
+	onChange: (checked: boolean) => void;
+};
+
+const topTabs: readonly [Tab, Tab, Tab] = [
 	{ id: 'overview', label: 'Обзор' },
 	{ id: 'states', label: 'Состояния' },
 	{ id: 'notes', label: 'Заметки' },
 ];
 
-const visibilityOptions: readonly ControlOption[] = [
-	{ value: 'shown', label: 'Показать' },
-	{ value: 'hidden', label: 'Скрыть' },
+const topActionsVariantTabs: readonly [Tab, Tab] = [
+	{ id: 'icons', label: 'Иконки' },
+	{ id: 'tabs', label: 'Табы' },
 ];
 
-const topVariantOptions: readonly ControlOption[] = [
-	{ value: 'tabs', label: 'Табы' },
-	{ value: 'icons', label: 'Иконки' },
+const bottomActionsVariantTabs: readonly [Tab, Tab, Tab] = [
+	{ id: 'buttons', label: 'Кнопки' },
+	{ id: 'navigation', label: 'Навигация' },
+	{ id: 'search', label: 'Поиск' },
 ];
 
-const bottomVariantOptions: readonly ControlOption[] = [
-	{ value: 'buttons-with-icon', label: 'Текст + иконка' },
-	{ value: 'buttons-only', label: 'Только текст' },
-	{ value: 'search', label: 'Поиск' },
+const sideButtonTabs: readonly [Tab, Tab, Tab] = [
+	{ id: 'left', label: 'Кнопка слева' },
+	{ id: 'right', label: 'Кнопка справа' },
+	{ id: 'none', label: 'Без кнопки' },
 ];
 
-const sideButtonOptions: readonly ControlOption[] = [
-	{ value: 'none', label: 'Без кнопки' },
-	{ value: 'left', label: 'Слева' },
-	{ value: 'right', label: 'Справа' },
-];
-
-const topVariantLabels: Record<TopActionsVariant, string> = {
+const topActionsVariantLabels: Record<TopActionsVariant, string> = {
+	icons: 'Иконки',
 	tabs: 'Табы',
-	icons: 'Блок с иконочными кнопками',
 };
 
-const bottomVariantLabels: Record<BottomActionsVariant, string> = {
-	'buttons-with-icon': 'Кнопки с иконками',
-	'buttons-only': 'Кнопки с текстом',
+const bottomActionsVariantLabels: Record<BottomActionsVariant, string> = {
+	buttons: 'Кнопки',
+	navigation: 'Навигация',
 	search: 'Поиск',
 };
 
 const sideButtonLabels: Record<SideButtonPosition, string> = {
-	none: 'без боковой кнопки',
+	none: 'без кнопки',
 	left: 'кнопка слева',
 	right: 'кнопка справа',
 };
 
-const sampleCells = [
+const noteItems: readonly InfoItem[] = [
 	{
-		id: 'layout',
-		title: 'Header уходит первым',
+		id: 'pattern',
+		title: 'Композиция экрана настраивается прямо в списке',
 		subtitle:
-			'Начните скролл внутри View, чтобы верхний заголовок скрылся и освободил место для sticky actions.',
-		icon: 'arrow-up',
+			'Главный список управляет Header, TopActions и BottomActions, а вложенные секции появляются только по условию.',
+		icon: 'done-all',
 	},
 	{
-		id: 'sticky',
-		title: 'Верхний Actions остаётся доступным',
+		id: 'controls',
+		title: 'Для булевых значений используется Cell со Switch',
 		subtitle:
-			'Секция прилипает к верхней кромке экрана и помогает переключать контекст без возврата к началу.',
-		icon: 'pinned-outline',
-	},
-	{
-		id: 'variants',
-		title: 'Варианты меняются на лету',
-		subtitle:
-			'Любая настройка ниже мгновенно перестраивает верхний и нижний action-блоки.',
+			'Выбор между несколькими вариантами перенесён в Tabs, чтобы состояние считывалось быстрее.',
 		icon: 'switches',
 	},
 	{
-		id: 'bottom',
-		title: 'Нижний Actions держит CTA рядом',
+		id: 'preview',
+		title: 'Превью экрана живёт рядом с настройками',
 		subtitle:
-			'Для коротких сценариев подойдут кнопки, а для длинных списков можно переключиться на поиск.',
-		icon: 'search',
-	},
-	{
-		id: 'spacing',
-		title: 'Секции собраны на реальных отступах',
-		subtitle:
-			'Экран опирается на те же App/View-компоненты, что и продуктовые страницы внутри проекта.',
-		icon: 'documentation',
-	},
-	{
-		id: 'testing',
-		title: 'Эта зона специально длинная',
-		subtitle:
-			'Так проще проверить scroll-state и увидеть, как экран живёт в пределах устройства 360x800.',
-		icon: 'bar-chart',
+			'Изменения сразу отражаются в Header, TopActions и BottomActions ниже по экрану.',
+		icon: 'copy-outline',
 	},
 ];
 
-type ControlGroupProps = {
-	label: string;
-	description?: string;
-	value: string;
-	options: readonly ControlOption[];
-	onChange: (value: string) => void;
-};
+function InfoCell({ title, subtitle, icon }: Omit<InfoItem, 'id'>) {
+	return (
+		<Cell
+			title={
+				<Text variant="medium-18" color="primary">
+					{title}
+				</Text>
+			}
+			subtitle={
+				<Text variant="regular-14" color="secondary">
+					{subtitle}
+				</Text>
+			}
+			leading={
+				<div className="components-screen__cell-icon">
+					<Icon
+						name={icon}
+						width={20}
+						height={20}
+						alt=""
+						aria-hidden="true"
+						colorToken="accent-primary"
+					/>
+				</div>
+			}
+		/>
+	);
+}
 
-function ControlGroup({
+function SelectionSetting({
 	label,
 	description,
+	tabs,
 	value,
-	options,
 	onChange,
-}: ControlGroupProps) {
+}: SelectionSettingProps) {
 	return (
-		<section className="components-view__control-group">
-			<div className="components-view__control-copy">
+		<div className="components-screen__segmented-setting">
+			<div className="components-screen__segmented-setting-copy">
 				<Text as="p" variant="medium-16" color="primary">
 					{label}
 				</Text>
@@ -138,74 +156,78 @@ function ControlGroup({
 					</Text>
 				) : null}
 			</div>
-
-			<div className="components-view__control-options">
-				{options.map((option) => {
-					const isActive = option.value === value;
-
-					return (
-						<button
-							key={option.value}
-							type="button"
-							className={`components-view__chip${isActive ? ' is-active' : ''}`}
-							onClick={() => onChange(option.value)}
-							aria-pressed={isActive}
-						>
-							<Text variant="medium-14" color={isActive ? 'primary' : 'secondary'}>
-								{option.label}
-							</Text>
-						</button>
-					);
-				})}
-			</div>
-		</section>
-	);
-}
-
-function StatePill({ label, value }: { label: string; value: string }) {
-	return (
-		<div className="components-view__state-pill">
-			<Text as="p" variant="regular-12" color="secondary">
-				{label}
-			</Text>
-			<Text as="p" variant="medium-14" color="primary">
-				{value}
-			</Text>
+			<Tabs tabs={tabs} value={value} onChange={onChange} />
 		</div>
 	);
 }
 
+function ToggleCell({ label, description, checked, onChange }: ToggleCellProps) {
+	const toggle = () => onChange(!checked);
+	const stopPropagation = (
+		event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>,
+	) => {
+		event.stopPropagation();
+	};
+
+	return (
+		<Cell
+			title={
+				<Text as="p" variant="medium-16" color="primary">
+					{label}
+				</Text>
+			}
+			subtitle={
+				description ? (
+					<Text as="p" variant="regular-14" color="secondary">
+						{description}
+					</Text>
+				) : undefined
+			}
+			trailing={
+				<div
+					className="components-screen__switch"
+					onClick={stopPropagation}
+					onKeyDown={stopPropagation}
+				>
+					<Switch checked={checked} onChange={() => toggle()} aria-label={label} />
+				</div>
+			}
+			variant="primary"
+			onClick={toggle}
+		/>
+	);
+}
+
 export default function ComponentsViewPage() {
+	const [showHeader, setShowHeader] = useState(true);
 	const [showTopActions, setShowTopActions] = useState(true);
-	const [topActionsVariant, setTopActionsVariant] = useState<TopActionsVariant>('tabs');
+	const [topActionsVariant, setTopActionsVariant] =
+		useState<TopActionsVariant>('tabs');
 	const [topTabsButtonPosition, setTopTabsButtonPosition] =
 		useState<SideButtonPosition>('left');
 	const [showBottomActions, setShowBottomActions] = useState(true);
 	const [bottomActionsVariant, setBottomActionsVariant] =
-		useState<BottomActionsVariant>('buttons-with-icon');
+		useState<BottomActionsVariant>('buttons');
 	const [bottomSearchButtonPosition, setBottomSearchButtonPosition] =
 		useState<SideButtonPosition>('right');
-	const [activeTab, setActiveTab] = useState(topTabs[0].id);
+	const [activeTab, setActiveTab] = useState(topTabs[1].id);
 	const [searchValue, setSearchValue] = useState('');
 
+	const activeTabLabel = topTabs.find((tab) => tab.id === activeTab)?.label ?? topTabs[0].label;
 	const topActionsSummary = showTopActions
 		? topActionsVariant === 'tabs'
-			? `${topVariantLabels[topActionsVariant]}, ${sideButtonLabels[topTabsButtonPosition]}`
-			: topVariantLabels[topActionsVariant]
+			? `${topActionsVariantLabels[topActionsVariant]}, ${sideButtonLabels[topTabsButtonPosition]}`
+			: topActionsVariantLabels[topActionsVariant]
 		: 'Скрыт';
 	const bottomActionsSummary = showBottomActions
 		? bottomActionsVariant === 'search'
-			? `${bottomVariantLabels[bottomActionsVariant]}, ${sideButtonLabels[bottomSearchButtonPosition]}`
-			: bottomVariantLabels[bottomActionsVariant]
+			? `${bottomActionsVariantLabels[bottomActionsVariant]}, ${sideButtonLabels[bottomSearchButtonPosition]}`
+			: bottomActionsVariantLabels[bottomActionsVariant]
 		: 'Скрыт';
 
 	const topTabsActionButton =
 		topTabsButtonPosition === 'none' ? null : (
-			<IconButton
-				size={60}
-				variant="primary"
-				aria-label="Дополнительное действие"
-			>
+			<IconButton size={60} variant="primary" aria-label="Дополнительное действие">
 				<Icon
 					name={topTabsButtonPosition === 'left' ? 'search' : 'filter'}
 					width={24}
@@ -232,41 +254,37 @@ export default function ComponentsViewPage() {
 			</SearchBarButton>
 		);
 
-	const renderTopActions = () => {
+	const renderTopActions = (): ReactNode => {
 		if (!showTopActions) {
-			return null;
+			return undefined;
 		}
 
-		if (topActionsVariant === 'tabs') {
+		if (topActionsVariant === 'icons') {
 			return (
-				<SegmentedTabs
-					tabs={topTabs}
-					value={activeTab}
-					onChange={setActiveTab}
-					button={topTabsActionButton ?? undefined}
-					buttonPosition={topTabsButtonPosition === 'left' ? 'left' : 'right'}
-				/>
+				<div className="components-screen__top-icons">
+					<IconButton size={60} variant="primary" aria-label="Поиск">
+						<Icon name="search" width={24} height={24} alt="" aria-hidden="true" />
+					</IconButton>
+					<IconButton size={60} variant="secondary" aria-label="Фильтр">
+						<Icon name="filter" width={24} height={24} alt="" aria-hidden="true" />
+					</IconButton>
+					<IconButton size={60} variant="accent" aria-label="Добавить">
+						<Icon name="add" width={24} height={24} alt="" aria-hidden="true" />
+					</IconButton>
+				</div>
 			);
 		}
 
 		return (
-			<div className="components-view__icon-actions">
-				<IconButton size={60} variant="primary" aria-label="Поиск">
-					<Icon name="search" width={24} height={24} alt="" aria-hidden="true" />
-				</IconButton>
-				<IconButton size={60} variant="primary" aria-label="Фильтры">
-					<Icon name="filter" width={24} height={24} alt="" aria-hidden="true" />
-				</IconButton>
-				<IconButton size={60} variant="primary" aria-label="Ещё">
-					<Icon
-						name="more-horizontal"
-						width={24}
-						height={24}
-						alt=""
-						aria-hidden="true"
-					/>
-				</IconButton>
-			</div>
+			<Tabs
+				tabs={topTabs}
+				value={activeTab}
+				onChange={setActiveTab}
+				button={topTabsActionButton ?? undefined}
+				buttonPosition={
+					topTabsButtonPosition === 'none' ? undefined : topTabsButtonPosition
+				}
+			/>
 		);
 	};
 
@@ -275,34 +293,9 @@ export default function ComponentsViewPage() {
 			return null;
 		}
 
-		if (bottomActionsVariant === 'buttons-with-icon') {
+		if (bottomActionsVariant === 'buttons') {
 			return (
-				<div className="components-view__bottom-row">
-					<Button
-						size={52}
-						variant="primary"
-						leftIcon={
-							<Icon name="filter" width={18} height={18} alt="" aria-hidden="true" />
-						}
-					>
-						Фильтр
-					</Button>
-					<Button
-						size={52}
-						variant="accent"
-						leftIcon={
-							<Icon name="add" width={18} height={18} alt="" aria-hidden="true" />
-						}
-					>
-						Добавить
-					</Button>
-				</div>
-			);
-		}
-
-		if (bottomActionsVariant === 'buttons-only') {
-			return (
-				<div className="components-view__bottom-row">
+				<div className="components-screen__bottom-row">
 					<Button size={52} variant="secondary">
 						Отмена
 					</Button>
@@ -310,6 +303,39 @@ export default function ComponentsViewPage() {
 						Сохранить
 					</Button>
 				</div>
+			);
+		}
+
+		if (bottomActionsVariant === 'navigation') {
+			return (
+				<Nav
+					items={[
+						{
+							id: 'home',
+							label: 'Главная',
+							active: true,
+							icon: <Icon name="apps" width={20} height={20} alt="" aria-hidden="true" />,
+						},
+						{
+							id: 'chat',
+							label: 'Чаты',
+							icon: <Icon name="chat" width={20} height={20} alt="" aria-hidden="true" />,
+						},
+						{
+							id: 'settings',
+							label: 'Настройки',
+							icon: (
+								<Icon
+									name="settings"
+									width={20}
+									height={20}
+									alt=""
+									aria-hidden="true"
+								/>
+							),
+						},
+					]}
+				/>
 			);
 		}
 
@@ -336,170 +362,127 @@ export default function ComponentsViewPage() {
 		);
 	};
 
-	return (
-		<App>
-			<div className="components-view">
-				<View>
-					<div className="components-view__canvas">
-						<Header
-							title="View"
-							button={
-								<div className="components-view__header-badge">
-									<Icon
-										name="arrow-up"
-										width={16}
-										height={16}
-										alt=""
-										aria-hidden="true"
-									/>
-										<Text variant="medium-14" color="primary">
-											Sticky state
-										</Text>
-									</div>
-								}
+	const renderContent = () => {
+		return (
+			<>
+				<List title="Компоненты">
+					<ToggleCell
+						label="Header"
+						checked={showHeader}
+						onChange={setShowHeader}
+					/>
+					<ToggleCell
+						label="TopActions"
+						checked={showTopActions}
+						onChange={setShowTopActions}
+					/>
+					<ToggleCell
+						label="BottomActions"
+						checked={showBottomActions}
+						onChange={setShowBottomActions}
+					/>
+				</List>
+
+				{showTopActions ? (
+					<List title="TopActions">
+						<SelectionSetting
+							label="Вариант"
+							tabs={topActionsVariantTabs}
+							value={topActionsVariant}
+							onChange={(nextValue) => setTopActionsVariant(nextValue as TopActionsVariant)}
 						/>
-
-						{showTopActions ? (
-							<div className="components-view__sticky-actions">{renderTopActions()}</div>
+						{topActionsVariant === 'tabs' ? (
+							<SelectionSetting
+								label="Кнопка"
+								tabs={sideButtonTabs}
+								value={topTabsButtonPosition}
+								onChange={(nextValue) =>
+									setTopTabsButtonPosition(nextValue as SideButtonPosition)
+								}
+							/>
 						) : null}
-
-						<div className="components-view__content">
-							<ListContainer>
-								<List title="Сценарий">
-									<div className="components-view__hero">
-										<div className="components-view__hero-copy">
-											<Text as="p" variant="medium-20" color="primary">
-												Шаблон экрана с управляемыми actions
-											</Text>
-											<Text as="p" variant="regular-16" color="secondary">
-												Прокрутите страницу внутри View: Header скроется,
-												а верхний action-блок закрепится у верхней границы.
-											</Text>
-										</div>
-
-										<div className="components-view__state-grid">
-											<StatePill label="Верхний блок" value={topActionsSummary} />
-											<StatePill label="Нижний блок" value={bottomActionsSummary} />
-											<StatePill label="Scroll" value="Header hide + sticky top" />
-										</div>
-									</div>
-								</List>
-
-								<List title="Верхний Actions">
-									<ControlGroup
-										label="Показать верхний блок"
-										description="Секция располагается сразу под Header и участвует в sticky-сценарии."
-										value={showTopActions ? 'shown' : 'hidden'}
-										options={visibilityOptions}
-										onChange={(value) => setShowTopActions(value === 'shown')}
-									/>
-
-									{showTopActions ? (
-										<ControlGroup
-											label="Вариант верхнего блока"
-											value={topActionsVariant}
-											options={topVariantOptions}
-											onChange={(value) =>
-												setTopActionsVariant(value as TopActionsVariant)
-											}
-										/>
-									) : null}
-
-									{showTopActions && topActionsVariant === 'tabs' ? (
-										<ControlGroup
-											label="Положение иконочной кнопки"
-											description="Для табов можно оставить только сегменты или добавить боковую кнопку."
-											value={topTabsButtonPosition}
-											options={sideButtonOptions}
-											onChange={(value) =>
-												setTopTabsButtonPosition(value as SideButtonPosition)
-											}
-										/>
-									) : null}
-								</List>
-
-								<List title="Нижний Actions">
-									<ControlGroup
-										label="Показать нижний блок"
-										description="Нижний actions фиксируется под View и остаётся рядом с системной навигацией устройства."
-										value={showBottomActions ? 'shown' : 'hidden'}
-										options={visibilityOptions}
-										onChange={(value) => setShowBottomActions(value === 'shown')}
-									/>
-
-									{showBottomActions ? (
-										<ControlGroup
-											label="Вариант нижнего блока"
-											value={bottomActionsVariant}
-											options={bottomVariantOptions}
-											onChange={(value) =>
-												setBottomActionsVariant(value as BottomActionsVariant)
-											}
-										/>
-									) : null}
-
-									{showBottomActions && bottomActionsVariant === 'search' ? (
-										<ControlGroup
-											label="Положение иконочной кнопки"
-											description="Кнопка добавляется слева или справа от SearchBar, либо полностью убирается."
-											value={bottomSearchButtonPosition}
-											options={sideButtonOptions}
-											onChange={(value) =>
-												setBottomSearchButtonPosition(value as SideButtonPosition)
-											}
-										/>
-									) : null}
-								</List>
-
-								<List title="Контент для скролла">
-									{sampleCells.map((item) => (
-										<Cell
-											key={item.id}
-											title={
-												<Text variant="medium-18" color="primary">
-													{item.title}
-												</Text>
-											}
-											subtitle={
-												<Text variant="regular-14" color="secondary">
-													{item.subtitle}
-												</Text>
-											}
-											leading={
-												<div className="components-view__cell-icon">
-													<Icon
-														name={item.icon}
-														width={20}
-														height={20}
-														alt=""
-														aria-hidden="true"
-														colorToken="accent-primary"
-													/>
-												</div>
-											}
-											trailing={
-												<IconButton size={44} variant="secondary" aria-label="Подробнее">
-													<Icon
-														name="chevron-right"
-														width={20}
-														height={20}
-														alt=""
-														aria-hidden="true"
-													/>
-												</IconButton>
-											}
-										/>
-									))}
-								</List>
-							</ListContainer>
-						</div>
-					</div>
-				</View>
+					</List>
+				) : null}
 
 				{showBottomActions ? (
-					<div className="components-view__bottom-actions">{renderBottomActions()}</div>
+					<List title="BottomActions">
+						<SelectionSetting
+							label="Вариант"
+							tabs={bottomActionsVariantTabs}
+							value={bottomActionsVariant}
+							onChange={(nextValue) =>
+								setBottomActionsVariant(nextValue as BottomActionsVariant)
+							}
+						/>
+						{bottomActionsVariant === 'search' ? (
+							<SelectionSetting
+								label="Кнопка"
+								tabs={sideButtonTabs}
+								value={bottomSearchButtonPosition}
+								onChange={(nextValue) =>
+									setBottomSearchButtonPosition(nextValue as SideButtonPosition)
+								}
+							/>
+						) : null}
+					</List>
 				) : null}
-			</div>
+
+				<List title="Текущее состояние">
+					<InfoCell
+						title={`Header: ${showHeader ? 'Да' : 'Нет'}`}
+						subtitle="Верхний header отображается независимо от остальных блоков."
+						icon="apps"
+					/>
+					<InfoCell
+						title={`TopActions: ${showTopActions ? 'Да' : 'Нет'}`}
+						subtitle={topActionsSummary}
+						icon="switches"
+					/>
+					<InfoCell
+						title={`BottomActions: ${showBottomActions ? 'Да' : 'Нет'}`}
+						subtitle={bottomActionsSummary}
+						icon="arrow-bottom-top"
+					/>
+					{showTopActions && topActionsVariant === 'tabs' ? (
+						<InfoCell
+							title={`Активный таб: ${activeTabLabel}`}
+							subtitle="Tabs на превью остаётся интерактивным и переключается по клику."
+							icon="done-all"
+						/>
+					) : null}
+				</List>
+
+				<List title="Заметки">
+					{noteItems.map((item) => (
+						<InfoCell
+							key={item.id}
+							title={item.title}
+							subtitle={item.subtitle}
+							icon={item.icon}
+						/>
+					))}
+				</List>
+			</>
+		);
+	};
+
+	return (
+		<App>
+			<ScreenScaffold
+				header={showHeader ? <Header title="Компоненты" /> : undefined}
+				topActions={renderTopActions()}
+				bottomActions={
+					showBottomActions ? (
+						<div className="components-screen__bottom-actions-shell">
+							{renderBottomActions()}
+						</div>
+					) : undefined
+				}
+			>
+				<View>
+					<ListContainer>{renderContent()}</ListContainer>
+				</View>
+			</ScreenScaffold>
 		</App>
 	);
 }

@@ -1,0 +1,40 @@
+.ui-screen-scaffold {
+	display: flex;
+	flex: 1;
+	min-height: 0;
+	flex-direction: column;
+}
+
+.ui-screen-scaffold__viewport {
+	flex: 1;
+	min-height: 0;
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
+}
+
+.ui-screen-scaffold__top-actions {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	background: var(--background-secondary);
+}
+
+.ui-screen-scaffold__top-actions.is-stuck {
+	border-bottom: 1px solid var(--content-border);
+}
+
+.ui-screen-scaffold__content {
+	display: flex;
+	flex-direction: column;
+	flex: 1 0 auto;
+	min-height: 0;
+}
+
+.ui-screen-scaffold__content > .ui-view {
+	min-height: 100%;
+}
+
+.ui-screen-scaffold__bottom-actions {
+	flex: 0 0 auto;
+}

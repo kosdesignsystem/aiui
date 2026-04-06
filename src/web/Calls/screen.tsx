@@ -10,7 +10,8 @@ import { IconButton } from '../../ui/IconButton';
 import { List, ListContainer } from '../../ui/List';
 import { Nav } from '../../ui/Nav';
 import { SearchBar } from '../../ui/SearchBar';
-import { SegmentedTabs } from '../../ui/SegmentedTabs';
+import { ScreenScaffold } from '../../ui/ScreenScaffold';
+import { Tabs } from '../../ui/Tabs';
 import { View } from '../../ui/View';
 import {
 	CallDirection,
@@ -271,90 +272,99 @@ export function CallsScreen({ title, filter, mode = 'default' }: CallsScreenProp
 							}
 						/>
 					</div>
-				) : (
-					<>
-						<Header title={title} />
-						<SegmentedTabs
-							tabs={callsFilterTabs}
-							value={filter}
-							onChange={(tabId) =>
-								navigate(tabId === 'missed' ? callsRoutes.missed : callsRoutes.main)
-							}
-							buttonPosition="left"
-							button={
-								<IconButton
-									size={60}
-									aria-label="Поиск"
-									background="content-background"
-									onClick={handleOpenSearch}
-								>
-									<Icon name="search" alt="" width={24} height={24} />
-								</IconButton>
-							}
+				) : null}
+
+				<ScreenScaffold
+					header={
+						isSearchMode ? undefined : <Header title={title} />
+					}
+					topActions={
+						isSearchMode ? undefined : (
+							<Tabs
+								tabs={callsFilterTabs}
+								value={filter}
+								onChange={(tabId) =>
+									navigate(
+										tabId === 'missed' ? callsRoutes.missed : callsRoutes.main,
+									)
+								}
+								buttonPosition="left"
+								button={
+									<IconButton
+										size={60}
+										aria-label="Поиск"
+										background="content-background"
+										onClick={handleOpenSearch}
+									>
+										<Icon name="search" alt="" width={24} height={24} />
+									</IconButton>
+								}
+							/>
+						)
+					}
+					bottomActions={
+						<Nav
+							items={callsNavItems.map((item) => {
+								const path = item.path;
+
+								return {
+									id: item.id,
+									label: item.label,
+									active: item.id === 'calls',
+									onClick: path ? () => navigate(path) : undefined,
+									icon: (
+										<Icon
+											name={item.icon}
+											width={20}
+											height={20}
+											alt=""
+											aria-hidden="true"
+											colorToken={
+												item.id === 'calls'
+													? 'content-primary'
+													: 'content-secondary'
+											}
+										/>
+									),
+								};
+							})}
 						/>
-					</>
-				)}
-
-				<View>
-					{isSearchMode ? (
-						<div className="calls-screen__search-content">
-							{activeSearchQuery.length === 0 ? null : searchResults.length === 0 ? (
-								<div className="calls-screen__search-empty">
-									<Text variant="regular-20" color="secondary">
-										Ничего не найдено
-									</Text>
-								</div>
-							) : (
-								<ListContainer>
-									<List>
-										{searchResults.map((call) => (
-											<CallRow
-												key={call.id}
-												call={call}
-												searchQuery={activeSearchQuery}
-											/>
-										))}
-									</List>
-								</ListContainer>
-							)}
-						</div>
-					) : (
-						<ListContainer>
-							{filteredCalls.length === 0 ? (
-								<EmptyCallsState filter={filter} />
-							) : null}
-							<CallSection title="Сегодня" calls={today} />
-							<CallSection title="Ранее" calls={earlier} />
-						</ListContainer>
-					)}
-				</View>
-
-				<Nav
-					items={callsNavItems.map((item) => {
-						const path = item.path;
-
-						return {
-							id: item.id,
-							label: item.label,
-							active: item.id === 'calls',
-							onClick: path ? () => navigate(path) : undefined,
-							icon: (
-								<Icon
-									name={item.icon}
-									width={20}
-									height={20}
-									alt=""
-									aria-hidden="true"
-									colorToken={
-										item.id === 'calls'
-											? 'content-primary'
-											: 'content-secondary'
-									}
-								/>
-							),
-						};
-					})}
-				/>
+					}
+				>
+					<View>
+						{isSearchMode ? (
+							<div className="calls-screen__search-content">
+								{activeSearchQuery.length === 0 ? null : searchResults.length === 0 ? (
+									<div className="calls-screen__search-empty">
+										<Text variant="regular-20" color="secondary">
+											Ничего не найдено
+										</Text>
+									</div>
+								) : (
+									<ListContainer>
+										<List>
+											{searchResults.map((call) => (
+												<CallRow
+													key={call.id}
+													call={call}
+													searchQuery={activeSearchQuery}
+												/>
+											))}
+										</List>
+									</ListContainer>
+								)}
+							</div>
+						) : (
+							<ListContainer>
+								{filteredCalls.length === 0 ? (
+									<EmptyCallsState filter={filter} />
+								) : null}
+								<CallSection title="Сегодня" calls={today} />
+								<CallSection title="Ранее" calls={earlier} />
+							</ListContainer>
+						)}
+					</View>
+				</ScreenScaffold>
 			</div>
 		</App>
 	);
