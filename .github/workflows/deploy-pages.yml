@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout source branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -40,7 +40,7 @@ jobs:
             gh-pages:refs/remotes/origin/gh-pages
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20
 
@@ -113,9 +113,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          find . -mindepth 1 -maxdepth 1 ! -name ".git" -exec rm -rf {} +
-          rsync -av --delete "${SNAPSHOT_ROOT}/" ./
+          sync_snapshot() {
+            find . -mindepth 1 -maxdepth 1 ! -name ".git" -exec rm -rf {} +
+            rsync -av --delete "${SNAPSHOT_ROOT}/" ./
+          }
 
+          sync_snapshot
           git add -A
 
           if git diff --cached --quiet; then
@@ -124,5 +127,29 @@ jobs:
           fi
 
           git commit -m "Deploy Pages snapshot from ${GITHUB_REF_NAME}"
-          git push origin HEAD:gh-pages
+
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:gh-pages; then
+              exit 0
+            fi
+
+            if [ "${attempt}" -eq 5 ]; then
+              echo "Failed to push gh-pages after ${attempt} attempts" >&2
+              exit 1
+            fi
+
+            git fetch origin gh-pages
+            git reset --hard origin/gh-pages
+            sync_snapshot
+            git add -A
+
+            if git diff --cached --quiet; then
+              echo "GitHub Pages is already up to date after refresh"
+              exit 0
+            fi
+
+            git commit -m "Deploy Pages snapshot from ${GITHUB_REF_NAME}"
+            sleep $((attempt * 5))
+          done
+
           popd >/dev/null
