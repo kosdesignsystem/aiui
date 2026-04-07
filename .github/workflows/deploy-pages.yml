@@ -1,4 +1,4 @@
-name: Deploy Pages per branch subpath
+name: Deploy Pages snapshot
 
 on:
   push:
@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: gh-pages-${{ github.ref_name }}
+  group: gh-pages
   cancel-in-progress: true
 
 jobs:
@@ -27,162 +27,102 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Fetch deployment branches
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin \
+            main \
+            core \
+            member/NC \
+            member/AE \
+            member/MK \
+            gh-pages:refs/remotes/origin/gh-pages
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
-      - name: Resolve deployment path
+      - name: Build full Pages snapshot
         shell: bash
         run: |
-          case "${GITHUB_REF_NAME}" in
-            main)
-              echo "SITE_PATH=" >> "$GITHUB_ENV"
-              echo "SITE_LABEL=root" >> "$GITHUB_ENV"
-              echo "VITE_BASE_PATH=/aiui/" >> "$GITHUB_ENV"
-              ;;
-            core)
-              echo "SITE_PATH=core" >> "$GITHUB_ENV"
-              echo "SITE_LABEL=core" >> "$GITHUB_ENV"
-              echo "VITE_BASE_PATH=/aiui/core/" >> "$GITHUB_ENV"
-              ;;
-            member/NC)
-              echo "SITE_PATH=nc" >> "$GITHUB_ENV"
-              echo "SITE_LABEL=nc" >> "$GITHUB_ENV"
-              echo "VITE_BASE_PATH=/aiui/nc/" >> "$GITHUB_ENV"
-              ;;
-            member/AE)
-              echo "SITE_PATH=ae" >> "$GITHUB_ENV"
-              echo "SITE_LABEL=ae" >> "$GITHUB_ENV"
-              echo "VITE_BASE_PATH=/aiui/ae/" >> "$GITHUB_ENV"
-              ;;
-            member/MK)
-              echo "SITE_PATH=mk" >> "$GITHUB_ENV"
-              echo "SITE_LABEL=mk" >> "$GITHUB_ENV"
-              echo "VITE_BASE_PATH=/aiui/mk/" >> "$GITHUB_ENV"
-              ;;
-            *)
-              echo "Unsupported branch: ${GITHUB_REF_NAME}" >&2
-              exit 1
-              ;;
-          esac
+          set -euo pipefail
 
-      - name: Install dependencies
-        run: npm ci
+          BUILD_ROOT="${RUNNER_TEMP}/pages-builds"
+          SNAPSHOT_ROOT="${RUNNER_TEMP}/pages-snapshot"
 
-      - name: Build site
-        env:
-          VITE_BASE_PATH: ${{ env.VITE_BASE_PATH }}
-        run: npm run build
+          rm -rf "${BUILD_ROOT}" "${SNAPSHOT_ROOT}"
+          mkdir -p "${BUILD_ROOT}" "${SNAPSHOT_ROOT}"
+          touch "${SNAPSHOT_ROOT}/.nojekyll"
 
-      - name: Prepare gh-pages branch content
+          build_site() {
+            local source_branch="$1"
+            local site_path="$2"
+            local vite_base_path="$3"
+            local worktree_key="$4"
+            local worktree_dir="${BUILD_ROOT}/${worktree_key}"
+
+            git worktree add --force --detach "${worktree_dir}" "origin/${source_branch}"
+
+            pushd "${worktree_dir}" >/dev/null
+            npm ci
+            VITE_BASE_PATH="${vite_base_path}" npm run build
+            popd >/dev/null
+
+            if [ -z "${site_path}" ]; then
+              rsync -av "${worktree_dir}/dist/" "${SNAPSHOT_ROOT}/"
+            else
+              mkdir -p "${SNAPSHOT_ROOT}/${site_path}"
+              rsync -av "${worktree_dir}/dist/" "${SNAPSHOT_ROOT}/${site_path}/"
+            fi
+
+            git worktree remove --force "${worktree_dir}"
+          }
+
+          build_site "main" "" "/aiui/" "main"
+          build_site "core" "core" "/aiui/core/" "core"
+          build_site "member/NC" "nc" "/aiui/nc/" "member-nc"
+          build_site "member/AE" "ae" "/aiui/ae/" "member-ae"
+          build_site "member/MK" "mk" "/aiui/mk/" "member-mk"
+
+      - name: Publish snapshot to gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
 
+          SNAPSHOT_ROOT="${RUNNER_TEMP}/pages-snapshot"
+          PUBLISH_ROOT="${RUNNER_TEMP}/gh-pages-site"
           REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          SITE_REPO_DIR="${RUNNER_TEMP}/gh-pages-site"
 
-          sync_site_dir() {
-            if [ -z "${SITE_PATH}" ]; then
-              find . -mindepth 1 -maxdepth 1 \
-                ! -name ".git" \
-                ! -name ".nojekyll" \
-                ! -name "core" \
-                ! -name "nc" \
-                ! -name "ae" \
-                ! -name "mk" \
-                -exec rm -rf {} +
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" ./
-            else
-              rm -rf "${SITE_PATH}"
-              mkdir -p "${SITE_PATH}"
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" "${SITE_PATH}/"
-            fi
-
-            touch .nojekyll
-          }
-
-          rm -rf "${SITE_REPO_DIR}"
+          rm -rf "${PUBLISH_ROOT}"
 
           if git ls-remote --exit-code --heads "${REPO_URL}" gh-pages >/dev/null 2>&1; then
-            git clone --branch gh-pages --depth 1 "${REPO_URL}" "${SITE_REPO_DIR}"
+            git clone --branch gh-pages --depth 1 "${REPO_URL}" "${PUBLISH_ROOT}"
           else
-            git init "${SITE_REPO_DIR}"
-            cd "${SITE_REPO_DIR}"
+            git init "${PUBLISH_ROOT}"
+            pushd "${PUBLISH_ROOT}" >/dev/null
             git checkout --orphan gh-pages
             git remote add origin "${REPO_URL}"
+            popd >/dev/null
           fi
 
-          cd "${SITE_REPO_DIR}"
+          pushd "${PUBLISH_ROOT}" >/dev/null
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          sync_site_dir
+          find . -mindepth 1 -maxdepth 1 ! -name ".git" -exec rm -rf {} +
+          rsync -av --delete "${SNAPSHOT_ROOT}/" ./
+
           git add -A
 
           if git diff --cached --quiet; then
-            echo "HAS_CHANGES=false" >> "$GITHUB_ENV"
+            echo "GitHub Pages is already up to date"
             exit 0
           fi
 
-          git commit -m "Deploy ${GITHUB_REF_NAME} to ${SITE_LABEL}"
-          echo "HAS_CHANGES=true" >> "$GITHUB_ENV"
-
-      - name: Push gh-pages updates
-        if: env.HAS_CHANGES == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          SITE_REPO_DIR="${RUNNER_TEMP}/gh-pages-site"
-          cd "${SITE_REPO_DIR}"
-
-          sync_site_dir() {
-            if [ -z "${SITE_PATH}" ]; then
-              find . -mindepth 1 -maxdepth 1 \
-                ! -name ".git" \
-                ! -name ".nojekyll" \
-                ! -name "core" \
-                ! -name "nc" \
-                ! -name "ae" \
-                ! -name "mk" \
-                -exec rm -rf {} +
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" ./
-            else
-              rm -rf "${SITE_PATH}"
-              mkdir -p "${SITE_PATH}"
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" "${SITE_PATH}/"
-            fi
-
-            touch .nojekyll
-          }
-
-          for attempt in 1 2 3 4 5; do
-            if git push origin HEAD:gh-pages; then
-              exit 0
-            fi
-
-            if [ "${attempt}" -eq 5 ]; then
-              echo "Failed to push gh-pages after ${attempt} attempts" >&2
-              exit 1
-            fi
-
-            git fetch origin gh-pages
-            git reset --hard origin/gh-pages
-            sync_site_dir
-            git add -A
-
-            if git diff --cached --quiet; then
-              echo "No changes to redeploy after refreshing gh-pages"
-              exit 0
-            fi
-
-            git commit -m "Deploy ${GITHUB_REF_NAME} to ${SITE_LABEL}"
-            sleep $((attempt * 5))
-          done
+          git commit -m "Deploy Pages snapshot from ${GITHUB_REF_NAME}"
+          git push origin HEAD:gh-pages
+          popd >/dev/null

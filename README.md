@@ -65,11 +65,11 @@
 
 ## Публикация на GitHub Pages
 
-Проект уже подготовлен к деплою через GitHub Actions.
+Проект уже подготовлен к деплою через GitHub Actions, которые публикуют готовую сборку в ветку `gh-pages`.
 
 1. Откройте репозиторий на GitHub.
 2. Перейдите в `Settings` -> `Pages`.
-3. В блоке `Build and deployment` выберите `Source: GitHub Actions`.
+3. В блоке `Build and deployment` выберите публикацию из ветки `gh-pages`.
 4. Убедитесь, что основная ветка называется `main`.
 5. Запушьте изменения в `main`.
 
