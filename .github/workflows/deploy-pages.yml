@@ -115,7 +115,7 @@ jobs:
 
           sync_snapshot() {
             find . -mindepth 1 -maxdepth 1 ! -name ".git" -exec rm -rf {} +
-            rsync -av --delete "${SNAPSHOT_ROOT}/" ./
+            rsync -av "${SNAPSHOT_ROOT}/" ./
           }
 
           sync_snapshot
