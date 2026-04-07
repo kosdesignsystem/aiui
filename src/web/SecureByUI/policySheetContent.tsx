@@ -52,6 +52,15 @@ export function SecurePolicySheetContent({ onCancel }: SecurePolicySheetContentP
 						</Avatar>
 					}
 				/>
+				<Cell
+					title={<Text variant="regular-18">Уведомить службу безопасности</Text>}
+					onClick={() => undefined}
+					leading={
+						<Avatar size={48} background="accent-background">
+							<Icon name="notification-active" width={22} height={22} colorToken="accent-primary" />
+						</Avatar>
+					}
+				/>
 			</List>
 
 			<Button size={52} variant="primary" onClick={onCancel}>
