@@ -105,7 +105,7 @@ export default function SecureByUIWifiPage() {
 					<button type="button" className="secure-ui__wifi-nav-button" aria-label="Назад">
 						<Icon name="arrow-left" width={28} height={28} aria-hidden />
 					</button>
-					<Text variant="semiBold-32">Wi‑Fi</Text>
+					<Text variant="semiBold-24">Wi‑Fi</Text>
 					<button type="button" className="secure-ui__wifi-nav-button" aria-label="Обновить">
 						<Icon name="arrow-history" width={28} height={28} aria-hidden />
 					</button>
