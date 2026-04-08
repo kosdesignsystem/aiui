@@ -18,24 +18,6 @@ import './view.scss';
 type TopActionsVariant = 'icons' | 'tabs';
 type BottomActionsVariant = 'buttons' | 'navigation' | 'search';
 type SideButtonPosition = 'none' | 'left' | 'right';
-type ControlTabs =
-	| readonly [Tab, Tab]
-	| readonly [Tab, Tab, Tab];
-
-type InfoItem = {
-	id: string;
-	title: string;
-	subtitle: string;
-	icon: string;
-};
-
-type SelectionSettingProps = {
-	label: string;
-	description?: string;
-	tabs: ControlTabs;
-	value: string;
-	onChange: (nextValue: string) => void;
-};
 
 type ToggleCellProps = {
 	label: string;
@@ -67,112 +49,16 @@ const sideButtonTabs: readonly [Tab, Tab, Tab] = [
 	{ id: 'none', label: 'Без кнопки' },
 ];
 
-const topActionsVariantLabels: Record<TopActionsVariant, string> = {
-	icons: 'Иконки',
-	tabs: 'Табы',
-};
-
-const bottomActionsVariantLabels: Record<BottomActionsVariant, string> = {
-	buttons: 'Кнопки',
-	navigation: 'Навигация',
-	search: 'Поиск',
-};
-
-const sideButtonLabels: Record<SideButtonPosition, string> = {
-	none: 'без кнопки',
-	left: 'кнопка слева',
-	right: 'кнопка справа',
-};
-
-const noteItems: readonly InfoItem[] = [
-	{
-		id: 'pattern',
-		title: 'Композиция экрана настраивается прямо в списке',
-		subtitle:
-			'Главный список управляет Header, TopActions и BottomActions, а вложенные секции появляются только по условию.',
-		icon: 'done-all',
-	},
-	{
-		id: 'controls',
-		title: 'Для булевых значений используется Cell со Switch',
-		subtitle:
-			'Выбор между несколькими вариантами перенесён в Tabs, чтобы состояние считывалось быстрее.',
-		icon: 'switches',
-	},
-	{
-		id: 'preview',
-		title: 'Превью экрана живёт рядом с настройками',
-		subtitle:
-			'Изменения сразу отражаются в Header, TopActions и BottomActions ниже по экрану.',
-		icon: 'copy-outline',
-	},
-];
-
-function InfoCell({ title, subtitle, icon }: Omit<InfoItem, 'id'>) {
-	return (
-		<Cell
-			title={
-				<Text variant="medium-18" color="primary">
-					{title}
-				</Text>
-			}
-			subtitle={
-				<Text variant="regular-14" color="secondary">
-					{subtitle}
-				</Text>
-			}
-			leading={
-				<div className="components-screen__cell-icon">
-					<Icon
-						name={icon}
-						width={20}
-						height={20}
-						alt=""
-						aria-hidden="true"
-						colorToken="accent-primary"
-					/>
-				</div>
-			}
-		/>
-	);
-}
-
-function SelectionSetting({
-	label,
-	description,
-	tabs,
-	value,
-	onChange,
-}: SelectionSettingProps) {
-	return (
-		<div className="components-screen__segmented-setting">
-			<div className="components-screen__segmented-setting-copy">
-				<Text as="p" variant="medium-16" color="primary">
-					{label}
-				</Text>
-				{description ? (
-					<Text as="p" variant="regular-14" color="secondary">
-						{description}
-					</Text>
-				) : null}
-			</div>
-			<Tabs tabs={tabs} value={value} onChange={onChange} />
-		</div>
-	);
-}
-
 function ToggleCell({ label, description, checked, onChange }: ToggleCellProps) {
 	const toggle = () => onChange(!checked);
-	const stopPropagation = (
-		event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>,
-	) => {
+	const stopPropagation = (event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => {
 		event.stopPropagation();
 	};
 
 	return (
 		<Cell
 			title={
-				<Text as="p" variant="medium-16" color="primary">
+				<Text as="p" variant="regular-18" color="primary">
 					{label}
 				</Text>
 			}
@@ -192,7 +78,6 @@ function ToggleCell({ label, description, checked, onChange }: ToggleCellProps) 
 					<Switch checked={checked} onChange={() => toggle()} aria-label={label} />
 				</div>
 			}
-			variant="primary"
 			onClick={toggle}
 		/>
 	);
@@ -201,10 +86,8 @@ function ToggleCell({ label, description, checked, onChange }: ToggleCellProps) 
 export default function ComponentsViewPage() {
 	const [showHeader, setShowHeader] = useState(true);
 	const [showTopActions, setShowTopActions] = useState(true);
-	const [topActionsVariant, setTopActionsVariant] =
-		useState<TopActionsVariant>('tabs');
-	const [topTabsButtonPosition, setTopTabsButtonPosition] =
-		useState<SideButtonPosition>('left');
+	const [topActionsVariant, setTopActionsVariant] = useState<TopActionsVariant>('tabs');
+	const [topTabsButtonPosition, setTopTabsButtonPosition] = useState<SideButtonPosition>('left');
 	const [showBottomActions, setShowBottomActions] = useState(true);
 	const [bottomActionsVariant, setBottomActionsVariant] =
 		useState<BottomActionsVariant>('buttons');
@@ -212,18 +95,6 @@ export default function ComponentsViewPage() {
 		useState<SideButtonPosition>('right');
 	const [activeTab, setActiveTab] = useState(topTabs[1].id);
 	const [searchValue, setSearchValue] = useState('');
-
-	const activeTabLabel = topTabs.find((tab) => tab.id === activeTab)?.label ?? topTabs[0].label;
-	const topActionsSummary = showTopActions
-		? topActionsVariant === 'tabs'
-			? `${topActionsVariantLabels[topActionsVariant]}, ${sideButtonLabels[topTabsButtonPosition]}`
-			: topActionsVariantLabels[topActionsVariant]
-		: 'Скрыт';
-	const bottomActionsSummary = showBottomActions
-		? bottomActionsVariant === 'search'
-			? `${bottomActionsVariantLabels[bottomActionsVariant]}, ${sideButtonLabels[bottomSearchButtonPosition]}`
-			: bottomActionsVariantLabels[bottomActionsVariant]
-		: 'Скрыт';
 
 	const topTabsActionButton =
 		topTabsButtonPosition === 'none' ? null : (
@@ -314,12 +185,28 @@ export default function ComponentsViewPage() {
 							id: 'home',
 							label: 'Главная',
 							active: true,
-							icon: <Icon name="apps" width={20} height={20} alt="" aria-hidden="true" />,
+							icon: (
+								<Icon
+									name="apps"
+									width={20}
+									height={20}
+									alt=""
+									aria-hidden="true"
+								/>
+							),
 						},
 						{
 							id: 'chat',
 							label: 'Чаты',
-							icon: <Icon name="chat" width={20} height={20} alt="" aria-hidden="true" />,
+							icon: (
+								<Icon
+									name="chat"
+									width={20}
+									height={20}
+									alt=""
+									aria-hidden="true"
+								/>
+							),
 						},
 						{
 							id: 'settings',
@@ -344,7 +231,9 @@ export default function ComponentsViewPage() {
 				type="search"
 				placeholder="Поиск по компоненту"
 				value={searchValue}
-				onChange={(event: ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)}
+				onChange={(event: ChangeEvent<HTMLInputElement>) =>
+					setSearchValue(event.target.value)
+				}
 				leftButton={bottomSearchButtonPosition === 'left' ? searchSideButton : undefined}
 				rightButton={bottomSearchButtonPosition === 'right' ? searchSideButton : undefined}
 				fieldRightButton={
@@ -366,11 +255,7 @@ export default function ComponentsViewPage() {
 		return (
 			<>
 				<List title="Компоненты">
-					<ToggleCell
-						label="Header"
-						checked={showHeader}
-						onChange={setShowHeader}
-					/>
+					<ToggleCell label="Header" checked={showHeader} onChange={setShowHeader} />
 					<ToggleCell
 						label="TopActions"
 						checked={showTopActions}
@@ -385,15 +270,15 @@ export default function ComponentsViewPage() {
 
 				{showTopActions ? (
 					<List title="TopActions">
-						<SelectionSetting
-							label="Вариант"
+						<Tabs
 							tabs={topActionsVariantTabs}
 							value={topActionsVariant}
-							onChange={(nextValue) => setTopActionsVariant(nextValue as TopActionsVariant)}
+							onChange={(nextValue) =>
+								setTopActionsVariant(nextValue as TopActionsVariant)
+							}
 						/>
 						{topActionsVariant === 'tabs' ? (
-							<SelectionSetting
-								label="Кнопка"
+							<Tabs
 								tabs={sideButtonTabs}
 								value={topTabsButtonPosition}
 								onChange={(nextValue) =>
@@ -406,8 +291,7 @@ export default function ComponentsViewPage() {
 
 				{showBottomActions ? (
 					<List title="BottomActions">
-						<SelectionSetting
-							label="Вариант"
+						<Tabs
 							tabs={bottomActionsVariantTabs}
 							value={bottomActionsVariant}
 							onChange={(nextValue) =>
@@ -415,8 +299,7 @@ export default function ComponentsViewPage() {
 							}
 						/>
 						{bottomActionsVariant === 'search' ? (
-							<SelectionSetting
-								label="Кнопка"
+							<Tabs
 								tabs={sideButtonTabs}
 								value={bottomSearchButtonPosition}
 								onChange={(nextValue) =>
@@ -426,42 +309,6 @@ export default function ComponentsViewPage() {
 						) : null}
 					</List>
 				) : null}
-
-				<List title="Текущее состояние">
-					<InfoCell
-						title={`Header: ${showHeader ? 'Да' : 'Нет'}`}
-						subtitle="Верхний header отображается независимо от остальных блоков."
-						icon="apps"
-					/>
-					<InfoCell
-						title={`TopActions: ${showTopActions ? 'Да' : 'Нет'}`}
-						subtitle={topActionsSummary}
-						icon="switches"
-					/>
-					<InfoCell
-						title={`BottomActions: ${showBottomActions ? 'Да' : 'Нет'}`}
-						subtitle={bottomActionsSummary}
-						icon="arrow-bottom-top"
-					/>
-					{showTopActions && topActionsVariant === 'tabs' ? (
-						<InfoCell
-							title={`Активный таб: ${activeTabLabel}`}
-							subtitle="Tabs на превью остаётся интерактивным и переключается по клику."
-							icon="done-all"
-						/>
-					) : null}
-				</List>
-
-				<List title="Заметки">
-					{noteItems.map((item) => (
-						<InfoCell
-							key={item.id}
-							title={item.title}
-							subtitle={item.subtitle}
-							icon={item.icon}
-						/>
-					))}
-				</List>
 			</>
 		);
 	};

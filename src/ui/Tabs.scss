@@ -15,24 +15,26 @@
 	display: flex;
 	align-items: stretch;
 	position: relative;
-	background: var(--background-primary, var(--background));
-	overflow: visible;
+	overflow: hidden;
 }
 
 .ui-tabs__viewport {
 	flex: 1 1 auto;
 	min-width: 0;
-	overflow: hidden;
+	overflow-x: auto;
+	overflow-y: hidden;
 	border-radius: 12px;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
 }
 
-.ui-tabs__list.has-overflow .ui-tabs__viewport {
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
+.ui-tabs__viewport::-webkit-scrollbar {
+	display: none;
 }
 
 .ui-tabs__track {
-	min-width: max-content;
+	width: max-content;
+	min-width: 100%;
 	height: 100%;
 	display: flex;
 	align-items: stretch;
@@ -42,9 +44,10 @@
 	border: 0;
 	border-radius: 12px;
 	background: transparent;
+	width: auto;
 	min-width: 100px;
-	max-width: 100%;
-	flex: 0 0 auto;
+	max-width: 160px;
+	flex: 1 0 auto;
 	padding: 16px 20px;
 	height: 100%;
 	display: inline-flex;
@@ -52,8 +55,12 @@
 	justify-content: center;
 	cursor: pointer;
 	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+}
+
+.ui-tabs__tab .ui-text {
+	display: block;
+	min-width: 0;
+	max-width: 100%;
 }
 
 .ui-tabs__tab-label {
@@ -74,77 +81,5 @@
 }
 
 .ui-tabs__tab:disabled {
-	cursor: default;
-}
-
-.ui-tabs__overflow {
-	position: relative;
-	flex: 0 0 60px;
-	width: 60px;
-	border-left: 1px solid var(--content-border);
-}
-
-.ui-tabs__more-button {
-	appearance: none;
-	border: 0;
-	width: 100%;
-	height: 100%;
-	padding: 0;
-	border-radius: 0 12px 12px 0;
-	background: transparent;
-	color: var(--content-primary);
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	transition: background-color 0.2s ease;
-}
-
-.ui-tabs__more-button:hover,
-.ui-tabs__more-button.is-active {
-	background: var(--content-background);
-}
-
-.ui-tabs__more-button:focus-visible {
-	outline: 2px solid var(--accent-primary);
-	outline-offset: -2px;
-}
-
-.ui-tabs__more-button:disabled {
-	cursor: default;
-}
-
-.ui-tabs__menu {
-	position: absolute;
-	top: calc(100% + 8px);
-	right: 0;
-	z-index: 2;
-	min-width: 180px;
-	padding: 6px;
-	border: 1px solid var(--content-border);
-	border-radius: 16px;
-	background: var(--background-primary, var(--background));
-	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
-}
-
-.ui-tabs__menu-item {
-	appearance: none;
-	border: 0;
-	width: 100%;
-	padding: 12px 14px;
-	border-radius: 12px;
-	background: transparent;
-	display: flex;
-	align-items: center;
-	text-align: left;
-	cursor: pointer;
-}
-
-.ui-tabs__menu-item:hover,
-.ui-tabs__menu-item.is-active {
-	background: var(--content-background);
-}
-
-.ui-tabs__menu-item:disabled {
 	cursor: default;
 }
