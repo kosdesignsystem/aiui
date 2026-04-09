@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DeviceFrame } from './system/DeviceFrame';
+import { NavBar } from './system/NavBar';
 import { ThemeName, ThemeProvider } from './ui/Tokens';
 import { IconButton } from './ui/IconButton';
 import { Icon } from './ui/Icon';
@@ -146,7 +147,6 @@ export default function App() {
 	const [theme, setTheme] = useState<ThemeName>('light');
 	const [isMobile, setIsMobile] = useState(getIsMobileViewport);
 	const [isNavigationVisible, setIsNavigationVisible] = useState(false);
-	const longPressTimerRef = useRef<number | null>(null);
 
 	useEffect(() => {
 		if (typeof window === 'undefined' || !window.matchMedia) {
@@ -174,51 +174,6 @@ export default function App() {
 
 		return () => mediaQuery.removeListener(handleChange);
 	}, []);
-
-	useEffect(() => {
-		if (!isMobile || typeof document === 'undefined') {
-			return undefined;
-		}
-
-		const clearLongPressTimer = () => {
-			if (longPressTimerRef.current !== null) {
-				window.clearTimeout(longPressTimerRef.current);
-				longPressTimerRef.current = null;
-			}
-		};
-
-		const handleTouchStart = (event: TouchEvent) => {
-			if (event.touches.length !== 2 || isNavigationVisible) {
-				clearLongPressTimer();
-				return;
-			}
-
-			clearLongPressTimer();
-			longPressTimerRef.current = window.setTimeout(() => {
-				setIsNavigationVisible(true);
-				longPressTimerRef.current = null;
-			}, 650);
-		};
-
-		const handleTouchMove = (event: TouchEvent) => {
-			if (event.touches.length !== 2) {
-				clearLongPressTimer();
-			}
-		};
-
-		document.addEventListener('touchstart', handleTouchStart, { passive: true });
-		document.addEventListener('touchmove', handleTouchMove, { passive: true });
-		document.addEventListener('touchend', clearLongPressTimer, { passive: true });
-		document.addEventListener('touchcancel', clearLongPressTimer, { passive: true });
-
-		return () => {
-			clearLongPressTimer();
-			document.removeEventListener('touchstart', handleTouchStart);
-			document.removeEventListener('touchmove', handleTouchMove);
-			document.removeEventListener('touchend', clearLongPressTimer);
-			document.removeEventListener('touchcancel', clearLongPressTimer);
-		};
-	}, [isMobile, isNavigationVisible]);
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -274,6 +229,17 @@ export default function App() {
 						/>
 					</Routes>
 				</main>
+
+				{isMobile ? (
+					<NavBar
+						isMobileViewport
+						onHomeLongPress={() => {
+							if (!isNavigationVisible) {
+								setIsNavigationVisible(true);
+							}
+						}}
+					/>
+				) : null}
 			</div>
 		</ThemeProvider>
 	);

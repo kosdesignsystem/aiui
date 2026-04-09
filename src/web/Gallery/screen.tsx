@@ -78,6 +78,16 @@ function clamp(value: number, min: number, max: number) {
 	return Math.min(max, Math.max(min, value));
 }
 
+function splitTakenAtLabel(label: string) {
+	const segments = label.trim().split(/\s+/);
+	const time = segments.pop() ?? '';
+
+	return {
+		date: segments.join(' '),
+		time,
+	};
+}
+
 function toSnapshot(rect: DOMRect): RectSnapshot {
 	return {
 		left: rect.left,
@@ -132,7 +142,6 @@ export function GalleryScreen() {
 	const navigate = useNavigate();
 	const viewerShellRef = useRef<HTMLDivElement | null>(null);
 	const viewerFrameRef = useRef<HTMLDivElement | null>(null);
-	const viewerScrimRef = useRef<HTMLButtonElement | null>(null);
 	const railRefs = useRef(new Map<string, HTMLButtonElement | null>());
 	const originRefs = useRef(new Map<string, HTMLElement | null>());
 	const animationsRef = useRef<Animation[]>([]);
@@ -145,6 +154,8 @@ export function GalleryScreen() {
 	const photosById = useMemo(() => new Map(galleryPhotos.map((photo) => [photo.id, photo])), []);
 
 	const activePhoto = viewer ? (photosById.get(viewer.currentPhotoId) ?? null) : null;
+	const isViewerChromeSuppressed =
+		Boolean(viewer && viewer.phase === 'closing') || viewerTransform.gestureActive;
 	const activeTrack = useMemo(() => {
 		if (!viewer) {
 			return [];
@@ -155,6 +166,7 @@ export function GalleryScreen() {
 			.filter((photo): photo is GalleryPhoto => Boolean(photo));
 	}, [photosById, viewer]);
 	const activePhotoIndex = activeTrack.findIndex((photo) => photo.id === activePhoto?.id);
+	const activePhotoTakenAt = activePhoto ? splitTakenAtLabel(activePhoto.takenAtLabel) : null;
 
 	const dismissProgress = Math.min(Math.abs(viewerTransform.dismissY) / 260, 0.86);
 	const chromeOpacity = 1 - dismissProgress * 0.64;
@@ -166,7 +178,7 @@ export function GalleryScreen() {
 		}px, 0) scale(${viewerTransform.zoom * dismissScale})`,
 	};
 
-	const viewerOverlayStyle: CSSProperties = {
+	const viewerChromeStyle: CSSProperties = {
 		'--gallery-viewer-chrome-opacity': `${chromeOpacity}`,
 	} as CSSProperties;
 
@@ -227,13 +239,12 @@ export function GalleryScreen() {
 
 		const closeTarget = findCloseTarget();
 		const shell = viewerShellRef.current;
-		const scrim = viewerScrimRef.current;
 
 		activePointersRef.current.clear();
 		gestureRef.current = null;
 		resetViewerTransform(false);
 
-		if (immediate || !shell || !scrim || !closeTarget) {
+		if (immediate || !shell || !closeTarget) {
 			stopAnimations();
 			setViewer(null);
 			return;
@@ -273,17 +284,7 @@ export function GalleryScreen() {
 				fill: 'forwards',
 			},
 		);
-
-		const scrimAnimation = scrim.animate(
-			[{ opacity: 1 - dismissProgress * 0.72 }, { opacity: 0 }],
-			{
-				duration: 240,
-				easing: 'ease-out',
-				fill: 'forwards',
-			},
-		);
-
-		animationsRef.current = [mediaAnimation, scrimAnimation];
+		animationsRef.current = [mediaAnimation];
 
 		mediaAnimation.onfinish = () => {
 			stopAnimations();
@@ -331,9 +332,8 @@ export function GalleryScreen() {
 		}
 
 		const shell = viewerShellRef.current;
-		const scrim = viewerScrimRef.current;
 
-		if (!shell || !scrim || !viewer.originRect) {
+		if (!shell || !viewer.originRect) {
 			setViewer((current) =>
 				current
 					? {
@@ -371,14 +371,7 @@ export function GalleryScreen() {
 					fill: 'forwards',
 				},
 			);
-
-			const scrimAnimation = scrim.animate([{ opacity: 0 }, { opacity: 1 }], {
-				duration: 220,
-				easing: 'ease-out',
-				fill: 'forwards',
-			});
-
-			animationsRef.current = [mediaAnimation, scrimAnimation];
+			animationsRef.current = [mediaAnimation];
 
 			mediaAnimation.onfinish = () => {
 				stopAnimations();
@@ -698,27 +691,55 @@ export function GalleryScreen() {
 
 	return (
 		<App>
-			<div className="gallery-screen">
-				<div className="gallery-screen__surface" aria-hidden={viewer ? true : undefined}>
-					<div className="gallery-screen__nav">
-						<IconButton variant="ghost">
-							<Icon width={24} height={24} name="more-vertical" />
-						</IconButton>
+			<div className="gallery-screen" style={viewer ? viewerChromeStyle : undefined}>
+				<div className="gallery-screen__surface">
+					<div className={`gallery-screen__nav gallery-screen__nav--top${viewer ? ' is-viewer-mode' : ''}`}>
+						{viewer && activePhoto && activePhotoTakenAt ? (
+							<button
+								type="button"
+								className="gallery-screen__viewer-back"
+								onClick={() => closeViewer()}
+								aria-label={`Закрыть просмотр фото, ${activePhoto.takenAtLabel}`}
+							>
+								<Icon
+									width={24}
+									height={24}
+									name="arrow-left"
+									alt=""
+									aria-hidden="true"
+								/>
+								<div className="gallery-screen__viewer-back-copy">
+									<Text as="span" variant="medium-16">
+										{activePhotoTakenAt.date}
+									</Text>
+									<Text as="span" variant="medium-16">
+										{activePhotoTakenAt.time}
+									</Text>
+								</div>
+							</button>
+						) : (
+							<IconButton variant="ghost" aria-label="Ещё">
+								<Icon width={24} height={24} name="more-vertical" />
+							</IconButton>
+						)}
 					</div>
-					<header className="gallery-screen__header">
-						<Text as="div" variant="semiBold-32">
-							Все фото
-						</Text>
-						<Text as="div" variant="regular-16" color="secondary">
-							{galleryTotalCountLabel}
-						</Text>
-					</header>
+					{!viewer ? (
+						<header className="gallery-screen__header">
+							<Text as="div" variant="semiBold-32">
+								Все фото
+							</Text>
+							<Text as="div" variant="regular-16" color="secondary">
+								{galleryTotalCountLabel}
+							</Text>
+						</header>
+					) : null}
 
-					<div className="gallery-screen__scroll">
+					<div className={`gallery-screen__scroll${viewer ? ' is-viewer-mode' : ''}`}>
 						<div
 							className="gallery-screen__grid"
 							role="list"
 							aria-label="Сетка фотографий"
+							aria-hidden={viewer ? true : undefined}
 						>
 							{galleryPhotos.map((photo) => {
 								const hidden = viewer?.currentPhotoId === photo.id;
@@ -743,177 +764,12 @@ export function GalleryScreen() {
 								);
 							})}
 						</div>
+
 					</div>
 
-					<div className="gallery-screen__nav">
-						<Nav
-							items={[
-								{
-									id: 'all',
-									active: true,
-									onClick: () => navigate('/app/Gallery/all'),
-									icon: (
-										<Icon
-											name="photo-outline"
-											alt=""
-											aria-hidden="true"
-											width={24}
-											height={24}
-											colorToken="#2e8dff"
-										/>
-									),
-									label: (
-										<Text as="span" variant="medium-12">
-											Все фото
-										</Text>
-									),
-								},
-								{
-									id: 'albums',
-									disabled: true,
-									icon: (
-										<Icon
-											name="folder-outline"
-											alt=""
-											aria-hidden="true"
-											width={24}
-											height={24}
-											colorToken="rgba(32, 36, 44, 0.44)"
-										/>
-									),
-									label: (
-										<Text as="span" variant="medium-12">
-											Альбомы
-										</Text>
-									),
-								},
-							]}
-						/>
-					</div>
-				</div>
-
-				{viewer && activePhoto ? (
-					<div
-						className="gallery-viewer"
-						style={viewerOverlayStyle}
-						role="dialog"
-						aria-modal="true"
-						aria-label={`Просмотр фото: ${activePhoto.title}`}
-					>
-						<button
-							ref={viewerScrimRef}
-							type="button"
-							className="gallery-viewer__scrim"
-							aria-label="Закрыть просмотр фото"
-							onClick={() => closeViewer()}
-						/>
-						<div className="gallery-viewer__chrome">
-							<header className="gallery-viewer__topbar">
-								<button
-									type="button"
-									className="gallery-viewer__back-button"
-									onClick={() => closeViewer()}
-									aria-label="Закрыть просмотр фото"
-								>
-									<Icon
-										name="mobile-back-outline"
-										alt=""
-										aria-hidden="true"
-										width={24}
-										height={24}
-										colorToken="#ffffff"
-									/>
-								</button>
-								<div className="gallery-viewer__topbar-copy">
-									<Text as="div" variant="medium-24">
-										{activePhoto.takenAtLabel}
-									</Text>
-									<Text as="div" variant="regular-14">
-										{activePhoto.title}
-									</Text>
-								</div>
-							</header>
-
-							<div className="gallery-viewer__stage">
-								<div ref={viewerShellRef} className="gallery-viewer__media-shell">
-									<div
-										ref={viewerFrameRef}
-										className={`gallery-viewer__media-frame${
-											viewerTransform.gestureActive
-												? ' is-gesture-active'
-												: ''
-										}`}
-										onPointerDown={handlePointerDown}
-										onPointerMove={handlePointerMove}
-										onPointerUp={handlePointerFinish}
-										onPointerCancel={handlePointerFinish}
-										onDoubleClick={() => {
-											if (!activePhoto || viewer.phase !== 'open') {
-												return;
-											}
-
-											if (viewerTransform.zoom > 1.02) {
-												resetViewerTransform(false);
-												return;
-											}
-
-											setViewerTransform({
-												zoom: 2,
-												panX: 0,
-												panY: 0,
-												dismissX: 0,
-												dismissY: 0,
-												gestureActive: false,
-											});
-										}}
-									>
-										<div
-											className="gallery-viewer__media"
-											style={viewerMediaStyle}
-										>
-											<img
-												src={activePhoto.imageSrc}
-												alt={activePhoto.title}
-												draggable={false}
-											/>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div
-								className="gallery-viewer__rail"
-								role="tablist"
-								aria-label="Лента фотографий"
-							>
-								{activeTrack.map((photo) => (
-									<button
-										key={photo.id}
-										ref={registerRailRef(photo.id)}
-										type="button"
-										role="tab"
-										aria-selected={photo.id === activePhoto.id}
-										className={`gallery-viewer__rail-item${
-											photo.id === activePhoto.id ? ' is-active' : ''
-										}`}
-										onClick={() => {
-											setViewer((current) =>
-												current
-													? {
-															...current,
-															currentPhotoId: photo.id,
-														}
-													: current,
-											);
-											resetViewerTransform(false);
-										}}
-									>
-										<img src={photo.imageSrc} alt="" aria-hidden="true" />
-									</button>
-								))}
-							</div>
-
-							<div className="gallery-viewer__actions">
+					<div className={`gallery-screen__nav gallery-screen__nav--bottom${viewer ? ' is-viewer-mode' : ''}`}>
+						{viewer && activePhoto ? (
+							<div className="gallery-screen__toolbar" role="toolbar" aria-label="Действия с фото">
 								<button
 									type="button"
 									className="gallery-viewer__action-button"
@@ -925,7 +781,7 @@ export function GalleryScreen() {
 										aria-hidden="true"
 										width={24}
 										height={24}
-										colorToken="#ffffff"
+										colorToken="content-primary"
 									/>
 								</button>
 								<button
@@ -939,7 +795,7 @@ export function GalleryScreen() {
 										aria-hidden="true"
 										width={24}
 										height={24}
-										colorToken="#ffffff"
+										colorToken="content-primary"
 									/>
 								</button>
 								<button
@@ -953,7 +809,7 @@ export function GalleryScreen() {
 										aria-hidden="true"
 										width={24}
 										height={24}
-										colorToken="#ffffff"
+										colorToken="content-primary"
 									/>
 								</button>
 								<button
@@ -967,10 +823,136 @@ export function GalleryScreen() {
 										aria-hidden="true"
 										width={24}
 										height={24}
-										colorToken="#ffffff"
+										colorToken="content-primary"
 									/>
 								</button>
 							</div>
+						) : (
+							<Nav
+								items={[
+									{
+										id: 'all',
+										active: true,
+										onClick: () => navigate('/app/Gallery/all'),
+										icon: (
+											<Icon
+												name="photo-outline"
+												alt=""
+												aria-hidden="true"
+												width={24}
+												height={24}
+												colorToken="#2e8dff"
+											/>
+										),
+										label: (
+											<Text as="span" variant="medium-12">
+												Все фото
+											</Text>
+										),
+									},
+									{
+										id: 'albums',
+										disabled: true,
+										icon: (
+											<Icon
+												name="folder-outline"
+												alt=""
+												aria-hidden="true"
+												width={24}
+												height={24}
+												colorToken="rgba(32, 36, 44, 0.44)"
+											/>
+										),
+										label: (
+											<Text as="span" variant="medium-12">
+												Альбомы
+											</Text>
+										),
+									},
+								]}
+							/>
+						)}
+					</div>
+				</div>
+				{viewer && activePhoto ? (
+					<div
+						className={`gallery-screen__viewer${
+							isViewerChromeSuppressed ? ' is-gesture-active' : ''
+						}`}
+						aria-label={`Просмотр фото: ${activePhoto.title}`}
+					>
+						<div className="gallery-viewer__stage">
+							<div ref={viewerShellRef} className="gallery-viewer__media-shell">
+								<div
+									ref={viewerFrameRef}
+									className={`gallery-viewer__media-frame${
+										viewerTransform.gestureActive ? ' is-gesture-active' : ''
+									}`}
+									onPointerDown={handlePointerDown}
+									onPointerMove={handlePointerMove}
+									onPointerUp={handlePointerFinish}
+									onPointerCancel={handlePointerFinish}
+									onDoubleClick={() => {
+										if (!activePhoto || viewer.phase !== 'open') {
+											return;
+										}
+
+										if (viewerTransform.zoom > 1.02) {
+											resetViewerTransform(false);
+											return;
+										}
+
+										setViewerTransform({
+											zoom: 2,
+											panX: 0,
+											panY: 0,
+											dismissX: 0,
+											dismissY: 0,
+											gestureActive: false,
+										});
+									}}
+								>
+									<div className="gallery-viewer__media" style={viewerMediaStyle}>
+										<img
+											src={activePhoto.imageSrc}
+											alt={activePhoto.title}
+											draggable={false}
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div
+							className="gallery-viewer__rail"
+							role="tablist"
+							aria-label="Лента фотографий"
+						>
+							{activeTrack.map((photo) => (
+								<button
+									key={photo.id}
+									ref={registerRailRef(photo.id)}
+									type="button"
+									role="tab"
+									aria-selected={photo.id === activePhoto.id}
+									className={`gallery-viewer__rail-item${
+										photo.id === activePhoto.id ? ' is-active' : ''
+									}`}
+									onClick={() => {
+										setViewer((current) =>
+											current
+												? {
+														...current,
+														currentPhotoId: photo.id,
+													}
+												: current,
+										);
+										resetViewerTransform(false);
+									}}
+								>
+									<img src={photo.imageSrc} alt="" aria-hidden="true" />
+								</button>
+							))}
 						</div>
 					</div>
 				) : null}
