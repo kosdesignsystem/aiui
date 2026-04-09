@@ -7,7 +7,7 @@ export type ThemeProviderProps = {
   children: ReactNode;
 };
 
-export function ThemeProvider({ theme = "dark", children }: ThemeProviderProps) {
+export function ThemeProvider({ theme = "light", children }: ThemeProviderProps) {
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);

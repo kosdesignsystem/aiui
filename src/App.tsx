@@ -143,7 +143,7 @@ function Navigation({ theme, onToggleTheme, onNavigate }: NavigationProps) {
 }
 
 export default function App() {
-	const [theme, setTheme] = useState<ThemeName>('dark');
+	const [theme, setTheme] = useState<ThemeName>('light');
 	const [isMobile, setIsMobile] = useState(getIsMobileViewport);
 	const [isNavigationVisible, setIsNavigationVisible] = useState(false);
 	const longPressTimerRef = useRef<number | null>(null);
