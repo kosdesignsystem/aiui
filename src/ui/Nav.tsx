@@ -7,6 +7,7 @@ export type NavItem = {
   icon?: ReactNode;
   active?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
 };
 
 export type NavProps = {
@@ -22,6 +23,8 @@ export function Nav({ items }: NavProps) {
             type="button"
             className={`ui-nav__item${item.active ? " is-active" : ""}`}
             onClick={item.onClick}
+            disabled={item.disabled}
+            aria-disabled={item.disabled}
           >
             {item.icon}
             {item.label ? (

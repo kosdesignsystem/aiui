@@ -13,17 +13,9 @@ import { App } from '../../ui/App';
 import { Text } from '../../ui/Fonts';
 import { Icon } from '../../ui/Icon';
 import { Nav } from '../../ui/Nav';
-import {
-	galleryAlbums,
-	galleryPhotos,
-	galleryRoutes,
-	galleryTotalCountLabel,
-	type GalleryAlbum,
-	type GalleryPhoto,
-} from './model';
+import { galleryPhotos, galleryTotalCountLabel, type GalleryPhoto } from './model';
 import './screen.scss';
-
-type GalleryTab = 'all' | 'albums';
+import { IconButton } from '../../ui/IconButton';
 
 type RectSnapshot = {
 	left: number;
@@ -136,36 +128,7 @@ function clampPan(transform: ViewerTransform, photo: GalleryPhoto, frame: DOMRec
 	};
 }
 
-function AlbumCover({
-	album,
-	photosById,
-}: {
-	album: GalleryAlbum;
-	photosById: Map<string, GalleryPhoto>;
-}) {
-	return (
-		<div className="gallery-screen__album-cover">
-			{album.coverPhotoIds.slice(0, 4).map((photoId, index) => {
-				const photo = photosById.get(photoId);
-
-				if (!photo) {
-					return null;
-				}
-
-				return (
-					<span
-						key={photo.id}
-						className={`gallery-screen__album-tile gallery-screen__album-tile--${index + 1}`}
-					>
-						<img src={photo.imageSrc} alt="" aria-hidden="true" />
-					</span>
-				);
-			})}
-		</div>
-	);
-}
-
-export function GalleryScreen({ tab }: { tab: GalleryTab }) {
+export function GalleryScreen() {
 	const navigate = useNavigate();
 	const viewerShellRef = useRef<HTMLDivElement | null>(null);
 	const viewerFrameRef = useRef<HTMLDivElement | null>(null);
@@ -176,14 +139,12 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 	const activePointersRef = useRef(new Map<number, PointerPoint>());
 	const gestureRef = useRef<GestureState | null>(null);
 	const [viewer, setViewer] = useState<ViewerState | null>(null);
-	const [viewerTransform, setViewerTransform] = useState<ViewerTransform>(DEFAULT_VIEWER_TRANSFORM);
+	const [viewerTransform, setViewerTransform] =
+		useState<ViewerTransform>(DEFAULT_VIEWER_TRANSFORM);
 
-	const photosById = useMemo(
-		() => new Map(galleryPhotos.map((photo) => [photo.id, photo])),
-		[],
-	);
+	const photosById = useMemo(() => new Map(galleryPhotos.map((photo) => [photo.id, photo])), []);
 
-	const activePhoto = viewer ? photosById.get(viewer.currentPhotoId) ?? null : null;
+	const activePhoto = viewer ? (photosById.get(viewer.currentPhotoId) ?? null) : null;
 	const activeTrack = useMemo(() => {
 		if (!viewer) {
 			return [];
@@ -283,7 +244,7 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 				? {
 						...current,
 						phase: 'closing',
-				  }
+					}
 				: current,
 		);
 
@@ -314,10 +275,7 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 		);
 
 		const scrimAnimation = scrim.animate(
-			[
-				{ opacity: 1 - dismissProgress * 0.72 },
-				{ opacity: 0 },
-			],
+			[{ opacity: 1 - dismissProgress * 0.72 }, { opacity: 0 }],
 			{
 				duration: 240,
 				easing: 'ease-out',
@@ -367,15 +325,6 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 		});
 	};
 
-	const handleAlbumOpen = (album: GalleryAlbum) => (event: ReactMouseEvent<HTMLButtonElement>) => {
-		openViewer({
-			photoId: album.photoIds[0],
-			photoIds: album.photoIds,
-			sourceElement: event.currentTarget,
-			sourceKey: `album:${album.id}`,
-		});
-	};
-
 	useLayoutEffect(() => {
 		if (!viewer || viewer.phase !== 'opening') {
 			return undefined;
@@ -390,7 +339,7 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 					? {
 							...current,
 							phase: 'open',
-					  }
+						}
 					: current,
 			);
 			return undefined;
@@ -423,17 +372,11 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 				},
 			);
 
-			const scrimAnimation = scrim.animate(
-				[
-					{ opacity: 0 },
-					{ opacity: 1 },
-				],
-				{
-					duration: 220,
-					easing: 'ease-out',
-					fill: 'forwards',
-				},
-			);
+			const scrimAnimation = scrim.animate([{ opacity: 0 }, { opacity: 1 }], {
+				duration: 220,
+				easing: 'ease-out',
+				fill: 'forwards',
+			});
 
 			animationsRef.current = [mediaAnimation, scrimAnimation];
 
@@ -444,7 +387,7 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 						? {
 								...current,
 								phase: 'open',
-						  }
+							}
 						: current,
 				);
 			};
@@ -477,7 +420,7 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 						? {
 								...current,
 								currentPhotoId: activeTrack[activePhotoIndex - 1].id,
-						  }
+							}
 						: current,
 				);
 				resetViewerTransform(false);
@@ -490,7 +433,7 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 						? {
 								...current,
 								currentPhotoId: activeTrack[activePhotoIndex + 1].id,
-						  }
+							}
 						: current,
 				);
 				resetViewerTransform(false);
@@ -628,10 +571,8 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 			const startZoom = gesture.mode === 'pinch' ? gesture.startZoom : viewerTransform.zoom;
 			const startPanX = gesture.mode === 'pinch' ? gesture.startPanX : viewerTransform.panX;
 			const startPanY = gesture.mode === 'pinch' ? gesture.startPanY : viewerTransform.panY;
-			const startCenterX =
-				gesture.mode === 'pinch' ? gesture.startCenterX : center.x;
-			const startCenterY =
-				gesture.mode === 'pinch' ? gesture.startCenterY : center.y;
+			const startCenterX = gesture.mode === 'pinch' ? gesture.startCenterX : center.x;
+			const startCenterY = gesture.mode === 'pinch' ? gesture.startCenterY : center.y;
 
 			const nextZoom = clamp((startZoom * distance) / Math.max(startDistance, 1), 1, 4);
 			const nextTransform = {
@@ -759,119 +700,49 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 		<App>
 			<div className="gallery-screen">
 				<div className="gallery-screen__surface" aria-hidden={viewer ? true : undefined}>
+					<div className="gallery-screen__nav">
+						<IconButton variant="ghost">
+							<Icon width={24} height={24} name="more-vertical" />
+						</IconButton>
+					</div>
 					<header className="gallery-screen__header">
-						<div className="gallery-screen__header-copy">
-							<Text as="div" variant="semiBold-40">
-								{tab === 'all' ? 'Все фото' : 'Альбомы'}
-							</Text>
-							<Text as="div" variant="medium-16">
-								{tab === 'all' ? galleryTotalCountLabel : `${galleryAlbums.length} коллекции`}
-							</Text>
-						</div>
-						<button
-							type="button"
-							className="gallery-screen__icon-button"
-							aria-label="Ещё"
-						>
-							<Icon
-								name="more-vertical"
-								alt=""
-								aria-hidden="true"
-								width={24}
-								height={24}
-								colorToken="#20242c"
-							/>
-						</button>
+						<Text as="div" variant="semiBold-32">
+							Все фото
+						</Text>
+						<Text as="div" variant="regular-16" color="secondary">
+							{galleryTotalCountLabel}
+						</Text>
 					</header>
 
 					<div className="gallery-screen__scroll">
-						{tab === 'all' ? (
-							<div className="gallery-screen__grid" role="list" aria-label="Сетка фотографий">
-								{galleryPhotos.map((photo) => {
-									const hidden = viewer?.currentPhotoId === photo.id;
+						<div
+							className="gallery-screen__grid"
+							role="list"
+							aria-label="Сетка фотографий"
+						>
+							{galleryPhotos.map((photo) => {
+								const hidden = viewer?.currentPhotoId === photo.id;
 
-									return (
-										<button
-											key={photo.id}
-											type="button"
-											role="listitem"
-											ref={registerOriginRef(`photo:${photo.id}`)}
-											className={`gallery-screen__thumb${hidden ? ' is-hidden-origin' : ''}`}
-											onClick={handleGridOpen(photo.id)}
-											aria-label={`Открыть фото: ${photo.title}`}
-										>
-											<img
-												src={photo.imageSrc}
-												alt=""
-												aria-hidden="true"
-												className="gallery-screen__thumb-image"
-											/>
-											{photo.favorite ? (
-												<span className="gallery-screen__thumb-badge">
-													<Icon
-														name="star-100"
-														alt=""
-														aria-hidden="true"
-														width={12}
-														height={12}
-														colorToken="#ffffff"
-													/>
-												</span>
-											) : null}
-										</button>
-									);
-								})}
-							</div>
-						) : (
-							<div className="gallery-screen__albums">
-								<div className="gallery-screen__section-copy">
-									<Text as="div" variant="medium-20">
-										Умные альбомы
-									</Text>
-									<Text as="div" variant="regular-14">
-										Подборки собираются автоматически из новых кадров.
-									</Text>
-								</div>
-
-								{galleryAlbums.map((album) => {
-									const hidden = viewer?.originKey === `album:${album.id}`;
-
-									return (
-										<button
-											key={album.id}
-											type="button"
-											ref={registerOriginRef(`album:${album.id}`)}
-											className={`gallery-screen__album${hidden ? ' is-hidden-origin' : ''}`}
-											onClick={handleAlbumOpen(album)}
-											aria-label={`Открыть альбом ${album.title}`}
-										>
-											<AlbumCover album={album} photosById={photosById} />
-											<div className="gallery-screen__album-copy">
-												<Text as="div" variant="medium-20">
-													{album.title}
-												</Text>
-												<Text as="div" variant="regular-14">
-													{album.description}
-												</Text>
-												<Text as="div" variant="medium-14">
-													{album.countLabel}
-												</Text>
-											</div>
-											<span className="gallery-screen__album-arrow" aria-hidden="true">
-												<Icon
-													name="chevron-right"
-													alt=""
-													aria-hidden="true"
-													width={20}
-													height={20}
-													colorToken="#5e6b7b"
-												/>
-											</span>
-										</button>
-									);
-								})}
-							</div>
-						)}
+								return (
+									<button
+										key={photo.id}
+										type="button"
+										role="listitem"
+										ref={registerOriginRef(`photo:${photo.id}`)}
+										className={`gallery-screen__thumb${hidden ? ' is-hidden-origin' : ''}`}
+										onClick={handleGridOpen(photo.id)}
+										aria-label={`Открыть фото: ${photo.title}`}
+									>
+										<img
+											src={photo.imageSrc}
+											alt=""
+											aria-hidden="true"
+											className="gallery-screen__thumb-image"
+										/>
+									</button>
+								);
+							})}
+						</div>
 					</div>
 
 					<div className="gallery-screen__nav">
@@ -879,8 +750,8 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 							items={[
 								{
 									id: 'all',
-									active: tab === 'all',
-									onClick: () => navigate(galleryRoutes.all),
+									active: true,
+									onClick: () => navigate('/app/Gallery/all'),
 									icon: (
 										<Icon
 											name="photo-outline"
@@ -888,7 +759,7 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 											aria-hidden="true"
 											width={24}
 											height={24}
-											colorToken={tab === 'all' ? '#2e8dff' : 'rgba(32, 36, 44, 0.44)'}
+											colorToken="#2e8dff"
 										/>
 									),
 									label: (
@@ -899,8 +770,7 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 								},
 								{
 									id: 'albums',
-									active: tab === 'albums',
-									onClick: () => navigate(galleryRoutes.albums),
+									disabled: true,
 									icon: (
 										<Icon
 											name="folder-outline"
@@ -908,7 +778,7 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 											aria-hidden="true"
 											width={24}
 											height={24}
-											colorToken={tab === 'albums' ? '#2e8dff' : 'rgba(32, 36, 44, 0.44)'}
+											colorToken="rgba(32, 36, 44, 0.44)"
 										/>
 									),
 									label: (
@@ -969,7 +839,9 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 									<div
 										ref={viewerFrameRef}
 										className={`gallery-viewer__media-frame${
-											viewerTransform.gestureActive ? ' is-gesture-active' : ''
+											viewerTransform.gestureActive
+												? ' is-gesture-active'
+												: ''
 										}`}
 										onPointerDown={handlePointerDown}
 										onPointerMove={handlePointerMove}
@@ -995,14 +867,25 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 											});
 										}}
 									>
-										<div className="gallery-viewer__media" style={viewerMediaStyle}>
-											<img src={activePhoto.imageSrc} alt={activePhoto.title} draggable={false} />
+										<div
+											className="gallery-viewer__media"
+											style={viewerMediaStyle}
+										>
+											<img
+												src={activePhoto.imageSrc}
+												alt={activePhoto.title}
+												draggable={false}
+											/>
 										</div>
 									</div>
 								</div>
 							</div>
 
-							<div className="gallery-viewer__rail" role="tablist" aria-label="Лента фотографий">
+							<div
+								className="gallery-viewer__rail"
+								role="tablist"
+								aria-label="Лента фотографий"
+							>
 								{activeTrack.map((photo) => (
 									<button
 										key={photo.id}
@@ -1019,7 +902,7 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 													? {
 															...current,
 															currentPhotoId: photo.id,
-													  }
+														}
 													: current,
 											);
 											resetViewerTransform(false);
@@ -1031,7 +914,11 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 							</div>
 
 							<div className="gallery-viewer__actions">
-								<button type="button" className="gallery-viewer__action-button" aria-label="В избранное">
+								<button
+									type="button"
+									className="gallery-viewer__action-button"
+									aria-label="В избранное"
+								>
 									<Icon
 										name={activePhoto.favorite ? 'star-100' : 'star-0'}
 										alt=""
@@ -1041,7 +928,11 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 										colorToken="#ffffff"
 									/>
 								</button>
-								<button type="button" className="gallery-viewer__action-button" aria-label="Информация">
+								<button
+									type="button"
+									className="gallery-viewer__action-button"
+									aria-label="Информация"
+								>
 									<Icon
 										name="status-info-outline"
 										alt=""
@@ -1051,7 +942,11 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 										colorToken="#ffffff"
 									/>
 								</button>
-								<button type="button" className="gallery-viewer__action-button" aria-label="Поделиться">
+								<button
+									type="button"
+									className="gallery-viewer__action-button"
+									aria-label="Поделиться"
+								>
 									<Icon
 										name="share-outline"
 										alt=""
@@ -1061,7 +956,11 @@ export function GalleryScreen({ tab }: { tab: GalleryTab }) {
 										colorToken="#ffffff"
 									/>
 								</button>
-								<button type="button" className="gallery-viewer__action-button" aria-label="Удалить">
+								<button
+									type="button"
+									className="gallery-viewer__action-button"
+									aria-label="Удалить"
+								>
 									<Icon
 										name="delete-outline"
 										alt=""
