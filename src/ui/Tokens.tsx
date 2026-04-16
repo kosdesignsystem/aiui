@@ -1,6 +1,6 @@
 import { ReactNode, useEffect } from "react";
 
-export type ThemeName = "dark" | "light";
+export type ThemeName = "dark" | "light" | "hexa-dark" | "hexa-light";
 
 export type ThemeProviderProps = {
   theme?: ThemeName;

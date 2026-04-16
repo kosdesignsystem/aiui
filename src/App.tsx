@@ -11,11 +11,16 @@ import { Header } from './ui/Header';
 import { appRegistry, flattenScreens } from './web/registry';
 import { Text } from './ui/Fonts';
 import './app.scss';
-import { Button } from './ui/Button';
 
 const screenList = flattenScreens();
 const defaultScreenPath = screenList[0]?.path;
 const mobileMediaQuery = '(max-width: 768px), (hover: none) and (pointer: coarse)';
+const themeOptions: Array<{ value: ThemeName; label: string }> = [
+	{ value: 'light', label: 'Light' },
+	{ value: 'dark', label: 'Dark' },
+	{ value: 'hexa-light', label: 'Hexa Light' },
+	{ value: 'hexa-dark', label: 'Hexa Dark' },
+];
 
 function getIsMobileViewport() {
 	if (typeof window === 'undefined' || !window.matchMedia) {
@@ -63,11 +68,11 @@ function AppScreen({ isMobile = false }: AppScreenProps) {
 
 type NavigationProps = {
 	theme: ThemeName;
-	onToggleTheme: () => void;
+	onThemeChange: (theme: ThemeName) => void;
 	onNavigate?: () => void;
 };
 
-function Navigation({ theme, onToggleTheme, onNavigate }: NavigationProps) {
+function Navigation({ theme, onThemeChange, onNavigate }: NavigationProps) {
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -96,9 +101,19 @@ function Navigation({ theme, onToggleTheme, onNavigate }: NavigationProps) {
 			<Header
 				title="AI UI"
 				button={
-					<Button variant={'primary'} size={44} type={'button'} onClick={onToggleTheme}>
-						{`Тема: ${theme}`}
-					</Button>
+					<label className="theme-select">
+						<select
+							className="theme-select__field"
+							value={theme}
+							onChange={(event) => onThemeChange(event.target.value as ThemeName)}
+						>
+							{themeOptions.map((option) => (
+								<option key={option.value} value={option.value}>
+									{option.label}
+								</option>
+							))}
+						</select>
+					</label>
 				}
 			/>
 
@@ -190,7 +205,7 @@ export default function App() {
 				{(!isMobile || isNavigationVisible) && (
 					<Navigation
 						theme={theme}
-						onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+						onThemeChange={setTheme}
 						onNavigate={() => {
 							if (isMobile) {
 								setIsNavigationVisible(false);
@@ -214,7 +229,10 @@ export default function App() {
 								)
 							}
 						/>
-						<Route path="/app/:appId/:screenId" element={<AppScreen isMobile={isMobile} />} />
+						<Route
+							path="/app/:appId/:screenId"
+							element={<AppScreen isMobile={isMobile} />}
+						/>
 						<Route
 							path="*"
 							element={
