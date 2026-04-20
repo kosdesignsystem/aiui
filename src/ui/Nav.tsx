@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Text } from "./Fonts";
 import "./Nav.scss";
 
 export type NavItem = {
@@ -28,7 +29,18 @@ export function Nav({ items }: NavProps) {
           >
             {item.icon}
             {item.label ? (
-              <span className="ui-nav__label">{item.label}</span>
+              <Text
+                variant="regular-14"
+                color={
+                  item.disabled
+                    ? "disabled"
+                    : item.active
+                      ? "primary"
+                      : "secondary"
+                }
+              >
+                {item.label}
+              </Text>
             ) : null}
           </button>
         ))}

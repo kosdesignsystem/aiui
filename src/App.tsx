@@ -8,12 +8,15 @@ import { Icon } from './ui/Icon';
 import { List, ListContainer } from './ui/List';
 import { Cell } from './ui/Cell';
 import { Header } from './ui/Header';
-import { appRegistry, flattenScreens } from './web/registry';
+import {
+	appRegistry,
+	findAppScreen,
+	getDefaultAppScreenPath,
+} from './web/registry';
 import { Text } from './ui/Fonts';
 import './app.scss';
 
-const screenList = flattenScreens();
-const defaultScreenPath = screenList[0]?.path;
+const defaultScreenPath = getDefaultAppScreenPath(appRegistry);
 const mobileMediaQuery = '(max-width: 768px), (hover: none) and (pointer: coarse)';
 const themeOptions: Array<{ value: ThemeName; label: string }> = [
 	{ value: 'light', label: 'Light' },
@@ -36,7 +39,7 @@ type AppScreenProps = {
 
 function AppScreen({ isMobile = false }: AppScreenProps) {
 	const { appId, screenId } = useParams();
-	const match = screenList.find((item) => item.app.id === appId && item.screen.id === screenId);
+	const match = findAppScreen(appRegistry, appId, screenId);
 
 	if (!match) {
 		if (defaultScreenPath) {
@@ -120,37 +123,39 @@ function Navigation({ theme, onThemeChange, onNavigate }: NavigationProps) {
 			<ListContainer>
 				{appRegistry.map((app) => (
 					<List key={app.id} title={app.title} collapsible>
-						{app.screens.map((screen) => {
-							const routePath = `/app/${app.id}/${screen.id}`;
-							const isActive = location.pathname === routePath;
+						{app.flows.flatMap((flow) =>
+							flow.screens.map((screen) => {
+								const routePath = `/app/${app.id}/${screen.id}`;
+								const isActive = location.pathname === routePath;
 
-							return (
-								<Cell
-									key={`${app.id}-${screen.id}`}
-									variant={isActive ? 'primary' : 'default'}
-									onClick={() => {
-										navigate(routePath);
-										onNavigate?.();
-									}}
-									title={<Text variant="regular-18">{screen.title}</Text>}
-									trailing={
-										<IconButton
-											type="button"
-											variant="secondary"
-											aria-label="Копировать путь"
-											title="Копировать путь"
-											onClick={(event) => {
-												event.stopPropagation();
-												void copyToClipboard(routePath);
-											}}
-											onKeyDown={(event) => event.stopPropagation()}
-										>
-											<Icon name="copy-outline" alt="" aria-hidden="true" />
-										</IconButton>
-									}
-								/>
-							);
-						})}
+								return (
+									<Cell
+										key={`${app.id}-${flow.id}-${screen.id}`}
+										variant={isActive ? 'primary' : 'default'}
+										onClick={() => {
+											navigate(routePath);
+											onNavigate?.();
+										}}
+										title={<Text variant="regular-18">{screen.title}</Text>}
+										trailing={
+											<IconButton
+												type="button"
+												variant="secondary"
+												aria-label="Копировать путь"
+												title="Копировать путь"
+												onClick={(event) => {
+													event.stopPropagation();
+													void copyToClipboard(routePath);
+												}}
+												onKeyDown={(event) => event.stopPropagation()}
+											>
+												<Icon name="copy-outline" alt="" aria-hidden="true" />
+											</IconButton>
+										}
+									/>
+								);
+							}),
+						)}
 					</List>
 				))}
 			</ListContainer>

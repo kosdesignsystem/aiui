@@ -1,23 +1,28 @@
 import { ChangeEvent, KeyboardEvent, MouseEvent, ReactNode, useState } from 'react';
-import { App } from '../../ui/App';
 import { Button } from '../../ui/Button';
 import { Cell } from '../../ui/Cell';
 import { Text } from '../../ui/Fonts';
-import { Header } from '../../ui/Header';
 import { Icon } from '../../ui/Icon';
 import { IconButton } from '../../ui/IconButton';
-import { List, ListContainer } from '../../ui/List';
+import { List } from '../../ui/List';
 import { Nav } from '../../ui/Nav';
-import { SearchBar, SearchBarButton } from '../../ui/SearchBar';
-import { ScreenScaffold } from '../../ui/ScreenScaffold';
-import { type Tab, Tabs } from '../../ui/Tabs';
+import { Search } from '../../ui/Search';
+import { Tabs } from '../../ui/Tabs';
 import { Switch } from '../../ui/Switch';
-import { View } from '../../ui/View';
+import { FlowPage, FlowPageList } from '../FlowPage';
 import './view.scss';
-
-type TopActionsVariant = 'icons' | 'tabs';
-type BottomActionsVariant = 'buttons' | 'navigation' | 'search';
-type SideButtonPosition = 'none' | 'left' | 'right';
+import {
+	type BottomActionsVariant,
+	type SideButtonPosition,
+	type TopActionsVariant,
+	bottomActionsVariantTabs,
+	componentOverviewTabs,
+	sideButtonTabs,
+	topActionIcons,
+	topActionsVariantTabs,
+	TOP_ICONS_MAX,
+	TOP_ICONS_MIN,
+} from './model';
 
 type ToggleCellProps = {
 	label: string;
@@ -25,29 +30,6 @@ type ToggleCellProps = {
 	checked: boolean;
 	onChange: (checked: boolean) => void;
 };
-
-const topTabs: readonly [Tab, Tab, Tab] = [
-	{ id: 'overview', label: 'Обзор' },
-	{ id: 'states', label: 'Состояния' },
-	{ id: 'notes', label: 'Заметки' },
-];
-
-const topActionsVariantTabs: readonly [Tab, Tab] = [
-	{ id: 'icons', label: 'Иконки' },
-	{ id: 'tabs', label: 'Табы' },
-];
-
-const bottomActionsVariantTabs: readonly [Tab, Tab, Tab] = [
-	{ id: 'buttons', label: 'Кнопки' },
-	{ id: 'navigation', label: 'Навигация' },
-	{ id: 'search', label: 'Поиск' },
-];
-
-const sideButtonTabs: readonly [Tab, Tab, Tab] = [
-	{ id: 'left', label: 'Кнопка слева' },
-	{ id: 'right', label: 'Кнопка справа' },
-	{ id: 'none', label: 'Без кнопки' },
-];
 
 function ToggleCell({ label, description, checked, onChange }: ToggleCellProps) {
 	const toggle = () => onChange(!checked);
@@ -88,12 +70,13 @@ export default function ComponentsViewPage() {
 	const [showTopActions, setShowTopActions] = useState(true);
 	const [topActionsVariant, setTopActionsVariant] = useState<TopActionsVariant>('tabs');
 	const [topTabsButtonPosition, setTopTabsButtonPosition] = useState<SideButtonPosition>('left');
+	const [topIconsCount, setTopIconsCount] = useState(3);
 	const [showBottomActions, setShowBottomActions] = useState(true);
 	const [bottomActionsVariant, setBottomActionsVariant] =
 		useState<BottomActionsVariant>('buttons');
 	const [bottomSearchButtonPosition, setBottomSearchButtonPosition] =
 		useState<SideButtonPosition>('right');
-	const [activeTab, setActiveTab] = useState(topTabs[1].id);
+	const [activeTab, setActiveTab] = useState(componentOverviewTabs[1].id);
 	const [searchValue, setSearchValue] = useState('');
 
 	const topTabsActionButton =
@@ -111,9 +94,10 @@ export default function ComponentsViewPage() {
 
 	const searchSideButton =
 		bottomSearchButtonPosition === 'none' ? null : (
-			<SearchBarButton
+			<IconButton
+				size={60}
+				variant="primary"
 				aria-label="Дополнительное действие поиска"
-				title="Дополнительное действие поиска"
 			>
 				<Icon
 					name={bottomSearchButtonPosition === 'left' ? 'filter' : 'add'}
@@ -122,8 +106,18 @@ export default function ComponentsViewPage() {
 					alt=""
 					aria-hidden="true"
 				/>
-			</SearchBarButton>
+			</IconButton>
 		);
+
+	const handleTopIconsCountChange = (event: ChangeEvent<HTMLInputElement>) => {
+		const nextValue = Number(event.target.value);
+
+		if (Number.isNaN(nextValue)) {
+			return;
+		}
+
+		setTopIconsCount(Math.min(TOP_ICONS_MAX, Math.max(TOP_ICONS_MIN, Math.trunc(nextValue))));
+	};
 
 	const renderTopActions = (): ReactNode => {
 		if (!showTopActions) {
@@ -133,29 +127,42 @@ export default function ComponentsViewPage() {
 		if (topActionsVariant === 'icons') {
 			return (
 				<div className="components-screen__top-icons">
-					<IconButton size={60} variant="primary" aria-label="Поиск">
-						<Icon name="search" width={24} height={24} alt="" aria-hidden="true" />
-					</IconButton>
-					<IconButton size={60} variant="secondary" aria-label="Фильтр">
-						<Icon name="filter" width={24} height={24} alt="" aria-hidden="true" />
-					</IconButton>
-					<IconButton size={60} variant="accent" aria-label="Добавить">
-						<Icon name="add" width={24} height={24} alt="" aria-hidden="true" />
-					</IconButton>
+					{Array.from({ length: topIconsCount }, (_, index) => {
+						const icon = topActionIcons[index % topActionIcons.length];
+
+						return (
+							<IconButton
+								key={`${icon.name}-${index}`}
+								size={60}
+								variant="primary"
+								aria-label={icon.label}
+							>
+								<Icon
+									name={icon.name}
+									width={24}
+									height={24}
+									alt=""
+									aria-hidden="true"
+								/>
+							</IconButton>
+						);
+					})}
 				</div>
 			);
 		}
 
 		return (
-			<Tabs
-				tabs={topTabs}
-				value={activeTab}
-				onChange={setActiveTab}
-				button={topTabsActionButton ?? undefined}
-				buttonPosition={
-					topTabsButtonPosition === 'none' ? undefined : topTabsButtonPosition
-				}
-			/>
+			<div className="components-screen__top-actions-shell">
+				<Tabs
+					tabs={componentOverviewTabs}
+					value={activeTab}
+					onChange={setActiveTab}
+					button={topTabsActionButton ?? undefined}
+					buttonPosition={
+						topTabsButtonPosition === 'none' ? undefined : topTabsButtonPosition
+					}
+				/>
+			</div>
 		);
 	};
 
@@ -167,10 +174,10 @@ export default function ComponentsViewPage() {
 		if (bottomActionsVariant === 'buttons') {
 			return (
 				<div className="components-screen__bottom-row">
-					<Button size={52} variant="secondary">
+					<Button size={60} variant="secondary">
 						Отмена
 					</Button>
-					<Button size={52} variant="accent">
+					<Button size={60} variant="accent">
 						Сохранить
 					</Button>
 				</div>
@@ -227,7 +234,7 @@ export default function ComponentsViewPage() {
 		}
 
 		return (
-			<SearchBar
+			<Search
 				type="search"
 				placeholder="Поиск по компоненту"
 				value={searchValue}
@@ -236,18 +243,19 @@ export default function ComponentsViewPage() {
 				}
 				leftButton={bottomSearchButtonPosition === 'left' ? searchSideButton : undefined}
 				rightButton={bottomSearchButtonPosition === 'right' ? searchSideButton : undefined}
-				fieldRightButton={
-					searchValue ? (
-						<SearchBarButton
-							aria-label="Очистить поиск"
-							title="Очистить поиск"
-							onClick={() => setSearchValue('')}
-						>
-							<Icon name="close" width={16} height={16} alt="" aria-hidden="true" />
-						</SearchBarButton>
-					) : undefined
-				}
-			/>
+					fieldAction={
+						searchValue ? (
+							<IconButton
+								size={32}
+								variant="primary"
+								aria-label="Очистить поиск"
+								onClick={() => setSearchValue('')}
+							>
+								<Icon name="close" width={16} height={16} alt="" aria-hidden="true" />
+							</IconButton>
+						) : undefined
+					}
+				/>
 		);
 	};
 
@@ -277,15 +285,43 @@ export default function ComponentsViewPage() {
 								setTopActionsVariant(nextValue as TopActionsVariant)
 							}
 						/>
-						{topActionsVariant === 'tabs' ? (
-							<Tabs
-								tabs={sideButtonTabs}
-								value={topTabsButtonPosition}
-								onChange={(nextValue) =>
-									setTopTabsButtonPosition(nextValue as SideButtonPosition)
+						{topActionsVariant === 'icons' ? (
+							<Cell
+								title={
+									<Text as="p" variant="regular-18" color="primary">
+										Количество иконок
+									</Text>
+								}
+								subtitle={
+									<Text as="p" variant="regular-14" color="secondary">
+										От {TOP_ICONS_MIN} до {TOP_ICONS_MAX}
+									</Text>
+								}
+								trailing={
+									<input
+										className="components-screen__field"
+										type="number"
+										min={TOP_ICONS_MIN}
+										max={TOP_ICONS_MAX}
+										inputMode="numeric"
+										value={topIconsCount}
+										onChange={handleTopIconsCountChange}
+										aria-label="Количество иконок"
+									/>
 								}
 							/>
 						) : null}
+					</List>
+				) : null}
+				{showTopActions && topActionsVariant === 'tabs' ? (
+					<List title="Положение кнопки">
+						<Tabs
+							tabs={sideButtonTabs}
+							value={topTabsButtonPosition}
+							onChange={(nextValue) =>
+								setTopTabsButtonPosition(nextValue as SideButtonPosition)
+							}
+						/>
 					</List>
 				) : null}
 
@@ -298,15 +334,17 @@ export default function ComponentsViewPage() {
 								setBottomActionsVariant(nextValue as BottomActionsVariant)
 							}
 						/>
-						{bottomActionsVariant === 'search' ? (
-							<Tabs
-								tabs={sideButtonTabs}
-								value={bottomSearchButtonPosition}
-								onChange={(nextValue) =>
-									setBottomSearchButtonPosition(nextValue as SideButtonPosition)
-								}
-							/>
-						) : null}
+					</List>
+				) : null}
+				{showBottomActions && bottomActionsVariant === 'search' ? (
+					<List title="Положение кнопки">
+						<Tabs
+							tabs={sideButtonTabs}
+							value={bottomSearchButtonPosition}
+							onChange={(nextValue) =>
+								setBottomSearchButtonPosition(nextValue as SideButtonPosition)
+							}
+						/>
 					</List>
 				) : null}
 			</>
@@ -314,22 +352,18 @@ export default function ComponentsViewPage() {
 	};
 
 	return (
-		<App>
-			<ScreenScaffold
-				header={showHeader ? <Header title="Компоненты" /> : undefined}
-				topActions={renderTopActions()}
-				bottomActions={
-					showBottomActions ? (
-						<div className="components-screen__bottom-actions-shell">
-							{renderBottomActions()}
-						</div>
-					) : undefined
-				}
-			>
-				<View>
-					<ListContainer>{renderContent()}</ListContainer>
-				</View>
-			</ScreenScaffold>
-		</App>
+		<FlowPage
+			title={showHeader ? 'Компоненты' : undefined}
+			topActions={renderTopActions()}
+			bottomActions={
+				showBottomActions ? (
+					<div className="components-screen__bottom-actions-shell">
+						{renderBottomActions()}
+					</div>
+				) : undefined
+			}
+		>
+			<FlowPageList>{renderContent()}</FlowPageList>
+		</FlowPage>
 	);
 }

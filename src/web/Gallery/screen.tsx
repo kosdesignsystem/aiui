@@ -13,7 +13,12 @@ import { App } from '../../ui/App';
 import { Text } from '../../ui/Fonts';
 import { Icon } from '../../ui/Icon';
 import { Nav } from '../../ui/Nav';
-import { galleryPhotos, galleryTotalCountLabel, type GalleryPhoto } from './model';
+import {
+	galleryPhotos,
+	galleryRoutes,
+	galleryTotalCountLabel,
+	type GalleryPhoto,
+} from './model';
 import './screen.scss';
 import { IconButton } from '../../ui/IconButton';
 
@@ -345,12 +350,13 @@ export function GalleryScreen() {
 			return undefined;
 		}
 
+		const originRect = viewer.originRect;
 		const animationFrame = window.requestAnimationFrame(() => {
 			const finalRect = shell.getBoundingClientRect();
-			const translateX = viewer.originRect.left - finalRect.left;
-			const translateY = viewer.originRect.top - finalRect.top;
-			const scaleX = viewer.originRect.width / finalRect.width;
-			const scaleY = viewer.originRect.height / finalRect.height;
+			const translateX = originRect.left - finalRect.left;
+			const translateY = originRect.top - finalRect.top;
+			const scaleX = originRect.width / finalRect.width;
+			const scaleY = originRect.height / finalRect.height;
 
 			stopAnimations();
 
@@ -613,6 +619,17 @@ export function GalleryScreen() {
 			return;
 		}
 
+		if (gesture.mode === 'pinch') {
+			gestureRef.current = {
+				mode: viewerTransform.zoom > 1.02 ? 'pan' : 'dismiss',
+				startX: event.clientX,
+				startY: event.clientY,
+				startPanX: viewerTransform.panX,
+				startPanY: viewerTransform.panY,
+			};
+			return;
+		}
+
 		const deltaX = event.clientX - gesture.startX;
 		const deltaY = event.clientY - gesture.startY;
 		const horizontalBias = Math.abs(deltaX) * 0.18;
@@ -833,7 +850,7 @@ export function GalleryScreen() {
 									{
 										id: 'all',
 										active: true,
-										onClick: () => navigate('/app/Gallery/all'),
+										onClick: () => navigate(galleryRoutes.all),
 										icon: (
 											<Icon
 												name="photo-outline"

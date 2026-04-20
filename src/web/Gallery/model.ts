@@ -1,3 +1,4 @@
+import { createAppScreenPath } from '../definition';
 import photo00 from '../../assets/gallery/photo.png';
 import photo01 from '../../assets/gallery/photo-1.png';
 import photo02 from '../../assets/gallery/photo-2.png';
@@ -22,6 +23,8 @@ import photo20 from '../../assets/gallery/photo-20.png';
 import photo21 from '../../assets/gallery/photo-21.png';
 import photo22 from '../../assets/gallery/photo-22.png';
 
+export const GALLERY_APP_ID = 'Gallery';
+
 export type GalleryPhoto = {
 	id: string;
 	title: string;
@@ -31,15 +34,6 @@ export type GalleryPhoto = {
 	width: number;
 	height: number;
 	imageSrc: string;
-};
-
-export type GalleryAlbum = {
-	id: string;
-	title: string;
-	description: string;
-	countLabel: string;
-	coverPhotoIds: string[];
-	photoIds: string[];
 };
 
 type PhotoSeed = Omit<GalleryPhoto, 'width' | 'height' | 'imageSrc'>;
@@ -236,54 +230,6 @@ export const galleryPhotos = photoSeeds.map((seed, index) => createPhoto(seed, p
 
 export const galleryTotalCountLabel = formatPhotoCount(galleryPhotos.length);
 
-const favorites = galleryPhotos.filter((photo) => photo.favorite).map((photo) => photo.id);
-const production = galleryPhotos
-	.filter((photo) => photo.albumIds.includes('production'))
-	.map((photo) => photo.id);
-const travel = galleryPhotos.filter((photo) => photo.albumIds.includes('travel')).map((photo) => photo.id);
-const documents = galleryPhotos
-	.filter((photo) => photo.albumIds.includes('documents'))
-	.map((photo) => photo.id);
-
-function createAlbum(
-	id: GalleryAlbum['id'],
-	title: string,
-	description: string,
-	photoIds: string[],
-): GalleryAlbum {
-	return {
-		id,
-		title,
-		description,
-		countLabel: formatPhotoCount(photoIds.length),
-		coverPhotoIds: photoIds.slice(0, 4),
-		photoIds,
-	};
-}
-
-export const galleryAlbums: GalleryAlbum[] = [
-	createAlbum(
-		'favorites',
-		'Избранное',
-		'Отмеченные кадры и быстрый доступ к лучшим снимкам.',
-		favorites,
-	),
-	createAlbum(
-		'production',
-		'Производство',
-		'Цех, станки, смены и инспекция оборудования.',
-		production,
-	),
-	createAlbum(
-		'travel',
-		'Поездки',
-		'Рельсы, горы, пустыня и вечерние маршруты.',
-		travel,
-	),
-	createAlbum(
-		'documents',
-		'Документы',
-		'Сканы, графики и служебные документы.',
-		documents,
-	),
-];
+export const galleryRoutes = {
+	all: createAppScreenPath(GALLERY_APP_ID, 'all'),
+} as const;

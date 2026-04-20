@@ -10,9 +10,8 @@ export type Tab = {
 };
 
 type TabsList =
-	| readonly [Tab]
-	| readonly [Tab, Tab]
-	| readonly [Tab, Tab, Tab];
+	// Prefer 2 tabs. Use 3 only when labels are short enough to avoid truncation.
+	readonly [Tab] | readonly [Tab, Tab] | readonly [Tab, Tab, Tab];
 
 export type TabsProps = {
 	tabs: TabsList;
@@ -60,11 +59,7 @@ export function Tabs({
 
 	const tabsList = (
 		<div className="ui-tabs__list">
-			<div
-				ref={viewportRef}
-				className="ui-tabs__viewport"
-				onWheel={handleViewportWheel}
-			>
+			<div ref={viewportRef} className="ui-tabs__viewport" onWheel={handleViewportWheel}>
 				<div className="ui-tabs__track" role="tablist" aria-label="Фильтр звонков">
 					{tabs.map((tab) => {
 						const isActive = tab.id === selectedTabId;
@@ -88,7 +83,7 @@ export function Tabs({
 										: undefined
 								}
 							>
-								<Text variant="medium-18" color={isActive ? 'primary' : 'secondary'}>
+								<Text variant="regular-18" color="primary">
 									<span className="ui-tabs__tab-label">{tab.label}</span>
 								</Text>
 							</button>
@@ -99,22 +94,20 @@ export function Tabs({
 		</div>
 	);
 
-	const actionButton = hasCustomButton
-		? button
-		: hasLegacyButton
-			? (
-				<IconButton
-					size={60}
-					aria-label="Поиск"
-					background={'content-background'}
-					onClick={() => {
-						onButtonClick?.();
-					}}
-				>
-					<Icon name="search" alt="" width={24} height={24} />
-				</IconButton>
-			)
-			: null;
+	const actionButton = hasCustomButton ? (
+		button
+	) : hasLegacyButton ? (
+		<IconButton
+			size={60}
+			aria-label="Поиск"
+			background={'content-background'}
+			onClick={() => {
+				onButtonClick?.();
+			}}
+		>
+			<Icon name="search" alt="" width={24} height={24} />
+		</IconButton>
+	) : null;
 
 	return (
 		<section className="ui-tabs">

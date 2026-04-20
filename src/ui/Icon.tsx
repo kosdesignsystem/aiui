@@ -1,7 +1,7 @@
 import { useId } from 'react';
-import { iconDefinitions, iconIdPrefixToken, iconNames } from '../generated/icons';
+import { iconDefinitions, iconIdPrefixToken } from '../generated/icons';
 
-export type IconName = string;
+export type IconName = keyof typeof iconDefinitions;
 
 export type IconProps = {
 	name: IconName;
@@ -13,7 +13,13 @@ export type IconProps = {
 };
 
 function resolveColorValue(colorToken: string) {
-	if (colorToken.startsWith('var(') || colorToken.startsWith('#') || colorToken.startsWith('rgb') || colorToken.startsWith('hsl')) {
+	if (
+		colorToken === 'currentColor' ||
+		colorToken.startsWith('var(') ||
+		colorToken.startsWith('#') ||
+		colorToken.startsWith('rgb') ||
+		colorToken.startsWith('hsl')
+	) {
 		return colorToken;
 	}
 
@@ -29,10 +35,10 @@ export function Icon({
 	alt,
 	width = 20,
 	height = 20,
-	colorToken = 'content-primary',
+	colorToken = 'currentColor',
 	'aria-hidden': ariaHidden = false,
 }: IconProps) {
-	const definition = iconDefinitions[name] ?? null;
+	const definition = iconDefinitions[name];
 
 	if (!definition) {
 		return null;
@@ -42,7 +48,7 @@ export function Icon({
 	const resolvedAlt = alt ?? (isAriaHidden ? '' : name);
 	const color = resolveColorValue(colorToken);
 	const iconIdPrefix = useId().replace(/[^a-zA-Z0-9_-]/g, '');
-	const body = definition.body.replaceAll(iconIdPrefixToken, `${iconIdPrefix}-`);
+	const body = definition.body.split(iconIdPrefixToken).join(`${iconIdPrefix}-`);
 
 	return (
 		<svg

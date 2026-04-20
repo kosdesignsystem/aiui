@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react';
 import './Avatar.scss';
 
+export type AvatarBackground = string;
+
 export type AvatarProps = {
 	size?: number;
-	background?: string;
+	background?: AvatarBackground;
 	children?: ReactNode;
 	'aria-label'?: string;
 };

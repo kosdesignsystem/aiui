@@ -74,8 +74,8 @@ export function SegmentedTabs({
 			? (
 				<IconButton
 					size={60}
+					variant="primary"
 					aria-label="Поиск"
-					background={'content-background'}
 					onClick={() => {
 						onButtonClick?.();
 					}}
