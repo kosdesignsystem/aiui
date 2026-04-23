@@ -1,11 +1,15 @@
 import { ReactNode } from 'react';
 import { Field, type FieldProps } from './Field';
 import { Icon } from './Icon';
+import { cn } from './lib/cn';
 import './Search.scss';
 
 export type SearchProps = Omit<FieldProps, 'leading' | 'trailing' | 'type' | 'className'> & {
 	className?: string;
 	fieldClassName?: string;
+	before?: ReactNode;
+	after?: ReactNode;
+	inputTrailing?: ReactNode;
 	leftButton?: ReactNode;
 	rightButton?: ReactNode;
 	fieldAction?: ReactNode;
@@ -15,6 +19,9 @@ export type SearchProps = Omit<FieldProps, 'leading' | 'trailing' | 'type' | 'cl
 };
 
 export function Search({
+	before,
+	after,
+	inputTrailing,
 	leftButton,
 	rightButton,
 	fieldAction,
@@ -44,19 +51,19 @@ export function Search({
 	...fieldProps
 }: SearchProps) {
 	const ariaLabel = ariaLabelProp ?? (ariaLabelledBy ? undefined : 'Поиск');
-	const trailing = fieldAction ?? fieldRightButton;
-	const classes = ['ui-search', 'ui-search-bar', className ?? ''].filter(Boolean).join(' ');
+	const resolvedBefore = before ?? leftButton;
+	const resolvedAfter = after ?? rightButton;
+	const trailing = inputTrailing ?? fieldAction ?? fieldRightButton;
+	const classes = cn('ui-search', 'ui-search-bar', className);
 
 	return (
 		<div className={classes}>
-			{leftButton ? (
-				<div className="ui-search__action ui-search-bar__action">{leftButton}</div>
+			{resolvedBefore ? (
+				<div className="ui-search__action ui-search-bar__action">{resolvedBefore}</div>
 			) : null}
 
 			<Field
-				className={['ui-search__field', 'ui-search-bar__field', fieldClassName ?? '']
-					.filter(Boolean)
-					.join(' ')}
+				className={cn('ui-search__field', 'ui-search-bar__field', fieldClassName)}
 				inputClassName={inputClassName}
 				type={type}
 				id={id}
@@ -93,8 +100,8 @@ export function Search({
 				{...fieldProps}
 			/>
 
-			{rightButton ? (
-				<div className="ui-search__action ui-search-bar__action">{rightButton}</div>
+			{resolvedAfter ? (
+				<div className="ui-search__action ui-search-bar__action">{resolvedAfter}</div>
 			) : null}
 		</div>
 	);

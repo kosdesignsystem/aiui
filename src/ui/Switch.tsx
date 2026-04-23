@@ -1,4 +1,5 @@
 import { ChangeEventHandler, useEffect, useRef, useState } from 'react';
+import { cn } from './lib/cn';
 import './Switch.scss';
 
 export type SwitchProps = {
@@ -12,6 +13,7 @@ export type SwitchProps = {
 	autoFocus?: boolean;
 	required?: boolean;
 	onChange?: ChangeEventHandler<HTMLInputElement>;
+	className?: string;
 	'aria-label'?: string;
 	'aria-labelledby'?: string;
 };
@@ -27,6 +29,7 @@ export function Switch({
 	autoFocus = false,
 	required = false,
 	onChange,
+	className,
 	'aria-label': ariaLabelProp,
 	'aria-labelledby': ariaLabelledBy,
 }: SwitchProps) {
@@ -43,14 +46,13 @@ export function Switch({
 		};
 	}, []);
 
-	const classes = [
+	const classes = cn(
 		'ui-switch',
 		isPressed ? 'is-pressed' : '',
 		animationDirection === 'on' ? 'is-animating-on' : '',
 		animationDirection === 'off' ? 'is-animating-off' : '',
-	]
-		.filter(Boolean)
-		.join(' ');
+		className,
+	);
 
 	const resetPressedState = () => {
 		setIsPressed(false);

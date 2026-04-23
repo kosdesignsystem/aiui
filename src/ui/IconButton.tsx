@@ -1,19 +1,14 @@
-import { CSSProperties, KeyboardEventHandler, MouseEventHandler, ReactNode } from 'react';
-import type { AvatarBackground } from './Avatar';
+import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react';
 import type { ButtonSize, ButtonVariant } from './Button';
+import { getActionClassName } from './lib/action';
+import { createCssVarStyle, type CssToken } from './lib/styles';
 import './IconButton.scss';
 
-export type IconButtonProps = {
+export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
 	size?: ButtonSize;
 	variant?: ButtonVariant;
-	background?: AvatarBackground;
-	type?: 'button' | 'submit' | 'reset';
-	disabled?: boolean;
-	title?: string;
+	background?: CssToken;
 	children?: ReactNode;
-	onClick?: MouseEventHandler<HTMLButtonElement>;
-	onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
-	'aria-label'?: string;
 };
 
 export function IconButton({
@@ -21,35 +16,28 @@ export function IconButton({
 	variant = 'accent',
 	background,
 	type = 'button',
-	disabled = false,
-	title,
 	children,
-	onClick,
-	onKeyDown,
-	'aria-label': ariaLabel,
+	className,
+	style,
+	...buttonProps
 }: IconButtonProps) {
-	const resolvedVariant = variant === 'ghost' ? 'link' : variant;
-	const classes = [
-		'ui-icon-button',
-		`ui-icon-button--${resolvedVariant}`,
-		`ui-icon-button--h${size}`,
-	]
-		.filter(Boolean)
-		.join(' ');
-	const backgroundStyle = background
-		? ({ '--ui-icon-button-background': `var(--${background})` } as CSSProperties)
-		: undefined;
+	const classes = getActionClassName({
+		baseClassName: 'ui-icon-button',
+		size,
+		variant,
+		className,
+	});
+	const backgroundStyle = createCssVarStyle('--ui-control-background', background);
+	const resolvedStyle = backgroundStyle
+		? ({ ...backgroundStyle, ...style } as CSSProperties)
+		: style;
 
 	return (
 		<button
+			{...buttonProps}
 			type={type}
-			disabled={disabled}
-			title={title}
-			onClick={onClick}
-			onKeyDown={onKeyDown}
-			aria-label={ariaLabel}
 			className={classes}
-			style={backgroundStyle}
+			style={resolvedStyle}
 		>
 			{children}
 		</button>

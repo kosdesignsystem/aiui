@@ -1,4 +1,5 @@
 import { InputHTMLAttributes, ReactNode } from 'react';
+import { cn } from './lib/cn';
 import './Field.scss';
 
 export type FieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
@@ -21,20 +22,16 @@ export function Field({
 	inputClassName,
 	...inputProps
 }: FieldProps) {
-	const classes = [
+	const classes = cn(
 		'ui-field',
 		label ? 'ui-field--with-label' : '',
 		invalid ? 'ui-field--invalid' : '',
 		disabled ? 'ui-field--disabled' : '',
 		readOnly ? 'ui-field--readonly' : '',
-		className ?? '',
-	]
-		.filter(Boolean)
-		.join(' ');
+		className,
+	);
 
-	const resolvedInputClassName = ['ui-field__input', inputClassName ?? '']
-		.filter(Boolean)
-		.join(' ');
+	const resolvedInputClassName = cn('ui-field__input', inputClassName);
 
 	return (
 		<label className={classes}>

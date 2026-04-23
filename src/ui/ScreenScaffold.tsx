@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
+import { cn } from './lib/cn';
 import './ScreenScaffold.scss';
 
 export type ScreenScaffoldProps = {
@@ -6,6 +7,7 @@ export type ScreenScaffoldProps = {
 	topActions?: ReactNode;
 	bottomActions?: ReactNode;
 	children: ReactNode;
+	className?: string;
 };
 
 // Default screen composition for apps. ScreenScaffold owns the scroll/sticky
@@ -15,6 +17,7 @@ export function ScreenScaffold({
 	topActions,
 	bottomActions,
 	children,
+	className,
 }: ScreenScaffoldProps) {
 	const viewportRef = useRef<HTMLDivElement | null>(null);
 	const topActionsRef = useRef<HTMLDivElement | null>(null);
@@ -51,7 +54,7 @@ export function ScreenScaffold({
 	}, [topActions, header]);
 
 	return (
-		<div className="ui-screen-scaffold">
+		<div className={cn('ui-screen-scaffold', className)}>
 			<div className="ui-screen-scaffold__viewport" ref={viewportRef}>
 				{header ? <div className="ui-screen-scaffold__header">{header}</div> : null}
 				{topActions ? (

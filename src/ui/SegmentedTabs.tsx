@@ -1,26 +1,31 @@
 import { ReactNode } from 'react';
 import { Text } from './Fonts';
-import { Icon } from './Icon';
-import { IconButton } from './IconButton';
+import { cn } from './lib/cn';
+import {
+	resolveTabsAction,
+	resolveTabsValue,
+	type LegacyTabsLayout,
+	type TabItem,
+	type TabItemList,
+	type TabsActionConfig,
+	type TabsActionPosition,
+} from './lib/tabs';
 import './SegmentedTabs.scss';
 
-export type SegmentedTab = {
-	id: string;
-	label: string;
-};
-
-type SegmentedTabsList =
-	| readonly [SegmentedTab]
-	| readonly [SegmentedTab, SegmentedTab]
-	| readonly [SegmentedTab, SegmentedTab, SegmentedTab];
+export type SegmentedTab = TabItem;
+type SegmentedTabsList = TabItemList<SegmentedTab>;
 
 export type SegmentedTabsProps = {
 	tabs: SegmentedTabsList;
 	value: string;
 	onChange: (tabId: string) => void;
+	interactive?: boolean;
+	ariaLabel?: string;
+	className?: string;
+	action?: TabsActionConfig;
 	button?: ReactNode;
-	buttonPosition?: 'left' | 'right';
-	variant?: 'tabs-only' | 'button-left' | 'button-right';
+	buttonPosition?: TabsActionPosition;
+	variant?: LegacyTabsLayout;
 	onButtonClick?: () => void;
 };
 
@@ -28,33 +33,43 @@ export function SegmentedTabs({
 	tabs,
 	value,
 	onChange,
+	interactive = true,
+	ariaLabel = 'Переключение вкладок',
+	className,
+	action,
 	button,
 	buttonPosition,
 	variant = 'tabs-only',
 	onButtonClick,
 }: SegmentedTabsProps) {
-	const hasCustomButton = button != null;
-	const hasLegacyButton = variant !== 'tabs-only';
-	const customButtonOnLeft =
-		(buttonPosition ?? (variant === 'button-left' ? 'left' : 'right')) === 'left';
-	const buttonOnLeft = hasCustomButton ? customButtonOnLeft : variant === 'button-left';
-	const selectedTabId = tabs.some((tab) => tab.id === value) ? value : tabs[0].id;
+	const selectedTabId = resolveTabsValue(tabs, value);
+	const { actionButton, isOnLeft } = resolveTabsAction({
+		action,
+		button,
+		buttonPosition,
+		variant,
+		onButtonClick,
+		defaultActionVariant: 'primary',
+		defaultActionAriaLabel: 'Поиск',
+	});
 
 	const tabsList = (
-		<div className="ui-segmented-tabs__list" role="tablist" aria-label="Фильтр звонков">
+		<div className="ui-segmented-tabs__list" role="tablist" aria-label={ariaLabel}>
 			{tabs.map((tab) => {
 				const isActive = tab.id === selectedTabId;
+				const isDisabled = !interactive || tab.disabled;
 
 				return (
 					<button
 						key={tab.id}
 						type="button"
 						role="tab"
-						className={`ui-segmented-tabs__tab${isActive ? ' is-active' : ''}`}
+						className={cn('ui-segmented-tabs__tab', isActive ? 'is-active' : '')}
 						aria-selected={isActive}
-						tabIndex={isActive ? 0 : -1}
+						tabIndex={!isDisabled && isActive ? 0 : -1}
+						disabled={isDisabled}
 						onClick={() => {
-							if (tab.id !== selectedTabId) {
+							if (!isDisabled && tab.id !== selectedTabId) {
 								onChange(tab.id);
 							}
 						}}
@@ -68,28 +83,11 @@ export function SegmentedTabs({
 		</div>
 	);
 
-	const actionButton = hasCustomButton
-		? button
-		: hasLegacyButton
-			? (
-				<IconButton
-					size={60}
-					variant="primary"
-					aria-label="Поиск"
-					onClick={() => {
-						onButtonClick?.();
-					}}
-				>
-					<Icon name="search" alt="" width={24} height={24} />
-				</IconButton>
-			)
-			: null;
-
 	return (
-		<section className="ui-segmented-tabs">
-			{actionButton && buttonOnLeft ? actionButton : null}
+		<section className={cn('ui-segmented-tabs', className)}>
+			{actionButton && isOnLeft ? actionButton : null}
 			{tabsList}
-			{actionButton && !buttonOnLeft ? actionButton : null}
+			{actionButton && !isOnLeft ? actionButton : null}
 		</section>
 	);
 }

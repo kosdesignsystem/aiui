@@ -252,7 +252,7 @@ export function CallsScreen({ title, filter, mode = 'default' }: CallsScreenProp
 								setSearchQuery(event.target.value)
 							}
 							onKeyDown={handleSearchKeyDown}
-							fieldAction={
+							inputTrailing={
 								<IconButton
 									size={32}
 									variant="primary"
@@ -277,17 +277,19 @@ export function CallsScreen({ title, filter, mode = 'default' }: CallsScreenProp
 						onChange={(tabId) =>
 							navigate(tabId === 'missed' ? callsRoutes.missed : callsRoutes.main)
 						}
-						buttonPosition="left"
-						button={
-							<IconButton
-								size={60}
-								variant="primary"
-								aria-label="Поиск"
-								onClick={handleOpenSearch}
-							>
-								<Icon name="search" alt="" width={24} height={24} />
-							</IconButton>
-						}
+						action={{
+							position: 'left',
+							element: (
+								<IconButton
+									size={60}
+									variant="primary"
+									aria-label="Поиск"
+									onClick={handleOpenSearch}
+								>
+									<Icon name="search" alt="" width={24} height={24} />
+								</IconButton>
+							),
+						}}
 					/>
 				)
 			}

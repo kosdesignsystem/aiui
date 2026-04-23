@@ -103,7 +103,7 @@ function Navigation({ theme, onThemeChange, onNavigate }: NavigationProps) {
 		<nav className="sidebar">
 			<Header
 				title="AI UI"
-				button={
+				action={
 					<label className="theme-select">
 						<select
 							className="theme-select__field"

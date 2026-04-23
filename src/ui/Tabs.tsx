@@ -1,26 +1,31 @@
 import { ReactNode, WheelEvent, useRef } from 'react';
 import { Text } from './Fonts';
-import { Icon } from './Icon';
-import { IconButton } from './IconButton';
+import { cn } from './lib/cn';
+import {
+	resolveTabsAction,
+	resolveTabsValue,
+	type LegacyTabsLayout,
+	type TabItem,
+	type TabItemList,
+	type TabsActionConfig,
+	type TabsActionPosition,
+} from './lib/tabs';
 import './Tabs.scss';
 
-export type Tab = {
-	id: string;
-	label: string;
-};
-
-type TabsList =
-	// Prefer 2 tabs. Use 3 only when labels are short enough to avoid truncation.
-	readonly [Tab] | readonly [Tab, Tab] | readonly [Tab, Tab, Tab];
+export type Tab = TabItem;
+type TabsList = TabItemList<Tab>;
 
 export type TabsProps = {
 	tabs: TabsList;
 	value: string;
 	onChange: (tabId: string) => void;
 	interactive?: boolean;
+	ariaLabel?: string;
+	className?: string;
+	action?: TabsActionConfig;
 	button?: ReactNode;
-	buttonPosition?: 'left' | 'right';
-	variant?: 'tabs-only' | 'button-left' | 'button-right';
+	buttonPosition?: TabsActionPosition;
+	variant?: LegacyTabsLayout;
 	onButtonClick?: () => void;
 };
 
@@ -29,18 +34,26 @@ export function Tabs({
 	value,
 	onChange,
 	interactive = true,
+	ariaLabel = 'Переключение вкладок',
+	className,
+	action,
 	button,
 	buttonPosition,
 	variant = 'tabs-only',
 	onButtonClick,
 }: TabsProps) {
 	const viewportRef = useRef<HTMLDivElement | null>(null);
-	const hasCustomButton = button != null;
-	const hasLegacyButton = variant !== 'tabs-only';
-	const customButtonOnLeft =
-		(buttonPosition ?? (variant === 'button-left' ? 'left' : 'right')) === 'left';
-	const buttonOnLeft = hasCustomButton ? customButtonOnLeft : variant === 'button-left';
-	const selectedTabId = tabs.some((tab) => tab.id === value) ? value : tabs[0].id;
+	const selectedTabId = resolveTabsValue(tabs, value);
+	const { actionButton, isOnLeft } = resolveTabsAction({
+		action,
+		button,
+		buttonPosition,
+		variant,
+		onButtonClick,
+		defaultActionVariant: 'accent',
+		defaultActionBackground: 'content-background',
+		defaultActionAriaLabel: 'Поиск',
+	});
 
 	const handleViewportWheel = (event: WheelEvent<HTMLDivElement>) => {
 		const viewport = viewportRef.current;
@@ -60,21 +73,22 @@ export function Tabs({
 	const tabsList = (
 		<div className="ui-tabs__list">
 			<div ref={viewportRef} className="ui-tabs__viewport" onWheel={handleViewportWheel}>
-				<div className="ui-tabs__track" role="tablist" aria-label="Фильтр звонков">
+				<div className="ui-tabs__track" role="tablist" aria-label={ariaLabel}>
 					{tabs.map((tab) => {
 						const isActive = tab.id === selectedTabId;
+						const isDisabled = !interactive || tab.disabled;
 
 						return (
 							<button
 								key={tab.id}
 								type="button"
 								role="tab"
-								className={`ui-tabs__tab${isActive ? ' is-active' : ''}`}
+								className={cn('ui-tabs__tab', isActive ? 'is-active' : '')}
 								aria-selected={isActive}
-								tabIndex={interactive && isActive ? 0 : -1}
-								disabled={!interactive}
+								tabIndex={!isDisabled && isActive ? 0 : -1}
+								disabled={isDisabled}
 								onClick={
-									interactive
+									!isDisabled
 										? () => {
 												if (tab.id !== selectedTabId) {
 													onChange(tab.id);
@@ -94,26 +108,11 @@ export function Tabs({
 		</div>
 	);
 
-	const actionButton = hasCustomButton ? (
-		button
-	) : hasLegacyButton ? (
-		<IconButton
-			size={60}
-			aria-label="Поиск"
-			background={'content-background'}
-			onClick={() => {
-				onButtonClick?.();
-			}}
-		>
-			<Icon name="search" alt="" width={24} height={24} />
-		</IconButton>
-	) : null;
-
 	return (
-		<section className="ui-tabs">
-			{actionButton && buttonOnLeft ? actionButton : null}
+		<section className={cn('ui-tabs', className)}>
+			{actionButton && isOnLeft ? actionButton : null}
 			{tabsList}
-			{actionButton && !buttonOnLeft ? actionButton : null}
+			{actionButton && !isOnLeft ? actionButton : null}
 		</section>
 	);
 }

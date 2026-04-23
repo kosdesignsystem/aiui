@@ -24,8 +24,11 @@
 	gap: 8px;
 }
 
-.ui-list__header > .ui-icon-button {
+.ui-list__header-actions {
 	margin-left: auto;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
 }
 
 .ui-list-container {

@@ -1,14 +1,10 @@
-import { ChangeEvent, KeyboardEvent, MouseEvent, ReactNode, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { Button } from '../../ui/Button';
-import { Cell } from '../../ui/Cell';
-import { Text } from '../../ui/Fonts';
 import { Icon } from '../../ui/Icon';
 import { IconButton } from '../../ui/IconButton';
-import { List } from '../../ui/List';
 import { Nav } from '../../ui/Nav';
 import { Search } from '../../ui/Search';
 import { Tabs } from '../../ui/Tabs';
-import { Switch } from '../../ui/Switch';
 import { FlowPage, FlowPageList } from '../FlowPage';
 import './view.scss';
 import {
@@ -23,47 +19,12 @@ import {
 	TOP_ICONS_MAX,
 	TOP_ICONS_MIN,
 } from './model';
-
-type ToggleCellProps = {
-	label: string;
-	description?: string;
-	checked: boolean;
-	onChange: (checked: boolean) => void;
-};
-
-function ToggleCell({ label, description, checked, onChange }: ToggleCellProps) {
-	const toggle = () => onChange(!checked);
-	const stopPropagation = (event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => {
-		event.stopPropagation();
-	};
-
-	return (
-		<Cell
-			title={
-				<Text as="p" variant="regular-18" color="primary">
-					{label}
-				</Text>
-			}
-			subtitle={
-				description ? (
-					<Text as="p" variant="regular-14" color="secondary">
-						{description}
-					</Text>
-				) : undefined
-			}
-			trailing={
-				<div
-					className="components-screen__switch"
-					onClick={stopPropagation}
-					onKeyDown={stopPropagation}
-				>
-					<Switch checked={checked} onChange={() => toggle()} aria-label={label} />
-				</div>
-			}
-			onClick={toggle}
-		/>
-	);
-}
+import {
+	buildPromptSpec,
+	ComponentSection,
+	InputCell,
+	ToggleCell,
+} from './shared';
 
 export default function ComponentsViewPage() {
 	const [showHeader, setShowHeader] = useState(true);
@@ -109,14 +70,16 @@ export default function ComponentsViewPage() {
 			</IconButton>
 		);
 
-	const handleTopIconsCountChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const nextValue = Number(event.target.value);
+	const handleTopIconsCountChange = (nextValue: string) => {
+		const parsedValue = Number(nextValue);
 
-		if (Number.isNaN(nextValue)) {
+		if (Number.isNaN(parsedValue)) {
 			return;
 		}
 
-		setTopIconsCount(Math.min(TOP_ICONS_MAX, Math.max(TOP_ICONS_MIN, Math.trunc(nextValue))));
+		setTopIconsCount(
+			Math.min(TOP_ICONS_MAX, Math.max(TOP_ICONS_MIN, Math.trunc(parsedValue))),
+		);
 	};
 
 	const renderTopActions = (): ReactNode => {
@@ -238,12 +201,10 @@ export default function ComponentsViewPage() {
 				type="search"
 				placeholder="Поиск по компоненту"
 				value={searchValue}
-				onChange={(event: ChangeEvent<HTMLInputElement>) =>
-					setSearchValue(event.target.value)
-				}
-				leftButton={bottomSearchButtonPosition === 'left' ? searchSideButton : undefined}
-				rightButton={bottomSearchButtonPosition === 'right' ? searchSideButton : undefined}
-					fieldAction={
+				onChange={(event) => setSearchValue(event.target.value)}
+				before={bottomSearchButtonPosition === 'left' ? searchSideButton : undefined}
+				after={bottomSearchButtonPosition === 'right' ? searchSideButton : undefined}
+				inputTrailing={
 						searchValue ? (
 							<IconButton
 								size={32}
@@ -262,7 +223,27 @@ export default function ComponentsViewPage() {
 	const renderContent = () => {
 		return (
 			<>
-				<List title="Компоненты">
+				<ComponentSection
+					title="ScreenScaffold"
+					copyText={buildPromptSpec('ScreenScaffold', {
+						header: showHeader,
+						topActions: showTopActions ? topActionsVariant : 'none',
+						topActionsButtonPosition:
+							showTopActions && topActionsVariant === 'tabs'
+								? topTabsButtonPosition
+								: undefined,
+						topIconsCount:
+							showTopActions && topActionsVariant === 'icons'
+								? topIconsCount
+								: undefined,
+						bottomActions: showBottomActions ? bottomActionsVariant : 'none',
+						bottomActionsButtonPosition:
+							showBottomActions && bottomActionsVariant === 'search'
+								? bottomSearchButtonPosition
+								: undefined,
+					})}
+					description="Композиция экрана на базе ScreenScaffold, Header и action-блоков."
+				>
 					<ToggleCell label="Header" checked={showHeader} onChange={setShowHeader} />
 					<ToggleCell
 						label="TopActions"
@@ -274,10 +255,20 @@ export default function ComponentsViewPage() {
 						checked={showBottomActions}
 						onChange={setShowBottomActions}
 					/>
-				</List>
+				</ComponentSection>
 
 				{showTopActions ? (
-					<List title="TopActions">
+					<ComponentSection
+						title="TopActions"
+						copyText={buildPromptSpec('TopActions', {
+							variant: topActionsVariant,
+							buttonPosition:
+								topActionsVariant === 'tabs' ? topTabsButtonPosition : undefined,
+							iconsCount:
+								topActionsVariant === 'icons' ? topIconsCount : undefined,
+						})}
+						description="Верхний sticky-блок с вкладками или группой icon buttons."
+					>
 						<Tabs
 							tabs={topActionsVariantTabs}
 							value={topActionsVariant}
@@ -286,35 +277,27 @@ export default function ComponentsViewPage() {
 							}
 						/>
 						{topActionsVariant === 'icons' ? (
-							<Cell
-								title={
-									<Text as="p" variant="regular-18" color="primary">
-										Количество иконок
-									</Text>
-								}
-								subtitle={
-									<Text as="p" variant="regular-14" color="secondary">
-										От {TOP_ICONS_MIN} до {TOP_ICONS_MAX}
-									</Text>
-								}
-								trailing={
-									<input
-										className="components-screen__field"
-										type="number"
-										min={TOP_ICONS_MIN}
-										max={TOP_ICONS_MAX}
-										inputMode="numeric"
-										value={topIconsCount}
-										onChange={handleTopIconsCountChange}
-										aria-label="Количество иконок"
-									/>
-								}
+							<InputCell
+								label="Количество иконок"
+								description={`От ${TOP_ICONS_MIN} до ${TOP_ICONS_MAX}`}
+								type="number"
+								min={TOP_ICONS_MIN}
+								max={TOP_ICONS_MAX}
+								inputMode="numeric"
+								value={topIconsCount}
+								onChange={handleTopIconsCountChange}
 							/>
 						) : null}
-					</List>
+					</ComponentSection>
 				) : null}
 				{showTopActions && topActionsVariant === 'tabs' ? (
-					<List title="Положение кнопки">
+					<ComponentSection
+						title="TopActions Button"
+						copyText={buildPromptSpec('TopActionsButton', {
+							position: topTabsButtonPosition,
+						})}
+						description="Положение дополнительной кнопки внутри блока Tabs."
+					>
 						<Tabs
 							tabs={sideButtonTabs}
 							value={topTabsButtonPosition}
@@ -322,11 +305,21 @@ export default function ComponentsViewPage() {
 								setTopTabsButtonPosition(nextValue as SideButtonPosition)
 							}
 						/>
-					</List>
+					</ComponentSection>
 				) : null}
 
 				{showBottomActions ? (
-					<List title="BottomActions">
+					<ComponentSection
+						title="BottomActions"
+						copyText={buildPromptSpec('BottomActions', {
+							variant: bottomActionsVariant,
+							buttonPosition:
+								bottomActionsVariant === 'search'
+									? bottomSearchButtonPosition
+									: undefined,
+						})}
+						description="Нижний action-блок: кнопки, навигация или поиск."
+					>
 						<Tabs
 							tabs={bottomActionsVariantTabs}
 							value={bottomActionsVariant}
@@ -334,10 +327,16 @@ export default function ComponentsViewPage() {
 								setBottomActionsVariant(nextValue as BottomActionsVariant)
 							}
 						/>
-					</List>
+					</ComponentSection>
 				) : null}
 				{showBottomActions && bottomActionsVariant === 'search' ? (
-					<List title="Положение кнопки">
+					<ComponentSection
+						title="Search Side Action"
+						copyText={buildPromptSpec('SearchSideAction', {
+							position: bottomSearchButtonPosition,
+						})}
+						description="Расположение иконочной кнопки рядом с поиском."
+					>
 						<Tabs
 							tabs={sideButtonTabs}
 							value={bottomSearchButtonPosition}
@@ -345,7 +344,7 @@ export default function ComponentsViewPage() {
 								setBottomSearchButtonPosition(nextValue as SideButtonPosition)
 							}
 						/>
-					</List>
+					</ComponentSection>
 				) : null}
 			</>
 		);
