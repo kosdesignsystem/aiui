@@ -1,6 +1,7 @@
 import { callsAppDefinition } from './Calls';
 import { componentsAppDefinition } from './Components';
 import { galleryAppDefinition } from './Gallery';
+import { remindersAppDefinition } from './Reminders';
 
 export {
 	createAppScreenPath,
@@ -18,4 +19,5 @@ export const appRegistry = [
 	componentsAppDefinition,
 	callsAppDefinition,
 	galleryAppDefinition,
+	remindersAppDefinition,
 ];
