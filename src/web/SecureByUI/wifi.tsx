@@ -3,8 +3,11 @@ import { App } from '../../ui/App';
 import { Avatar } from '../../ui/Avatar';
 import { Cell } from '../../ui/Cell';
 import { Text } from '../../ui/Fonts';
+import { Header } from '../../ui/Header';
 import { Icon } from '../../ui/Icon';
+import { IconButton } from '../../ui/IconButton';
 import { List } from '../../ui/List';
+import { Switch } from '../../ui/Switch';
 import './screen.scss';
 import { WifiPolicySheetContent } from './wifiPolicySheetContent';
 
@@ -101,38 +104,35 @@ export default function SecureByUIWifiPage() {
 	return (
 		<App>
 			<section className="secure-ui secure-ui__wifi-page" aria-label="Secure by UI - Wi-Fi">
-				<header className="secure-ui__wifi-topbar">
-					<button type="button" className="secure-ui__wifi-nav-button" aria-label="Назад">
-						<Icon name="arrow-left" width={28} height={28} aria-hidden />
-					</button>
-					<Text variant="semiBold-32">Wi‑Fi</Text>
-					<button type="button" className="secure-ui__wifi-nav-button" aria-label="Обновить">
-						<Icon name="arrow-history" width={28} height={28} aria-hidden />
-					</button>
-				</header>
+				<Header
+					title="Wi‑Fi"
+					button={
+						<IconButton size={60} variant="primary" aria-label="Назад">
+							<Icon name="arrow-left" width={24} height={24} aria-hidden />
+						</IconButton>
+					}
+					action={
+						<IconButton size={60} variant="primary" aria-label="Обновить">
+							<Icon name="arrow-history" width={24} height={24} aria-hidden />
+						</IconButton>
+					}
+				/>
 
-				<button
-					type="button"
-					className={`secure-ui__wifi-switch${isWifiEnabled ? ' is-on' : ''}`}
-					aria-label={`Wi-Fi ${isWifiEnabled ? 'включён' : 'выключен'}`}
-					onClick={() => setIsWifiEnabled((value) => !value)}
-				>
-					<Text variant="medium-20">{isWifiEnabled ? 'Включено' : 'Выключено'}</Text>
-					<div className="secure-ui__wifi-switch-control">
-						<div className="secure-ui__wifi-switch-thumb" />
-					</div>
-				</button>
+				<div className="secure-ui__wifi-switch">
+					<Text variant="medium-20">Wi‑Fi</Text>
+					<Switch
+						checked={isWifiEnabled}
+						onChange={(event) => setIsWifiEnabled(event.target.checked)}
+						aria-label={`Wi-Fi ${isWifiEnabled ? 'включён' : 'выключен'}`}
+					/>
+				</div>
 
 				<div className="secure-ui__wifi-lists">
-					<List>
+					<List title="Текущая сеть">
 						<WifiRow item={{ id: 'corp', name: 'KI Corp', secured: true, isConnected: true }} />
 					</List>
 
-					<Text variant="regular-20" color="secondary">
-						Доступные сети
-					</Text>
-
-					<List>
+					<List title="Доступные сети" action={<Text variant="regular-14" color="secondary">Сканируется…</Text>}>
 						{AVAILABLE_NETWORKS.map((network) => (
 							<WifiRow
 								key={network.id}
@@ -141,11 +141,6 @@ export default function SecureByUIWifiPage() {
 							/>
 						))}
 					</List>
-
-					<button type="button" className="secure-ui__wifi-more">
-						<Text variant="medium-20">Еще доступные сети</Text>
-						<Icon name="chevron-down" width={26} height={26} aria-hidden />
-					</button>
 				</div>
 
 				{isPolicySheetMounted ? (
