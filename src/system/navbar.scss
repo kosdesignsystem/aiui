@@ -9,6 +9,20 @@
 	padding-left: 52px;
 }
 
+.device-navbar--mobile {
+	position: fixed;
+	width: 100%;
+	max-width: none;
+	z-index: 40;
+	justify-content: center;
+	padding-left: 0;
+	height: calc(52px + env(safe-area-inset-bottom, 0px));
+	padding-bottom: env(safe-area-inset-bottom, 0px);
+	background: var(--background-primary);
+	border-top: 1px solid var(--content-border);
+	backdrop-filter: blur(18px);
+}
+
 .nav-button {
 	display: inline-block;
 	width: 52px;

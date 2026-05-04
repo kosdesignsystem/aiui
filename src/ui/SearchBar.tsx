@@ -1,132 +1,40 @@
-import {
-  ChangeEventHandler,
-  FocusEventHandler,
-  KeyboardEventHandler,
-  MouseEventHandler,
-  ReactNode,
-} from "react";
-import { Icon } from "./Icon";
-import "./SearchBar.scss";
+import type { MouseEventHandler, ReactNode } from 'react';
+import { Search, type SearchProps } from './Search';
+import './SearchBar.scss';
 
-export type SearchBarProps = {
-  leftButton?: ReactNode;
-  rightButton?: ReactNode;
-  fieldRightButton?: ReactNode;
-  hideSearchIcon?: boolean;
-  autoFocus?: boolean;
-  value?: string;
-  defaultValue?: string;
-  placeholder?: string;
-  type?: "search" | "text";
-  name?: string;
-  autoComplete?: string;
-  id?: string;
-  disabled?: boolean;
-  readOnly?: boolean;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
-  onFocus?: FocusEventHandler<HTMLInputElement>;
-  onBlur?: FocusEventHandler<HTMLInputElement>;
-  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
-  "aria-label"?: string;
-  "aria-labelledby"?: string;
-};
+export type SearchBarProps = SearchProps;
 
-export function SearchBar({
-  leftButton,
-  rightButton,
-  fieldRightButton,
-  hideSearchIcon = false,
-  autoFocus = false,
-  value,
-  defaultValue,
-  placeholder = "Поиск",
-  type = "search",
-  name,
-  autoComplete,
-  id,
-  disabled = false,
-  readOnly = false,
-  onChange,
-  onFocus,
-  onBlur,
-  onKeyDown,
-  "aria-label": ariaLabelProp,
-  "aria-labelledby": ariaLabelledBy,
-}: SearchBarProps) {
-  const ariaLabel = ariaLabelProp ?? (ariaLabelledBy ? undefined : "Поиск");
-
-  return (
-    <div className="ui-search-bar">
-      {leftButton ? <div className="ui-search-bar__action">{leftButton}</div> : null}
-
-      <label className="ui-search-bar__field">
-        {!hideSearchIcon ? (
-          <span className="ui-search-bar__icon" aria-hidden="true">
-            <Icon
-              name="search"
-              width={24}
-              height={24}
-              alt=""
-              aria-hidden="true"
-            />
-          </span>
-        ) : null}
-        <input
-          className="ui-search-bar__input"
-          type={type}
-          id={id}
-          name={name}
-          autoFocus={autoFocus}
-          autoComplete={autoComplete}
-          disabled={disabled}
-          readOnly={readOnly}
-          value={value}
-          defaultValue={defaultValue}
-          onChange={onChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onKeyDown={onKeyDown}
-          placeholder={placeholder}
-          aria-label={ariaLabel}
-          aria-labelledby={ariaLabelledBy}
-        />
-        {fieldRightButton ? (
-          <span className="ui-search-bar__field-action">{fieldRightButton}</span>
-        ) : null}
-      </label>
-
-      {rightButton ? <div className="ui-search-bar__action">{rightButton}</div> : null}
-    </div>
-  );
+export function SearchBar(props: SearchBarProps) {
+	return <Search {...props} />;
 }
 
 export type SearchBarButtonProps = {
-  type?: "button" | "submit" | "reset";
-  disabled?: boolean;
-  title?: string;
-  children?: ReactNode;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
-  "aria-label"?: string;
+	type?: 'button' | 'submit' | 'reset';
+	disabled?: boolean;
+	title?: string;
+	children?: ReactNode;
+	onClick?: MouseEventHandler<HTMLButtonElement>;
+	'aria-label'?: string;
 };
 
 export function SearchBarButton({
-  type = "button",
-  disabled = false,
-  title,
-  children,
-  onClick,
-  "aria-label": ariaLabel,
+	type = 'button',
+	disabled = false,
+	title,
+	children,
+	onClick,
+	'aria-label': ariaLabel,
 }: SearchBarButtonProps) {
-  return (
-    <button
-      type={type}
-      disabled={disabled}
-      title={title}
-      onClick={onClick}
-      aria-label={ariaLabel}
-      className="ui-search-bar-button"
-    >
-      {children}
-    </button>
-  );
+	return (
+		<button
+			type={type}
+			disabled={disabled}
+			title={title}
+			onClick={onClick}
+			aria-label={ariaLabel}
+			className="ui-search-bar-button"
+		>
+			{children}
+		</button>
+	);
 }
