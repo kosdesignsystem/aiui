@@ -329,3 +329,114 @@
 .secure-ui__wifi-more:hover {
 	background: var(--content-background);
 }
+
+.secure-ui__wifi-page {
+	position: relative;
+	isolation: isolate;
+}
+
+.secure-ui__secure-glow {
+	position: absolute;
+	inset: -10px;
+	pointer-events: none;
+	opacity: 0;
+	background:
+		radial-gradient(110% 75% at 50% 0%, rgb(90 255 165 / 26%), transparent 62%),
+		radial-gradient(100% 70% at 50% 100%, rgb(120 255 185 / 20%), transparent 66%),
+		radial-gradient(110% 85% at 0% 50%, rgb(80 240 150 / 14%), transparent 60%),
+		radial-gradient(110% 85% at 100% 50%, rgb(96 255 170 / 14%), transparent 60%);
+	filter: blur(8px);
+	transition: opacity 0.5s ease;
+	animation: secure-glow-breathe 6.5s ease-in-out infinite;
+	z-index: 0;
+}
+
+.secure-ui__wifi-page > *:not(.secure-ui__secure-glow) {
+	position: relative;
+	z-index: 1;
+}
+
+.secure-ui__wifi-page.is-secure-mode .secure-ui__secure-glow {
+	opacity: 1;
+}
+
+@keyframes secure-glow-breathe {
+	0%,
+	100% { transform: scale(1); filter: blur(8px); }
+	50% { transform: scale(1.01); filter: blur(10px); }
+}
+
+.secure-ui__wifi-switches {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin: 24px 20px 16px;
+}
+
+.secure-ui__wifi-switch {
+	margin: 0;
+}
+
+.secure-ui__wifi-networks-wrap {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.secure-ui__wifi-network-item {
+	animation: secure-network-fade-in 0.24s ease;
+}
+
+@keyframes secure-network-fade-in {
+	from { opacity: 0; transform: translateY(6px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+.secure-ui__secure-sheet {
+	gap: 16px;
+}
+
+.secure-ui__secure-card {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 14px;
+	border-radius: 16px;
+	background: linear-gradient(135deg, rgb(120 255 185 / 18%), rgb(60 180 120 / 8%));
+	border: 1px solid rgb(120 255 185 / 28%);
+}
+
+.secure-ui__secure-actions {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.secure-ui__wifi-switch-copy {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	max-width: 76%;
+}
+
+.secure-ui__wifi-empty-state {
+	margin: 8px 20px 0;
+	padding: 28px 20px;
+	border-radius: 24px;
+	background: var(--content-background);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: 10px;
+}
+
+.secure-ui__wifi-empty-icon {
+	width: 56px;
+	height: 56px;
+	border-radius: 18px;
+	background: linear-gradient(145deg, rgb(120 255 185 / 20%), rgb(120 255 185 / 8%));
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
