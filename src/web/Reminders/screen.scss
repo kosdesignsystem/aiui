@@ -11,61 +11,13 @@
 	min-height: 56px;
 }
 
-.reminders-screen__composer {
-	margin: 0 10px 10px;
-	padding: 12px;
-	border: 1px solid var(--content-border);
-	border-radius: 8px;
-	background: var(--background-primary);
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+.reminders-screen__tabs .ui-segmented-tabs__list {
+	width: 100%;
 }
 
-.reminders-screen__composer-header {
-	min-height: 32px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 12px;
-}
-
-.reminders-screen__draft-grid {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-	gap: 10px;
-}
-
-.reminders-screen__list-picker {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 8px;
-}
-
-.reminders-screen__list-chip {
+.reminders-screen__tabs .ui-segmented-tabs__tab {
+	flex: 1 1 0;
 	min-width: 0;
-	min-height: 44px;
-	padding: 0 10px;
-	border: 1px solid var(--content-border);
-	border-radius: 8px;
-	background: transparent;
-	color: var(--content-primary);
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	gap: 6px;
-	cursor: pointer;
-}
-
-.reminders-screen__list-chip.is-active {
-	border-color: var(--content-primary);
-	background: var(--content-background);
-}
-
-.reminders-screen__list-chip .ui-text {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 }
 
 .reminders-screen__row {
@@ -76,8 +28,48 @@
 	border-radius: 8px;
 }
 
+.reminders-screen__checkbox {
+	width: 44px;
+	height: 44px;
+	border: 0;
+	border-radius: 50%;
+	padding: 0;
+	background: transparent;
+	color: var(--content-primary);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.reminders-screen__checkbox:focus-visible {
+	outline: 2px solid var(--accent-primary);
+	outline-offset: 2px;
+}
+
+.reminders-screen__checkbox-avatar.ui-avatar {
+	border: 2px solid var(--content-border);
+	border-radius: 50%;
+	background: var(--background-primary);
+	transition:
+		background-color 160ms ease,
+		border-color 160ms ease,
+		transform 160ms ease;
+}
+
+.reminders-screen__checkbox:hover .reminders-screen__checkbox-avatar {
+	border-color: var(--accent-primary);
+	transform: scale(1.04);
+}
+
+.reminders-screen__checkbox.is-checked .reminders-screen__checkbox-avatar {
+	border-color: var(--accent-primary);
+	background: var(--accent-primary);
+}
+
 .reminders-screen__cell.is-completed .reminders-screen__title {
 	text-decoration: line-through;
+	text-decoration-thickness: 1.5px;
 }
 
 .reminders-screen__title {
@@ -98,42 +90,10 @@
 }
 
 .reminders-screen__bottom {
-	background: var(--background-primary);
-	border-top: 1px solid var(--content-border);
+	background: var(--background-secondary);
 }
 
 .reminders-screen__add-task {
 	width: calc(100% - 20px);
-	min-height: 52px;
 	margin: 10px 10px 0;
-	border: 1px solid var(--content-border);
-	border-radius: 8px;
-	background: var(--content-primary);
-	color: var(--background-primary);
-	font: inherit;
-	font-weight: 500;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	gap: 8px;
-	cursor: pointer;
-}
-
-.reminders-screen__add-task:disabled {
-	opacity: 0.48;
-	cursor: default;
-}
-
-.reminders-screen__bottom .ui-nav {
-	height: 64px;
-}
-
-@media (max-width: 380px) {
-	.reminders-screen__draft-grid {
-		grid-template-columns: 1fr;
-	}
-
-	.reminders-screen__list-picker {
-		grid-template-columns: 1fr;
-	}
 }

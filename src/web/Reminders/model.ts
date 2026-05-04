@@ -57,17 +57,6 @@ export const reminderLists: ReminderList[] = [
 	},
 ];
 
-export const remindersNavItems = [
-	{ id: 'tasks', label: 'Задачи', icon: 'list-check', path: remindersRoutes.today },
-	{ id: 'lists', label: 'Списки', icon: 'folder-outline' },
-	{ id: 'plan', label: 'План', icon: 'calendar-week-outline' },
-] satisfies Array<{
-	id: string;
-	label: string;
-	icon: IconName;
-	path?: string;
-}>;
-
 export const reminderSeeds: Reminder[] = [
 	{
 		id: 'reminder-1',
@@ -160,13 +149,26 @@ export function getReminderList(listId: ReminderListId) {
 export function getRemindersByFilter(reminders: Reminder[], filter: ReminderFilter) {
 	if (filter === 'today') {
 		return reminders.filter(
-			(reminder) =>
-				!reminder.completed &&
-				(reminder.section === 'today' || reminder.section === 'overdue'),
+			(reminder) => {
+				if (reminder.section === 'today' || reminder.section === 'overdue') {
+					return true;
+				}
+
+				if (!reminder.completed) {
+					return false;
+				}
+
+				return (
+					reminder.activeSection === 'today' ||
+					reminder.activeSection === 'overdue' ||
+					reminder.dueLabel === 'Сегодня' ||
+					reminder.dueLabel === 'Вчера'
+				);
+			},
 		);
 	}
 
-	return reminders.filter((reminder) => !reminder.completed);
+	return reminders;
 }
 
 function normalizeSearchValue(value: string) {

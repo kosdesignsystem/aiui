@@ -1,21 +1,13 @@
-import {
-	ChangeEvent,
-	FormEvent,
-	KeyboardEvent,
-	SetStateAction,
-	useMemo,
-	useState,
-} from 'react';
+import { ChangeEvent, KeyboardEvent, SetStateAction, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Avatar } from '../../ui/Avatar';
+import { Button } from '../../ui/Button';
 import { Cell } from '../../ui/Cell';
-import { Field } from '../../ui/Field';
 import { Text } from '../../ui/Fonts';
 import { Header } from '../../ui/Header';
-import { Icon, type IconName } from '../../ui/Icon';
+import { Icon } from '../../ui/Icon';
 import { IconButton } from '../../ui/IconButton';
 import { List } from '../../ui/List';
-import { Nav } from '../../ui/Nav';
 import { Search } from '../../ui/Search';
 import { SegmentedTabs } from '../../ui/SegmentedTabs';
 import { FlowPage, FlowPageList } from '../FlowPage';
@@ -24,9 +16,7 @@ import {
 	getReminderList,
 	groupReminders,
 	reminderFilterTabs,
-	reminderLists,
 	reminderSeeds,
-	remindersNavItems,
 	remindersRoutes,
 	searchReminders,
 	type Reminder,
@@ -42,10 +32,10 @@ type RemindersScreenProps = {
 	mode?: 'default' | 'search';
 };
 
-type DraftReminder = {
+type PreparedReminder = {
 	title: string;
-	date: string;
-	time: string;
+	dateOffset: number | null;
+	dueTime?: string;
 	listId: ReminderListId;
 };
 
@@ -53,20 +43,40 @@ type RouteState = {
 	from?: string;
 };
 
-type ReminderAvatarMeta = {
-	icon: IconName;
-	label: string;
-	colorToken: string;
-};
-
-const EMPTY_DRAFT: DraftReminder = {
-	title: '',
-	date: '',
-	time: '',
-	listId: 'work',
-};
+const preparedReminders: PreparedReminder[] = [
+	{
+		title: 'Подготовить статус по проекту',
+		dateOffset: 0,
+		dueTime: '12:00',
+		listId: 'work',
+	},
+	{
+		title: 'Оплатить интернет',
+		dateOffset: 1,
+		dueTime: '19:00',
+		listId: 'home',
+	},
+	{
+		title: 'Записаться к врачу',
+		dateOffset: 3,
+		dueTime: '10:00',
+		listId: 'personal',
+	},
+	{
+		title: 'Отнести документы в офис',
+		dateOffset: 7,
+		dueTime: '09:30',
+		listId: 'work',
+	},
+	{
+		title: 'Разобрать список покупок',
+		dateOffset: null,
+		listId: 'home',
+	},
+];
 
 let reminderStore = reminderSeeds;
+let preparedReminderCursor = 0;
 
 function useReminderStore() {
 	const [reminders, setReminderState] = useState(reminderStore);
@@ -109,7 +119,14 @@ function getTomorrow(date: Date) {
 	return tomorrow;
 }
 
-function formatDraftDateLabel(dateKey: string) {
+function getDateByOffset(offset: number) {
+	const date = new Date();
+	date.setDate(date.getDate() + offset);
+
+	return date;
+}
+
+function formatReminderDateLabel(dateKey: string) {
 	if (!dateKey) {
 		return 'Без срока';
 	}
@@ -134,7 +151,7 @@ function formatDraftDateLabel(dateKey: string) {
 	}).format(date);
 }
 
-function getDraftSection(dateKey: string): Exclude<ReminderSectionId, 'completed'> {
+function getReminderSection(dateKey: string): Exclude<ReminderSectionId, 'completed'> {
 	if (!dateKey) {
 		return 'no-date';
 	}
@@ -150,6 +167,14 @@ function getDraftSection(dateKey: string): Exclude<ReminderSectionId, 'completed
 	}
 
 	return 'upcoming';
+}
+
+function getPreparedReminderDateKey(preset: PreparedReminder) {
+	if (preset.dateOffset === null) {
+		return '';
+	}
+
+	return toDateKey(getDateByOffset(preset.dateOffset));
 }
 
 function restoreReminderSection(reminder: Reminder): Exclude<ReminderSectionId, 'completed'> {
@@ -168,60 +193,21 @@ function restoreReminderSection(reminder: Reminder): Exclude<ReminderSectionId, 
 	return 'upcoming';
 }
 
-function createReminderFromDraft(draft: DraftReminder): Reminder {
-	const section = getDraftSection(draft.date);
+function createReminderFromPreset(preset: PreparedReminder): Reminder {
+	const dateKey = getPreparedReminderDateKey(preset);
+	const section = getReminderSection(dateKey);
 
 	return {
-		id: `reminder-${Date.now()}`,
-		title: draft.title.trim(),
+		id: `reminder-${Date.now()}-${preparedReminderCursor}`,
+		title: preset.title,
 		note: '',
-		listId: draft.listId,
+		listId: preset.listId,
 		section,
 		activeSection: section,
-		dueLabel: formatDraftDateLabel(draft.date),
-		dueTime: draft.time || undefined,
+		dueLabel: formatReminderDateLabel(dateKey),
+		dueTime: preset.dueTime,
 		priority: 'normal',
 		completed: false,
-	};
-}
-
-function getReminderAvatarMeta(reminder: Reminder): ReminderAvatarMeta {
-	if (reminder.completed) {
-		return {
-			icon: 'status-done-outline',
-			label: 'Выполнено',
-			colorToken: 'content-secondary',
-		};
-	}
-
-	if (reminder.section === 'overdue') {
-		return {
-			icon: 'alarm-clock-warning-outline',
-			label: 'Просрочено',
-			colorToken: 'content-primary',
-		};
-	}
-
-	if (reminder.section === 'today') {
-		return {
-			icon: 'calendar-today-outline',
-			label: 'Сегодня',
-			colorToken: 'content-primary',
-		};
-	}
-
-	if (reminder.section === 'upcoming') {
-		return {
-			icon: 'calendar-week-outline',
-			label: 'Позже',
-			colorToken: 'content-secondary',
-		};
-	}
-
-	return {
-		icon: 'note-outline',
-		label: 'Без срока',
-		colorToken: 'content-secondary',
 	};
 }
 
@@ -236,29 +222,43 @@ function formatReminderMeta(reminder: Reminder) {
 	return segments.join(' · ');
 }
 
-function ReminderRow({
-	reminder,
-	onToggle,
-}: {
-	reminder: Reminder;
-	onToggle: () => void;
-}) {
-	const avatar = getReminderAvatarMeta(reminder);
+function ReminderRow({ reminder, onToggle }: { reminder: Reminder; onToggle: () => void }) {
 	const isDone = reminder.completed;
 
 	return (
 		<Cell
 			className={isDone ? 'reminders-screen__cell is-completed' : 'reminders-screen__cell'}
 			leading={
-				<Avatar background="content-background">
-					<Icon
-						name={avatar.icon}
-						width={22}
-						height={22}
-						alt={avatar.label}
-						colorToken={avatar.colorToken}
-					/>
-				</Avatar>
+				<button
+					className={
+						isDone
+							? 'reminders-screen__checkbox is-checked'
+							: 'reminders-screen__checkbox'
+					}
+					type="button"
+					role="checkbox"
+					aria-checked={isDone}
+					aria-label={isDone ? 'Вернуть в активные' : 'Отметить выполненным'}
+					title={isDone ? 'Вернуть в активные' : 'Отметить выполненным'}
+					onClick={onToggle}
+				>
+					<Avatar
+						size={32}
+						background={isDone ? 'accent-primary' : 'background-primary'}
+						className="reminders-screen__checkbox-avatar"
+					>
+						{isDone ? (
+							<Icon
+								name="done"
+								width={20}
+								height={20}
+								alt=""
+								aria-hidden="true"
+								colorToken="content-constant"
+							/>
+						) : null}
+					</Avatar>
+				</button>
 			}
 			title={
 				<Text variant="medium-18" color={isDone ? 'secondary' : 'primary'}>
@@ -269,24 +269,6 @@ function ReminderRow({
 				<Text variant="regular-14" color="secondary">
 					{formatReminderMeta(reminder)}
 				</Text>
-			}
-			trailing={
-				<IconButton
-					size={44}
-					variant="primary"
-					aria-label={isDone ? 'Вернуть в активные' : 'Отметить выполненным'}
-					title={isDone ? 'Вернуть в активные' : 'Отметить выполненным'}
-					onClick={onToggle}
-				>
-					<Icon
-						name={isDone ? 'arrow-repeat' : 'done'}
-						width={22}
-						height={22}
-						alt=""
-						aria-hidden="true"
-						colorToken="content-primary"
-					/>
-				</IconButton>
 			}
 		/>
 	);
@@ -339,48 +321,26 @@ function SearchEmptyState() {
 	);
 }
 
-export function RemindersScreen({
-	title,
-	filter,
-	mode = 'default',
-}: RemindersScreenProps) {
+export function RemindersScreen({ title, filter, mode = 'default' }: RemindersScreenProps) {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const routeState = (location.state ?? {}) as RouteState;
 	const isSearchMode = mode === 'search';
 	const [reminders, setReminders] = useReminderStore();
 	const [searchQuery, setSearchQuery] = useState('');
-	const [isComposerOpen, setIsComposerOpen] = useState(false);
-	const [draft, setDraft] = useState<DraftReminder>(EMPTY_DRAFT);
-	const {
-		activeCount,
-		overdueCount,
-		filteredReminders,
-		groupedReminders,
-	} = useMemo(() => createReminderScreenState(reminders, filter), [filter, reminders]);
+	const { activeCount, overdueCount, filteredReminders, groupedReminders } = useMemo(
+		() => createReminderScreenState(reminders, filter),
+		[filter, reminders],
+	);
 	const searchResults = useMemo(
 		() => searchReminders(reminders, searchQuery),
 		[reminders, searchQuery],
 	);
-	const groupedSearchResults = useMemo(
-		() => groupReminders(searchResults),
-		[searchResults],
-	);
+	const groupedSearchResults = useMemo(() => groupReminders(searchResults), [searchResults]);
 	const metaLabel =
 		overdueCount > 0
 			? `${activeCount} активных · ${overdueCount} просрочено`
 			: `${activeCount} активных`;
-	const isDraftValid = draft.title.trim().length > 0;
-	const composerFormId = `reminders-composer-${filter}`;
-
-	const updateDraft =
-		(field: keyof DraftReminder) =>
-		(event: ChangeEvent<HTMLInputElement>) => {
-			setDraft((current) => ({
-				...current,
-				[field]: event.target.value,
-			}));
-		};
 
 	const handleOpenSearch = () => {
 		setSearchQuery('');
@@ -401,17 +361,12 @@ export function RemindersScreen({
 		handleCloseSearch();
 	};
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
+	const handleCreateTask = () => {
+		const preset = preparedReminders[preparedReminderCursor % preparedReminders.length];
+		preparedReminderCursor += 1;
+		const nextReminder = createReminderFromPreset(preset);
 
-		if (!isDraftValid) {
-			return;
-		}
-
-		const nextReminder = createReminderFromDraft(draft);
 		setReminders((current) => [nextReminder, ...current]);
-		setDraft(EMPTY_DRAFT);
-		setIsComposerOpen(false);
 		navigate(
 			nextReminder.section === 'today' || nextReminder.section === 'overdue'
 				? remindersRoutes.today
@@ -447,51 +402,16 @@ export function RemindersScreen({
 	const bottomActions = (
 		<div className="reminders-screen__bottom">
 			{!isSearchMode ? (
-				<button
+				<Button
 					className="reminders-screen__add-task"
-					type={isComposerOpen ? 'submit' : 'button'}
-					form={isComposerOpen ? composerFormId : undefined}
-					disabled={isComposerOpen && !isDraftValid}
-					onClick={() => {
-						if (!isComposerOpen) {
-							setIsComposerOpen(true);
-						}
-					}}
+					type="button"
+					size={60}
+					variant="accent"
+					onClick={handleCreateTask}
 				>
-					<Icon
-						name={isComposerOpen ? 'done' : 'add'}
-						width={20}
-						height={20}
-						alt=""
-						aria-hidden="true"
-					/>
-					<span>{isComposerOpen ? 'Добавить' : 'Новая задача'}</span>
-				</button>
+					Создать задачу
+				</Button>
 			) : null}
-
-			<Nav
-				items={remindersNavItems.map((item) => {
-					const isActive = item.id === 'tasks';
-
-					return {
-						id: item.id,
-						label: item.label,
-						active: isActive,
-						disabled: !item.path,
-						onClick: item.path ? () => navigate(item.path) : undefined,
-						icon: (
-							<Icon
-								name={item.icon}
-								width={20}
-								height={20}
-								alt=""
-								aria-hidden="true"
-								colorToken={isActive ? 'content-primary' : 'content-secondary'}
-							/>
-						),
-					};
-				})}
-			/>
 		</div>
 	);
 
@@ -544,6 +464,7 @@ export function RemindersScreen({
 					</div>
 				) : (
 					<SegmentedTabs
+						className="reminders-screen__tabs"
 						tabs={reminderFilterTabs}
 						value={filter}
 						onChange={(tabId) => navigate(getFilterRoute(tabId as ReminderFilter))}
@@ -566,91 +487,6 @@ export function RemindersScreen({
 			}
 			bottomActions={bottomActions}
 		>
-			{!isSearchMode && isComposerOpen ? (
-				<form
-					id={composerFormId}
-					className="reminders-screen__composer"
-					onSubmit={handleSubmit}
-				>
-					<div className="reminders-screen__composer-header">
-						<Text variant="medium-18" color="primary">
-							Новая задача
-						</Text>
-						<IconButton
-							size={32}
-							variant="secondary"
-							aria-label="Закрыть ввод"
-							onClick={() => {
-								setIsComposerOpen(false);
-								setDraft(EMPTY_DRAFT);
-							}}
-						>
-							<Icon
-								name="close"
-								width={18}
-								height={18}
-								alt=""
-								aria-hidden="true"
-							/>
-						</IconButton>
-					</div>
-					<Field
-						label="Название"
-						placeholder="Новое напоминание"
-						value={draft.title}
-						onChange={updateDraft('title')}
-						autoFocus
-					/>
-
-					<div className="reminders-screen__draft-grid">
-						<Field
-							label="Дата"
-							type="date"
-							value={draft.date}
-							onChange={updateDraft('date')}
-						/>
-						<Field
-							label="Время"
-							type="time"
-							value={draft.time}
-							onChange={updateDraft('time')}
-						/>
-					</div>
-
-					<div className="reminders-screen__list-picker" aria-label="Список">
-						{reminderLists.map((list) => (
-							<button
-								key={list.id}
-								type="button"
-								className={`reminders-screen__list-chip${
-									draft.listId === list.id ? ' is-active' : ''
-								}`}
-								onClick={() =>
-									setDraft((current) => ({ ...current, listId: list.id }))
-								}
-							>
-								<Icon
-									name={list.icon}
-									width={18}
-									height={18}
-									alt=""
-									aria-hidden="true"
-									colorToken={
-										draft.listId === list.id ? 'content-primary' : 'content-secondary'
-									}
-								/>
-								<Text
-									variant="medium-14"
-									color={draft.listId === list.id ? 'primary' : 'secondary'}
-								>
-									{list.label}
-								</Text>
-							</button>
-						))}
-					</div>
-				</form>
-			) : null}
-
 			{isSearchMode ? (
 				<div className="reminders-screen__search-content">
 					{searchQuery.trim().length === 0 ? null : searchResults.length === 0 ? (
@@ -673,7 +509,9 @@ export function RemindersScreen({
 				</div>
 			) : (
 				<FlowPageList>
-					{filteredReminders.length === 0 ? <EmptyRemindersState filter={filter} /> : null}
+					{filteredReminders.length === 0 ? (
+						<EmptyRemindersState filter={filter} />
+					) : null}
 					{groupedReminders.map((section) => (
 						<List key={section.id} title={section.title}>
 							{section.reminders.map((reminder) => (
