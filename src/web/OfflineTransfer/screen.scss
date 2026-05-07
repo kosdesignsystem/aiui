@@ -1,0 +1,209 @@
+.offline-transfer {
+	background: #f4f4f1;
+	color: var(--content-primary);
+}
+
+.offline-transfer .ui-screen-scaffold__viewport {
+	padding: 48px 16px 0;
+	background: linear-gradient(180deg, #fbfbf8 0%, #f4f4f1 100%);
+}
+
+.offline-transfer .ui-screen-scaffold__header {
+	padding: 0 0 16px;
+}
+
+.offline-transfer .ui-screen-scaffold__content {
+	min-height: 0;
+}
+
+.offline-transfer__status-banner {
+	border-radius: 24px;
+	background: rgb(8 9 10 / 0.94);
+	box-shadow: 0 18px 42px rgb(8 9 10 / 0.18);
+	overflow: hidden;
+}
+
+.offline-transfer__status-banner .ui-cell-shell {
+	background: transparent;
+	border-color: rgb(255 255 255 / 0.12);
+}
+
+.offline-transfer__status-banner .ui-cell {
+	min-height: 76px;
+}
+
+.offline-transfer__status-banner .ui-text-color-primary {
+	color: #fff;
+}
+
+.offline-transfer__status-banner .ui-text-color-secondary {
+	color: rgb(255 255 255 / 0.58);
+}
+
+.offline-transfer__banner-icon,
+.offline-transfer__activity-icon {
+	display: grid;
+	place-items: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: var(--content-background);
+	color: var(--content-primary);
+}
+
+.offline-transfer__banner-icon {
+	background: rgb(255 255 255 / 0.1);
+	color: #fff;
+}
+
+.offline-transfer__status-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: #63d6a5;
+	box-shadow: 0 0 0 7px rgb(99 214 165 / 0.12), 0 0 18px rgb(99 214 165 / 0.72);
+	animation: offline-transfer-status-dot 1.8s ease-in-out infinite;
+}
+
+.offline-transfer__view {
+	position: relative;
+	gap: 16px;
+	padding: 0 0 16px;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	overflow: visible;
+}
+
+.offline-transfer__header {
+	padding: 18px 0 2px;
+}
+
+.offline-transfer__header .ui-header__title {
+	max-width: 260px;
+	font-size: 50px;
+	line-height: 0.92;
+	letter-spacing: -0.08em;
+}
+
+.offline-transfer__summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 14px;
+	padding: 16px;
+	border: 1px solid rgb(8 9 10 / 0.08);
+	border-radius: 24px;
+	background: rgb(255 255 252 / 0.72);
+	box-shadow: 0 14px 32px rgb(8 9 10 / 0.06);
+}
+
+.offline-transfer__summary p {
+	margin: 4px 0 0;
+	letter-spacing: -0.06em;
+}
+
+.offline-transfer__activity-list {
+	gap: 12px;
+}
+
+.offline-transfer__activity-list .ui-list {
+	border: 1px solid rgb(8 9 10 / 0.08);
+	border-radius: 24px;
+	background: rgb(255 255 252 / 0.72);
+	box-shadow: 0 14px 32px rgb(8 9 10 / 0.05);
+	overflow: hidden;
+}
+
+.offline-transfer__activity-list .ui-list__header {
+	padding: 16px 16px 8px;
+}
+
+.offline-transfer__activity-list .ui-list__content {
+	gap: 0;
+	padding: 0 8px 8px;
+}
+
+.offline-transfer__activity-cell {
+	background: transparent;
+	border-color: transparent;
+}
+
+.offline-transfer__activity-cell + .offline-transfer__activity-cell {
+	border-top: 1px solid rgb(8 9 10 / 0.08);
+	border-radius: 0;
+}
+
+.offline-transfer__activity-cell .ui-cell {
+	align-items: flex-start;
+	min-height: 76px;
+	padding-block: 12px;
+}
+
+.offline-transfer__activity-cell--active .offline-transfer__activity-icon {
+	background: rgb(122 184 255 / 0.14);
+	color: #1c6ba8;
+}
+
+.offline-transfer__activity-cell--success .offline-transfer__activity-icon {
+	background: rgb(99 214 165 / 0.16);
+	color: #087a4d;
+}
+
+.offline-transfer__activity-cell--muted {
+	opacity: 0.68;
+}
+
+.offline-transfer__activity-title {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.offline-transfer__activity-title > .ui-text:first-child {
+	line-height: 1.12;
+	letter-spacing: -0.03em;
+}
+
+.offline-transfer__activity-meta {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding-top: 4px;
+}
+
+.offline-transfer__progress {
+	height: 5px;
+	border-radius: 999px;
+	background: rgb(8 9 10 / 0.08);
+	overflow: hidden;
+}
+
+.offline-transfer__progress span {
+	display: block;
+	height: 100%;
+	border-radius: inherit;
+	background: linear-gradient(90deg, #08090a, #7ab8ff);
+}
+
+.offline-transfer__bottom-actions {
+	padding: 0 16px 10px;
+	background: #f4f4f1;
+}
+
+.offline-transfer__bottom-actions .ui-nav {
+	height: 66px;
+	border: 1px solid rgb(8 9 10 / 0.08);
+	border-radius: 24px;
+	background: rgb(255 255 252 / 0.86);
+	box-shadow: 0 12px 28px rgb(8 9 10 / 0.08);
+	overflow: hidden;
+}
+
+@keyframes offline-transfer-status-dot {
+	50% {
+		transform: scale(0.72);
+		box-shadow: 0 0 0 10px rgb(99 214 165 / 0.08), 0 0 20px rgb(99 214 165 / 0.86);
+	}
+}
