@@ -2,6 +2,7 @@ import CallsMainPage from './Calls/main';
 import CallsMissedPage from './Calls/missed';
 import CallsSearchPage from './Calls/search';
 import { componentsAppDefinition } from './Components';
+import OfflineTransferMainPage from './OfflineTransfer/main';
 import PasswordGeneratorMainPage from './PasswordGenerator/main';
 import SecureByUIMainPage from './SecureByUI/main';
 import SecureByUIPolicyPage from './SecureByUI/policy';
@@ -19,6 +20,28 @@ export {
 	type AppScreenEntry,
 	type ScreenScenario,
 } from './definition';
+
+const offlineTransferAppDefinition = defineApp({
+	id: 'OfflineTransfer',
+	title: 'Offline Transfer',
+	businessGoal: 'Preview a premium offline mode and local network transfer dashboard.',
+	flows: [
+		defineFlow({
+			id: 'local-network',
+			title: 'Local Network',
+			businessGoal: 'Show network activity while cloud connectivity is unavailable.',
+			screens: [
+				defineScreen({
+					id: 'main',
+					title: 'Network Activity',
+					scenario: 'preview',
+					businessGoal: 'Show offline mode status, local transfer progress, and secure mesh activity.',
+					Component: OfflineTransferMainPage,
+				}),
+			],
+		}),
+	],
+});
 
 const callsAppDefinition = defineApp({
 	id: 'Calls',
@@ -115,6 +138,7 @@ const passwordGeneratorAppDefinition = defineApp({
 });
 
 export const appRegistry = [
+	offlineTransferAppDefinition,
 	componentsAppDefinition,
 	callsAppDefinition,
 	secureByUIAppDefinition,
