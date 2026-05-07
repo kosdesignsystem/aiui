@@ -1,150 +1,203 @@
+import { Button } from '../../ui/Button';
+import { Cell } from '../../ui/Cell';
+import { Text } from '../../ui/Fonts';
+import { Header } from '../../ui/Header';
+import { Icon, type IconName } from '../../ui/Icon';
+import { IconButton } from '../../ui/IconButton';
+import { List, ListContainer } from '../../ui/List';
+import { Nav } from '../../ui/Nav';
+import { ScreenScaffold } from '../../ui/ScreenScaffold';
+import { View } from '../../ui/View';
 import './screen.scss';
 
-const activityEvents = [
+type ActivityEvent = {
+	id: string;
+	title: string;
+	meta: string;
+	time: string;
+	icon: IconName;
+	variant?: 'success' | 'muted' | 'active';
+	progress?: number;
+};
+
+const activityEvents: ActivityEvent[] = [
 	{
-		status: 'active',
-		eyebrow: 'DOCS / 184.2 MB',
+		id: 'download',
 		title: 'Documentation package downloading',
-		meta: '74% · 136 MB received · 4.8 MB/s',
+		meta: '74% · 136 of 184.2 MB · 4.8 MB/s',
 		time: 'Now',
-		icon: 'pulse',
+		icon: 'folder-download-outline',
+		variant: 'active',
 		progress: 74,
 	},
 	{
-		status: 'success',
-		eyebrow: 'ARCHIVE / 12 FILES',
+		id: 'complete',
 		title: 'Transfer completed',
 		meta: 'Blueprints exported to Ava’s MacBook Pro',
 		time: '09:42',
-		icon: 'check',
+		icon: 'done',
+		variant: 'success',
 	},
 	{
-		status: 'discover',
-		eyebrow: 'LOCAL MESH',
+		id: 'device',
 		title: 'Device discovered nearby',
 		meta: 'Studio iPad · 192.168.0.24 · signal −42 dBm',
 		time: '09:41',
-		icon: 'network',
+		icon: 'network-outline',
 	},
 	{
-		status: 'secure',
-		eyebrow: 'E2E / AES-256',
+		id: 'secure',
 		title: 'Encrypted channel established',
-		meta: 'Private key rotation completed',
+		meta: 'AES-256 channel · private key rotated',
 		time: '09:39',
-		icon: 'shield',
+		icon: 'shield-done-outline',
 	},
 	{
-		status: 'muted',
-		eyebrow: 'SYNC STATE',
+		id: 'paused',
 		title: 'Sync paused — waiting for connection',
 		meta: 'Cloud queue suspended while offline mode is active',
 		time: '09:38',
-		icon: 'pause',
+		icon: 'clock-disable-outline',
+		variant: 'muted',
 	},
-] as const;
+];
 
-function OfflineIcon() {
+function StatusBanner() {
 	return (
-		<span className="offline-transfer__offline-icon" aria-hidden="true">
-			<span />
-			<span />
-			<span />
-		</span>
+		<div className="offline-transfer__status-banner">
+			<Cell
+				variant="primary"
+				leading={
+					<span className="offline-transfer__banner-icon" aria-hidden="true">
+						<Icon name="wifi-off" width={20} height={20} alt="" aria-hidden="true" />
+					</span>
+				}
+				title={
+					<Text variant="medium-16" color="primary">
+						Offline Mode Activated
+					</Text>
+				}
+				subtitle={
+					<Text variant="regular-12" color="secondary">
+						You can continue working and transfer files over local network
+					</Text>
+				}
+				trailing={<span className="offline-transfer__status-dot" aria-label="Local transfer is active" />}
+			/>
+		</div>
 	);
 }
 
-function ActivityIcon({ type }: { type: (typeof activityEvents)[number]['icon'] }) {
+function ActivityCell({ event }: { event: ActivityEvent }) {
+	const isMuted = event.variant === 'muted';
+
 	return (
-		<span className={`offline-transfer__event-icon offline-transfer__event-icon--${type}`} aria-hidden="true">
-			{type === 'check' ? '✓' : null}
-			{type === 'shield' ? '◈' : null}
-			{type === 'pause' ? 'Ⅱ' : null}
-			{type === 'network' ? (
-				<>
-					<i />
-					<i />
-					<i />
-				</>
-			) : null}
-			{type === 'pulse' ? <b /> : null}
-		</span>
+		<Cell
+			className={`offline-transfer__activity-cell offline-transfer__activity-cell--${event.variant ?? 'default'}`}
+			leading={
+				<span className="offline-transfer__activity-icon" aria-hidden="true">
+					<Icon name={event.icon} width={22} height={22} alt="" aria-hidden="true" />
+				</span>
+			}
+			title={
+				<div className="offline-transfer__activity-title">
+					<Text variant="medium-16" color={isMuted ? 'secondary' : 'primary'}>
+						{event.title}
+					</Text>
+					<Text variant="regular-12" color="secondary" family="mono">
+						{event.time}
+					</Text>
+				</div>
+			}
+			subtitle={
+				<div className="offline-transfer__activity-meta">
+					<Text variant="regular-12" color="secondary">
+						{event.meta}
+					</Text>
+					{event.progress !== undefined ? (
+						<div className="offline-transfer__progress" aria-label={`${event.progress}% complete`}>
+							<span style={{ width: `${event.progress}%` }} />
+						</div>
+					) : null}
+				</div>
+			}
+		/>
 	);
 }
 
 export default function OfflineTransferMainPage() {
 	return (
-		<section className="offline-transfer" aria-label="Offline Mode Local Network Transfer">
-			<div className="offline-transfer__grain" aria-hidden="true" />
-
-			<div className="offline-transfer__banner">
-				<OfflineIcon />
-				<div className="offline-transfer__banner-copy">
-					<strong>Offline Mode Activated</strong>
-					<span>You can continue working and transfer files over local network</span>
+		<ScreenScaffold
+			className="offline-transfer"
+			header={<StatusBanner />}
+			bottomActions={
+				<div className="offline-transfer__bottom-actions">
+					<Nav
+						ariaLabel="Offline transfer navigation"
+						items={[
+							{
+								id: 'activity',
+								label: 'Activity',
+								active: true,
+								icon: <Icon name="signal-search" width={20} height={20} alt="" aria-hidden="true" />,
+							},
+							{
+								id: 'devices',
+								label: 'Devices',
+								icon: <Icon name="router-outline" width={20} height={20} alt="" aria-hidden="true" />,
+							},
+							{
+								id: 'vault',
+								label: 'Vault',
+								icon: <Icon name="shield-outline" width={20} height={20} alt="" aria-hidden="true" />,
+							},
+						]}
+					/>
 				</div>
-				<span className="offline-transfer__status-dot" aria-label="Offline transfer status active" />
-			</div>
+			}
+		>
+			<View className="offline-transfer__view">
+				<Header
+					className="offline-transfer__header"
+					title="Network Activity"
+					meta={
+						<Text variant="regular-14" color="secondary">
+							Local-only workspace · encrypted transfer channel
+						</Text>
+					}
+					action={
+						<IconButton size={52} variant="primary" aria-label="Open local network settings">
+							<Icon name="settings-outline" width={22} height={22} alt="" aria-hidden="true" />
+						</IconButton>
+					}
+				/>
 
-			<header className="offline-transfer__hero">
-				<div>
-					<p className="offline-transfer__kicker">LOCAL / SECURE / 09:44</p>
-					<h1>Network Activity</h1>
-				</div>
-				<div className="offline-transfer__signal-card" aria-label="Local transfer pulse">
-					<div className="offline-transfer__signal-orbit">
-						<span />
-						<span />
-						<span />
+				<section className="offline-transfer__summary" aria-label="Local network summary">
+					<div>
+						<Text family="mono" variant="regular-12" color="secondary">
+							LAN STATUS
+						</Text>
+						<Text as="p" variant="semiBold-32" color="primary">
+							3 devices
+						</Text>
 					</div>
-					<div className="offline-transfer__signal-label">
-						<span>LAN</span>
-						<strong>3</strong>
-					</div>
-				</div>
-			</header>
-
-			<div className="offline-transfer__ruler" aria-hidden="true">
-				{Array.from({ length: 42 }, (_, index) => (
-					<span key={index} className={index % 5 === 0 ? 'is-major' : undefined} />
-				))}
-			</div>
-
-			<main className="offline-transfer__journal" aria-label="Activity journal">
-				{activityEvents.map((event) => (
-					<article
-						className={`offline-transfer__event offline-transfer__event--${event.status}`}
-						key={event.title}
+					<Button
+						size={52}
+						variant="accent"
+						leftIcon={<Icon name="send-outline" width={18} height={18} alt="" aria-hidden="true" />}
 					>
-						<div className="offline-transfer__timeline-node">
-							<ActivityIcon type={event.icon} />
-						</div>
-						<div className="offline-transfer__event-body">
-							<div className="offline-transfer__event-topline">
-								<span>{event.eyebrow}</span>
-								<time>{event.time}</time>
-							</div>
-							<h2>{event.title}</h2>
-							<p>{event.meta}</p>
-							{'progress' in event ? (
-								<div className="offline-transfer__progress" aria-label="Download progress 74 percent">
-									<span style={{ width: `${event.progress}%` }} />
-								</div>
-							) : null}
-						</div>
-					</article>
-				))}
-			</main>
+						Transfer
+					</Button>
+				</section>
 
-			<button className="offline-transfer__fab" type="button" aria-label="Start local network transfer">
-				<span />
-			</button>
-
-			<nav className="offline-transfer__nav" aria-label="Offline transfer navigation">
-				<a className="is-active" href="#activity">Activity</a>
-				<a href="#devices">Devices</a>
-				<a href="#vault">Vault</a>
-			</nav>
-		</section>
+				<ListContainer className="offline-transfer__activity-list">
+					<List title="Activity journal">
+						{activityEvents.map((event) => (
+							<ActivityCell event={event} key={event.id} />
+						))}
+					</List>
+				</ListContainer>
+			</View>
+		</ScreenScaffold>
 	);
 }
