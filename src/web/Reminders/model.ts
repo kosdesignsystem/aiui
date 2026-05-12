@@ -149,22 +149,9 @@ export function getReminderList(listId: ReminderListId) {
 export function getRemindersByFilter(reminders: Reminder[], filter: ReminderFilter) {
 	if (filter === 'today') {
 		return reminders.filter(
-			(reminder) => {
-				if (reminder.section === 'today' || reminder.section === 'overdue') {
-					return true;
-				}
-
-				if (!reminder.completed) {
-					return false;
-				}
-
-				return (
-					reminder.activeSection === 'today' ||
-					reminder.activeSection === 'overdue' ||
-					reminder.dueLabel === 'Сегодня' ||
-					reminder.dueLabel === 'Вчера'
-				);
-			},
+			(reminder) =>
+				!reminder.completed &&
+				(reminder.section === 'today' || reminder.section === 'overdue'),
 		);
 	}
 

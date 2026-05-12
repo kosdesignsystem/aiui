@@ -10,6 +10,7 @@ export type FlowPageProps = {
 	header?: ReactNode;
 	topActions?: ReactNode;
 	bottomActions?: ReactNode;
+	overlay?: ReactNode;
 	children: ReactNode;
 };
 
@@ -18,6 +19,7 @@ export function FlowPage({
 	header,
 	topActions,
 	bottomActions,
+	overlay,
 	children,
 }: FlowPageProps) {
 	const resolvedHeader = header ?? (title ? <Header title={title} /> : undefined);
@@ -31,6 +33,7 @@ export function FlowPage({
 			>
 				<View>{children}</View>
 			</ScreenScaffold>
+			{overlay ? <div className="flow-page__overlay">{overlay}</div> : null}
 		</App>
 	);
 }
