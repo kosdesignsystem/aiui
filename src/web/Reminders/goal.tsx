@@ -6,6 +6,7 @@ export function RemindersGoalSetupScreen() {
 			title="Настройка количества дневных задач"
 			filter="today"
 			modalPreview="goal-setup"
+			previewGoal={15}
 		/>
 	);
 }
