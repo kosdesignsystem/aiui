@@ -3,7 +3,6 @@ import {
 	type CSSProperties,
 	KeyboardEvent,
 	SetStateAction,
-	useEffect,
 	useMemo,
 	useState,
 } from 'react';
@@ -38,6 +37,7 @@ type RemindersScreenProps = {
 	title: string;
 	filter: ReminderFilter;
 	mode?: 'default' | 'search';
+	modalPreview?: 'goal-setup' | 'success';
 };
 
 type PreparedReminder = {
@@ -86,8 +86,6 @@ const preparedReminders: PreparedReminder[] = [
 let reminderStore = reminderSeeds;
 let preparedReminderCursor = 0;
 
-const REMINDERS_GOAL_STORAGE_KEY = 'aiui-reminders-plan-goal';
-const REMINDERS_GOAL_CELEBRATED_KEY = 'aiui-reminders-plan-goal-celebrated';
 const DEFAULT_PLAN_GOAL = 3;
 
 const confettiPieces = Array.from({ length: 64 }, (_, index) => index);
@@ -99,25 +97,6 @@ const confettiColors = [
 	'#8c7bff',
 	'#ffffff',
 ];
-
-function readStoredNumber(key: string) {
-	if (typeof window === 'undefined') {
-		return null;
-	}
-
-	const value = window.localStorage.getItem(key);
-	const parsedValue = value ? Number(value) : NaN;
-
-	return Number.isFinite(parsedValue) && parsedValue > 0 ? parsedValue : null;
-}
-
-function writeStoredNumber(key: string, value: number) {
-	if (typeof window === 'undefined') {
-		return;
-	}
-
-	window.localStorage.setItem(key, String(value));
-}
 
 function useReminderStore() {
 	const [reminders, setReminderState] = useState(reminderStore);
@@ -579,47 +558,33 @@ function SearchEmptyState() {
 	);
 }
 
-export function RemindersScreen({ title, filter, mode = 'default' }: RemindersScreenProps) {
+export function RemindersScreen({
+	title,
+	filter,
+	mode = 'default',
+	modalPreview,
+}: RemindersScreenProps) {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const routeState = (location.state ?? {}) as RouteState;
 	const isSearchMode = mode === 'search';
 	const [reminders, setReminders] = useReminderStore();
 	const [searchQuery, setSearchQuery] = useState('');
-	const [planGoal, setPlanGoal] = useState(() => readStoredNumber(REMINDERS_GOAL_STORAGE_KEY));
-	const [showGoalSetup, setShowGoalSetup] = useState(() => planGoal === null);
-	const [celebratedGoal, setCelebratedGoal] = useState(() =>
-		readStoredNumber(REMINDERS_GOAL_CELEBRATED_KEY),
-	);
-	const [showCongratulations, setShowCongratulations] = useState(false);
+	const [planGoal, setPlanGoal] = useState(DEFAULT_PLAN_GOAL);
 	const { activeCount, overdueCount, filteredReminders, groupedReminders } = useMemo(
 		() => createReminderScreenState(reminders, filter),
 		[filter, reminders],
 	);
 	const completedCount = useMemo(() => getCompletedReminderCount(reminders), [reminders]);
-	const progressPlanGoal = planGoal ?? DEFAULT_PLAN_GOAL;
 	const searchResults = useMemo(
 		() => searchReminders(reminders, searchQuery),
 		[reminders, searchQuery],
 	);
 	const groupedSearchResults = useMemo(() => groupReminders(searchResults), [searchResults]);
-	const headerTitle =
-		overdueCount > 0 ? `${title}: ${overdueCount} просрочено` : title;
-
-	useEffect(() => {
-		if (!planGoal || showGoalSetup || completedCount < planGoal || celebratedGoal === planGoal) {
-			return;
-		}
-
-		writeStoredNumber(REMINDERS_GOAL_CELEBRATED_KEY, planGoal);
-		setCelebratedGoal(planGoal);
-		setShowCongratulations(true);
-	}, [celebratedGoal, completedCount, planGoal, showGoalSetup]);
+	const headerTitle = overdueCount > 0 ? `${title}: ${overdueCount} просрочено` : title;
 
 	const handleSaveGoal = (goal: number) => {
-		writeStoredNumber(REMINDERS_GOAL_STORAGE_KEY, goal);
 		setPlanGoal(goal);
-		setShowGoalSetup(false);
 	};
 
 	const handleOpenSearch = () => {
@@ -697,19 +662,19 @@ export function RemindersScreen({ title, filter, mode = 'default' }: RemindersSc
 
 	const modalOverlay = (
 		<>
-			{showGoalSetup ? (
+			{modalPreview === 'goal-setup' ? (
 				<GoalSetupModal
 					activeCount={activeCount}
 					completedCount={completedCount}
-					initialGoal={progressPlanGoal}
+					initialGoal={planGoal}
 					onSave={handleSaveGoal}
 				/>
 			) : null}
-			{showCongratulations && planGoal ? (
+			{modalPreview === 'success' ? (
 				<CongratulationsModal
-					completedCount={completedCount}
+					completedCount={Math.max(completedCount, planGoal)}
 					planGoal={planGoal}
-					onClose={() => setShowCongratulations(false)}
+					onClose={() => undefined}
 				/>
 			) : null}
 		</>
@@ -726,7 +691,7 @@ export function RemindersScreen({ title, filter, mode = 'default' }: RemindersSc
 							<PlanProgress
 								activeCount={activeCount}
 								completedCount={completedCount}
-								planGoal={progressPlanGoal}
+								planGoal={planGoal}
 							/>
 						}
 					/>

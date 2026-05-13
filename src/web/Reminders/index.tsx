@@ -1,6 +1,8 @@
 import { defineApp, defineFlow, defineScreen } from '../definition';
 import { RemindersAllScreen } from './all';
+import { RemindersGoalSetupScreen } from './goal';
 import { RemindersSearchScreen } from './search';
+import { RemindersSuccessScreen } from './success';
 import { RemindersTodayScreen } from './today';
 
 export const remindersAppDefinition = defineApp({
@@ -33,6 +35,20 @@ export const remindersAppDefinition = defineApp({
 					scenario: 'search',
 					businessGoal: 'Найти напоминание по названию, заметке, списку или сроку.',
 					Component: RemindersSearchScreen,
+				}),
+				defineScreen({
+					id: 'goal',
+					title: 'Настройка количества дневных задач',
+					scenario: 'preview',
+					businessGoal: 'Показать состояние модалки настройки дневной нормы задач.',
+					Component: RemindersGoalSetupScreen,
+				}),
+				defineScreen({
+					id: 'success',
+					title: 'Успех',
+					scenario: 'preview',
+					businessGoal: 'Показать состояние модалки успешного выполнения дневного плана.',
+					Component: RemindersSuccessScreen,
 				}),
 			],
 		}),

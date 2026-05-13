@@ -126,6 +126,7 @@ function Navigation({ theme, onThemeChange, onNavigate }: NavigationProps) {
 						{app.flows.flatMap((flow) =>
 							flow.screens.map((screen) => {
 								const routePath = `/app/${app.id}/${screen.id}`;
+								const sourcePath = `./src/web/${app.id}/${screen.id}`;
 								const isActive = location.pathname === routePath;
 
 								return (
@@ -145,7 +146,7 @@ function Navigation({ theme, onThemeChange, onNavigate }: NavigationProps) {
 												title="Копировать путь"
 												onClick={(event) => {
 													event.stopPropagation();
-													void copyToClipboard(routePath);
+													void copyToClipboard(sourcePath);
 												}}
 												onKeyDown={(event) => event.stopPropagation()}
 											>
