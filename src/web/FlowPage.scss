@@ -1,0 +1,8 @@
+.flow-page__overlay {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: var(--ui-app-navbar-height, 52px);
+	left: 0;
+	z-index: 20;
+}

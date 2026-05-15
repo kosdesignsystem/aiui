@@ -129,15 +129,6 @@
 	background: var(--reminders-progress-orange);
 }
 
-.reminders-progress__marker {
-	position: absolute;
-	top: 50%;
-	left: var(--reminders-progress-marker-left);
-	border-radius: 999px;
-	background: var(--reminders-progress-orange);
-	transform: translate(-50%, -50%);
-}
-
 .reminders-progress__count {
 	flex: 0 0 auto;
 	display: inline-flex;
@@ -169,13 +160,9 @@
 	height: 20px;
 }
 
-.reminders-progress--header .reminders-progress__marker {
-	width: 2px;
-	height: 28px;
-}
-
 .reminders-progress--goal .reminders-progress__track {
-	gap: 7px;
+	justify-content: space-between;
+	gap: 0;
 	height: 42px;
 }
 
@@ -184,8 +171,9 @@
 	height: 34px;
 }
 
-.reminders-progress--goal .reminders-progress__marker {
-	display: none;
+.reminders-progress--goal .reminders-progress__segment.is-active {
+	width: 12px;
+	height: 42px;
 }
 
 .reminders-weekdays {
@@ -256,12 +244,12 @@
 }
 
 .reminders-screen__week-stat .reminders-weekdays__day {
-	width: 31px;
-	height: 56px;
-	border-radius: 14px;
-	font-size: 20px;
+	width: 26px;
+	height: 24px;
+	border-radius: 6px;
+	font-size: 12px;
 	font-weight: 600;
-	line-height: 20px;
+	line-height: 12px;
 }
 
 .reminders-screen__week-stat .reminders-weekdays__days {
@@ -270,9 +258,6 @@
 }
 
 .reminders-screen__modal-layer {
-	position: absolute;
-	inset: 0;
-	z-index: 20;
 	display: flex;
 	align-items: flex-end;
 	justify-content: center;
@@ -286,6 +271,7 @@
 	width: 100%;
 	max-width: 360px;
 	box-sizing: border-box;
+	background: var(--background-secondary);
 	color: var(--content-primary);
 	animation: reminders-sheet-enter 320ms cubic-bezier(0.2, 0.9, 0.2, 1);
 }
@@ -297,6 +283,9 @@
 .reminders-screen__goal-panel,
 .reminders-screen__congrats-panel {
 	background: var(--background-modal);
+}
+
+.reminders-screen__goal-panel {
 	box-shadow: 0 -1px 0 var(--content-border);
 }
 
@@ -412,9 +401,11 @@
 	position: relative;
 	width: 110px;
 	margin-bottom: 18px;
+	isolation: isolate;
 }
 
 .reminders-screen__achievement-icon {
+	position: relative;
 	width: 64px;
 	height: 64px;
 	border-radius: 24px;
@@ -422,15 +413,58 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	overflow: visible;
 }
 
-.reminders-screen__achievement-icon span {
+.reminders-screen__achievement-emoji {
+	position: relative;
+	z-index: 2;
+	display: block;
 	font-size: 40px;
 	line-height: 1;
+	transform-origin: 58% 72%;
+	animation: reminders-celebration-popper 1500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.reminders-screen__confetti-burst {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	z-index: 1;
+	width: 1px;
+	height: 1px;
+	pointer-events: none;
+}
+
+.reminders-screen__confetti-piece {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 7px;
+	height: 7px;
+	border-radius: 2px;
+	background: var(--confetti-color);
+	opacity: 0;
+	transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+	animation: reminders-confetti-burst 3200ms cubic-bezier(0.2, 0.74, 0.2, 1) both;
+	animation-delay: calc(210ms + var(--confetti-delay));
+}
+
+.reminders-screen__confetti-piece.is-dot {
+	border-radius: 50%;
+	width: 6px;
+	height: 6px;
+}
+
+.reminders-screen__confetti-piece.is-strip {
+	width: 4px;
+	height: 12px;
+	border-radius: 2px;
 }
 
 .reminders-screen__achievement-badge {
 	position: absolute;
+	z-index: 3;
 	right: 0;
 	bottom: 0;
 	min-width: 55px;
@@ -485,11 +519,65 @@
 	}
 }
 
+@keyframes reminders-celebration-popper {
+	0% {
+		transform: translate(0, 0) rotate(0deg) scale(1);
+	}
+	15% {
+		transform: translate(-5px, 7px) rotate(-12deg) scale(0.9);
+	}
+	22% {
+		transform: translate(-7px, 9px) rotate(-15deg) scale(0.88);
+	}
+	31% {
+		transform: translate(9px, -9px) rotate(12deg) scale(1.14);
+	}
+	46% {
+		transform: translate(-2px, 2px) rotate(-4deg) scale(1.02);
+	}
+	64%,
+	100% {
+		transform: translate(0, 0) rotate(0deg) scale(1);
+	}
+}
+
+@keyframes reminders-confetti-burst {
+	0%,
+	8% {
+		opacity: 0;
+		transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+	}
+	13% {
+		opacity: 1;
+		transform: translate(-50%, -50%) scale(0.95) rotate(0deg);
+	}
+	28% {
+		opacity: 1;
+		transform: translate(var(--confetti-x), var(--confetti-y)) scale(1)
+			rotate(var(--confetti-rotate));
+	}
+	58% {
+		opacity: 0.95;
+		transform: translate(calc(var(--confetti-x) + 10px), calc(var(--confetti-y) + 210px))
+			scale(0.94) rotate(calc(var(--confetti-rotate) + 140deg));
+	}
+	82% {
+		opacity: 0.7;
+		transform: translate(calc(var(--confetti-end-x) - 8px), calc(var(--confetti-end-y) - 90px))
+			scale(0.86) rotate(calc(var(--confetti-rotate) + 250deg));
+	}
+	100% {
+		opacity: 0;
+		transform: translate(var(--confetti-end-x), var(--confetti-end-y)) scale(0.76)
+			rotate(calc(var(--confetti-rotate) + 360deg));
+	}
+}
+
 @media (max-width: 360px) {
 	.reminders-screen__week-stat .reminders-weekdays__day {
-		width: 29px;
-		height: 52px;
-		font-size: 18px;
-		line-height: 18px;
+		width: 26px;
+		height: 24px;
+		font-size: 12px;
+		line-height: 12px;
 	}
 }

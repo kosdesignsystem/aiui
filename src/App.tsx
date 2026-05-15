@@ -13,6 +13,7 @@ import {
 	findAppScreen,
 	getDefaultAppScreenPath,
 } from './web/registry';
+import { resetGoalSetupModalSessionState } from './web/Reminders/session';
 import { Text } from './ui/Fonts';
 import './app.scss';
 
@@ -122,7 +123,31 @@ function Navigation({ theme, onThemeChange, onNavigate }: NavigationProps) {
 
 			<ListContainer>
 				{appRegistry.map((app) => (
-					<List key={app.id} title={app.title} collapsible>
+					<List
+						key={app.id}
+						title={app.title}
+						collapsible
+						action={
+							app.id === 'Reminders' ? (
+								<IconButton
+									type="button"
+									size={32}
+									variant="secondary"
+									aria-label="Сбросить показ модалки задач"
+									title="Сбросить показ модалки задач"
+									onClick={resetGoalSetupModalSessionState}
+								>
+									<Icon
+										name="delete-history-outline"
+										width={20}
+										height={20}
+										alt=""
+										aria-hidden="true"
+									/>
+								</IconButton>
+							) : undefined
+						}
+					>
 						{app.flows.flatMap((flow) =>
 							flow.screens.map((screen) => {
 								const routePath = `/app/${app.id}/${screen.id}`;
