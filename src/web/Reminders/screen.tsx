@@ -935,7 +935,7 @@ export function RemindersScreen({
 			}
 			bottomActions={bottomActions}
 			overlayClassName={modalOverlayClassName}
-			overlay={modalOverlay}
+			overlay={activeModal ? modalOverlay : undefined}
 		>
 			{isSearchMode ? (
 				<div className="reminders-screen__search-content">
