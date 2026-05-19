@@ -44,7 +44,6 @@ export function TaskProgressMeter({
 			className={cn(
 				'reminders-progress',
 				`reminders-progress--${variant}`,
-				showCount ? 'reminders-progress--with-count' : '',
 				className,
 			)}
 			role="img"

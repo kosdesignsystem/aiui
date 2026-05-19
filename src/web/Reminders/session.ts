@@ -116,11 +116,11 @@ export function markGoalSetupModalShownInSession() {
 	}
 }
 
-export function getStoredPlanGoal(defaultGoal: number) {
+export function getStoredPlanGoal(defaultGoal: number): number {
 	const storedValue = readSessionStorageValue(planGoalSessionKey);
 	const parsedValue = storedValue ? Number(storedValue) : storedPlanGoalFallback;
 
-	return Number.isFinite(parsedValue) ? parsedValue : defaultGoal;
+	return Number.isFinite(parsedValue) ? Number(parsedValue) : defaultGoal;
 }
 
 export function savePlanGoalInSession(goal: number) {

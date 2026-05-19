@@ -20,10 +20,6 @@
 	min-width: 0;
 }
 
-.reminders-screen__row {
-	border-radius: 8px;
-}
-
 .reminders-screen__cell .ui-cell {
 	border-radius: 8px;
 }
@@ -271,6 +267,8 @@
 	width: 100%;
 	max-width: 360px;
 	box-sizing: border-box;
+	border-radius: 22px 22px 0 0;
+	overflow: hidden;
 	background: var(--background-secondary);
 	color: var(--content-primary);
 	animation: reminders-sheet-enter 320ms cubic-bezier(0.2, 0.9, 0.2, 1);
@@ -286,12 +284,9 @@
 }
 
 .reminders-screen__goal-panel {
-	box-shadow: 0 -1px 0 var(--content-border);
-}
-
-.reminders-screen__goal-panel {
 	border-radius: 22px;
 	overflow: hidden;
+	box-shadow: 0 -1px 0 var(--content-border);
 }
 
 .reminders-screen__goal-panel h2 {
@@ -388,7 +383,110 @@
 	background: hsl(204 20% 18% / 0.94);
 }
 
+.reminders-screen__modal-layer.is-create-task {
+	--reminders-keyboard-height: 316px;
+	--reminders-overlay-background: hsl(204 20% 18% / 0.94);
+	padding-bottom: var(--reminders-keyboard-height);
+	background: linear-gradient(
+		to top,
+		var(--background-secondary) 0 var(--reminders-keyboard-height),
+		var(--reminders-overlay-background) var(--reminders-keyboard-height) 100%
+	);
+	backdrop-filter: blur(5px);
+}
+
+.reminders-screen__create-task-modal {
+	padding: 0 0 12px;
+}
+
+.reminders-screen__create-task-panel {
+	border-radius: 22px;
+	padding: 18px 20px 20px;
+	background: var(--background-modal);
+	box-shadow: 0 -1px 0 var(--content-border);
+}
+
+.reminders-screen__create-task-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.reminders-screen__create-task-header h2 {
+	margin: 0;
+	color: var(--content-primary);
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 24px;
+	letter-spacing: 0;
+}
+
+.reminders-screen__create-task-input {
+	width: 100%;
+	min-height: 48px;
+	box-sizing: border-box;
+	border: 0;
+	border-radius: 0;
+	padding: 14px 0 16px;
+	background: transparent;
+	color: var(--content-primary);
+	font-family: var(--font-family-base);
+	font-size: 22px;
+	font-weight: 500;
+	line-height: 28px;
+	letter-spacing: 0;
+	outline: 0;
+}
+
+.reminders-screen__create-task-input::placeholder {
+	color: var(--content-secondary);
+}
+
+.reminders-screen__create-task-controls {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+}
+
+.reminders-screen__create-task-chip {
+	min-width: 0;
+	height: 36px;
+	border: 1px solid var(--content-border);
+	border-radius: 10px;
+	padding: 0 10px;
+	background: var(--content-background);
+	color: var(--content-secondary);
+	font-family: var(--font-family-base);
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 16px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+}
+
+.reminders-screen__create-task-chip span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.reminders-screen__create-task-chip:disabled {
+	color: var(--content-disabled);
+	cursor: not-allowed;
+}
+
+.reminders-screen__create-task-submit.ui-button {
+	border-radius: 14px;
+	font-size: 16px;
+	font-weight: 500;
+}
+
 .reminders-screen__congrats-modal {
+	overflow: visible;
 	padding: 0 0 18px;
 }
 
@@ -446,7 +544,8 @@
 	background: var(--confetti-color);
 	opacity: 0;
 	transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
-	animation: reminders-confetti-burst 3200ms cubic-bezier(0.2, 0.74, 0.2, 1) both;
+	will-change: transform, opacity;
+	animation: reminders-confetti-burst 3600ms linear both;
 	animation-delay: calc(210ms + var(--confetti-delay));
 }
 
@@ -551,20 +650,30 @@
 		opacity: 1;
 		transform: translate(-50%, -50%) scale(0.95) rotate(0deg);
 	}
-	28% {
+	24% {
 		opacity: 1;
 		transform: translate(var(--confetti-x), var(--confetti-y)) scale(1)
 			rotate(var(--confetti-rotate));
 	}
-	58% {
+	38% {
+		opacity: 1;
+		transform: translate(calc(var(--confetti-x) + 6px), calc(var(--confetti-y) + 96px))
+			scale(0.97) rotate(calc(var(--confetti-rotate) + 72deg));
+	}
+	52% {
 		opacity: 0.95;
 		transform: translate(calc(var(--confetti-x) + 10px), calc(var(--confetti-y) + 210px))
-			scale(0.94) rotate(calc(var(--confetti-rotate) + 140deg));
+			scale(0.94) rotate(calc(var(--confetti-rotate) + 148deg));
 	}
-	82% {
+	68% {
+		opacity: 0.82;
+		transform: translate(calc(var(--confetti-end-x) - 12px), calc(var(--confetti-end-y) - 180px))
+			scale(0.9) rotate(calc(var(--confetti-rotate) + 226deg));
+	}
+	84% {
 		opacity: 0.7;
 		transform: translate(calc(var(--confetti-end-x) - 8px), calc(var(--confetti-end-y) - 90px))
-			scale(0.86) rotate(calc(var(--confetti-rotate) + 250deg));
+			scale(0.86) rotate(calc(var(--confetti-rotate) + 296deg));
 	}
 	100% {
 		opacity: 0;

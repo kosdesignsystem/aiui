@@ -189,16 +189,6 @@ export function groupReminders(reminders: Reminder[]) {
 		.filter((section) => section.reminders.length > 0);
 }
 
-export function getActiveReminderCount(reminders: Reminder[]) {
-	return reminders.filter((reminder) => !reminder.completed).length;
-}
-
-export function getOverdueReminderCount(reminders: Reminder[]) {
-	return reminders.filter(
-		(reminder) => !reminder.completed && reminder.section === 'overdue',
-	).length;
-}
-
 export function createReminderScreenState(
 	reminders: Reminder[],
 	filter: ReminderFilter,
@@ -206,8 +196,6 @@ export function createReminderScreenState(
 	const filteredReminders = getRemindersByFilter(reminders, filter);
 
 	return {
-		activeCount: getActiveReminderCount(reminders),
-		overdueCount: getOverdueReminderCount(reminders),
 		filteredReminders,
 		groupedReminders: groupReminders(filteredReminders),
 	};
