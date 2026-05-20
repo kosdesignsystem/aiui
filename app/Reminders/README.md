@@ -1,17 +1,44 @@
-# reminders
+# Reminders
 
-A new Flutter project.
+Production Flutter implementation of a focused reminders app with daily goal setup,
+search, task creation, progress tracking, and a success state.
 
-## Getting Started
+## Requirements
 
-This project is a starting point for a Flutter application.
+- Flutter 3.41 or newer
+- Dart 3.11 or newer
+- macOS tooling for the desktop release target
 
-A few resources to get you started if this is your first Flutter project:
+## Development
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+```sh
+flutter pub get
+flutter analyze
+flutter test
+flutter run -d chrome
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+If several Flutter SDKs are installed locally, this workspace has been verified
+with `/Users/kasper/dev/flutter/bin/flutter`.
+
+## Release Checks
+
+```sh
+flutter analyze
+flutter test
+flutter build web --release
+flutter build macos --release
+```
+
+Release artifacts:
+
+- Web: `build/web`
+- macOS: `build/macos/Build/Products/Release/Reminders.app`
+
+## Structure
+
+- `lib/models` contains reminder data models and pure transformation helpers.
+- `lib/navigation` contains route names and route helper logic.
+- `lib/state` keeps the in-memory demo session state isolated from widgets.
+- `lib/screens` owns page-level state and orchestration.
+- `lib/widgets` contains reusable chrome, content, modal, progress, and animation widgets.
