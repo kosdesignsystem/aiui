@@ -23,48 +23,71 @@ class FlowPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final overlayWidget = overlay == null
         ? null
-        : Positioned.fill(child: overlay!);
+        : Positioned(
+            top: 0,
+            right: 0,
+            bottom: RemindersTokens.navBarHeight,
+            left: 0,
+            child: overlay!,
+          );
 
     return Scaffold(
       backgroundColor: RemindersTokens.backgroundSecondary,
+      resizeToAvoidBottomInset: false,
       body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: RemindersTokens.maxAppWidth,
-          ),
-          child: SafeArea(
-            child: Stack(
-              children: [
-                Column(
-                  children: [
-                    Expanded(
+        child: OverflowBox(
+          minWidth: RemindersTokens.appWidth,
+          maxWidth: RemindersTokens.appWidth,
+          minHeight: RemindersTokens.appHeight,
+          maxHeight: RemindersTokens.appHeight,
+          child: ClipRect(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: RemindersTokens.backgroundSecondary,
+              ),
+              child: Stack(
+                clipBehavior: Clip.hardEdge,
+                children: [
+                  Positioned.fill(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: RemindersTokens.statusBarHeight,
+                        bottom: RemindersTokens.navBarHeight,
+                      ),
                       child: Column(
                         children: [
-                          ?header,
-                          ?topActions,
                           Expanded(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(24),
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  color: RemindersTokens.backgroundPrimary,
-                                  border: Border.all(
-                                    color: RemindersTokens.contentBorder,
+                            child: Column(
+                              children: [
+                                ?header,
+                                ?topActions,
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(24),
+                                    child: DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        color:
+                                            RemindersTokens.backgroundPrimary,
+                                        border: Border.all(
+                                          color: RemindersTokens.contentBorder,
+                                        ),
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
+                                      child: child,
+                                    ),
                                   ),
-                                  borderRadius: BorderRadius.circular(24),
                                 ),
-                                child: child,
-                              ),
+                              ],
                             ),
                           ),
+                          ?bottomActions,
                         ],
                       ),
                     ),
-                    ?bottomActions,
-                  ],
-                ),
-                ?overlayWidget,
-              ],
+                  ),
+                  ?overlayWidget,
+                ],
+              ),
             ),
           ),
         ),

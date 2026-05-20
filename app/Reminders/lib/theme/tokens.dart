@@ -56,5 +56,13 @@ class RemindersTokens {
   static const orange = Color(0xffff5500);
   static final blue = accentPrimary;
 
-  static const maxAppWidth = 430.0;
+  static const appWidth = 360.0;
+  static const appHeight = 800.0;
+  static const statusBarHeight = 40.0;
+  static const navBarHeight = 52.0;
+  static const createTaskKeyboardHeight = 316.0;
+  static const createTaskKeyboardGradientStop =
+      createTaskKeyboardHeight / (appHeight - navBarHeight);
+  static const maxAppWidth = appWidth;
+  static const sheetWidth = appWidth;
 }
