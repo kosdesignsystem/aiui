@@ -13,6 +13,7 @@ export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
 
 export function Avatar({
 	size = 44,
+
 	background = 'content-background',
 	children,
 	className,
@@ -29,11 +30,7 @@ export function Avatar({
 	};
 
 	return (
-		<span
-			{...props}
-			className={cn('ui-avatar', className)}
-			style={resolvedStyle}
-		>
+		<span {...props} className={cn('ui-avatar', className)} style={resolvedStyle}>
 			<span className="ui-avatar__content">
 				{isPrimitiveContent ? (
 					<span className="ui-avatar__text">{String(children)}</span>
