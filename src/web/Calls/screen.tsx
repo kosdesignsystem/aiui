@@ -1,17 +1,15 @@
 import { ChangeEvent, KeyboardEvent, ReactNode, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { App } from '../../ui/App';
 import { Avatar } from '../../ui/Avatar';
 import { Cell } from '../../ui/Cell';
 import { Text } from '../../ui/Fonts';
-import { Header } from '../../ui/Header';
-import { Icon } from '../../ui/Icon';
+import { Icon, type IconName } from '../../ui/Icon';
 import { IconButton } from '../../ui/IconButton';
-import { List, ListContainer } from '../../ui/List';
+import { List } from '../../ui/List';
 import { Nav } from '../../ui/Nav';
-import { SearchBar } from '../../ui/SearchBar';
+import { Search } from '../../ui/Search';
 import { SegmentedTabs } from '../../ui/SegmentedTabs';
-import { View } from '../../ui/View';
+import { FlowPage, FlowPageList } from '../FlowPage';
 import {
 	CallDirection,
 	CallLogEntry,
@@ -19,9 +17,7 @@ import {
 	callsFilterTabs,
 	callsNavItems,
 	callsRoutes,
-	getCallsByFilter,
-	searchCalls,
-	splitCallsByGroup,
+	createCallsScreenState,
 } from './model';
 import './screen.scss';
 
@@ -31,7 +27,11 @@ type CallsScreenProps = {
 	mode?: 'default' | 'search';
 };
 
-function getCallDirectionMeta(direction: CallDirection) {
+function getCallDirectionMeta(direction: CallDirection): {
+	icon: IconName;
+	iconColor: string;
+	iconBg: string;
+} {
 	if (direction === 'incoming') {
 		return {
 			icon: 'phone-received',
@@ -174,6 +174,8 @@ function CallSection({
 }
 
 function EmptyCallsState({ filter }: { filter: CallsFilter }) {
+	const emptyStateCopy = createCallsScreenState(filter, '').emptyState;
+
 	return (
 		<List title="История">
 			<Cell
@@ -190,14 +192,12 @@ function EmptyCallsState({ filter }: { filter: CallsFilter }) {
 				}
 				title={
 					<Text variant="medium-18" color="primary">
-						{filter === 'missed' ? 'Пропущенных вызовов нет' : 'История вызовов пуста'}
+						{emptyStateCopy.title}
 					</Text>
 				}
 				subtitle={
 					<Text variant="regular-14" color="secondary">
-						{filter === 'missed'
-							? 'Новые пропущенные вызовы появятся здесь.'
-							: 'Совершите звонок, чтобы увидеть его в списке.'}
+						{emptyStateCopy.description}
 					</Text>
 				}
 			/>
@@ -209,14 +209,12 @@ export function CallsScreen({ title, filter, mode = 'default' }: CallsScreenProp
 	const navigate = useNavigate();
 	const isSearchMode = mode === 'search';
 	const [searchQuery, setSearchQuery] = useState('');
-
-	const filteredCalls = useMemo(() => getCallsByFilter(filter), [filter]);
-	const { today, earlier } = useMemo(() => splitCallsByGroup(filteredCalls), [filteredCalls]);
-	const activeSearchQuery = searchQuery.trim();
-	const searchResults = useMemo(
-		() => searchCalls(filteredCalls, activeSearchQuery),
-		[filteredCalls, activeSearchQuery],
-	);
+	const {
+		filteredCalls,
+		groupedCalls: { today, earlier },
+		searchQuery: activeSearchQuery,
+		searchResults,
+	} = useMemo(() => createCallsScreenState(filter, searchQuery), [filter, searchQuery]);
 
 	const handleOpenSearch = () => {
 		setSearchQuery('');
@@ -238,11 +236,12 @@ export function CallsScreen({ title, filter, mode = 'default' }: CallsScreenProp
 	};
 
 	return (
-		<App>
-			<div className={`calls-screen${isSearchMode ? ' is-search-mode' : ''}`}>
-				{isSearchMode ? (
+		<FlowPage
+			title={isSearchMode ? undefined : title}
+			topActions={
+				isSearchMode ? (
 					<div className="calls-screen__search">
-						<SearchBar
+						<Search
 							type="search"
 							hideSearchIcon={true}
 							autoFocus
@@ -253,7 +252,7 @@ export function CallsScreen({ title, filter, mode = 'default' }: CallsScreenProp
 								setSearchQuery(event.target.value)
 							}
 							onKeyDown={handleSearchKeyDown}
-							fieldRightButton={
+							inputTrailing={
 								<IconButton
 									size={32}
 									variant="primary"
@@ -272,63 +271,29 @@ export function CallsScreen({ title, filter, mode = 'default' }: CallsScreenProp
 						/>
 					</div>
 				) : (
-					<>
-						<Header title={title} />
-						<SegmentedTabs
-							tabs={callsFilterTabs}
-							value={filter}
-							onChange={(tabId) =>
-								navigate(tabId === 'missed' ? callsRoutes.missed : callsRoutes.main)
-							}
-							buttonPosition="left"
-							button={
+					<SegmentedTabs
+						tabs={callsFilterTabs}
+						value={filter}
+						onChange={(tabId) =>
+							navigate(tabId === 'missed' ? callsRoutes.missed : callsRoutes.main)
+						}
+						action={{
+							position: 'left',
+							element: (
 								<IconButton
 									size={60}
+									variant="primary"
 									aria-label="Поиск"
-									background="content-background"
 									onClick={handleOpenSearch}
 								>
 									<Icon name="search" alt="" width={24} height={24} />
 								</IconButton>
-							}
-						/>
-					</>
-				)}
-
-				<View>
-					{isSearchMode ? (
-						<div className="calls-screen__search-content">
-							{activeSearchQuery.length === 0 ? null : searchResults.length === 0 ? (
-								<div className="calls-screen__search-empty">
-									<Text variant="regular-20" color="secondary">
-										Ничего не найдено
-									</Text>
-								</div>
-							) : (
-								<ListContainer>
-									<List>
-										{searchResults.map((call) => (
-											<CallRow
-												key={call.id}
-												call={call}
-												searchQuery={activeSearchQuery}
-											/>
-										))}
-									</List>
-								</ListContainer>
-							)}
-						</div>
-					) : (
-						<ListContainer>
-							{filteredCalls.length === 0 ? (
-								<EmptyCallsState filter={filter} />
-							) : null}
-							<CallSection title="Сегодня" calls={today} />
-							<CallSection title="Ранее" calls={earlier} />
-						</ListContainer>
-					)}
-				</View>
-
+							),
+						}}
+					/>
+				)
+			}
+			bottomActions={
 				<Nav
 					items={callsNavItems.map((item) => {
 						const path = item.path;
@@ -355,7 +320,37 @@ export function CallsScreen({ title, filter, mode = 'default' }: CallsScreenProp
 						};
 					})}
 				/>
-			</div>
-		</App>
+			}
+		>
+			{isSearchMode ? (
+				<div className="calls-screen__search-content">
+					{activeSearchQuery.length === 0 ? null : searchResults.length === 0 ? (
+						<div className="calls-screen__search-empty">
+							<Text variant="regular-20" color="secondary">
+								Ничего не найдено
+							</Text>
+						</div>
+					) : (
+						<FlowPageList>
+							<List>
+								{searchResults.map((call) => (
+									<CallRow
+										key={call.id}
+										call={call}
+										searchQuery={activeSearchQuery}
+									/>
+								))}
+							</List>
+						</FlowPageList>
+					)}
+				</div>
+			) : (
+				<FlowPageList>
+					{filteredCalls.length === 0 ? <EmptyCallsState filter={filter} /> : null}
+					<CallSection title="Сегодня" calls={today} />
+					<CallSection title="Ранее" calls={earlier} />
+				</FlowPageList>
+			)}
+		</FlowPage>
 	);
 }

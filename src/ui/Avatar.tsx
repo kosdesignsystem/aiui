@@ -1,26 +1,38 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
+import { cn } from './lib/cn';
+import { createCssVarStyle, type CssToken } from './lib/styles';
 import './Avatar.scss';
 
-export type AvatarProps = {
+export type AvatarBackground = CssToken;
+
+export type AvatarProps = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & {
 	size?: number;
-	background?: string;
+	background?: AvatarBackground;
 	children?: ReactNode;
-	'aria-label'?: string;
 };
 
 export function Avatar({
 	size = 44,
 	background = 'content-background',
 	children,
-	'aria-label': ariaLabel,
+	className,
+	style,
+	...props
 }: AvatarProps) {
 	const isPrimitiveContent = typeof children === 'string' || typeof children === 'number';
+	const backgroundStyle = createCssVarStyle('--ui-avatar-background', background);
+	const resolvedStyle: CSSProperties = {
+		...backgroundStyle,
+		width: size,
+		height: size,
+		...style,
+	};
 
 	return (
 		<span
-			className="ui-avatar"
-			style={{ width: size, height: size, background: `var(--${background})` }}
-			aria-label={ariaLabel}
+			{...props}
+			className={cn('ui-avatar', className)}
+			style={resolvedStyle}
 		>
 			<span className="ui-avatar__content">
 				{isPrimitiveContent ? (

@@ -1,0 +1,26 @@
+.ui-search,
+.ui-search-bar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+}
+
+.ui-search__action,
+.ui-search-bar__action {
+	flex: 0 0 auto;
+	display: inline-flex;
+}
+
+.ui-search__field,
+.ui-search-bar__field {
+	flex: 1;
+	min-width: 0;
+}
+
+.ui-search__icon,
+.ui-search-bar__icon {
+	display: inline-flex;
+	color: var(--content-secondary);
+	opacity: 0.56;
+}

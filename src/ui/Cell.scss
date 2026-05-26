@@ -14,15 +14,20 @@
 
 .ui-cell {
 	--ui-cell-background: transparent;
+	--ui-cell-padding-left: 6px;
 
 	display: flex;
 	align-items: center;
 	width: 100%;
 	min-height: 56px;
 	gap: 12px;
-	padding: 6px;
+	padding: 6px 6px 6px var(--ui-cell-padding-left);
 	border-radius: 16px;
 	background: var(--ui-cell-background);
+}
+
+.ui-cell--without-leading {
+	--ui-cell-padding-left: 12px;
 }
 
 .ui-cell-shell--accent .ui-cell {
