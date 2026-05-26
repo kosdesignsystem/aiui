@@ -96,11 +96,11 @@ jobs:
                 ! -name "ae" \
                 ! -name "mk" \
                 -exec rm -rf {} +
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" ./
+              rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" ./
             else
               rm -rf "${SITE_PATH}"
               mkdir -p "${SITE_PATH}"
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" "${SITE_PATH}/"
+              rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" "${SITE_PATH}/"
             fi
 
             touch .nojekyll
@@ -153,11 +153,11 @@ jobs:
                 ! -name "ae" \
                 ! -name "mk" \
                 -exec rm -rf {} +
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" ./
+              rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" ./
             else
               rm -rf "${SITE_PATH}"
               mkdir -p "${SITE_PATH}"
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" "${SITE_PATH}/"
+              rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" "${SITE_PATH}/"
             fi
 
             touch .nojekyll
