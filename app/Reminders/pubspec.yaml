@@ -1,0 +1,31 @@
+name: reminders
+description: "Production-ready Flutter reminders app."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Kaspersky Sans Text
+      fonts:
+        - asset: assets/fonts/KasperskySansText-Regular.woff2
+          weight: 400
+        - asset: assets/fonts/KasperskySansText-Medium.woff2
+          weight: 500
+        - asset: assets/fonts/KasperskySansText-SemiBold.woff2
+          weight: 600
