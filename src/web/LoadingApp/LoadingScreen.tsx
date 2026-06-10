@@ -3,7 +3,7 @@ import clockIcon from '../../assets/icons/loading-clock.svg';
 import './LoadingScreen.scss';
 
 const hexagonVisual = {
-	color: 'hsl(210, 50%, 50%)',
+	color: 'hsl(210, 40%, 24%)',
 	blur: 80,
 	opacity: 0.6,
 };
