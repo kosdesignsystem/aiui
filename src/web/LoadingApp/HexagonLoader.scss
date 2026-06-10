@@ -1,0 +1,52 @@
+.hexagon-loader {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 auto;
+}
+
+.hexagon-loader__svg {
+	display: block;
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+
+.hexagon-loader__shape {
+	color: var(--hexagon-loader-shape-color);
+	opacity: var(--hexagon-loader-shape-opacity);
+	transform-box: fill-box;
+	transform-origin: center;
+	transform: scale(var(--hexagon-loader-shape-scale));
+	animation-duration: var(--hexagon-loader-shape-duration);
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-delay: var(--hexagon-loader-shape-delay);
+	filter: drop-shadow(0 0 5px currentColor);
+}
+
+.hexagon-loader__shape--clockwise {
+	animation-name: hexagon-loader-spin-clockwise;
+}
+
+.hexagon-loader__shape--counterclockwise {
+	animation-name: hexagon-loader-spin-counterclockwise;
+}
+
+@keyframes hexagon-loader-spin-clockwise {
+	to {
+		transform: scale(var(--hexagon-loader-shape-scale)) rotate(360deg);
+	}
+}
+
+@keyframes hexagon-loader-spin-counterclockwise {
+	to {
+		transform: scale(var(--hexagon-loader-shape-scale)) rotate(-360deg);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.hexagon-loader__shape {
+		animation: none;
+	}
+}

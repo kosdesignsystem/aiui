@@ -2,6 +2,7 @@ import { callsAppDefinition } from './Calls';
 import { componentsAppDefinition } from './Components';
 import { contactsAppDefinition } from './Contacts';
 import { galleryAppDefinition } from './Gallery';
+import { loadingAppDefinition } from './LoadingApp';
 import { remindersAppDefinition } from './Reminders';
 
 export {
@@ -21,5 +22,6 @@ export const appRegistry = [
 	componentsAppDefinition,
 	callsAppDefinition,
 	galleryAppDefinition,
+	loadingAppDefinition,
 	remindersAppDefinition,
 ];
