@@ -5,7 +5,7 @@ import { LoadingAppScreen } from './LoadingScreen';
 export const loadingAppDefinition = defineApp({
 	id: 'LoadingApp',
 	title: 'Loading App',
-	businessGoal: 'Показать темный загрузочный экран с центральной иконкой часов и мягким пульсом ожидания.',
+	businessGoal: 'Показать темный загрузочный экран с центральной иконкой часов.',
 	flows: [
 		defineFlow({
 			id: 'loading',
@@ -16,7 +16,7 @@ export const loadingAppDefinition = defineApp({
 					id: 'main',
 					title: 'Loading',
 					scenario: 'preview',
-					businessGoal: 'Отобразить статичную иконку Clock и медленно пульсирующий hex ниже.',
+					businessGoal: 'Отобразить центральную иконку Clock на темном фоне.',
 					Component: LoadingAppScreen,
 				}),
 				defineScreen({
