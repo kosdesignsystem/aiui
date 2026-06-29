@@ -1,3 +1,5 @@
+import type { IconName } from '../../ui/Icon';
+
 export type CallsFilter = 'all' | 'missed';
 
 export type CallDirection = 'incoming' | 'outgoing' | 'missed';
@@ -5,7 +7,7 @@ export type CallDirection = 'incoming' | 'outgoing' | 'missed';
 export type CallsNavItem = {
 	id: string;
 	label: string;
-	icon: string;
+	icon: IconName;
 	path?: string;
 };
 
@@ -22,6 +24,7 @@ export const callsRoutes = {
 	main: '/app/Calls/main',
 	missed: '/app/Calls/missed',
 	search: '/app/Calls/search',
+	dialpad: '/app/Calls/dialpad',
 } as const;
 
 export const callsFilterTabs = [
@@ -32,7 +35,7 @@ export const callsFilterTabs = [
 export const callsNavItems: CallsNavItem[] = [
 	{ id: 'calls', label: 'Вызовы', icon: 'phone', path: callsRoutes.main },
 	{ id: 'contacts', label: 'Контакты', icon: 'persone-outline' },
-	{ id: 'dialpad', label: 'Набор', icon: 'dialpad' },
+	{ id: 'dialpad', label: 'Набор', icon: 'dialpad', path: callsRoutes.dialpad },
 ];
 
 export const callsLog: CallLogEntry[] = [
