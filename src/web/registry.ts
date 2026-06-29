@@ -1,6 +1,7 @@
 import CallsMainPage from './Calls/main';
 import CallsMissedPage from './Calls/missed';
 import CallsSearchPage from './Calls/search';
+import CallsDialpadPage from './Calls/dialpad';
 import { componentsAppDefinition } from './Components';
 import OfflineTransferMainPage from './OfflineTransfer/main';
 import PasswordGeneratorMainPage from './PasswordGenerator/main';
@@ -73,6 +74,13 @@ const callsAppDefinition = defineApp({
 					scenario: 'search',
 					businessGoal: 'Показать поиск по звонкам.',
 					Component: CallsSearchPage,
+				}),
+				defineScreen({
+					id: 'dialpad',
+					title: 'Набор',
+					scenario: 'preview',
+					businessGoal: 'Показать экран набора номера с тактильной клавиатурой.',
+					Component: CallsDialpadPage,
 				}),
 			],
 		}),
