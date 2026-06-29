@@ -502,7 +502,7 @@ export function DialpadScreen() {
 				<div className="calls-dialpad-screen__actions">
 					<div />
 					<button type="button" className="calls-dialpad-screen__call" aria-label="Позвонить">
-						<Icon name="phone" width={36} height={36} alt="" aria-hidden="true" colorToken="content-constant" />
+						<Icon name="phone" width={20} height={20} alt="" aria-hidden="true" colorToken="content-constant" />
 					</button>
 					<button
 						type="button"
@@ -510,7 +510,7 @@ export function DialpadScreen() {
 						onClick={handleBackspace}
 						aria-label="Удалить символ"
 					>
-						<Icon name="delete-close" width={32} height={32} alt="" aria-hidden="true" colorToken="content-secondary" />
+						<Icon name="delete-close" width={24} height={24} alt="" aria-hidden="true" colorToken="content-secondary" />
 					</button>
 				</div>
 
