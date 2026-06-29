@@ -1,10 +1,15 @@
-import { ReactNode } from "react";
-import "./View.scss";
+import type { HTMLAttributes, ReactNode } from 'react';
+import { cn } from './lib/cn';
+import './View.scss';
 
-export type ViewProps = {
-  children: ReactNode;
+export type ViewProps = HTMLAttributes<HTMLElement> & {
+	children: ReactNode;
 };
 
-export function View({ children }: ViewProps) {
-  return <main className="ui-view">{children}</main>;
+export function View({ children, className, ...props }: ViewProps) {
+	return (
+		<main {...props} className={cn('ui-view', className)}>
+			{children}
+		</main>
+	);
 }

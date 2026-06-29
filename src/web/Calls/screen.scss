@@ -17,6 +17,12 @@
 	min-height: 56px;
 }
 
+.calls-screen .ui-segmented-tabs .ui-icon-button {
+	border-color: var(--content-border);
+	background: var(--content-background);
+	color: var(--content-primary);
+}
+
 .calls-screen__search-content {
 	min-height: 100%;
 }

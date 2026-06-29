@@ -1,5 +1,6 @@
 import { useId } from 'react';
-import { iconDefinitions, iconIdPrefixToken, iconNames } from '../generated/icons';
+import { iconDefinitions, iconIdPrefixToken, type IconDefinition } from '../generated/icons';
+import { resolveCssTokenValue, type CssToken } from './lib/styles';
 
 export type IconName = string;
 
@@ -8,31 +9,26 @@ export type IconProps = {
 	alt?: string;
 	width?: number;
 	height?: number;
+	color?: CssToken;
 	colorToken?: string;
+	className?: string;
+	style?: React.CSSProperties;
 	'aria-hidden'?: boolean | 'true' | 'false';
 };
-
-function resolveColorValue(colorToken: string) {
-	if (colorToken.startsWith('var(') || colorToken.startsWith('#') || colorToken.startsWith('rgb') || colorToken.startsWith('hsl')) {
-		return colorToken;
-	}
-
-	if (colorToken.startsWith('--')) {
-		return `var(${colorToken})`;
-	}
-
-	return `var(--${colorToken})`;
-}
 
 export function Icon({
 	name,
 	alt,
 	width = 20,
 	height = 20,
-	colorToken = 'content-primary',
+	color,
+	colorToken = 'currentColor',
+	className,
+	style,
 	'aria-hidden': ariaHidden = false,
 }: IconProps) {
-	const definition = iconDefinitions[name] ?? null;
+	const definitions = iconDefinitions as Record<string, IconDefinition>;
+	const definition = definitions[name] ?? null;
 
 	if (!definition) {
 		return null;
@@ -40,9 +36,9 @@ export function Icon({
 
 	const isAriaHidden = ariaHidden === true || ariaHidden === 'true';
 	const resolvedAlt = alt ?? (isAriaHidden ? '' : name);
-	const color = resolveColorValue(colorToken);
+	const resolvedColor = resolveCssTokenValue(color ?? colorToken);
 	const iconIdPrefix = useId().replace(/[^a-zA-Z0-9_-]/g, '');
-	const body = definition.body.replaceAll(iconIdPrefixToken, `${iconIdPrefix}-`);
+	const body = definition.body.split(iconIdPrefixToken).join(`${iconIdPrefix}-`);
 
 	return (
 		<svg
@@ -50,11 +46,13 @@ export function Icon({
 			viewBox={definition.viewBox}
 			width={width}
 			height={height}
+			className={className}
 			style={{
 				display: 'inline-block',
-				color,
+				color: resolvedColor,
 				flexShrink: 0,
 				verticalAlign: 'middle',
+				...style,
 			}}
 			focusable="false"
 			aria-hidden={isAriaHidden || resolvedAlt === '' ? true : undefined}

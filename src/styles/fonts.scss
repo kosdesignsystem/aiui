@@ -160,6 +160,10 @@
     @include typography-token(500, 32, 40);
 }
 
+.text-medium-36 {
+    @include typography-token(500, 36, 44);
+}
+
 .text-medium-24 {
     @include typography-token(500, 24, 30);
 }

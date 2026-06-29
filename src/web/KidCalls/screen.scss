@@ -1,8 +1,24 @@
 .kid-calls-screen {
+	--content-primary: #f8f7ff;
+	--content-secondary: rgb(248 247 255 / 72%);
+	--content-border: rgb(248 247 255 / 16%);
+	--content-background: rgb(248 247 255 / 10%);
+	--background-primary: transparent;
+	--background-secondary: rgb(16 14 61 / 76%);
+
 	height: 100%;
 	background:
 		radial-gradient(circle at 50% 15%, rgb(108 61 214 / 35%), transparent 52%),
 		linear-gradient(165deg, #120b41 0%, #07062f 52%, #03021d 100%);
+}
+
+.kid-calls-screen .ui-view {
+	border-color: transparent;
+	background: transparent;
+}
+
+.kid-calls-screen .ui-header__title {
+	color: #f8f7ff;
 }
 
 .kid-calls-screen__content {

@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+import type { ReactNode } from 'react';
+import { cn } from './lib/cn';
 
 export const textVariantsByFamily = {
   semiBold: [
@@ -12,6 +13,7 @@ export const textVariantsByFamily = {
     "semiBold-14",
   ],
   medium: [
+    "medium-36",
     "medium-32",
     "medium-24",
     "medium-20",
@@ -52,6 +54,7 @@ const variantClass = {
   "semiBold-20": "text-semi-bold-20",
   "semiBold-16": "text-semi-bold-16",
   "semiBold-14": "text-semi-bold-14",
+  "medium-36": "text-medium-36",
   "medium-32": "text-medium-32",
   "medium-24": "text-medium-24",
   "medium-20": "text-medium-20",
@@ -77,6 +80,7 @@ export type TextProps = {
   family?: FontFamily;
   variant?: FontVariant;
   color?: TextColor;
+  className?: string;
   children: ReactNode;
 };
 
@@ -85,15 +89,14 @@ export function Text({
   family = "sansText",
   variant = "regular-16",
   color,
+  className,
   children,
 }: TextProps) {
   const Component = as ?? "span";
   const familyToken = fontFamilies[family];
   const fontClass = variantClass[variant];
   const colorClass = color ? textColorClass[color] : "";
-  const classes = ["ui-text", familyToken, fontClass, colorClass]
-    .filter(Boolean)
-    .join(" ");
+  const classes = cn("ui-text", familyToken, fontClass, colorClass, className);
 
   return (
     <Component className={classes}>
