@@ -4,6 +4,7 @@ import CallsSearchPage from './Calls/search';
 import CallsDialpadPage from './Calls/dialpad';
 import { componentsAppDefinition } from './Components';
 import OfflineTransferMainPage from './OfflineTransfer/main';
+import NikitaMainPage from './Nikita/main';
 import PasswordGeneratorMainPage from './PasswordGenerator/main';
 import SecureByUIMainPage from './SecureByUI/main';
 import SecureByUIPolicyPage from './SecureByUI/policy';
@@ -21,6 +22,28 @@ export {
 	type AppScreenEntry,
 	type ScreenScenario,
 } from './definition';
+
+const nikitaAppDefinition = defineApp({
+	id: 'Nikita',
+	title: 'Никита',
+	businessGoal: 'Показать минимальное мобильное приложение с красным фоном.',
+	flows: [
+		defineFlow({
+			id: 'main',
+			title: 'Основной сценарий',
+			businessGoal: 'Открыть главный экран приложения.',
+			screens: [
+				defineScreen({
+					id: 'main',
+					title: 'Главный экран',
+					scenario: 'preview',
+					businessGoal: 'Показать полноэкранный красный фон.',
+					Component: NikitaMainPage,
+				}),
+			],
+		}),
+	],
+});
 
 const offlineTransferAppDefinition = defineApp({
 	id: 'OfflineTransfer',
@@ -146,6 +169,7 @@ const passwordGeneratorAppDefinition = defineApp({
 });
 
 export const appRegistry = [
+	nikitaAppDefinition,
 	offlineTransferAppDefinition,
 	componentsAppDefinition,
 	callsAppDefinition,
