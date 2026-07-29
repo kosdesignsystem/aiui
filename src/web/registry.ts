@@ -4,7 +4,7 @@ import CallsSearchPage from './Calls/search';
 import CallsDialpadPage from './Calls/dialpad';
 import { componentsAppDefinition } from './Components';
 import OfflineTransferMainPage from './OfflineTransfer/main';
-import NikitaMainPage from './Nikita/main';
+import NikitaMainPage from './Nikita';
 import PasswordGeneratorMainPage from './PasswordGenerator/main';
 import SecureByUIMainPage from './SecureByUI/main';
 import SecureByUIPolicyPage from './SecureByUI/policy';
@@ -175,5 +175,4 @@ export const appRegistry = [
 	callsAppDefinition,
 	secureByUIAppDefinition,
 	passwordGeneratorAppDefinition,
-	nikitaAppDefinition,
 ];
