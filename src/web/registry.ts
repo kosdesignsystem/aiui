@@ -175,4 +175,5 @@ export const appRegistry = [
 	callsAppDefinition,
 	secureByUIAppDefinition,
 	passwordGeneratorAppDefinition,
+	nikitaAppDefinition,
 ];
