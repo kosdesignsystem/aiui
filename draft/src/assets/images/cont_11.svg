@@ -1,0 +1,12 @@
+<svg viewBox="0 0 100 48" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100.000000" height="48.000000" fill="none">
+	<defs>
+		<clipPath id="clipPath_18">
+			<rect width="24.000000" height="24.000000" x="38.000000" y="12.000000" fill="rgb(255,255,255)" />
+		</clipPath>
+	</defs>
+	<rect id="cont_1" width="100.000000" height="48.000000" x="0.000000" y="0.000000" />
+	<g id="mobile-back" clip-path="url(#clipPath_18)" customFrame="url(#clipPath_18)">
+		<rect id="mobile-back" width="24.000000" height="24.000000" x="38.000000" y="12.000000" />
+		<path id="color" d="M53 19.3328L44.25 23.9994L53 28.6662L53 19.3328ZM43.3088 22.2347C41.8971 22.9877 41.8971 25.0112 43.3088 25.7641L52.0588 30.4309C53.391 31.1414 55 30.176 55 28.6662L55 19.3328C55 17.823 53.391 16.8576 52.0588 17.5681L43.3088 22.2347Z" fill="rgb(33,37,41)" fill-rule="evenodd" />
+	</g>
+</svg>

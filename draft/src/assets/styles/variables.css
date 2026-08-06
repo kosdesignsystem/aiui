@@ -1,0 +1,131 @@
+:root, 
+[data-collection-19171-34-mode="light"] {
+  /* Light */
+  --accent-accent-disabled: rgba(42, 131, 242, 0.28);
+  --accent-accent-primary: rgba(42, 131, 242, 1);
+  --system-system-warning-primary-9f9b7395cd16c73d5efcc5d47c1ed4a8da657d56-19171-51: rgba(242, 179, 37, 1);
+  --accent-accent-sub-primary-b361a74bf00108928fc835823a0982df0287690c-19171-43: rgba(42, 131, 242, 0.72);
+  --accent-accent-secondary-b3937a20841e5a67d6a68c4712b1239b95d07ee1-19171-42: rgba(42, 131, 242, 0.52);
+  --accent-accent-border-c6391d36a71aa2e5fbbec13d14b8023103533f54-19171-45: rgba(42, 131, 242, 0.2);
+  --accent-accent-background-7472aa02ca53dbf78f7c79a2ace67adcd8d2b007-19171-46: rgba(42, 131, 242, 0.04);
+  --content-content-disabled-d9c066edc7cde51478dffefecab7b5940cd702ef-19171-38: rgba(33, 37, 41, 0.28);
+  --content-content-border: rgba(33, 37, 41, 0.12);
+  --content-content-background-3143b1fb78fb9841552e461aa2f74b1ff6a5521f-19171-40: rgba(33, 37, 41, 0.04);
+  --content-content-secondary-e0d603df5484592b8ab1a05fdd19f12336187141-19171-37: rgba(33, 37, 41, 0.52);
+  --system-system-error-primary: rgba(242, 42, 65, 1);
+  --system-system-success-primary-9737b406ed4fa49db956e4e7e5df3126ec0001f8-19171-47: rgba(36, 206, 159, 1);
+  --content-content-primary: rgba(33, 37, 41, 1);
+  --colors-white: rgba(255, 255, 255, 1);
+}
+
+[data-collection-19171-34-mode="dark"] {
+  /* Dark */
+  --accent-accent-disabled: rgba(140, 140, 255, 0.28);
+  --accent-accent-primary: rgba(140, 140, 255, 1);
+  --system-system-warning-primary-9f9b7395cd16c73d5efcc5d47c1ed4a8da657d56-19171-51: rgba(242, 179, 37, 1);
+  --accent-accent-sub-primary-b361a74bf00108928fc835823a0982df0287690c-19171-43: rgba(140, 140, 255, 0.72);
+  --accent-accent-secondary-b3937a20841e5a67d6a68c4712b1239b95d07ee1-19171-42: rgba(140, 140, 255, 0.56);
+  --accent-accent-border-c6391d36a71aa2e5fbbec13d14b8023103533f54-19171-45: rgba(140, 140, 255, 0.2);
+  --accent-accent-background-7472aa02ca53dbf78f7c79a2ace67adcd8d2b007-19171-46: rgba(140, 140, 255, 0.12);
+  --content-content-disabled-d9c066edc7cde51478dffefecab7b5940cd702ef-19171-38: rgba(255, 255, 255, 0.34);
+  --content-content-border: rgba(255, 255, 255, 0.16);
+  --content-content-background-3143b1fb78fb9841552e461aa2f74b1ff6a5521f-19171-40: rgba(255, 255, 255, 0.12);
+  --content-content-secondary-e0d603df5484592b8ab1a05fdd19f12336187141-19171-37: rgba(255, 255, 255, 0.56);
+  --system-system-error-primary: rgba(242, 42, 65, 1);
+  --system-system-success-primary-9737b406ed4fa49db956e4e7e5df3126ec0001f8-19171-47: rgba(36, 206, 159, 1);
+  --content-content-primary: rgba(255, 255, 255, 1);
+  --colors-white: rgba(255, 255, 255, 1);
+}
+
+:root, 
+[data-collection-10647-1-mode="mode-1"] {
+  /* Mode 1 */
+  --small-radius-a2d55cc6923cd2848ed4aee5fe7bf412a37ae8c9-14116-27: 8px;
+  --small-size-94c84065add6109771f20fc479438f2c5ef0a4b4-14116-26: 32px;
+  --big-radius: 16px;
+  --big-size-79c6c38d6f5823b2202f0ea416bb6237c8a3e9b0-14116-18: 52px;
+  --medium-size-0fc34409473ff2618db1ac4de81a59d9cfed54aa-14116-22: 40px;
+  --medium-radius-e528a6107943a5d5bc00bd4ccec44fac4aa97d93-14116-23: 12px;
+}
+
+:root, 
+[data-collection-10647-1-mode="mode-1"] {
+  /* Mode 1 */
+  --small-size: 32px;
+  --big-size: 52px;
+  --small-radius: 8px;
+  --medium-size: 40px;
+  --big-radius-05e0c963bc041bf8d46bb5ac3b4126bd2f02ced0-14116-19: 16px;
+  --medium-radius: 12px;
+}
+
+:root, 
+[data-collection-10852-332-mode="light-opacity"] {
+  /* Light Opacity */
+  --system-system-success-primary: rgba(36, 206, 159, 1);
+}
+
+[data-collection-10852-332-mode="dark-opacity"] {
+  /* Dark Opacity */
+  --system-system-success-primary: rgba(36, 206, 159, 1);
+}
+
+[data-collection-10852-332-mode="light-solid"] {
+  /* Light Solid */
+  --system-system-success-primary: rgba(36, 206, 159, 1);
+}
+
+[data-collection-10852-332-mode="dark-solid"] {
+  /* Dark Solid */
+  --system-system-success-primary: rgba(36, 206, 159, 1);
+}
+
+:root, 
+[data-collection-15184-3-mode="mode-1"] {
+  /* Mode 1 */
+  --secondary: rgba(0, 0, 0, 0.48);
+}
+
+:root, 
+[data-collection-17178-132-mode="light"] {
+  /* Light */
+  --background-background-secondary: rgba(247, 248, 250, 1);
+  --accent-accent-disabled-c8a6f6424c71c065153c639812fd58511a8e2f28-17178-119: rgba(42, 131, 242, 0.28);
+  --accent-accent-border: rgba(42, 131, 242, 0.2);
+  --accent-accent-background: rgba(42, 131, 242, 0.12);
+  --accent-accent-secondary: rgba(42, 131, 242, 0.52);
+  --accent-accent-sub-primary: rgba(42, 131, 242, 0.72);
+  --system-system-error-primary-b0e6aa706b44c7f616e0228a8ec0fd61a91110f7-17178-128: rgba(242, 42, 65, 1);
+  --accent-accent-primary-1d3dcea5276688a36ab7e7ecf88088bfd47731e6-17178-121: rgba(42, 131, 242, 1);
+  --content-content-border-3a9b5f9c6b64eae1133d8e92e07a7d8fdc679df2-17178-122: rgba(33, 37, 41, 0.12);
+  --background-background-primary: rgba(255, 255, 255, 1);
+  --content-content-primary-d19f126556c8423d899988749bcb72b3645b5ef5-17178-131: rgba(33, 37, 41, 1);
+  --content-content-constant: rgba(255, 255, 255, 1);
+  --system-system-warning-primary: rgba(242, 179, 37, 1);
+  --content-content-secondary: rgba(33, 37, 41, 0.52);
+  --content-content-disabled: rgba(33, 37, 41, 0.28);
+  --content-content-background: rgba(33, 37, 41, 0.04);
+  --system-system-success-primary-0f91deea51b504171a4167c1ea0aaff774e4e1da-17178-116: rgba(36, 206, 159, 1);
+}
+
+[data-collection-17178-132-mode="dark"] {
+  /* Dark */
+  --background-background-secondary: rgba(27, 27, 34, 1);
+  --accent-accent-disabled-c8a6f6424c71c065153c639812fd58511a8e2f28-17178-119: rgba(140, 140, 255, 0.28);
+  --accent-accent-border: rgba(140, 140, 255, 0.2);
+  --accent-accent-background: rgba(140, 140, 255, 0.12);
+  --accent-accent-secondary: rgba(140, 140, 255, 0.56);
+  --accent-accent-sub-primary: rgba(140, 140, 255, 0.72);
+  --system-system-error-primary-b0e6aa706b44c7f616e0228a8ec0fd61a91110f7-17178-128: rgba(242, 42, 65, 1);
+  --accent-accent-primary-1d3dcea5276688a36ab7e7ecf88088bfd47731e6-17178-121: rgba(140, 140, 255, 1);
+  --content-content-border-3a9b5f9c6b64eae1133d8e92e07a7d8fdc679df2-17178-122: rgba(255, 255, 255, 0.16);
+  --background-background-primary: rgba(13, 13, 17, 1);
+  --content-content-primary-d19f126556c8423d899988749bcb72b3645b5ef5-17178-131: rgba(255, 255, 255, 1);
+  --content-content-constant: rgba(255, 255, 255, 1);
+  --system-system-warning-primary: rgba(242, 179, 37, 1);
+  --content-content-secondary: rgba(255, 255, 255, 0.56);
+  --content-content-disabled: rgba(255, 255, 255, 0.34);
+  --content-content-background: rgba(255, 255, 255, 0.12);
+  --system-system-success-primary-0f91deea51b504171a4167c1ea0aaff774e4e1da-17178-116: rgba(36, 206, 159, 1);
+}
+

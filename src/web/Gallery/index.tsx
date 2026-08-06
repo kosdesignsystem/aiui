@@ -1,4 +1,5 @@
 import { defineApp, defineFlow, defineScreen } from '../definition';
+import { AlbumsScreen } from './albums';
 import { GalleryScreen } from './screen';
 
 export const galleryAppDefinition = defineApp({
@@ -8,8 +9,8 @@ export const galleryAppDefinition = defineApp({
 	flows: [
 		defineFlow({
 			id: 'photo-browser',
-			title: 'Просмотр фотографий',
-			businessGoal: 'Один сценарий: выбрать фото в сетке и открыть полноэкранный просмотр.',
+			title: 'Медиатека',
+			businessGoal: 'Просматривать фотографии и собранные из них альбомы.',
 			screens: [
 				defineScreen({
 					id: 'all',
@@ -17,6 +18,13 @@ export const galleryAppDefinition = defineApp({
 					scenario: 'browse',
 					businessGoal: 'Показать сетку фотографий и вход в просмотрщик.',
 					Component: GalleryScreen,
+				}),
+				defineScreen({
+					id: 'albums',
+					title: 'Альбомы',
+					scenario: 'browse',
+					businessGoal: 'Показать избранные фотографии и личные альбомы.',
+					Component: AlbumsScreen,
 				}),
 			],
 		}),

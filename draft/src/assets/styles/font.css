@@ -1,0 +1,9 @@
+@font-face {
+                font-family: "Kaspersky Sans Text-SemiBold"; font-style: normal; src: url('@/assets/fonts/Kaspersky Sans Text'); font-weight: 600
+            }
+@font-face {
+                font-family: "Kaspersky Sans Text-Medium"; font-style: normal; src: url('@/assets/fonts/Kaspersky Sans Text'); font-weight: 500
+            }
+@font-face {
+                font-family: "Kaspersky Sans Text-Regular"; font-style: normal; src: url('@/assets/fonts/Kaspersky Sans Text'); font-weight: 400
+            }

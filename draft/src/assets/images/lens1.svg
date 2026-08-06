@@ -1,0 +1,23 @@
+<svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="12.000000" height="12.000000" fill="none" customFrame="#000000">
+	<defs>
+		<linearGradient id="paint_linear_4" x1="6.00003433" x2="6.01103735" y1="0.179687515" y2="3.09120321" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(60,64,83)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(213,213,218)" offset="1" stop-opacity="0" />
+		</linearGradient>
+		<linearGradient id="paint_linear_5" x1="5.83246469" x2="6.5500412" y1="-1.78813934e-07" y2="3.48168373" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(119,212,151)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(112,209,148)" offset="1" stop-opacity="0" />
+		</linearGradient>
+		<radialGradient id="paint_radial_2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(5.11884,-4.48834,2.51959,2.87354,1.48186,0.173838)">
+			<stop stop-color="rgb(121,199,195)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(19,20,35)" offset="1" stop-opacity="1" />
+		</radialGradient>
+	</defs>
+	<rect id="lens" width="12.000000" height="12.000000" x="0.000000" y="0.000000" />
+	<circle id="Ellipse 107" cx="6" cy="6" r="6" fill="rgb(1,1,1)" />
+	<path id="Subtract" d="M12.0001 6.0028C10.4011 4.44945 8.30058 3.50688 6.00003 3.50688C3.69949 3.50688 1.59898 4.44945 0 6.0028C0.371738 2.72001 2.91631 0.179688 6.00003 0.179688C9.08375 0.179688 11.6283 2.72001 12.0001 6.0028Z" fill="url(#paint_linear_4)" fill-rule="nonzero" />
+	<path id="Subtract" d="M11.6649 5.55245C10.1106 4.0713 8.06876 3.17254 5.83246 3.17254C3.59617 3.17254 1.55432 4.0713 0 5.55245C0.361356 2.42225 2.83486 0 5.83246 0C8.83006 0 11.3036 2.42225 11.6649 5.55245Z" fill="url(#paint_linear_5)" fill-rule="nonzero" transform="matrix(1,0,0,-1,0.16748,11.7734)" />
+	<path id="Vector" />
+	<path id="Vector" d="M5.99993 8.182C7.20492 8.182 8.18175 7.20516 8.18175 6.00018C8.18175 4.79519 7.20492 3.81836 5.99993 3.81836C4.79495 3.81836 3.81812 4.79519 3.81812 6.00018C3.81812 7.20516 4.79495 8.182 5.99993 8.182Z" fill="rgb(25,25,25)" fill-rule="evenodd" />
+	<path id="Vector" d="M1.27391 2.54781C1.97747 2.54781 5.09563 3.25137 5.09563 2.54781C5.09563 1.84426 2.54781 0 1.27391 2.58467e-13C0.570348 2.58467e-13 0 0.570348 0 1.27391C0 1.97747 0.570348 2.54781 1.27391 2.54781Z" fill="url(#paint_radial_2)" fill-rule="evenodd" transform="matrix(0.751895,0.659282,-0.659282,0.751895,7.89453,1.59961)" />
+</svg>

@@ -2,7 +2,7 @@
 	--gallery-viewer-chrome-opacity: 1;
 	--gallery-screen-safe-top: 40px;
 	--gallery-screen-safe-bottom: 52px;
-	--gallery-screen-nav-height: 56px;
+	--gallery-screen-nav-height: 72px;
 
 	flex: 1 1 auto;
 	min-height: 0;
@@ -24,6 +24,26 @@
 	min-height: 0;
 }
 
+.gallery-screen--cover:not(.is-viewer) .gallery-screen__surface {
+	margin-top: calc(-1 * var(--gallery-screen-safe-top));
+}
+
+.gallery-screen--cover .gallery-screen__surface {
+	transition: margin-top 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gallery-screen--cover .gallery-screen__nav {
+	transition:
+		min-height 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+		padding 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gallery-screen--cover .gallery-screen__nav.is-placeholder {
+	min-height: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
 .gallery-screen__nav {
 	min-height: 56px;
 	display: flex;
@@ -40,41 +60,80 @@
 }
 
 .gallery-screen__nav--top.is-viewer-mode {
-	justify-content: flex-start;
-	padding: 8px 12px 90px 12px;
+	min-height: var(--gallery-screen-nav-height);
+	padding: 0 16px;
 }
 
-.gallery-screen__viewer-back {
-	display: inline-flex;
+.gallery-controls {
+	display: grid;
+	grid-template-columns: 44px minmax(0, 1fr) 44px;
 	align-items: center;
 	gap: 12px;
-	padding: 0;
-	border: none;
-	background: transparent;
-	color: inherit;
-	cursor: pointer;
-	min-width: 0;
-	text-align: left;
+	width: 100%;
 }
 
-.gallery-screen__viewer-back-copy {
-	display: inline-flex;
+.gallery-controls__content {
+	min-width: 0;
+}
+
+.gallery-screen__viewer-title {
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
 	align-items: center;
-	gap: 16px;
-	min-width: 0;
+	gap: 2px;
+	text-align: center;
 }
 
-.gallery-screen__viewer-back-copy .ui-text {
+.gallery-screen__viewer-title .ui-text {
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
-.gallery-screen__header {
-	height: 56px;
-	margin-bottom: 16px;
+.gallery-screen__viewer-title .text-regular-12 {
+	line-height: 16px;
+}
+
+.gallery-controls__button {
+	flex: 0 0 auto;
+}
+
+.gallery-header {
+	min-height: 72px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: 16px;
 	padding: 0 16px;
+	flex: 0 0 auto;
+}
+
+.gallery-header__title,
+.gallery-header__actions {
+	display: flex;
+	align-items: center;
+}
+
+.gallery-header__title {
+	min-width: 0;
+	gap: 16px;
+}
+
+.gallery-header__title > button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+}
+
+.gallery-header__actions {
+	gap: 8px;
 }
 
 .gallery-screen__scroll {
@@ -92,7 +151,7 @@
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
 	gap: 2px;
-	padding: 0 2px 20px;
+	padding: 0 0 20px;
 }
 
 .gallery-screen__thumb {
@@ -123,6 +182,72 @@
 	display: block;
 }
 
+.gallery-screen__thumb-star {
+	position: absolute;
+	left: 4px;
+	bottom: 4px;
+	filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.55));
+}
+
+.gallery-screen__cover {
+	position: relative;
+	height: 263px;
+	overflow: hidden;
+	flex: 0 0 auto;
+	background: #111820;
+	color: var(--content-constant);
+}
+
+.gallery-screen__cover > img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.gallery-screen__cover-shade {
+	position: absolute;
+	inset: 0;
+	background:
+		linear-gradient(180deg, rgb(5 12 22 / 0.34), transparent 42%),
+		linear-gradient(0deg, rgb(5 12 22 / 0.58), transparent 56%);
+}
+
+.gallery-screen__cover-actions {
+	position: absolute;
+	top: calc(var(--gallery-screen-safe-top) + 16px);
+	left: 16px;
+	right: 16px;
+	width: auto;
+}
+
+.gallery-screen__cover-actions .gallery-controls__button {
+	border-color: transparent;
+	background: rgb(255 255 255 / 0.16);
+	color: var(--content-constant);
+	backdrop-filter: blur(8px);
+}
+
+.gallery-screen__cover-copy {
+	position: absolute;
+	left: 24px;
+	right: 24px;
+	bottom: 32px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2px;
+	text-align: center;
+}
+
+.gallery-screen__cover-copy .text-regular-12 {
+	color: rgb(255 255 255 / 0.52);
+}
+
+.gallery-screen--cover .gallery-screen__grid {
+	margin-top: 2px;
+}
+
 .gallery-screen__nav--bottom {
 	position: relative;
 	z-index: 3;
@@ -139,6 +264,10 @@
 }
 
 .gallery-screen__nav--bottom .ui-nav__item.is-active {
+	color: #2e8dff;
+}
+
+.gallery-screen__nav--bottom .ui-nav__item.is-active .ui-text {
 	color: #2e8dff;
 }
 

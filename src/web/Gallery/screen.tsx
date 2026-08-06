@@ -8,19 +8,17 @@ import {
 	useRef,
 	useState,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { App } from '../../ui/App';
 import { Text } from '../../ui/Fonts';
 import { Icon } from '../../ui/Icon';
-import { Nav } from '../../ui/Nav';
 import {
 	galleryPhotos,
-	galleryRoutes,
-	galleryTotalCountLabel,
+	getPhotoCountLabel,
 	type GalleryPhoto,
 } from './model';
+import { GalleryControls, GalleryHeader } from './header';
+import { GalleryNav } from './nav';
 import './screen.scss';
-import { IconButton } from '../../ui/IconButton';
 
 type RectSnapshot = {
 	left: number;
@@ -143,8 +141,25 @@ function clampPan(transform: ViewerTransform, photo: GalleryPhoto, frame: DOMRec
 	};
 }
 
-export function GalleryScreen() {
-	const navigate = useNavigate();
+type PhotoScreenProps = {
+	title: string;
+	photos: GalleryPhoto[];
+	cover?: GalleryPhoto;
+	initialPhotoId?: string;
+	onBack?: () => void;
+	onViewerClose?: () => void;
+	showNav?: boolean;
+};
+
+export function PhotoScreen({
+	title,
+	photos,
+	cover,
+	initialPhotoId,
+	onBack,
+	onViewerClose,
+	showNav = false,
+}: PhotoScreenProps) {
 	const viewerShellRef = useRef<HTMLDivElement | null>(null);
 	const viewerFrameRef = useRef<HTMLDivElement | null>(null);
 	const railRefs = useRef(new Map<string, HTMLButtonElement | null>());
@@ -152,11 +167,21 @@ export function GalleryScreen() {
 	const animationsRef = useRef<Animation[]>([]);
 	const activePointersRef = useRef(new Map<number, PointerPoint>());
 	const gestureRef = useRef<GestureState | null>(null);
-	const [viewer, setViewer] = useState<ViewerState | null>(null);
+	const [viewer, setViewer] = useState<ViewerState | null>(() =>
+		initialPhotoId && photos.some((photo) => photo.id === initialPhotoId)
+			? {
+					phase: 'open',
+					currentPhotoId: initialPhotoId,
+					photoIds: photos.map((photo) => photo.id),
+					originRect: null,
+					originKey: null,
+				}
+			: null,
+	);
 	const [viewerTransform, setViewerTransform] =
 		useState<ViewerTransform>(DEFAULT_VIEWER_TRANSFORM);
 
-	const photosById = useMemo(() => new Map(galleryPhotos.map((photo) => [photo.id, photo])), []);
+	const photosById = useMemo(() => new Map(photos.map((photo) => [photo.id, photo])), [photos]);
 
 	const activePhoto = viewer ? (photosById.get(viewer.currentPhotoId) ?? null) : null;
 	const isViewerChromeSuppressed =
@@ -242,7 +267,7 @@ export function GalleryScreen() {
 			return;
 		}
 
-		const closeTarget = findCloseTarget();
+		const closeTarget = onViewerClose ? null : findCloseTarget();
 		const shell = viewerShellRef.current;
 
 		activePointersRef.current.clear();
@@ -252,6 +277,7 @@ export function GalleryScreen() {
 		if (immediate || !shell || !closeTarget) {
 			stopAnimations();
 			setViewer(null);
+			onViewerClose?.();
 			return;
 		}
 
@@ -294,6 +320,7 @@ export function GalleryScreen() {
 		mediaAnimation.onfinish = () => {
 			stopAnimations();
 			setViewer(null);
+			onViewerClose?.();
 		};
 	};
 
@@ -325,7 +352,7 @@ export function GalleryScreen() {
 	const handleGridOpen = (photoId: string) => (event: ReactMouseEvent<HTMLButtonElement>) => {
 		openViewer({
 			photoId,
-			photoIds: galleryPhotos.map((photo) => photo.id),
+			photoIds: photos.map((photo) => photo.id),
 			sourceElement: event.currentTarget,
 			sourceKey: `photo:${photoId}`,
 		});
@@ -708,57 +735,60 @@ export function GalleryScreen() {
 
 	return (
 		<App>
-			<div className="gallery-screen" style={viewer ? viewerChromeStyle : undefined}>
+			<div
+				className={`gallery-screen${cover ? ' gallery-screen--cover' : ''}${
+					viewer ? ' is-viewer' : ''
+				}`}
+				style={viewer ? viewerChromeStyle : undefined}
+			>
 				<div className="gallery-screen__surface">
-					<div className={`gallery-screen__nav gallery-screen__nav--top${viewer ? ' is-viewer-mode' : ''}`}>
-						{viewer && activePhoto && activePhotoTakenAt ? (
-							<button
-								type="button"
-								className="gallery-screen__viewer-back"
-								onClick={() => closeViewer()}
-								aria-label={`Закрыть просмотр фото, ${activePhoto.takenAtLabel}`}
-							>
-								<Icon
-									width={24}
-									height={24}
-									name="arrow-left"
-									alt=""
-									aria-hidden="true"
-								/>
-								<div className="gallery-screen__viewer-back-copy">
-									<Text as="span" variant="medium-16">
-										{activePhotoTakenAt.date}
+					{viewer && activePhoto && activePhotoTakenAt ? (
+						<div className="gallery-screen__nav gallery-screen__nav--top is-viewer-mode">
+							<GalleryControls onBack={() => closeViewer()}>
+								<div className="gallery-screen__viewer-title">
+									<Text as="span" variant="semiBold-16">
+										{activePhoto.title}
 									</Text>
-									<Text as="span" variant="medium-16">
-										{activePhotoTakenAt.time}
+									<Text as="span" variant="regular-12" color="secondary">
+										{activePhotoTakenAt.date}, {activePhotoTakenAt.time}
 									</Text>
 								</div>
-							</button>
-						) : (
-							<IconButton variant="ghost" aria-label="Ещё">
-								<Icon width={24} height={24} name="more-vertical" />
-							</IconButton>
-						)}
-					</div>
-					{!viewer ? (
-						<header className="gallery-screen__header">
-							<Text as="div" variant="semiBold-32">
-								Все фото
-							</Text>
-							<Text as="div" variant="regular-16" color="secondary">
-								{galleryTotalCountLabel}
-							</Text>
-						</header>
+							</GalleryControls>
+						</div>
+					) : cover ? (
+						<div
+							className="gallery-screen__nav gallery-screen__nav--top is-placeholder"
+							aria-hidden="true"
+						/>
 					) : null}
+					{!viewer && !cover ? <GalleryHeader title={title} showCreate={false} /> : null}
 
 					<div className={`gallery-screen__scroll${viewer ? ' is-viewer-mode' : ''}`}>
+						{cover ? (
+							<header className="gallery-screen__cover">
+								<img src={cover.imageSrc} alt="" aria-hidden="true" />
+								<span className="gallery-screen__cover-shade" />
+								<GalleryControls
+									className="gallery-screen__cover-actions"
+									onBack={() => onBack?.()}
+								/>
+								<div className="gallery-screen__cover-copy">
+									<Text as="div" variant="semiBold-32">
+										{title}
+									</Text>
+									<Text as="div" variant="regular-12">
+										{getPhotoCountLabel(photos.length)}
+									</Text>
+								</div>
+							</header>
+						) : null}
 						<div
 							className="gallery-screen__grid"
 							role="list"
 							aria-label="Сетка фотографий"
 							aria-hidden={viewer ? true : undefined}
 						>
-							{galleryPhotos.map((photo) => {
+							{photos.map((photo) => {
 								const hidden = viewer?.currentPhotoId === photo.id;
 
 								return (
@@ -777,119 +807,96 @@ export function GalleryScreen() {
 											aria-hidden="true"
 											className="gallery-screen__thumb-image"
 										/>
+										{photo.favorite ? (
+											<Icon
+												name="star-100"
+												width={24}
+												height={24}
+												className="gallery-screen__thumb-star"
+												colorToken="content-constant"
+												aria-hidden="true"
+											/>
+										) : null}
 									</button>
 								);
 							})}
 						</div>
-
 					</div>
 
-					<div className={`gallery-screen__nav gallery-screen__nav--bottom${viewer ? ' is-viewer-mode' : ''}`}>
-						{viewer && activePhoto ? (
-							<div className="gallery-screen__toolbar" role="toolbar" aria-label="Действия с фото">
-								<button
-									type="button"
-									className="gallery-viewer__action-button"
-									aria-label="В избранное"
+					{viewer || showNav || cover ? (
+						<div
+							className={`gallery-screen__nav gallery-screen__nav--bottom${
+								viewer ? ' is-viewer-mode' : cover ? ' is-placeholder' : ''
+							}`}
+						>
+							{viewer && activePhoto ? (
+								<div
+									className="gallery-screen__toolbar"
+									role="toolbar"
+									aria-label="Действия с фото"
 								>
-									<Icon
-										name={activePhoto.favorite ? 'star-100' : 'star-0'}
-										alt=""
-										aria-hidden="true"
-										width={24}
-										height={24}
-										colorToken="content-primary"
-									/>
-								</button>
-								<button
-									type="button"
-									className="gallery-viewer__action-button"
-									aria-label="Информация"
-								>
-									<Icon
-										name="status-info-outline"
-										alt=""
-										aria-hidden="true"
-										width={24}
-										height={24}
-										colorToken="content-primary"
-									/>
-								</button>
-								<button
-									type="button"
-									className="gallery-viewer__action-button"
-									aria-label="Поделиться"
-								>
-									<Icon
-										name="share-outline"
-										alt=""
-										aria-hidden="true"
-										width={24}
-										height={24}
-										colorToken="content-primary"
-									/>
-								</button>
-								<button
-									type="button"
-									className="gallery-viewer__action-button"
-									aria-label="Удалить"
-								>
-									<Icon
-										name="delete-outline"
-										alt=""
-										aria-hidden="true"
-										width={24}
-										height={24}
-										colorToken="content-primary"
-									/>
-								</button>
-							</div>
-						) : (
-							<Nav
-								items={[
-									{
-										id: 'all',
-										active: true,
-										onClick: () => navigate(galleryRoutes.all),
-										icon: (
-											<Icon
-												name="photo-outline"
-												alt=""
-												aria-hidden="true"
-												width={24}
-												height={24}
-												colorToken="#2e8dff"
-											/>
-										),
-										label: (
-											<Text as="span" variant="medium-12">
-												Все фото
-											</Text>
-										),
-									},
-									{
-										id: 'albums',
-										disabled: true,
-										icon: (
-											<Icon
-												name="folder-outline"
-												alt=""
-												aria-hidden="true"
-												width={24}
-												height={24}
-												colorToken="rgba(32, 36, 44, 0.44)"
-											/>
-										),
-										label: (
-											<Text as="span" variant="medium-12">
-												Альбомы
-											</Text>
-										),
-									},
-								]}
-							/>
-						)}
-					</div>
+									<button
+										type="button"
+										className="gallery-viewer__action-button"
+										aria-label="В избранное"
+									>
+										<Icon
+											name={activePhoto.favorite ? 'star-100' : 'star-0'}
+											alt=""
+											aria-hidden="true"
+											width={24}
+											height={24}
+											colorToken="content-primary"
+										/>
+									</button>
+									<button
+										type="button"
+										className="gallery-viewer__action-button"
+										aria-label="Информация"
+									>
+										<Icon
+											name="status-info-outline"
+											alt=""
+											aria-hidden="true"
+											width={24}
+											height={24}
+											colorToken="content-primary"
+										/>
+									</button>
+									<button
+										type="button"
+										className="gallery-viewer__action-button"
+										aria-label="Поделиться"
+									>
+										<Icon
+											name="share-outline"
+											alt=""
+											aria-hidden="true"
+											width={24}
+											height={24}
+											colorToken="content-primary"
+										/>
+									</button>
+									<button
+										type="button"
+										className="gallery-viewer__action-button"
+										aria-label="Удалить"
+									>
+										<Icon
+											name="delete-outline"
+											alt=""
+											aria-hidden="true"
+											width={24}
+											height={24}
+											colorToken="content-primary"
+										/>
+									</button>
+								</div>
+							) : showNav ? (
+								<GalleryNav active="all" />
+							) : null}
+						</div>
+					) : null}
 				</div>
 				{viewer && activePhoto ? (
 					<div
@@ -976,4 +983,8 @@ export function GalleryScreen() {
 			</div>
 		</App>
 	);
+}
+
+export function GalleryScreen() {
+	return <PhotoScreen title="Все фото" photos={galleryPhotos} showNav />;
 }

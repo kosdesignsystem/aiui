@@ -1,0 +1,175 @@
+
+.Pixso-symbol-445_139134 {
+        width: 360px;
+height: 68px;
+position: relative;
+display: flex;
+flex-direction: row;
+align-items: center;
+background-color: var(--background-background-secondary);
+      }
+.Pixso-frame-445_139135 {
+        width: 100%;
+height: auto;
+overflow: hidden;
+position: relative;
+flex-shrink: 1;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+flex-grow: 1;
+flex-basis: 0;
+border-radius: 16px 16px 16px 16px;
+      }
+.frame-content-445_139135 {
+        display: flex;
+flex-direction: column;
+gap: 6px;
+align-items: center;
+justify-content: center;
+padding: 16px 24px 12px 24px;
+width: 100%;
+position: relative;
+      }
+.Pixso-instance-445_139136 {
+        width: 20px;
+height: 20px;
+background-image: url(@/assets/images/phonereceived0.svg);
+background-size: 100% 100%;
+background-repeat: no-repeat;
+overflow: hidden;
+position: relative;
+flex-shrink: 0;
+      }
+.Pixso-paragraph-445_139137 {
+        font-size: 14px;
+font-family: "Kaspersky Sans Text-Regular";
+font-weight: 400;
+display: flex;
+flex-direction: column;
+justify-content: center;
+letter-spacing: 0em;
+line-height: 100%;
+color: rgba(0, 0, 0, 1);
+width: auto;
+height: auto;
+position: relative;
+flex-shrink: 0;
+white-space: pre;
+flex-grow: 0;
+      }
+.Pixso-frame-445_139138 {
+        width: 100%;
+height: auto;
+overflow: hidden;
+position: relative;
+flex-shrink: 1;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+flex-grow: 1;
+flex-basis: 0;
+border-radius: 16px 16px 16px 16px;
+      }
+.frame-content-445_139138 {
+        display: flex;
+flex-direction: column;
+gap: 6px;
+align-items: center;
+justify-content: center;
+padding: 16px 24px 12px 24px;
+width: 100%;
+position: relative;
+      }
+.Pixso-instance-445_139139 {
+        width: 20px;
+height: 20px;
+background-image: url(@/assets/images/persone2.svg);
+background-size: 100% 100%;
+background-repeat: no-repeat;
+overflow: hidden;
+position: relative;
+flex-shrink: 0;
+      }
+.Pixso-paragraph-445_139140 {
+        font-size: 14px;
+font-family: "Kaspersky Sans Text-Regular";
+font-weight: 400;
+display: flex;
+flex-direction: column;
+justify-content: center;
+letter-spacing: 0em;
+line-height: 100%;
+color: var(--secondary);
+width: auto;
+height: auto;
+position: relative;
+flex-shrink: 0;
+white-space: pre;
+flex-grow: 0;
+      }
+.Pixso-frame-445_139141 {
+        width: 100%;
+height: auto;
+overflow: hidden;
+position: relative;
+flex-shrink: 1;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+flex-grow: 1;
+flex-basis: 0;
+border-radius: 16px 16px 16px 16px;
+      }
+.frame-content-445_139141 {
+        display: flex;
+flex-direction: column;
+gap: 6px;
+align-items: center;
+justify-content: center;
+padding: 16px 24px 12px 24px;
+width: 100%;
+position: relative;
+      }
+.Pixso-instance-445_139142 {
+        width: 20px;
+height: 20px;
+position: relative;
+flex-shrink: 0;
+      }
+.Pixso-paragraph-445_139143 {
+        font-size: 14px;
+font-family: "Kaspersky Sans Text-Regular";
+font-weight: 400;
+display: flex;
+flex-direction: column;
+justify-content: center;
+letter-spacing: 0em;
+line-height: 100%;
+color: var(--secondary);
+width: auto;
+height: auto;
+position: relative;
+flex-shrink: 0;
+white-space: pre;
+flex-grow: 0;
+      }
+.component-445_139134 {
+        width: fit-content;
+height: fit-content;
+      }
+
+
+.Pixso-instance-445_139142 {
+        background-image: url(@/assets/images/dialpad1.svg);
+background-size: 100% 100%;
+background-repeat: no-repeat;
+      }
+.Pixso-instance-445_139142 .Pixso-symbol-445_139036  {
+        width: 20px;
+height: 20px;
+overflow: hidden;
+      }

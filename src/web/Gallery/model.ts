@@ -36,6 +36,25 @@ export type GalleryPhoto = {
 	imageSrc: string;
 };
 
+export type GalleryAlbum = {
+	id: string;
+	title: string;
+	photos: GalleryPhoto[];
+};
+
+export type GalleryCategoryId =
+	| 'photos'
+	| 'videos'
+	| 'screenshots'
+	| 'records'
+	| 'downloads';
+
+export type GalleryCategory = {
+	id: GalleryCategoryId;
+	title: string;
+	count: number;
+};
+
 type PhotoSeed = Omit<GalleryPhoto, 'width' | 'height' | 'imageSrc'>;
 
 const PHOTO_WIDTH = 800;
@@ -213,7 +232,7 @@ const photoSeeds: PhotoSeed[] = [
 	},
 ];
 
-function formatPhotoCount(count: number) {
+export function getPhotoCountLabel(count: number) {
 	return `${count} фото`;
 }
 
@@ -228,8 +247,26 @@ function createPhoto(seed: PhotoSeed, imageSrc: string): GalleryPhoto {
 
 export const galleryPhotos = photoSeeds.map((seed, index) => createPhoto(seed, photoAssets[index]));
 
-export const galleryTotalCountLabel = formatPhotoCount(galleryPhotos.length);
+export const favoritePhotos = galleryPhotos.filter((photo) => photo.favorite);
+
+export const galleryAlbums: GalleryAlbum[] = [
+	{ id: 'production', title: 'Делишки' },
+	{ id: 'documents', title: 'Коллеги' },
+	{ id: 'travel', title: 'Путешествия' },
+].map((album) => ({
+	...album,
+	photos: galleryPhotos.filter((photo) => photo.albumIds.includes(album.id)),
+}));
+
+export const galleryCategories: GalleryCategory[] = [
+	{ id: 'photos', title: 'Фото', count: 1124 },
+	{ id: 'videos', title: 'Видео', count: 421 },
+	{ id: 'screenshots', title: 'Скриншоты', count: 25 },
+	{ id: 'records', title: 'Записи экрана', count: 5 },
+	{ id: 'downloads', title: 'Загрузки', count: 159 },
+];
 
 export const galleryRoutes = {
 	all: createAppScreenPath(GALLERY_APP_ID, 'all'),
+	albums: createAppScreenPath(GALLERY_APP_ID, 'albums'),
 } as const;

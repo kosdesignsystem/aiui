@@ -1,0 +1,39 @@
+
+.Pixso-symbol-1057_169888 {
+        width: 40px;
+height: 40px;
+overflow: hidden;
+position: relative;
+border-radius: var(--medium-radius) var(--medium-radius) var(--medium-radius) var(--medium-radius);
+      }
+.Pixso-instance-1057_169889 {
+        width: 24px;
+height: 24px;
+position: absolute;
+left: 8px;
+top: 8px;
+      }
+.component-1057_169888 {
+        width: fit-content;
+height: fit-content;
+      }
+
+
+.Pixso-instance-1057_169889 .Pixso-symbol-188_119799 .Pixso-symbol-504_2219 {
+        width: 24px;
+height: 24px;
+background-image: url(@/assets/images/is_outlinefalse18.svg);
+background-size: 100% 100%;
+background-repeat: no-repeat;
+overflow: hidden;
+      }
+.Pixso-instance-1057_169889 {
+        background-image: url(@/assets/images/is_outlinefalse18.svg);
+background-size: 100% 100%;
+background-repeat: no-repeat;
+      }
+.Pixso-instance-1057_169889 .Pixso-symbol-188_119799  {
+        width: 24px;
+height: 24px;
+overflow: hidden;
+      }
