@@ -30,15 +30,37 @@
 .radio-now-playing { min-width: 0; margin-top: auto; padding: 0 3px 16px; }
 .radio-now-playing .ui-text { display: block; }
 .radio-now-playing__title { overflow: hidden; margin-top: 5px; text-overflow: ellipsis; white-space: nowrap; }
-.radio-controls { display: grid; grid-template-columns: 70px 1fr 70px; gap: 8px; height: 104px; }
-.radio-controls button { display: grid; border: 0; border-radius: 22px; place-items: center; background: #181818; cursor: pointer; }
-.radio-controls button:active { transform: scale(.97); }
+.radio-controls { display: grid; grid-template-columns: 72px 1fr 72px; align-items: center; gap: 8px; height: 88px; }
+.radio-controls button {
+	display: grid;
+	width: 100%;
+	height: 72px;
+	box-sizing: border-box;
+	border: 1px solid rgba(227, 226, 226, 1);
+	border-radius: 20px;
+	place-items: center;
+	background: #181818;
+	box-shadow: 0 0 16px 0 rgba(0, 0, 0, .07);
+	cursor: pointer;
+	transform: translateY(0) scale(1);
+	transition: transform 120ms cubic-bezier(.2, .8, .2, 1), box-shadow 120ms ease, filter 120ms ease;
+}
+.radio-controls button:hover { filter: brightness(1.08); }
+.radio-controls button:active {
+	box-shadow: inset 0 3px 8px rgba(0, 0, 0, .28), 0 1px 3px rgba(0, 0, 0, .12);
+	filter: brightness(.92);
+	transform: translateY(4px) scale(.96);
+}
 .radio-controls .radio-controls__main { color: #000; background: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+	.radio-controls button { transition: none; }
+}
 
 .device-screen .radio-screen { min-height: 100%; }
 @media (max-height: 720px) {
 	.radio-frequency { margin-top: 36px; }
 	.radio-tuner { margin-top: 38px; }
 	.radio-tuner { height: 105px; }
-	.radio-controls { height: 90px; }
+	.radio-controls { height: 80px; }
 }
