@@ -1,0 +1,47 @@
+.radio-screen {
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	min-height: 100dvh;
+	overflow: hidden;
+	padding: 28px 18px 72px;
+	color: #fff;
+	background: #000;
+}
+
+.radio-screen button { color: inherit; }
+.radio-screen .ui-text-color-secondary { color: #777; }
+.radio-frequency { margin-top: clamp(72px, 14vh, 120px); text-align: center; }
+.radio-frequency > div { color: #fff; font-family: 'Kaspersky Sans Text Clock', 'Kaspersky Sans Text', sans-serif; font-size: 114px; font-weight: 500; line-height: .95; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
+.radio-frequency__name { display: block; overflow: hidden; margin-top: 18px; color: #858585; font-size: 48px; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
+.radio-frequency__country { display: block; overflow: hidden; margin-top: 10px; color: #505050; font-size: 36px; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
+
+.radio-tuner { position: relative; height: 128px; margin: 76px -2px 0; }
+.radio-tuner__ticks { display: flex; align-items: end; justify-content: space-between; height: 56px; padding-top: 16px; }
+.radio-tuner__ticks i { width: 1px; height: 24px; background: #393939; }
+.radio-tuner__ticks i.is-major { height: 40px; background: #6c6c6c; }
+.radio-tuner__needle { position: absolute; top: 0; width: 3px; height: 92px; border-radius: 3px; background: #ff4141; box-shadow: 0 0 18px rgba(255,65,65,.55); transform: translateX(-50%); transition: left .22s ease; }
+.radio-tuner input { position: absolute; inset: 0 0 28px; width: 100%; opacity: 0; cursor: ew-resize; }
+.radio-tuner__labels { display: flex; justify-content: space-between; margin-top: 10px; color: #555; font-family: 'Kaspersky Sans Text Clock', sans-serif; font-size: 12px; }
+
+.radio-now-playing { min-width: 0; margin-top: auto; padding: 0 3px 16px; }
+.radio-now-playing .ui-text { display: block; }
+.radio-now-playing__title { overflow: hidden; margin-top: 5px; text-overflow: ellipsis; white-space: nowrap; }
+.radio-controls { display: grid; grid-template-columns: 70px 1fr 70px; gap: 8px; height: 104px; }
+.radio-controls button { display: grid; border: 0; border-radius: 22px; place-items: center; background: #181818; cursor: pointer; transition: transform 100ms ease; }
+.radio-controls button:active { transform: scale(.97); }
+.radio-controls .radio-controls__main { color: #000; background: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+	.radio-controls button { transition: none; }
+}
+
+.device-screen .radio-screen { min-height: 100%; }
+@media (max-height: 720px) {
+	.radio-frequency { margin-top: 36px; }
+	.radio-tuner { margin-top: 38px; }
+	.radio-tuner { height: 105px; }
+	.radio-controls { height: 90px; }
+}
