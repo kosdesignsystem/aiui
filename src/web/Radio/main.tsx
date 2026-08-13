@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Text } from '../../ui/Fonts';
 import { Icon } from '../../ui/Icon';
+import { AnimatedRollingNumber } from './AnimatedRollingNumber';
 import './screen.scss';
 
 type RadioBrowserStation = {
@@ -136,7 +137,7 @@ export default function RadioMainPage() {
 				onError={() => { setHasError(true); setIsLoading(false); setIsPlaying(false); }}
 			/>
 			<section className="radio-frequency" aria-live="polite">
-				<div>{station.frequency.toFixed(1)}</div>
+				<AnimatedRollingNumber className="radio-frequency__number rolling-number" value={station.frequency} />
 				<Text variant="regular-16" className="radio-frequency__name">{station.name}</Text>
 				{station.country ? <Text variant="medium-12" className="radio-frequency__country">{station.country}</Text> : null}
 			</section>

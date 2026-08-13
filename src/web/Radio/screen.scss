@@ -14,7 +14,11 @@
 .radio-screen button { color: inherit; }
 .radio-screen .ui-text-color-secondary { color: #777; }
 .radio-frequency { margin-top: clamp(72px, 14vh, 120px); text-align: center; }
-.radio-frequency > div { color: #fff; font-family: 'Kaspersky Sans Text Clock', 'Kaspersky Sans Text', sans-serif; font-size: 114px; font-weight: 500; line-height: .95; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
+.radio-frequency__number { display: flex; justify-content: center; color: #fff; font-family: 'Kaspersky Sans Text Clock', 'Kaspersky Sans Text', sans-serif; font-size: 104px; font-weight: 500; line-height: .95; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
+.rolling-number__digit { display: inline-block; width: .57em; height: .95em; overflow: hidden; }
+.rolling-number__reel { display: flex; flex-direction: column; transition: transform 620ms cubic-bezier(.2, .78, .24, 1); transform: translateY(calc(var(--rolling-digit) * -.95em)); will-change: transform; }
+.rolling-number__reel > span { display: block; flex: 0 0 .95em; height: .95em; line-height: .95em; }
+.rolling-number__separator { align-self: flex-end; width: .28em; height: .95em; line-height: .95em; }
 .radio-frequency__name { display: block; overflow: hidden; margin-top: 18px; color: #858585; font-size: 48px; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
 .radio-frequency__country { display: block; overflow: hidden; margin-top: 10px; color: #505050; font-size: 36px; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -36,6 +40,7 @@
 
 @media (prefers-reduced-motion: reduce) {
 	.radio-controls button { transition: none; }
+	.rolling-number__reel { transition: none; }
 }
 
 .device-screen .radio-screen { min-height: 100%; }
