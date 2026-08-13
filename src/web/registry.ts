@@ -3,6 +3,7 @@ import { componentsAppDefinition } from './Components';
 import { contactsAppDefinition } from './Contacts';
 import { galleryAppDefinition } from './Gallery';
 import { remindersAppDefinition } from './Reminders';
+import { radioAppDefinition } from './Radio';
 
 export {
 	createAppScreenPath,
@@ -17,6 +18,7 @@ export {
 } from './definition';
 
 export const appRegistry = [
+	radioAppDefinition,
 	contactsAppDefinition,
 	componentsAppDefinition,
 	callsAppDefinition,
