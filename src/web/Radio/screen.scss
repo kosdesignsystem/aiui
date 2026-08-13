@@ -19,8 +19,8 @@
 .rolling-number__reel { display: flex; flex-direction: column; transition: transform 620ms cubic-bezier(.2, .78, .24, 1); transform: translateY(calc(var(--rolling-digit) * -.95em)); will-change: transform; }
 .rolling-number__reel > span { display: block; flex: 0 0 .95em; height: .95em; line-height: .95em; }
 .rolling-number__separator { align-self: flex-end; width: .28em; height: .95em; line-height: .95em; }
-.radio-frequency__name { display: block; overflow: hidden; margin-top: 18px; color: #858585; font-size: 48px; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
-.radio-frequency__country { display: block; overflow: hidden; margin-top: 10px; color: #505050; font-size: 36px; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
+.radio-frequency .radio-frequency__name { display: block; overflow: hidden; margin-top: 28px; color: #858585; font-size: 72px; line-height: 1.1; text-overflow: ellipsis; white-space: nowrap; }
+.radio-frequency .radio-frequency__country { display: block; overflow: hidden; margin-top: 14px; color: #505050; font-size: 54px; line-height: 1.1; text-overflow: ellipsis; white-space: nowrap; }
 
 .radio-tuner { position: relative; height: 128px; margin: 76px -2px 0; }
 .radio-tuner__ticks { display: flex; align-items: end; justify-content: space-between; height: 56px; padding-top: 16px; }

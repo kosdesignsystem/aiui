@@ -11,8 +11,7 @@ const DIGITS = Array.from({ length: 10 }, (_, digit) => digit);
 // Web adaptation of the reel technique used by
 // https://github.com/BouarourMohammed/react-native-animated-rolling-numbers.
 function formatFrequency(value: number, decimals: number) {
-	const [integer, fraction] = value.toFixed(decimals).split('.');
-	return `${integer.padStart(3, '0')}.${fraction}`;
+	return value.toFixed(decimals);
 }
 
 export function AnimatedRollingNumber({
