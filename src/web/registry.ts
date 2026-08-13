@@ -26,19 +26,19 @@ export {
 
 const nikitaAppDefinition = defineApp({
 	id: 'Nikita',
-	title: 'Никита',
-	businessGoal: 'Показать минимальное мобильное приложение с красным фоном.',
+	title: 'Радио — Никита',
+	businessGoal: 'Открывать приложение радио по адресу Никиты.',
 	flows: [
 		defineFlow({
 			id: 'main',
-			title: 'Основной сценарий',
-			businessGoal: 'Открыть главный экран приложения.',
+			title: 'Радио',
+			businessGoal: 'Открыть полнофункциональный экран радио.',
 			screens: [
 				defineScreen({
 					id: 'main',
 					title: 'Главный экран',
-					scenario: 'preview',
-					businessGoal: 'Показать полноэкранный красный фон.',
+					scenario: 'browse',
+					businessGoal: 'Слушать и переключать интернет-радиостанции.',
 					Component: NikitaMainPage,
 				}),
 			],
