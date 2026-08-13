@@ -5,6 +5,7 @@ import CallsDialpadPage from './Calls/dialpad';
 import { componentsAppDefinition } from './Components';
 import OfflineTransferMainPage from './OfflineTransfer/main';
 import NikitaMainPage from './Nikita';
+import RadioMainPage from './Radio';
 import PasswordGeneratorMainPage from './PasswordGenerator/main';
 import SecureByUIMainPage from './SecureByUI/main';
 import SecureByUIPolicyPage from './SecureByUI/policy';
@@ -61,6 +62,28 @@ const offlineTransferAppDefinition = defineApp({
 					scenario: 'preview',
 					businessGoal: 'Show offline mode status, local transfer progress, and secure mesh activity.',
 					Component: OfflineTransferMainPage,
+				}),
+			],
+		}),
+	],
+});
+
+const radioAppDefinition = defineApp({
+	id: 'Radio',
+	title: 'Радио',
+	businessGoal: 'Слушать эфирные станции и быстро переключаться между ними.',
+	flows: [
+		defineFlow({
+			id: 'radio',
+			title: 'Радио',
+			businessGoal: 'Управлять воспроизведением и выбирать популярные станции.',
+			screens: [
+				defineScreen({
+					id: 'main',
+					title: 'Главный экран',
+					scenario: 'browse',
+					businessGoal: 'Показать текущий эфир, трек и список станций.',
+					Component: RadioMainPage,
 				}),
 			],
 		}),
@@ -170,6 +193,7 @@ const passwordGeneratorAppDefinition = defineApp({
 
 export const appRegistry = [
 	nikitaAppDefinition,
+	radioAppDefinition,
 	offlineTransferAppDefinition,
 	componentsAppDefinition,
 	callsAppDefinition,
