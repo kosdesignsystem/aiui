@@ -13,7 +13,11 @@
 
 .radio-screen button { color: inherit; }
 .radio-screen .ui-text-color-secondary { color: #777; }
-.radio-frequency { margin-top: clamp(72px, 14vh, 120px); text-align: center; }
+.radio-country { align-self: center; position: relative; }
+.radio-country__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+.radio-country select { padding: 9px 34px 9px 14px; border: 0; border-radius: 14px; color: #aaa; background: #161616; font: inherit; font-size: 13px; text-align: center; cursor: pointer; }
+.radio-country select:disabled { cursor: wait; opacity: .55; }
+.radio-frequency { margin-top: clamp(50px, 10vh, 86px); text-align: center; }
 .radio-frequency > div { font-family: 'Kaspersky Sans Text Clock', 'Kaspersky Sans Text', sans-serif; font-size: 76px; font-weight: 500; line-height: .95; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
 .radio-frequency > div span { color: #3a3a3a; }
 .radio-frequency__name { display: block; overflow: hidden; margin-top: 12px; color: #858585; text-overflow: ellipsis; white-space: nowrap; }
@@ -30,27 +34,9 @@
 .radio-now-playing { min-width: 0; margin-top: auto; padding: 0 3px 16px; }
 .radio-now-playing .ui-text { display: block; }
 .radio-now-playing__title { overflow: hidden; margin-top: 5px; text-overflow: ellipsis; white-space: nowrap; }
-.radio-controls { display: grid; grid-template-columns: 72px 1fr 72px; align-items: center; gap: 8px; height: 88px; }
-.radio-controls button {
-	display: grid;
-	width: 100%;
-	height: 72px;
-	box-sizing: border-box;
-	border: 1px solid rgba(227, 226, 226, 1);
-	border-radius: 20px;
-	place-items: center;
-	background: #181818;
-	box-shadow: 0 0 16px 0 rgba(0, 0, 0, .07);
-	cursor: pointer;
-	transform: translateY(0) scale(1);
-	transition: transform 120ms cubic-bezier(.2, .8, .2, 1), box-shadow 120ms ease, filter 120ms ease;
-}
-.radio-controls button:hover { filter: brightness(1.08); }
-.radio-controls button:active {
-	box-shadow: inset 0 3px 8px rgba(0, 0, 0, .28), 0 1px 3px rgba(0, 0, 0, .12);
-	filter: brightness(.92);
-	transform: translateY(4px) scale(.96);
-}
+.radio-controls { display: grid; grid-template-columns: 70px 1fr 70px; gap: 8px; height: 104px; }
+.radio-controls button { display: grid; border: 0; border-radius: 22px; place-items: center; background: #181818; cursor: pointer; transition: transform 100ms ease; }
+.radio-controls button:active { transform: scale(.97); }
 .radio-controls .radio-controls__main { color: #000; background: #fff; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -62,5 +48,5 @@
 	.radio-frequency { margin-top: 36px; }
 	.radio-tuner { margin-top: 38px; }
 	.radio-tuner { height: 105px; }
-	.radio-controls { height: 80px; }
+	.radio-controls { height: 90px; }
 }

@@ -14,13 +14,37 @@ type RadioBrowserStation = {
 
 type Station = RadioBrowserStation & { frequency: number };
 
-const API_BASE = 'https://all.api.radio-browser.info/json';
+const API_BASES = [
+	'https://all.api.radio-browser.info/json',
+	'https://de1.api.radio-browser.info/json',
+	'https://nl1.api.radio-browser.info/json',
+];
+const COUNTRIES = ['All countries', 'Germany', 'France', 'Spain', 'Italy', 'United Kingdom', 'United States', 'Netherlands'];
 const FALLBACK_STATIONS: RadioBrowserStation[] = [
 	{ stationuuid: 'groovesalad', name: 'Groove Salad', url_resolved: 'https://ice2.somafm.com/groovesalad-128-mp3', favicon: '', tags: 'ambient', country: 'United States' },
 	{ stationuuid: 'secretagent', name: 'Secret Agent', url_resolved: 'https://ice2.somafm.com/secretagent-128-mp3', favicon: '', tags: 'downtempo', country: 'United States' },
 	{ stationuuid: 'dronezone', name: 'Drone Zone', url_resolved: 'https://ice2.somafm.com/dronezone-128-mp3', favicon: '', tags: 'ambient', country: 'United States' },
 	{ stationuuid: 'indiepop', name: 'Indie Pop Rocks!', url_resolved: 'https://ice2.somafm.com/indiepop-128-mp3', favicon: '', tags: 'indie', country: 'United States' },
+	{ stationuuid: 'lush', name: 'Lush', url_resolved: 'https://ice2.somafm.com/lush-128-mp3', favicon: '', tags: 'electronic', country: 'United States' },
+	{ stationuuid: 'fluid', name: 'Fluid', url_resolved: 'https://ice2.somafm.com/fluid-128-mp3', favicon: '', tags: 'instrumental hip-hop', country: 'United States' },
+	{ stationuuid: 'bootliquor', name: 'Boot Liquor', url_resolved: 'https://ice2.somafm.com/bootliquor-128-mp3', favicon: '', tags: 'americana', country: 'United States' },
+	{ stationuuid: 'sonicuniverse', name: 'Sonic Universe', url_resolved: 'https://ice2.somafm.com/sonicuniverse-128-mp3', favicon: '', tags: 'jazz', country: 'United States' },
 ];
+
+async function fetchStations(country: string, signal: AbortSignal) {
+	const path = country === COUNTRIES[0]
+		? '/stations/topclick/30?hidebroken=true&order=clickcount&reverse=true'
+		: `/stations/bycountryexact/${encodeURIComponent(country)}?limit=30&hidebroken=true&order=clickcount&reverse=true`;
+	for (const apiBase of API_BASES) {
+		try {
+			const response = await fetch(`${apiBase}${path}`, { signal });
+			if (response.ok) return await response.json() as RadioBrowserStation[];
+		} catch (error) {
+			if (signal.aborted) throw error;
+		}
+	}
+	throw new Error('Radio Browser is unavailable');
+}
 
 function addFrequencies(stations: RadioBrowserStation[]): Station[] {
 	const unique = stations.filter((station, index, list) =>
@@ -40,15 +64,15 @@ export default function RadioMainPage() {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [hasError, setHasError] = useState(false);
+	const [country, setCountry] = useState(COUNTRIES[0]);
+	const [isCatalogLoading, setIsCatalogLoading] = useState(false);
 	const station = stations[stationIndex] ?? stations[0];
 	const tunerPosition = useMemo(() => ((station.frequency - 87.5) / 20.5) * 100, [station.frequency]);
 
 	useEffect(() => {
 		const controller = new AbortController();
-		fetch(`${API_BASE}/stations/topclick/30?hidebroken=true&order=clickcount&reverse=true`, {
-			signal: controller.signal,
-		})
-			.then((response) => response.ok ? response.json() as Promise<RadioBrowserStation[]> : Promise.reject())
+		setIsCatalogLoading(true);
+		fetchStations(country, controller.signal)
 			.then((result) => {
 				const playable = addFrequencies(result);
 				if (playable.length) {
@@ -56,9 +80,15 @@ export default function RadioMainPage() {
 					setStationIndex(0);
 				}
 			})
-			.catch(() => undefined);
+			.catch(() => {
+				if (country === COUNTRIES[0] || country === 'United States') {
+					setStations(addFrequencies(FALLBACK_STATIONS));
+					setStationIndex(0);
+				}
+			})
+			.finally(() => setIsCatalogLoading(false));
 		return () => controller.abort();
-	}, []);
+	}, [country]);
 
 	useEffect(() => {
 		const audio = audioRef.current;
@@ -93,7 +123,7 @@ export default function RadioMainPage() {
 		try {
 			await audio.play();
 			if (station.stationuuid.includes('-')) {
-				void fetch(`${API_BASE}/url/${station.stationuuid}`, { method: 'POST' });
+					void fetch(`${API_BASES[0]}/url/${station.stationuuid}`, { method: 'POST' });
 			}
 		} catch {
 			shouldKeepPlayingRef.current = false;
@@ -114,6 +144,12 @@ export default function RadioMainPage() {
 				onCanPlay={() => setIsLoading(false)}
 				onError={() => { setHasError(true); setIsLoading(false); setIsPlaying(false); }}
 			/>
+			<label className="radio-country">
+				<span className="radio-country__label">Страна</span>
+				<select value={country} onChange={(event) => setCountry(event.target.value)} disabled={isCatalogLoading}>
+					{COUNTRIES.map((item) => <option key={item} value={item}>{item}</option>)}
+				</select>
+			</label>
 
 			<section className="radio-frequency" aria-live="polite">
 				<div><span>{station.frequency.toFixed(1).slice(0, 2)}</span>{station.frequency.toFixed(1).slice(2)}</div>
