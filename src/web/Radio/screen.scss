@@ -13,15 +13,10 @@
 
 .radio-screen button { color: inherit; }
 .radio-screen .ui-text-color-secondary { color: #777; }
-.radio-country { align-self: center; position: relative; }
-.radio-country__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
-.radio-country select { padding: 9px 34px 9px 14px; border: 0; border-radius: 14px; color: #aaa; background: #161616; font: inherit; font-size: 13px; text-align: center; cursor: pointer; }
-.radio-country select:disabled { cursor: wait; opacity: .55; }
-.radio-frequency { margin-top: clamp(50px, 10vh, 86px); text-align: center; }
-.radio-frequency > div { font-family: 'Kaspersky Sans Text Clock', 'Kaspersky Sans Text', sans-serif; font-size: 76px; font-weight: 500; line-height: .95; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
-.radio-frequency > div span { color: #3a3a3a; }
-.radio-frequency__name { display: block; overflow: hidden; margin-top: 12px; color: #858585; text-overflow: ellipsis; white-space: nowrap; }
-.radio-frequency__country { display: block; margin-top: 7px; color: #505050; }
+.radio-frequency { margin-top: clamp(72px, 14vh, 120px); text-align: center; }
+.radio-frequency > div { color: #fff; font-family: 'Kaspersky Sans Text Clock', 'Kaspersky Sans Text', sans-serif; font-size: 114px; font-weight: 500; line-height: .95; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
+.radio-frequency__name { display: block; overflow: hidden; margin-top: 18px; color: #858585; font-size: 24px; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
+.radio-frequency__country { display: block; margin-top: 10px; color: #505050; font-size: 18px; line-height: 1.25; }
 
 .radio-tuner { position: relative; height: 128px; margin: 76px -2px 0; }
 .radio-tuner__ticks { display: flex; align-items: end; justify-content: space-between; height: 56px; padding-top: 16px; }

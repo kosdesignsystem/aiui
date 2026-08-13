@@ -19,7 +19,6 @@ const API_BASES = [
 	'https://de1.api.radio-browser.info/json',
 	'https://nl1.api.radio-browser.info/json',
 ];
-const COUNTRIES = ['All countries', 'Germany', 'France', 'Spain', 'Italy', 'United Kingdom', 'United States', 'Netherlands'];
 const FALLBACK_STATIONS: RadioBrowserStation[] = [
 	{ stationuuid: 'groovesalad', name: 'Groove Salad', url_resolved: 'https://ice2.somafm.com/groovesalad-128-mp3', favicon: '', tags: 'ambient', country: 'United States' },
 	{ stationuuid: 'secretagent', name: 'Secret Agent', url_resolved: 'https://ice2.somafm.com/secretagent-128-mp3', favicon: '', tags: 'downtempo', country: 'United States' },
@@ -31,10 +30,8 @@ const FALLBACK_STATIONS: RadioBrowserStation[] = [
 	{ stationuuid: 'sonicuniverse', name: 'Sonic Universe', url_resolved: 'https://ice2.somafm.com/sonicuniverse-128-mp3', favicon: '', tags: 'jazz', country: 'United States' },
 ];
 
-async function fetchStations(country: string, signal: AbortSignal) {
-	const path = country === COUNTRIES[0]
-		? '/stations/topclick/30?hidebroken=true&order=clickcount&reverse=true'
-		: `/stations/bycountryexact/${encodeURIComponent(country)}?limit=30&hidebroken=true&order=clickcount&reverse=true`;
+async function fetchStations(signal: AbortSignal) {
+	const path = '/stations/topclick/30?hidebroken=true&order=clickcount&reverse=true';
 	for (const apiBase of API_BASES) {
 		try {
 			const response = await fetch(`${apiBase}${path}`, { signal });
@@ -64,15 +61,12 @@ export default function RadioMainPage() {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [hasError, setHasError] = useState(false);
-	const [country, setCountry] = useState(COUNTRIES[0]);
-	const [isCatalogLoading, setIsCatalogLoading] = useState(false);
 	const station = stations[stationIndex] ?? stations[0];
 	const tunerPosition = useMemo(() => ((station.frequency - 87.5) / 20.5) * 100, [station.frequency]);
 
 	useEffect(() => {
 		const controller = new AbortController();
-		setIsCatalogLoading(true);
-		fetchStations(country, controller.signal)
+		fetchStations(controller.signal)
 			.then((result) => {
 				const playable = addFrequencies(result);
 				if (playable.length) {
@@ -81,14 +75,11 @@ export default function RadioMainPage() {
 				}
 			})
 			.catch(() => {
-				if (country === COUNTRIES[0] || country === 'United States') {
-					setStations(addFrequencies(FALLBACK_STATIONS));
-					setStationIndex(0);
-				}
-			})
-			.finally(() => setIsCatalogLoading(false));
+				setStations(addFrequencies(FALLBACK_STATIONS));
+				setStationIndex(0);
+			});
 		return () => controller.abort();
-	}, [country]);
+	}, []);
 
 	useEffect(() => {
 		const audio = audioRef.current;
@@ -144,15 +135,8 @@ export default function RadioMainPage() {
 				onCanPlay={() => setIsLoading(false)}
 				onError={() => { setHasError(true); setIsLoading(false); setIsPlaying(false); }}
 			/>
-			<label className="radio-country">
-				<span className="radio-country__label">Страна</span>
-				<select value={country} onChange={(event) => setCountry(event.target.value)} disabled={isCatalogLoading}>
-					{COUNTRIES.map((item) => <option key={item} value={item}>{item}</option>)}
-				</select>
-			</label>
-
 			<section className="radio-frequency" aria-live="polite">
-				<div><span>{station.frequency.toFixed(1).slice(0, 2)}</span>{station.frequency.toFixed(1).slice(2)}</div>
+				<div>{station.frequency.toFixed(1)}</div>
 				<Text variant="regular-16" className="radio-frequency__name">{station.name}</Text>
 				{station.country ? <Text variant="medium-12" className="radio-frequency__country">{station.country}</Text> : null}
 			</section>
