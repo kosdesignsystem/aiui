@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Text } from '../../ui/Fonts';
 import { Icon } from '../../ui/Icon';
-import { IconButton } from '../../ui/IconButton';
 import './screen.scss';
 
 type RadioBrowserStation = {
@@ -10,16 +9,17 @@ type RadioBrowserStation = {
 	url_resolved: string;
 	favicon: string;
 	tags: string;
+	country: string;
 };
 
 type Station = RadioBrowserStation & { frequency: number };
 
 const API_BASE = 'https://all.api.radio-browser.info/json';
 const FALLBACK_STATIONS: RadioBrowserStation[] = [
-	{ stationuuid: 'groovesalad', name: 'Groove Salad', url_resolved: 'https://ice2.somafm.com/groovesalad-128-mp3', favicon: '', tags: 'ambient' },
-	{ stationuuid: 'secretagent', name: 'Secret Agent', url_resolved: 'https://ice2.somafm.com/secretagent-128-mp3', favicon: '', tags: 'downtempo' },
-	{ stationuuid: 'dronezone', name: 'Drone Zone', url_resolved: 'https://ice2.somafm.com/dronezone-128-mp3', favicon: '', tags: 'ambient' },
-	{ stationuuid: 'indiepop', name: 'Indie Pop Rocks!', url_resolved: 'https://ice2.somafm.com/indiepop-128-mp3', favicon: '', tags: 'indie' },
+	{ stationuuid: 'groovesalad', name: 'Groove Salad', url_resolved: 'https://ice2.somafm.com/groovesalad-128-mp3', favicon: '', tags: 'ambient', country: 'United States' },
+	{ stationuuid: 'secretagent', name: 'Secret Agent', url_resolved: 'https://ice2.somafm.com/secretagent-128-mp3', favicon: '', tags: 'downtempo', country: 'United States' },
+	{ stationuuid: 'dronezone', name: 'Drone Zone', url_resolved: 'https://ice2.somafm.com/dronezone-128-mp3', favicon: '', tags: 'ambient', country: 'United States' },
+	{ stationuuid: 'indiepop', name: 'Indie Pop Rocks!', url_resolved: 'https://ice2.somafm.com/indiepop-128-mp3', favicon: '', tags: 'indie', country: 'United States' },
 ];
 
 function addFrequencies(stations: RadioBrowserStation[]): Station[] {
@@ -34,12 +34,12 @@ function addFrequencies(stations: RadioBrowserStation[]): Station[] {
 
 export default function RadioMainPage() {
 	const audioRef = useRef<HTMLAudioElement>(null);
+	const shouldKeepPlayingRef = useRef(false);
 	const [stations, setStations] = useState(() => addFrequencies(FALLBACK_STATIONS));
 	const [stationIndex, setStationIndex] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [hasError, setHasError] = useState(false);
-	const [isFavorite, setIsFavorite] = useState(false);
 	const station = stations[stationIndex] ?? stations[0];
 	const tunerPosition = useMemo(() => ((station.frequency - 87.5) / 20.5) * 100, [station.frequency]);
 
@@ -63,25 +63,31 @@ export default function RadioMainPage() {
 	useEffect(() => {
 		const audio = audioRef.current;
 		if (!audio) return;
-		audio.pause();
+		const shouldResume = shouldKeepPlayingRef.current;
 		audio.load();
-		setIsPlaying(false);
-		setIsLoading(false);
+		setIsLoading(shouldResume);
 		setHasError(false);
+		if (shouldResume) {
+			audio.play().catch(() => {
+				setIsLoading(false);
+				setHasError(true);
+			});
+		}
 	}, [station.stationuuid]);
 
 	const tune = (nextIndex: number) => {
 		setStationIndex((nextIndex + stations.length) % stations.length);
-		setIsFavorite(false);
 	};
 
 	const togglePlayback = async () => {
 		const audio = audioRef.current;
 		if (!audio) return;
 		if (!audio.paused) {
+			shouldKeepPlayingRef.current = false;
 			audio.pause();
 			return;
 		}
+		shouldKeepPlayingRef.current = true;
 		setIsLoading(true);
 		setHasError(false);
 		try {
@@ -90,6 +96,7 @@ export default function RadioMainPage() {
 				void fetch(`${API_BASE}/url/${station.stationuuid}`, { method: 'POST' });
 			}
 		} catch {
+			shouldKeepPlayingRef.current = false;
 			setIsLoading(false);
 			setHasError(true);
 		}
@@ -108,28 +115,11 @@ export default function RadioMainPage() {
 				onError={() => { setHasError(true); setIsLoading(false); setIsPlaying(false); }}
 			/>
 
-			<header className="radio-header">
-				<IconButton variant="ghost" aria-label="Предыдущая станция" onClick={() => tune(stationIndex - 1)}>
-					<Icon name="chevron-left" alt="" aria-hidden="true" />
-				</IconButton>
-				<Text variant="semiBold-16" className="radio-header__station">Radio</Text>
-				<div className="radio-band" aria-label="Диапазон FM"><b>FM</b><span>AM</span></div>
-			</header>
-
 			<section className="radio-frequency" aria-live="polite">
 				<div><span>{station.frequency.toFixed(1).slice(0, 2)}</span>{station.frequency.toFixed(1).slice(2)}</div>
 				<Text variant="regular-16" className="radio-frequency__name">{station.name}</Text>
+				{station.country ? <Text variant="medium-12" className="radio-frequency__country">{station.country}</Text> : null}
 			</section>
-
-			<div className="radio-actions">
-				<IconButton variant="ghost" aria-label="Избранное" onClick={() => setIsFavorite((value) => !value)}>
-					<Icon name={isFavorite ? 'star-100' : 'star-0'} colorToken={isFavorite ? '#ff4141' : '#ffffff'} alt="" aria-hidden="true" />
-				</IconButton>
-				<Text variant="medium-12">{station.tags.split(',')[0] || 'Live radio'}</Text>
-				<IconButton variant="ghost" aria-label="Поделиться станцией" onClick={() => void navigator.share?.({ title: station.name, url: station.url_resolved })}>
-					<Icon name="share-outline" alt="" aria-hidden="true" />
-				</IconButton>
-			</div>
 
 			<div className="radio-tuner">
 				<div className="radio-tuner__ticks" aria-hidden="true">

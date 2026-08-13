@@ -6,29 +6,20 @@
 	height: 100%;
 	min-height: 100dvh;
 	overflow: hidden;
-	padding: 28px 18px 22px;
+	padding: 28px 18px 72px;
 	color: #fff;
 	background: #000;
 }
 
 .radio-screen button { color: inherit; }
 .radio-screen .ui-text-color-secondary { color: #777; }
-.radio-header { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 10px; }
-.radio-header .ui-icon-button { color: #fff; }
-.radio-header__station { overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
-.radio-band { display: flex; overflow: hidden; border-radius: 14px; color: #777; background: #161616; font-size: 14px; }
-.radio-band b, .radio-band span { padding: 11px 14px; }
-.radio-band b { border-radius: 13px; color: #000; background: #fff; }
-
-.radio-frequency { margin-top: clamp(60px, 12vh, 104px); text-align: center; }
+.radio-frequency { margin-top: clamp(72px, 14vh, 120px); text-align: center; }
 .radio-frequency > div { font-family: 'Kaspersky Sans Text Clock', 'Kaspersky Sans Text', sans-serif; font-size: 76px; font-weight: 500; line-height: .95; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
 .radio-frequency > div span { color: #3a3a3a; }
 .radio-frequency__name { display: block; overflow: hidden; margin-top: 12px; color: #858585; text-overflow: ellipsis; white-space: nowrap; }
+.radio-frequency__country { display: block; margin-top: 7px; color: #505050; }
 
-.radio-actions { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; margin-top: 62px; color: #777; text-align: center; text-transform: capitalize; }
-.radio-actions .ui-icon-button { color: #fff; background: #101010; }
-
-.radio-tuner { position: relative; height: 128px; margin: 20px -2px 0; }
+.radio-tuner { position: relative; height: 128px; margin: 76px -2px 0; }
 .radio-tuner__ticks { display: flex; align-items: end; justify-content: space-between; height: 56px; padding-top: 16px; }
 .radio-tuner__ticks i { width: 1px; height: 24px; background: #393939; }
 .radio-tuner__ticks i.is-major { height: 40px; background: #6c6c6c; }
@@ -47,7 +38,7 @@
 .device-screen .radio-screen { min-height: 100%; }
 @media (max-height: 720px) {
 	.radio-frequency { margin-top: 36px; }
-	.radio-actions { margin-top: 34px; }
+	.radio-tuner { margin-top: 38px; }
 	.radio-tuner { height: 105px; }
 	.radio-controls { height: 90px; }
 }
