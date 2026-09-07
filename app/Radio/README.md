@@ -5,6 +5,18 @@
 
 ## Запуск
 
+### Онлайн без установки Flutter
+
+После успешной публикации ветки `member/NC` приложение доступно по адресу:
+
+<https://kosdesignsystem.github.io/aiui/nc/radio/>
+
+GitHub Actions автоматически проверяет, собирает и публикует Flutter Web-версию
+при каждом push в `member/NC`. До слияния этих настроек в ветку ссылка возвращает
+404, потому что каталога `radio` ещё нет в опубликованной сборке.
+
+### Локально
+
 ```sh
 flutter pub get
 flutter run -d chrome
@@ -29,4 +41,3 @@ flutter run -d chrome
 ```sh
 flutter create --platforms=android,ios,macos,windows,linux .
 ```
-
