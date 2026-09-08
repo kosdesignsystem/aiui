@@ -1,0 +1,40 @@
+name: "radio2"
+description: "Native Flutter internet radio KPA application."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.12.0 <4.0.0'
+
+dependencies:
+  audioplayers: 0.20.1
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/fonts/KasperskySansText-Regular.woff2
+    - assets/fonts/KasperskySansText-Medium.woff2
+    - assets/fonts/KasperskySansText-SemiBold.woff2
+    - assets/fonts/KasperskySansTextClock-Medium.otf
+
+  fonts:
+    - family: Kaspersky Sans Text
+      fonts:
+        - asset: assets/fonts/KasperskySansText-Regular.woff2
+          weight: 400
+        - asset: assets/fonts/KasperskySansText-Medium.woff2
+          weight: 500
+        - asset: assets/fonts/KasperskySansText-SemiBold.woff2
+          weight: 600
+    - family: Kaspersky Sans Text Clock
+      fonts:
+        - asset: assets/fonts/KasperskySansTextClock-Medium.otf
+          weight: 500

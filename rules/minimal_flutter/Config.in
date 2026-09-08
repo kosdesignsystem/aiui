@@ -1,0 +1,18 @@
+menuconfig KB_examples_projects_mobile_kpa_minimal_flutter
+	bool "Flutter Application"
+	depends on KB_TARGET_arm_kos    \
+	        || KB_TARGET_arm64_kos  \
+	        || KB_TARGET_i686_kos   \
+	        || KB_TARGET_x86_64_kos
+	default n
+
+if KB_examples_projects_mobile_kpa_minimal_flutter
+
+#define NAME examples_projects_mobile_kpa_minimal_flutter
+#include <package.internal.in>
+
+config PACKAGE_PROPERTY(PREFIX)
+	string
+	default "$(EXAMPLES_PREFIX_DIR)/mobile/kpa/minimal_flutter"
+
+endif

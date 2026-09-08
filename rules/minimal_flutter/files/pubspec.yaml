@@ -1,0 +1,35 @@
+name: "MinimalFlutter"
+description: "An example of an application on Flutter for KOS"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.12.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/image1.png
+    - assets/image2.png
+    - assets/image3.png
+    - assets/image4.png
+    - assets/image5.png
+    - assets/image6.png
+    - assets/image7.png
+    - assets/image8.png
+    - assets/image9.png
+    - assets/image10.png
+    - assets/image11.png
+    - assets/image12.png
+    - assets/image13.png
+    - assets/image14.png
