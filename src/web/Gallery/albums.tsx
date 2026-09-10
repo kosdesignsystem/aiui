@@ -12,7 +12,7 @@ import {
 	type GalleryCategoryId,
 } from './model';
 import { GalleryHeader } from './header';
-import { GalleryNav } from './nav';
+import { GalleryNav, type GalleryRoutes } from './nav';
 import { PhotoScreen } from './screen';
 import './screen.scss';
 import './albums.scss';
@@ -25,15 +25,21 @@ const categoryIcons: Record<GalleryCategoryId, IconName> = {
 	downloads: 'download',
 };
 
-export function AlbumsScreen() {
+export function AlbumsScreen({
+	routes = galleryRoutes,
+	showMarks = true,
+}: {
+	routes?: GalleryRoutes;
+	showMarks?: boolean;
+}) {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [searchParams] = useSearchParams();
 	const swipeStartRef = useRef<number | null>(null);
 	const swipedRef = useRef(false);
 	const [favoriteIndex, setFavoriteIndex] = useState(0);
-	const listPath = `${galleryRoutes.albums}?view=list`;
-	const favoritesPath = `${galleryRoutes.albums}?view=favorites`;
+	const listPath = `${routes.albums}?view=list`;
+	const favoritesPath = `${routes.albums}?view=favorites`;
 	const album = galleryAlbums.find((item) => item.id === searchParams.get('album'));
 
 	const moveFavorite = (step: number) => {
@@ -62,6 +68,7 @@ export function AlbumsScreen() {
 				title={album.title}
 				photos={album.photos}
 				cover={album.photos[0]}
+				showMarks={showMarks}
 				onBack={() => navigate(backTo)}
 			/>
 		);
@@ -74,10 +81,11 @@ export function AlbumsScreen() {
 				photos={favoritePhotos}
 				cover={favoritePhotos[0]}
 				initialPhotoId={searchParams.get('photo') ?? undefined}
-				onBack={() => navigate(galleryRoutes.albums)}
+				showMarks={showMarks}
+				onBack={() => navigate(routes.albums)}
 				onViewerClose={
 					searchParams.has('photo')
-						? () => navigate(galleryRoutes.albums, { replace: true })
+						? () => navigate(routes.albums, { replace: true })
 						: undefined
 				}
 			/>
@@ -92,7 +100,7 @@ export function AlbumsScreen() {
 						<GalleryHeader
 							title="Мои альбомы"
 							showCreate
-							onBack={() => navigate(galleryRoutes.albums)}
+							onBack={() => navigate(routes.albums)}
 						/>
 						<main className="gallery-screen__scroll gallery-albums__list-scroll">
 							<div className="album-grid" role="list" aria-label="Мои альбомы">
@@ -102,7 +110,7 @@ export function AlbumsScreen() {
 										type="button"
 										className="album-slider__card"
 										onClick={() =>
-											navigate(`${galleryRoutes.albums}?album=${item.id}`, {
+											navigate(`${routes.albums}?album=${item.id}`, {
 												state: { backTo: listPath },
 											})
 										}
@@ -124,7 +132,7 @@ export function AlbumsScreen() {
 							</div>
 						</main>
 						<div className="gallery-screen__nav gallery-screen__nav--bottom">
-							<GalleryNav active="albums" />
+							<GalleryNav active="albums" routes={routes} />
 						</div>
 					</div>
 				</div>
@@ -222,17 +230,17 @@ export function AlbumsScreen() {
 								className="album-slider"
 								aria-label="Слайдер моих альбомов"
 							>
-								{galleryAlbums.map((item) => (
-									<button
-										key={item.id}
-										type="button"
-										className="album-slider__card"
-										onClick={() =>
-											navigate(`${galleryRoutes.albums}?album=${item.id}`, {
-												state: { backTo: galleryRoutes.albums },
-											})
-										}
-										aria-label={`${item.title}, ${getPhotoCountLabel(item.photos.length)}`}
+				{galleryAlbums.map((item) => (
+					<button
+						key={item.id}
+						type="button"
+						className="album-slider__card"
+						onClick={() =>
+							navigate(`${routes.albums}?album=${item.id}`, {
+								state: { backTo: routes.albums },
+							})
+						}
+						aria-label={`${item.title}, ${getPhotoCountLabel(item.photos.length)}`}
 									>
 										<img src={item.photos[0].imageSrc} alt="" aria-hidden="true" draggable={false} />
 										<span className="gallery-cover__shade" />
@@ -278,7 +286,7 @@ export function AlbumsScreen() {
 					</main>
 
 					<div className="gallery-screen__nav gallery-screen__nav--bottom">
-						<GalleryNav active="albums" />
+						<GalleryNav active="albums" routes={routes} />
 					</div>
 				</div>
 			</div>

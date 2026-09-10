@@ -6,6 +6,8 @@ import { IconButton } from '../../ui/IconButton';
 type GalleryHeaderProps = {
 	title: string;
 	showCreate: boolean;
+	action?: ReactNode;
+	showMore?: boolean;
 	onBack?: () => void;
 };
 
@@ -34,7 +36,13 @@ export function GalleryControls({ children, className, onBack }: GalleryControls
 	);
 }
 
-export function GalleryHeader({ title, showCreate, onBack }: GalleryHeaderProps) {
+export function GalleryHeader({
+	title,
+	showCreate,
+	action,
+	showMore = true,
+	onBack,
+}: GalleryHeaderProps) {
 	return (
 		<header className="gallery-header">
 			<div className="gallery-header__title">
@@ -48,14 +56,17 @@ export function GalleryHeader({ title, showCreate, onBack }: GalleryHeaderProps)
 				</Text>
 			</div>
 			<div className="gallery-header__actions">
+				{action}
 				{showCreate ? (
 					<IconButton variant="accent" aria-label="Создать альбом">
 						<Icon width={24} height={24} name="add" aria-hidden="true" />
 					</IconButton>
 				) : null}
-				<IconButton variant="primary" aria-label="Ещё">
-					<Icon width={24} height={24} name="more-vertical" aria-hidden="true" />
-				</IconButton>
+				{showMore ? (
+					<IconButton variant="primary" aria-label="Ещё">
+						<Icon width={24} height={24} name="more-vertical" aria-hidden="true" />
+					</IconButton>
+				) : null}
 			</div>
 		</header>
 	);

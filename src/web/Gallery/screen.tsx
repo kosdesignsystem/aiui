@@ -2,6 +2,7 @@ import {
 	CSSProperties,
 	MouseEvent as ReactMouseEvent,
 	PointerEvent as ReactPointerEvent,
+	type ReactNode,
 	useEffect,
 	useLayoutEffect,
 	useMemo,
@@ -17,7 +18,7 @@ import {
 	type GalleryPhoto,
 } from './model';
 import { GalleryControls, GalleryHeader } from './header';
-import { GalleryNav } from './nav';
+import { GalleryNav, type GalleryRoutes } from './nav';
 import './screen.scss';
 
 type RectSnapshot = {
@@ -142,24 +143,43 @@ function clampPan(transform: ViewerTransform, photo: GalleryPhoto, frame: DOMRec
 }
 
 type PhotoScreenProps = {
+	className?: string;
 	title: string;
 	photos: GalleryPhoto[];
 	cover?: GalleryPhoto;
+	gridMode?: 'grid' | 'feed';
+	gridHeader?: ReactNode;
+	headerAction?: ReactNode;
 	initialPhotoId?: string;
+	navActive?: 'all' | 'albums';
+	navRoutes?: GalleryRoutes;
 	onBack?: () => void;
+	onScroll?: (scrollTop: number) => void;
 	onViewerClose?: () => void;
+	scrollKey?: string;
+	showMarks?: boolean;
 	showNav?: boolean;
 };
 
 export function PhotoScreen({
+	className,
 	title,
 	photos,
 	cover,
+	gridMode = 'grid',
+	gridHeader,
+	headerAction,
 	initialPhotoId,
+	navActive = 'all',
+	navRoutes,
 	onBack,
+	onScroll,
 	onViewerClose,
+	scrollKey,
+	showMarks = true,
 	showNav = false,
 }: PhotoScreenProps) {
+	const scrollRef = useRef<HTMLDivElement | null>(null);
 	const viewerShellRef = useRef<HTMLDivElement | null>(null);
 	const viewerFrameRef = useRef<HTMLDivElement | null>(null);
 	const railRefs = useRef(new Map<string, HTMLButtonElement | null>());
@@ -211,6 +231,12 @@ export function PhotoScreen({
 	const viewerChromeStyle: CSSProperties = {
 		'--gallery-viewer-chrome-opacity': `${chromeOpacity}`,
 	} as CSSProperties;
+
+	useLayoutEffect(() => {
+		if (scrollKey !== undefined && scrollRef.current) {
+			scrollRef.current.scrollTop = 0;
+		}
+	}, [scrollKey]);
 
 	const stopAnimations = () => {
 		animationsRef.current.forEach((animation) => animation.cancel());
@@ -712,6 +738,29 @@ export function PhotoScreen({
 
 		gestureRef.current = null;
 
+		const horizontalSwipe =
+			viewerTransform.zoom <= 1.02 &&
+			Math.abs(viewerTransform.dismissX) > 18 &&
+			Math.abs(viewerTransform.dismissX) * 5 > Math.abs(viewerTransform.dismissY);
+
+		if (horizontalSwipe) {
+			const nextIndex = activePhotoIndex + (viewerTransform.dismissX < 0 ? 1 : -1);
+
+			if (nextIndex >= 0 && nextIndex < activeTrack.length) {
+				setViewer((current) =>
+					current
+						? {
+								...current,
+								currentPhotoId: activeTrack[nextIndex].id,
+							}
+						: current,
+				);
+			}
+
+			resetViewerTransform(false);
+			return;
+		}
+
 		if (Math.abs(viewerTransform.dismissY) > 136 && viewerTransform.zoom <= 1.02) {
 			closeViewer();
 			return;
@@ -734,7 +783,7 @@ export function PhotoScreen({
 	};
 
 	return (
-		<App>
+		<App className={className}>
 			<div
 				className={`gallery-screen${cover ? ' gallery-screen--cover' : ''}${
 					viewer ? ' is-viewer' : ''
@@ -761,9 +810,22 @@ export function PhotoScreen({
 							aria-hidden="true"
 						/>
 					) : null}
-					{!viewer && !cover ? <GalleryHeader title={title} showCreate={false} /> : null}
+					{!viewer && !cover ? (
+						<GalleryHeader
+							title={title}
+							showCreate={false}
+							action={headerAction}
+							showMore={!headerAction}
+						/>
+					) : null}
 
-					<div className={`gallery-screen__scroll${viewer ? ' is-viewer-mode' : ''}`}>
+					<div
+						ref={scrollRef}
+						className={`gallery-screen__scroll${viewer ? ' is-viewer-mode' : ''}`}
+						onScroll={
+							onScroll ? (event) => onScroll(event.currentTarget.scrollTop) : undefined
+						}
+					>
 						{cover ? (
 							<header className="gallery-screen__cover">
 								<img src={cover.imageSrc} alt="" aria-hidden="true" />
@@ -782,10 +844,18 @@ export function PhotoScreen({
 								</div>
 							</header>
 						) : null}
+						{gridHeader ? (
+							<div
+								className="gallery-screen__grid-header"
+								aria-hidden={viewer ? true : undefined}
+							>
+								{gridHeader}
+							</div>
+						) : null}
 						<div
-							className="gallery-screen__grid"
+							className={`gallery-screen__grid is-${gridMode}`}
 							role="list"
-							aria-label="Сетка фотографий"
+							aria-label={gridMode === 'feed' ? 'Вертикальная лента фотографий' : 'Сетка фотографий'}
 							aria-hidden={viewer ? true : undefined}
 						>
 							{photos.map((photo) => {
@@ -807,7 +877,7 @@ export function PhotoScreen({
 											aria-hidden="true"
 											className="gallery-screen__thumb-image"
 										/>
-										{photo.favorite ? (
+										{showMarks && photo.favorite ? (
 											<Icon
 												name="star-100"
 												width={24}
@@ -893,7 +963,7 @@ export function PhotoScreen({
 									</button>
 								</div>
 							) : showNav ? (
-								<GalleryNav active="all" />
+								<GalleryNav active={navActive} routes={navRoutes} />
 							) : null}
 						</div>
 					) : null}

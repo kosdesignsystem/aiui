@@ -6,9 +6,15 @@ import { galleryRoutes } from './model';
 
 type GalleryNavProps = {
 	active: 'all' | 'albums';
+	routes?: GalleryRoutes;
 };
 
-export function GalleryNav({ active }: GalleryNavProps) {
+export type GalleryRoutes = {
+	all: string;
+	albums: string;
+};
+
+export function GalleryNav({ active, routes = galleryRoutes }: GalleryNavProps) {
 	const navigate = useNavigate();
 
 	return (
@@ -18,7 +24,7 @@ export function GalleryNav({ active }: GalleryNavProps) {
 				{
 					id: 'all',
 					active: active === 'all',
-					onClick: () => navigate(galleryRoutes.all),
+					onClick: () => navigate(routes.all),
 					icon: (
 						<Icon name="photo-outline" alt="" aria-hidden="true" width={24} height={24} />
 					),
@@ -31,7 +37,7 @@ export function GalleryNav({ active }: GalleryNavProps) {
 				{
 					id: 'albums',
 					active: active === 'albums',
-					onClick: () => navigate(galleryRoutes.albums),
+					onClick: () => navigate(routes.albums),
 					icon: (
 						<Icon name="folder-outline" alt="" aria-hidden="true" width={24} height={24} />
 					),
