@@ -7,16 +7,28 @@ import '../models/station.dart';
 
 class RadioPlayer extends ChangeNotifier {
   RadioPlayer() {
-    _stateSub = _audio.onPlayerStateChanged.listen((state) {
-      _playing = state == PlayerState.PLAYING;
-      if (_playing ||
-          state == PlayerState.PAUSED ||
-          state == PlayerState.STOPPED) {
-        _loading = false;
-      }
-      notifyListeners();
-    }, onError: (_) => _fail());
-    _errorSub = _audio.onPlayerError.listen((_) => _fail());
+    _stateSub = _audio.onPlayerStateChanged.listen(
+      (state) {
+        debugPrint('RADIO STATE: $state');
+        _playing = state == PlayerState.PLAYING;
+        if (_playing ||
+            state == PlayerState.PAUSED ||
+            state == PlayerState.STOPPED) {
+          _loading = false;
+        }
+        notifyListeners();
+      },
+      onError: (Object error, StackTrace stackTrace) {
+        debugPrint('RADIO STATE ERROR: $error');
+        debugPrint('RADIO STATE STACK: $stackTrace');
+        _fail();
+      },
+    );
+
+    _errorSub = _audio.onPlayerError.listen((error) {
+      debugPrint('RADIO PLAYER ERROR: $error');
+      _fail();
+    });
   }
 
   final AudioPlayer _audio = AudioPlayer();
@@ -35,6 +47,7 @@ class RadioPlayer extends ChangeNotifier {
   Future<bool> toggle(Station station) async {
     if (_wanted) {
       _wanted = false;
+      debugPrint('RADIO: pause requested');
       await _audio.pause();
       return false;
     }
@@ -45,6 +58,9 @@ class RadioPlayer extends ChangeNotifier {
 
   Future<void> tune(Station station) async {
     final resume = _wanted;
+    debugPrint(
+      'RADIO: tune to "${station.name}" (${station.url}), resume=$resume',
+    );
     await _audio.stop();
     _hasError = false;
     if (resume) {
@@ -58,14 +74,25 @@ class RadioPlayer extends ChangeNotifier {
     _loading = true;
     _hasError = false;
     notifyListeners();
+
+    debugPrint(
+      'RADIO: trying to play "${station.name}" from ${station.url}',
+    );
+
     try {
       final result = await _audio.play(station.url);
+      debugPrint('RADIO: AudioPlayer.play result = $result');
+
       if (result != 1) {
+        debugPrint('RADIO: play returned non-success result: $result');
         _fail();
         return false;
       }
+
       return true;
-    } catch (_) {
+    } catch (error, stackTrace) {
+      debugPrint('RADIO ERROR: $error');
+      debugPrint('RADIO STACK: $stackTrace');
       _fail();
       return false;
     }
