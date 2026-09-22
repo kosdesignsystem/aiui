@@ -1,0 +1,41 @@
+
+.Pixso-symbol-3078_6306,.Pixso-instance-3078_6307 {
+  width: 320px;
+  height: 80px;
+  border-radius: 16px 16px 16px 16px;
+}
+
+.Pixso-symbol-3078_6306 {
+  flex-direction: row;
+  isolation: isolate;
+  gap: 18px;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 0px 56px 0px 0px;
+  background-color: var(--system-system-error-primary-b0e6aa706b44c7f616e0228a8ec0fd61a91110f7-17178-128);
+}
+
+.Pixso-instance-3078_6307 {
+  z-index: 1;
+  background-color: var(--background-background-primary);
+}
+
+.Pixso-instance-3078_6308,.Pixso-instance-3078_6308 .Pixso-symbol-3078_6242  {
+  width: 20px;
+  height: 20px;
+}
+
+.Pixso-instance-3078_6308 {
+  position: absolute;
+  z-index: 2;
+  left: 282px;
+  top: 30px;
+  background-image: url(@/assets/images/is_outlinefalse34.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.component-3078_6306 {
+  width: fit-content;
+  height: fit-content;
+}

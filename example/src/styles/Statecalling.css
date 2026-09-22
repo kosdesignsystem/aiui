@@ -1,0 +1,29 @@
+
+.Pixso-symbol-421_10547 {
+  width: 24px;
+  height: 24px;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.Pixso-instance-421_10554 {
+  width: 24px;
+  height: 24px;
+  background-color: var(--system-system-success-primary);
+  border-radius: 12px 12px 12px 12px;
+}
+
+.Pixso-instance-421_10540 {
+  width: 16px;
+  height: 16px;
+  background-image: url(@/assets/images/phone1.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.component-421_10547 {
+  width: fit-content;
+  height: fit-content;
+}

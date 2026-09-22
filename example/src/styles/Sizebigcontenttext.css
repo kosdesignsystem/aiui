@@ -1,0 +1,35 @@
+
+.Pixso-symbol-3078_6218 {
+  width: 60px;
+  height: 60px;
+  flex-direction: row;
+  isolation: isolate;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px 16px 16px 16px;
+  background-color: var(--content-content-background);
+}
+
+.Pixso-paragraph-3078_6219 {
+  flex-direction: column;
+  justify-content: center;
+  color: var(--content-content-primary);
+  z-index: 1;
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-instance-3078_6220 {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  z-index: 2;
+  left: 44px;
+  top: 44px;
+}
+
+.component-3078_6218 {
+  width: fit-content;
+  height: fit-content;
+}

@@ -1,0 +1,103 @@
+
+.scroll-container {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.Pixso-frame-5573_19500 {
+  width: 100%;
+  height: 800px;
+  overflow: hidden;
+  border-radius: 24px 24px 24px 24px;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.Pixso-rectangle-5573_19501 {
+  width: 480.599945px;
+  height: 1068px;
+  position: absolute;
+  left: -60px;
+  top: -134px;
+  border-radius: 1px 1px 1px 1px;
+  background-image: url(@/assets/images/bglockscreen3.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.Pixso-instance-5573_19544 {
+  width: 360px;
+  height: 40px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.Pixso-instance-461_42582,.Pixso-instance-461_42579 {
+  width: 16px;
+  height: 16px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.Pixso-instance-461_42582 {
+  background-image: url(@/assets/images/wifil505.svg);
+}
+
+.Pixso-instance-461_42579 {
+  background-image: url(@/assets/images/signal505.svg);
+}
+
+.Pixso-vector-461_42562 {
+  width: 32px;
+  height: 32px;
+  background-image: url(@/assets/images/area3.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.Pixso-instance-461_42585 {
+  width: 48px;
+  height: 20px;
+}
+
+.Pixso-instance-461_42586 {
+  width: 16px;
+  height: 16px;
+  background-image: url(@/assets/images/batterychargelow5.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.Pixso-paragraph-461_42589,.Pixso-paragraph-3007_9524 {
+  flex-direction: column;
+  justify-content: center;
+  color: var(--content-content-primary);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-paragraph-461_42589 {
+  text-align: right;
+  text-decoration: none;
+}
+
+.Pixso-paragraph-3007_9524,.Pixso-instance-5573_19544 .Pixso-paragraph-3007_9524  {
+  display: none;
+}
+
+.Pixso-instance-461_42585 .Pixso-symbol-421_9828  {
+  width: 48px;
+  flex-shrink: 0;
+}
+
+.Pixso-instance-5573_19544 .Pixso-instance-3007_9529 .Pixso-paragraph-421_9830  {
+  width: auto;
+  height: auto;
+}

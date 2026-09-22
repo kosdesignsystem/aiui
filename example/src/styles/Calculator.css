@@ -1,0 +1,235 @@
+
+.Pixso-symbol-3001_8088 {
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+}
+
+.Pixso-group-3001_8089,.Pixso-group-3001_8090 {
+  width: 58px;
+  height: 60px;
+  position: absolute;
+}
+
+.Pixso-group-3001_8089 {
+  left: 3px;
+  top: 2px;
+}
+
+.Pixso-group-3001_8090,.Pixso-group-3001_8093 {
+  left: 0px;
+  top: 0px;
+}
+
+.Pixso-vector-3001_8091,.Pixso-vector-3001_8094,.Pixso-vector-3001_8099,.Pixso-vector-3001_8104,.Pixso-vector-3001_8107 {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-vector-3001_8091 {
+  width: 100%;
+  height: 100%;
+  background-image: url(@/assets/images/Star1219.svg);
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+}
+
+.Pixso-group-3001_8092 {
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  left: 11.500071px;
+  top: 12.500057px;
+}
+
+.Pixso-group-3001_8093,.vector-wrapper-3001_8094,.Pixso-group-3001_8098,.vector-wrapper-3001_8099,.Pixso-group-3001_8103,.vector-wrapper-3001_8104,.Pixso-group-3001_8106,.vector-wrapper-3001_8107 {
+  width: 16px;
+  height: 16px;
+}
+
+.Pixso-group-3001_8093 {
+  position: absolute;
+}
+
+.Pixso-vector-3001_8094 {
+  position: absolute;
+  inset: -3.1912911975860547% -31.912819145202644% -31.912798777771002% -7.978203298568721% ;
+  background-image: url(@/assets/images/Rectangle28616.svg);
+}
+
+.vector-wrapper-3001_8094,.Pixso-rectangle-3001_8097 {
+  top: 0%;
+  bottom: 0%;
+}
+
+.vector-wrapper-3001_8094 {
+  position: absolute;
+  left: 0%;
+  right: 0%;
+}
+
+.Pixso-group-3001_8095 {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  left: 3.000001px;
+  top: 3.000001px;
+}
+
+.Pixso-rectangle-3001_8096,.Pixso-rectangle-3001_8097,.Pixso-rectangle-3001_8101,.Pixso-rectangle-3001_8102,.Pixso-rectangle-3001_8105,.Pixso-rectangle-3001_8109,.Pixso-rectangle-3001_8110 {
+  border-radius: 1.276513px 1.276513px 1.276513px 1.276513px;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.Pixso-rectangle-3001_8096,.Pixso-rectangle-3001_8097 {
+  width: 18.08%;
+  height: 100%;
+  position: absolute;
+}
+
+.Pixso-rectangle-3001_8096 {
+  left: 0%;
+  right: 81.92%;
+  top: 40.96%;
+  bottom: -40.96%;
+  transform: rotate(90.000002deg);
+}
+
+.Pixso-rectangle-3001_8097 {
+  left: 40.96%;
+  right: 40.96%;
+}
+
+.Pixso-group-3001_8098 {
+  position: absolute;
+  left: 0px;
+  top: 19px;
+}
+
+.Pixso-vector-3001_8099 {
+  position: absolute;
+  inset: -3.1912852371215994% -31.912819145202644% -31.91279877777098% -7.978203298568721% ;
+  background-image: url(@/assets/images/Rectangle28596.svg);
+}
+
+.vector-wrapper-3001_8099,.Pixso-rectangle-3001_8101,.Pixso-rectangle-3001_8102 {
+  left: 0%;
+  top: 0%;
+}
+
+.vector-wrapper-3001_8099 {
+  position: absolute;
+  right: 0%;
+  bottom: 0%;
+}
+
+.Pixso-group-3001_8100 {
+  width: 8.323144px;
+  height: 8.368964px;
+  position: absolute;
+  left: 3.838867px;
+  top: 3.81543px;
+}
+
+.Pixso-rectangle-3001_8101,.Pixso-rectangle-3001_8102 {
+  width: 21.66%;
+  height: 119.49%;
+  position: absolute;
+  right: 78.34%;
+  bottom: -19.49%;
+}
+
+.Pixso-rectangle-3001_8101 {
+  transform: rotate(45.157621deg);
+}
+
+.Pixso-rectangle-3001_8102 {
+  transform: rotate(134.842383deg);
+}
+
+.Pixso-group-3001_8103 {
+  position: absolute;
+  left: 19px;
+  top: 0px;
+}
+
+.Pixso-vector-3001_8104 {
+  position: absolute;
+  inset: -3.1912911975860547% -31.912795303344723% -31.912798777771002% -7.978209259033209% ;
+  background-image: url(@/assets/images/Rectangle28626.svg);
+}
+
+.vector-wrapper-3001_8104 {
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+}
+
+.Pixso-rectangle-3001_8105 {
+  width: 11.3%;
+  height: 62.5%;
+  position: absolute;
+  left: 19.75%;
+  right: 68.95%;
+  top: 43.32%;
+  bottom: -5.82%;
+  transform: rotate(90.000002deg);
+}
+
+.Pixso-group-3001_8106 {
+  position: absolute;
+  left: 19px;
+  top: 19px;
+}
+
+.Pixso-vector-3001_8107 {
+  position: absolute;
+  inset: -3.1912852371215994% -31.912795303344723% -31.91279877777098% -7.978209259033209% ;
+  background-image: url(@/assets/images/Rectangle28606.svg);
+}
+
+.vector-wrapper-3001_8107 {
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+}
+
+.Pixso-group-3001_8108 {
+  width: 8px;
+  height: 5.425162px;
+  position: absolute;
+  left: 4px;
+  top: 5.287476px;
+}
+
+.Pixso-rectangle-3001_8109,.Pixso-rectangle-3001_8110 {
+  width: 22.6%;
+  position: absolute;
+  left: 0%;
+  right: 77.4%;
+  transform: rotate(90.000002deg);
+}
+
+.Pixso-rectangle-3001_8109 {
+  height: 147.46%;
+  top: 0%;
+  bottom: -47.46%;
+}
+
+.Pixso-rectangle-3001_8110 {
+  height: 147.47%;
+  top: 66.67%;
+  bottom: -114.14%;
+}
+
+.component-3001_8088 {
+  width: fit-content;
+  height: fit-content;
+}

@@ -1,0 +1,30 @@
+
+.Pixso-symbol-3078_6191 {
+  width: 24px;
+  height: 24px;
+}
+
+.Pixso-vector-3078_6192,.Pixso-vector-3078_6193 {
+  width: 83.34%;
+  height: 83.34%;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 8.33%;
+  right: 8.33%;
+  top: 8.33%;
+  bottom: 8.33%;
+}
+
+.Pixso-vector-3078_6192 {
+  background-image: url(@/assets/images/bg0.svg);
+}
+
+.Pixso-vector-3078_6193 {
+  background-image: url(@/assets/images/color1.svg);
+}
+
+.component-3078_6191 {
+  width: fit-content;
+  height: fit-content;
+}

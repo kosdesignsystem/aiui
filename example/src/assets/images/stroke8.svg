@@ -1,0 +1,40 @@
+<svg viewBox="0 0 335.9 492.433" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="335.900391" height="492.433105" fill="none" customFrame="#000000">
+	<mask id="mask_116" width="335.900635" height="492.433014" x="0.000000" y="0.000000" maskUnits="userSpaceOnUse">
+		<g filter="url(#pixso_custom_mask_type_alpha)">
+			<path id="Vector 359" d="M0 162.896L165.5 28.4009C360.5 -116.61 426 332.896 157 492.433L0 492.433L0 162.896Z" fill="url(#paint_linear_516)" fill-rule="nonzero" />
+			<path id="Vector 359" d="M0 162.896L165.5 28.4009C360.5 -116.61 426 332.896 157 492.433L0 492.433L0 162.896Z" fill="url(#paint_radial_229)" fill-opacity="0.200000003" fill-rule="nonzero" />
+		</g>
+	</mask>
+	<defs>
+		<linearGradient id="paint_linear_516" x1="160.1259" x2="132.500015" y1="0" y2="431.896484" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(2,22,23)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(16,47,51)" offset="0.446583003" stop-opacity="1" />
+			<stop stop-color="rgb(18,49,53)" offset="0.708548486" stop-opacity="1" />
+			<stop stop-color="rgb(20,53,58)" offset="0.976300478" stop-opacity="0" />
+		</linearGradient>
+		<radialGradient id="paint_radial_229" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-349.998,-275.96,164,-208,129.5,318.896)">
+			<stop stop-color="rgb(8,29,31)" offset="0.279097736" stop-opacity="0.800000012" />
+			<stop stop-color="rgb(54,94,100)" offset="1" stop-opacity="1" />
+		</radialGradient>
+		<filter id="pixso_custom_mask_type_alpha">
+			<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0 " />
+		</filter>
+		<g id="pixso_custom_effect_185">
+			<effect visibility="visible" effectType="gaussianBlur" stdDeviation="1" />
+		</g>
+		<filter id="filter_185" width="335.900391" height="492.433105" x="0.000000" y="0.000000" filterUnits="userSpaceOnUse" customEffect="url(#pixso_custom_effect_185)" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="0.333333343" result="effect_layerBlur_1" />
+		</filter>
+		<radialGradient id="paint_radial_230" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-84.813,427.551,-184,-36.5,326.5,105.897)">
+			<stop stop-color="rgb(30,58,61)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(15,28,30)" offset="1" stop-opacity="0" />
+		</radialGradient>
+	</defs>
+	<g id="stroke" mask="url(#mask_116)">
+		<g filter="url(#filter_185)">
+			<path id="Vector 357" d="M165.5 28.4009C189.737 10.3775 182.67 8.49631 202.512 7.14292C204.698 6.99377 236.159 -0.0225964 238.287 0.00781284C299.237 0.878794 335.901 74.469 335.901 167.371C335.901 278.595 283.348 417.5 157 492.433L0 492.433L0 163.401L165.5 28.4009ZM1 163.876L1 491.433L156.726 491.433C170.788 483.078 184.129 473.826 196.748 463.677C212.971 450.63 228.001 436.1 241.839 420.088C243.127 418.598 244.403 417.097 245.666 415.586Q277.109 377.974 298.326 331.814C303.34 320.904 307.849 309.815 311.851 298.547C318.928 278.621 324.423 258.133 328.335 237.084C331.231 221.508 333.171 205.993 334.155 190.539Q334.902 178.811 334.902 167.371Q334.902 156.697 334.252 146.274C333.365 132.057 331.591 118.497 328.93 105.592C326.275 92.7164 322.799 80.7848 318.5 69.7971C314.167 58.7214 309.096 48.8533 303.286 40.1929Q294.419 26.9756 283.629 18.0658C276.248 11.9717 268.325 7.50069 259.859 4.65273C258.2 4.09476 256.526 3.6007 254.834 3.17056L254.833 3.17034L254.832 3.16993Q243.972 0.408133 232.218 1.16028Q217.103 2.12753 200.879 8.88555Q183.926 15.9476 166.114 29.1903L1 163.876Z" fill="url(#paint_radial_230)" fill-rule="evenodd" />
+		</g>
+	</g>
+</svg>

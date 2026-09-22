@@ -1,0 +1,26 @@
+
+.Pixso-symbol-1_844,.Pixso-paragraph-1_845 {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Pixso-symbol-1_844 {
+  width: 16px;
+  height: 16px;
+  gap: 10px;
+  align-items: center;
+  padding: 0px 4px 0px 4px;
+  border-radius: 6px 6px 6px 6px;
+}
+
+.Pixso-paragraph-1_845 {
+  text-align: center;
+  color: var(--content-content-primary-d19f126556c8423d899988749bcb72b3645b5ef5-10852-376);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.component-1_844 {
+  width: fit-content;
+  height: fit-content;
+}

@@ -1,0 +1,27 @@
+
+.Pixso-symbol-421_10562 {
+  width: 24px;
+  height: 24px;
+  overflow: hidden;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 24px 24px 24px 24px;
+  background-color: var(--colors-purple);
+}
+
+.Pixso-instance-421_10564,.Pixso-instance-421_10564 .Pixso-symbol-421_10557  {
+  width: 16px;
+  height: 16px;
+}
+
+.Pixso-instance-421_10564 {
+  background-image: url(@/assets/images/is_outlinefalse23.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.component-421_10562 {
+  width: fit-content;
+  height: fit-content;
+}

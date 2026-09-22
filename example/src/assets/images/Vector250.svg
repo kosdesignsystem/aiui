@@ -1,0 +1,17 @@
+<svg viewBox="0 0 11.9014 12.2021" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="11.901367" height="12.202148" fill="none" customFrame="#000000" mask="url(#mask_75)">
+	<mask id="mask_75" width="11.901855" height="12.202148" x="0.000000" y="0.000000" maskUnits="userSpaceOnUse">
+		<g filter="url(#pixso_custom_mask_type_alpha)">
+			<path id="Vector 250" d="M10.9259 1.62305C11.604 1.04402 11.8401 0.43993 11.9019 0C11.8957 0.978991 11.5173 1.91897 10.8435 2.62921L6.72883 6.9664L1.94796 11.5518C1.53383 11.949 0.985344 12.1757 0.411637 12.1869L0.127441 12.2021L0 12.1948C0.675665 12.0914 1.21136 11.7936 1.63467 11.3668C4.70659 8.26978 7.60857 4.45564 10.9259 1.62305Z" fill="url(#paint_linear_57)" fill-rule="nonzero" />
+		</g>
+	</mask>
+	<defs>
+		<linearGradient id="paint_linear_57" x1="4.11926651" x2="6.89496326" y1="4.50513887" y2="7.49591541" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(245,248,255)" offset="9.99999975e-05" stop-opacity="1" />
+			<stop stop-color="rgb(211,214,220)" offset="0.66856426" stop-opacity="1" />
+			<stop stop-color="rgb(217,222,232)" offset="1" stop-opacity="1" />
+		</linearGradient>
+		<filter id="pixso_custom_mask_type_alpha">
+			<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0 " />
+		</filter>
+	</defs>
+</svg>

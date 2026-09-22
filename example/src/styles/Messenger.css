@@ -1,0 +1,102 @@
+
+.Pixso-symbol-3001_8111 {
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+}
+
+.Pixso-group-3001_8112 {
+  width: 58px;
+  height: 60px;
+  position: absolute;
+  left: 3px;
+  top: 2px;
+}
+
+.Pixso-vector-3001_8113 {
+  width: 100%;
+  height: 100%;
+  background-image: url(@/assets/images/Star1218.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+}
+
+.Pixso-group-3001_8114 {
+  width: 41.398949px;
+  height: 29.353642px;
+  position: absolute;
+  left: 1.3829925000000003px;
+  right: -1.3829925000000003px;
+  margin-left: auto;
+  margin-right: auto;
+  top: 2.078586999999997px;
+  bottom: -2.078586999999997px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.Pixso-vector-3001_8115,.Pixso-vector-3001_8116,.Pixso-vector-3001_8117,.Pixso-vector-3001_8118,.Pixso-vector-3001_8119 {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+}
+
+.Pixso-vector-3001_8115 {
+  width: 55.54%;
+  height: 35.13%;
+  background-image: url(@/assets/images/Intersect2.svg);
+  left: 21.82%;
+  right: 22.64%;
+  top: 64.87%;
+  bottom: 0%;
+}
+
+.Pixso-vector-3001_8116 {
+  width: 14.59%;
+  height: 20.64%;
+  background-image: url(@/assets/images/Intersect1.svg);
+  left: 85.41%;
+  right: 0%;
+  top: 10.11%;
+  bottom: 69.25%;
+}
+
+.Pixso-vector-3001_8117 {
+  width: 57.71%;
+  height: 58.47%;
+  background-image: url(@/assets/images/Intersect0.svg);
+  left: 31.7%;
+  right: 10.59%;
+  top: 10.11%;
+  bottom: 31.42%;
+}
+
+.Pixso-vector-3001_8118 {
+  width: 45.72%;
+  height: 60.77%;
+  background-image: url(@/assets/images/Vector369.svg);
+  left: 31.63%;
+  right: 22.65%;
+  top: 7.81%;
+  bottom: 31.42%;
+}
+
+.Pixso-vector-3001_8119 {
+  width: 48%;
+  height: 64.87%;
+  background-image: url(@/assets/images/Vector365.svg);
+  left: 0%;
+  right: 52%;
+  top: 0%;
+  bottom: 35.13%;
+}
+
+.component-3001_8111 {
+  width: fit-content;
+  height: fit-content;
+}

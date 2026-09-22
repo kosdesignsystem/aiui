@@ -1,0 +1,30 @@
+<svg viewBox="0 0 11.9014 12.2021" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="11.901367" height="12.202148" fill="none" customFrame="#000000">
+	<mask id="mask_145" width="11.901855" height="12.202148" x="0.000000" y="0.000000" maskUnits="userSpaceOnUse">
+		<g filter="url(#pixso_custom_mask_type_alpha)">
+			<path id="Vector 250" d="M10.9259 1.62305C11.604 1.04402 11.8401 0.43993 11.9019 0C11.8957 0.978991 11.5173 1.91897 10.8435 2.62921L6.72883 6.9664L1.94796 11.5518C1.53383 11.949 0.985344 12.1757 0.411637 12.1869L0.127441 12.2021L0 12.1948C0.675665 12.0914 1.21136 11.7936 1.63467 11.3668C4.70659 8.26978 7.60857 4.45564 10.9259 1.62305Z" fill="url(#paint_linear_848)" fill-rule="nonzero" />
+		</g>
+	</mask>
+	<defs>
+		<linearGradient id="paint_linear_848" x1="4.11926651" x2="6.89496326" y1="4.50513887" y2="7.49591541" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(245,248,255)" offset="9.99999975e-05" stop-opacity="1" />
+			<stop stop-color="rgb(211,214,220)" offset="0.66856426" stop-opacity="1" />
+			<stop stop-color="rgb(217,222,232)" offset="1" stop-opacity="1" />
+		</linearGradient>
+		<filter id="pixso_custom_mask_type_alpha">
+			<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0 " />
+		</filter>
+		<linearGradient id="paint_linear_849" x1="4.11877918" x2="6.89447594" y1="4.50513935" y2="7.49591589" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(245,248,255)" offset="9.99999975e-05" stop-opacity="1" />
+			<stop stop-color="rgb(211,214,220)" offset="0.66856426" stop-opacity="1" />
+			<stop stop-color="rgb(217,222,232)" offset="1" stop-opacity="1" />
+		</linearGradient>
+		<radialGradient id="paint_radial_382" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-7.61415,-8.8004,10.4066,-9.00386,4.16395,4.15787)">
+			<stop stop-color="rgb(255,255,255)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(255,255,255)" offset="1" stop-opacity="0" />
+		</radialGradient>
+	</defs>
+	<g id="Group 4425817" mask="url(#mask_145)">
+		<path id="Vector 248" d="M10.9134 1.63242C11.5997 1.05055 11.8378 0.442304 11.8999 0C11.8947 0.978895 11.5168 1.91904 10.843 2.62921L6.72834 6.9664L2.03209 11.4707C1.5635 11.9201 0.943097 12.177 0.293945 12.1904L0.11084 12.208L-0.0166016 12.1904C0.664212 12.0862 1.20334 11.7847 1.62886 11.3529C4.6869 8.24977 7.59026 4.44987 10.9134 1.63242Z" fill="url(#paint_linear_849)" fill-rule="nonzero" />
+		<path id="Vector 249" d="M-0.00935031 11.9161C-0.148725 11.9374 -0.244408 12.0677 -0.223064 12.2071C-0.201719 12.3465 -0.0714308 12.4422 0.0679441 12.4208L-0.00935031 11.9161ZM12.1451 0.0384182C12.1647 -0.101213 12.0674 -0.230295 11.9277 -0.249894C11.7881 -0.269494 11.659 -0.17219 11.6394 -0.0325588L12.1451 0.0384182ZM11.8923 0.00292969L11.6394 -0.0325588C11.5869 0.34177 11.3873 0.877839 10.7813 1.40697L10.9492 1.59928L11.1171 1.7916C11.8181 1.17949 12.0759 0.530907 12.1451 0.0384182L11.8923 0.00292969ZM1.61859 11.3851L1.44084 11.2019C1.06224 11.5691 0.588926 11.8245 -0.00935031 11.9161L0.0292969 12.1685L0.0679441 12.4208C0.775165 12.3125 1.34466 12.0065 1.79635 11.5684L1.61859 11.3851ZM10.9492 1.59928L10.7813 1.40697C9.12097 2.85667 7.56395 4.55244 6.03556 6.25866C4.50365 7.9688 3.00237 9.68721 1.44084 11.2019L1.61859 11.3851L1.79635 11.5684C3.37424 10.0379 4.89099 8.30166 6.41588 6.59934C7.9443 4.8931 9.48287 3.21854 11.1171 1.7916L10.9492 1.59928Z" stroke="url(#paint_radial_382)" stroke-linecap="round" stroke-width="0.510605" />
+	</g>
+</svg>

@@ -1,0 +1,49 @@
+
+.Pixso-symbol-1_1083 {
+  width: 84px;
+  height: var(--big-size);
+  overflow: hidden;
+  flex-direction: row;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 16px 14px 16px;
+  border-radius: var(--big-radius) var(--big-radius) var(--big-radius) var(--big-radius);
+  background-color: var(--accent-accent-secondary);
+}
+
+.Pixso-instance-1_1084,.Pixso-instance-1_1087 {
+  width: 24px;
+  height: 24px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-1_1084 {
+  background-image: url(@/assets/images/is_outlinetrue38.svg);
+}
+
+.Pixso-paragraph-1_1085 {
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--content-content-constant-d73426dc8b2e21cc9b9975385c913a385487c055-10852-349);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-instance-1_1086 {
+  width: 22px;
+  height: 20px;
+  background-color: var(--content-content-constant-d73426dc8b2e21cc9b9975385c913a385487c055-10852-349);
+  border-radius: 8px 8px 8px 8px;
+}
+
+.Pixso-instance-1_1087 {
+  background-image: url(@/assets/images/chevronright0.svg);
+}
+
+.component-1_1083 {
+  width: fit-content;
+  height: fit-content;
+}

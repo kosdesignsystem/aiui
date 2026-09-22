@@ -1,0 +1,25 @@
+
+.Pixso-symbol-1_26944,.Pixso-paragraph-1_26945 {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Pixso-symbol-1_26944 {
+  width: 16px;
+  height: 16px;
+  gap: 10px;
+  align-items: center;
+  padding: 0px 4px 0px 4px;
+  border-radius: 6px 6px 6px 6px;
+}
+
+.Pixso-paragraph-1_26945 {
+  text-align: center;
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.component-1_26944 {
+  width: fit-content;
+  height: fit-content;
+}

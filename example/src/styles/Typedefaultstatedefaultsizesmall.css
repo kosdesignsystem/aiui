@@ -1,0 +1,49 @@
+
+.Pixso-symbol-1_1298 {
+  width: 69px;
+  height: var(--small-size);
+  overflow: hidden;
+  flex-direction: row;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 12px 6px 12px;
+  border-radius: var(--small-radius) var(--small-radius) var(--small-radius) var(--small-radius);
+}
+
+.Pixso-instance-1_1299,.Pixso-instance-1_1301,.Pixso-instance-1_1302,.Pixso-instance-1_1302 .Pixso-symbol-1_848 ,.Pixso-instance-1_1299 .Pixso-symbol-1_817  {
+  width: 16px;
+  height: 16px;
+}
+
+.Pixso-instance-1_1299,.Pixso-instance-1_1302 {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-1_1299 {
+  background-image: url(@/assets/images/is_outlinetrue38.svg);
+}
+
+.Pixso-paragraph-1_1300 {
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--content-content-primary-d19f126556c8423d899988749bcb72b3645b5ef5-10852-376);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-instance-1_1301 {
+  background-color: var(--background-background-primary-3ebb80646f48fad8c7b735a4cde2621aa78c6dc6-14213-49);
+  border-radius: 6px 6px 6px 6px;
+}
+
+.Pixso-instance-1_1302 {
+  background-image: url(@/assets/images/chevronright0.svg);
+}
+
+.component-1_1298 {
+  width: fit-content;
+  height: fit-content;
+}

@@ -1,0 +1,21 @@
+
+.Pixso-symbol-421_10510 {
+  width: 19px;
+  height: 20px;
+  flex-direction: row;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.Pixso-paragraph-421_10515 {
+  flex-direction: column;
+  justify-content: center;
+  color: var(--content-content-primary);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.component-421_10510 {
+  width: fit-content;
+  height: fit-content;
+}

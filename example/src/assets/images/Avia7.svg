@@ -1,0 +1,15 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64.000000" height="64.000000" fill="none" customFrame="url(#clipPath_45)">
+	<defs>
+		<clipPath id="clipPath_45">
+			<rect width="64.000000" height="64.000000" x="0.000000" y="0.000000" rx="16.000000" fill="rgb(255,255,255)" />
+		</clipPath>
+		<clipPath id="clipPath_46">
+			<rect width="24.000000" height="24.000000" x="20.000000" y="20.000000" fill="rgb(255,255,255)" />
+		</clipPath>
+	</defs>
+	<rect id="Avia" width="64.000000" height="64.000000" x="0.000000" y="0.000000" rx="16.000000" fill="rgb(255,255,255)" fill-opacity="0.119999997" />
+	<g id="communication / avia" clip-path="url(#clipPath_46)" customFrame="url(#clipPath_46)">
+		<rect id="communication / avia" width="24.000000" height="24.000000" x="20.000000" y="20.000000" />
+		<path id="color" d="M8 1.5C8 0.671573 8.67157 0 9.5 0C10.3284 0 11 0.671573 11 1.5L11 6L18.6 11.7C18.8518 11.8889 19 12.1852 19 12.5L19 13.3596C19 13.6849 18.6943 13.9236 18.3787 13.8447L11 12L11 17L12.7236 17.8618C12.893 17.9465 13 18.1196 13 18.309L13 19.7349C13 19.8677 12.8728 19.9637 12.7451 19.9272L9.77472 19.0785C9.59517 19.0272 9.40483 19.0272 9.22528 19.0785L6.25494 19.9272C6.12718 19.9637 6 19.8677 6 19.7349L6 18.309C6 18.1196 6.107 17.9465 6.27639 17.8618L8 17L8 12L0.621268 13.8447C0.305695 13.9236 0 13.6849 0 13.3596L0 12.5C0 12.1852 0.148194 11.8889 0.4 11.7L8 6L8 1.5Z" fill="rgb(255,255,255)" fill-rule="evenodd" transform="matrix(-4.37114e-08,1,-1,-4.37114e-08,41.9673,22.4675)" />
+	</g>
+</svg>

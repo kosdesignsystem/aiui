@@ -1,0 +1,48 @@
+
+.Pixso-symbol-421_10567 {
+  width: 52px;
+  height: 24px;
+  flex-direction: row;
+  gap: 4px;
+  align-items: flex-start;
+  background-color: var(--background-background-primary);
+}
+
+.Pixso-instance-421_10568,.Pixso-instance-421_10554 {
+  width: 24px;
+  height: 24px;
+}
+
+.Pixso-instance-421_10554 {
+  background-color: var(--system-system-success-primary);
+  border-radius: 12px 12px 12px 12px;
+}
+
+.Pixso-instance-421_10540,.Pixso-instance-421_10564 {
+  width: 16px;
+  height: 16px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.Pixso-instance-421_10540 {
+  background-image: url(@/assets/images/phone1.svg);
+  z-index: 2;
+}
+
+.Pixso-instance-421_10569 {
+  width: 24px;
+  height: 24px;
+  background-color: var(--colors-purple);
+  border-radius: 24px 24px 24px 24px;
+}
+
+.Pixso-instance-421_10564 {
+  background-image: url(@/assets/images/stopwatch0.svg);
+}
+
+.component-421_10567 {
+  width: fit-content;
+  height: fit-content;
+}

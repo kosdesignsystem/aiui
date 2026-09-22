@@ -1,0 +1,35 @@
+
+.Pixso-symbol-3078_6227 {
+  width: 60px;
+  height: 60px;
+  flex-direction: row;
+  isolation: isolate;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px 16px 16px 16px;
+  background-color: var(--content-content-background);
+}
+
+.Pixso-instance-3078_6228 {
+  width: 24px;
+  height: 24px;
+  z-index: 1;
+  background-image: url(@/assets/images/is_outlinefalse27.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-3078_6229 {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  z-index: 2;
+  left: 44px;
+  top: 44px;
+}
+
+.component-3078_6227 {
+  width: fit-content;
+  height: fit-content;
+}

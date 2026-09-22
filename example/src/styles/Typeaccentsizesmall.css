@@ -1,0 +1,27 @@
+
+.Pixso-symbol-1_834,.Pixso-paragraph-1_835 {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Pixso-symbol-1_834 {
+  width: 16px;
+  height: 16px;
+  gap: 10px;
+  align-items: center;
+  padding: 0px 4px 0px 4px;
+  border-radius: 6px 6px 6px 6px;
+  background-color: var(--accent-accent-primary-1d3dcea5276688a36ab7e7ecf88088bfd47731e6-10852-431);
+}
+
+.Pixso-paragraph-1_835 {
+  text-align: center;
+  color: var(--content-content-constant-d73426dc8b2e21cc9b9975385c913a385487c055-10852-349);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.component-1_834 {
+  width: fit-content;
+  height: fit-content;
+}

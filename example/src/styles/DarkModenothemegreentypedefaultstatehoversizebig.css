@@ -1,0 +1,46 @@
+
+.Pixso-symbol-1_26224 {
+  width: 84px;
+  height: 52px;
+  overflow: hidden;
+  flex-direction: row;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px 8px 16px;
+  border-radius: 16px 16px 16px 16px;
+}
+
+.Pixso-instance-1_26225,.Pixso-instance-1_26228 {
+  width: 24px;
+  height: 24px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-1_26225 {
+  background-image: url(@/assets/images/is_outlinetrue19.svg);
+}
+
+.Pixso-paragraph-1_26226 {
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-instance-1_26227 {
+  width: 22px;
+  height: 20px;
+  border-radius: 8px 8px 8px 8px;
+}
+
+.Pixso-instance-1_26228 {
+  background-image: url(@/assets/images/actionschevron_right212.svg);
+}
+
+.component-1_26224 {
+  width: fit-content;
+  height: fit-content;
+}

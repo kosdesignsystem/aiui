@@ -1,0 +1,9 @@
+<svg viewBox="0 0 6.03847 6.06006" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="6.038467" height="6.060062" fill="none" customFrame="#000000">
+	<defs>
+		<linearGradient id="paint_linear_1384" x1="7.58939362" x2="-0.0340986252" y1="1.54199386" y2="3.81663179" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(255,255,255)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(221,221,238)" offset="1" stop-opacity="1" />
+		</linearGradient>
+	</defs>
+	<path id="Intersect" d="M5.87718 2.86887C6.12422 3.05267 6.07966 3.43496 5.79698 3.55702L0 6.06006L1.65615 0.000572507C1.87762 -0.00691661 2.10069 0.0590845 2.287 0.197703L5.87718 2.86887Z" fill="url(#paint_linear_1384)" fill-rule="nonzero" />
+</svg>

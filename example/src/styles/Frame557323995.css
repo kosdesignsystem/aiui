@@ -1,0 +1,934 @@
+
+.scroll-container {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.Pixso-frame-5573_23995 {
+  width: 100%;
+  height: 800px;
+  overflow: hidden;
+  border-radius: 24px 24px 24px 24px;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.Pixso-instance-5573_23996,.Pixso-vector-461_26831,.Pixso-vector-461_26830,.Pixso-vector-461_26826,.Pixso-vector-461_26822,.Pixso-vector-461_26821 {
+  position: absolute;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-5573_23996 {
+  width: 360px;
+  height: 800px;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg%20viewBox%3D'0%200%20360%20800'%20preserveAspectRatio%3D'none'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%0A%20%20%20%20%20%20%3Cdefs%3E%0A%20%20%20%20%20%20%20%20%3ClinearGradient%20id%3D'grad'%20gradientUnits%3D'objectBoundingBox'%20x1%3D'0'%20y1%3D'0.5'%20x2%3D'1'%20y2%3D'0.5'%20gradientTransform%3D'matrix(0.2444%2C%200.9244%2C%20-2.0542%2C%200.1100%2C%201.2826%2C%200.0206)'%3E%0A%20%20%20%20%20%20%20%20%20%20%3Cstop%20stop-color%3D'rgba(5%2C5%2C5%2C1)'%20offset%3D'0'%2F%3E%3Cstop%20stop-color%3D'rgba(16%2C41%2C45%2C1)'%20offset%3D'0.252653'%2F%3E%3Cstop%20stop-color%3D'rgba(15.708473%2C39.673061%2C44.998535%2C1)'%20offset%3D'1'%2F%3E%0A%20%20%20%20%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%20%20%3C%2Fdefs%3E%0A%20%20%20%20%20%20%3Crect%20width%3D'100%25'%20height%3D'100%25'%20fill%3D'url(%23grad)'%2F%3E%0A%20%20%20%20%3C%2Fsvg%3E");
+  background-position: center;
+}
+
+.Pixso-vector-461_26831,.Pixso-vector-461_26830 {
+  width: 361px;
+  height: 760px;
+  left: 0px;
+  top: 40px;
+}
+
+.Pixso-vector-461_26831 {
+  background-image: url(@/assets/images/Vector_461_26831.svg);
+}
+
+.Pixso-vector-461_26830 {
+  background-image: url(@/assets/images/Vector_461_26830.svg);
+}
+
+.Pixso-vector-461_26826 {
+  width: 237px;
+  height: 602.3690185546875px;
+  background-image: url(@/assets/images/Vector3557.svg);
+  left: -4px;
+  top: -17.369629px;
+}
+
+.Pixso-vector-461_26822 {
+  width: 335.900390625px;
+  height: 492.43310546875px;
+  background-image: url(@/assets/images/Vector3567.svg);
+  left: 0px;
+  top: 350.103516px;
+}
+
+.Pixso-vector-461_26821 {
+  inset: 0% 0.00008306004030758445% 0% 0% ;
+  background-image: url(@/assets/images/Vector3587.svg);
+}
+
+.vector-wrapper-461_26821 {
+  position: absolute;
+  left: 159.5px;
+  top: 339px;
+  width: 91.500076px;
+  height: 45.5px;
+}
+
+.Pixso-instance-5573_23997 {
+  width: 360px;
+  height: 40px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.Pixso-instance-461_41393,.Pixso-instance-461_41390 {
+  width: 16px;
+  height: 16px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.Pixso-instance-461_41393 {
+  background-image: url(@/assets/images/wifil5034.svg);
+}
+
+.Pixso-instance-461_41390 {
+  background-image: url(@/assets/images/signal5034.svg);
+}
+
+.Pixso-vector-461_41373 {
+  width: 32px;
+  height: 32px;
+  background-image: url(@/assets/images/area31.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.Pixso-instance-461_41396 {
+  width: 48px;
+  height: 20px;
+}
+
+.Pixso-instance-461_41397 {
+  width: 16px;
+  height: 16px;
+  background-image: url(@/assets/images/batterychargelow34.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.Pixso-paragraph-461_41400,.Pixso-paragraph-461_41383 {
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--content-content-primary);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-paragraph-461_41400 {
+  text-align: right;
+}
+
+.Pixso-paragraph-461_41383 {
+  text-align: left;
+}
+
+.Pixso-instance-5573_23998 {
+  width: 360px;
+  height: 48px;
+  position: absolute;
+  left: 0px;
+  top: 752px;
+  background-color: var(--background-background-primary);
+}
+
+.Pixso-vector-461_31835 {
+  width: 100px;
+  height: 48px;
+  background-image: url(@/assets/images/cont_225.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: -130px;
+  right: 130px;
+  margin-left: auto;
+  margin-right: auto;
+  top: 0px;
+  display: none;
+}
+
+.Pixso-frame-5573_23999 {
+  position: absolute;
+  left: 0px;
+  top: 504px;
+  flex-direction: row;
+  align-items: flex-end;
+}
+
+.Pixso-frame-5573_24000,.Pixso-frame-5573_24054 {
+  overflow: hidden;
+  flex-direction: column;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.Pixso-frame-5573_24001,.Pixso-frame-5573_24014,.Pixso-frame-5573_24056 {
+  width: 360px;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.frame-content-5573_24001,.frame-content-5573_24014,.frame-content-5573_24056 {
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0px 8px 0px 8px;
+  width: 100%;
+}
+
+.Pixso-frame-5573_24002,.Pixso-frame-5573_24005,.Pixso-frame-5573_24008,.Pixso-frame-5573_24011,.Pixso-frame-5573_24015,.Pixso-frame-5573_24021,.Pixso-frame-5573_24027,.Pixso-frame-5573_24030,.Pixso-frame-5573_24061,.Pixso-frame-5573_24064,.Pixso-frame-5573_24067 {
+  width: 86px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.frame-content-5573_24002,.frame-content-5573_24005,.frame-content-5573_24008,.frame-content-5573_24011,.frame-content-5573_24015,.frame-content-5573_24021,.frame-content-5573_24027,.frame-content-5573_24030,.frame-content-5573_24057,.frame-content-5573_24061,.frame-content-5573_24064,.frame-content-5573_24067 {
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  width: 100%;
+}
+
+.Pixso-instance-5573_24003 {
+  width: 64px;
+  height: 64px;
+  background-image: url(@/assets/images/Contacts9.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-paragraph-5573_24004,.Pixso-paragraph-5573_24007,.Pixso-paragraph-5573_24010,.Pixso-paragraph-5573_24013,.Pixso-paragraph-5573_24020,.Pixso-paragraph-5573_24026,.Pixso-paragraph-5573_24029,.Pixso-paragraph-5573_24053,.Pixso-paragraph-5573_24063,.Pixso-paragraph-5573_24066,.Pixso-paragraph-5573_24071 {
+  font-size: 12px;
+  font-family: "Kaspersky Sans Text-Regular";
+  font-weight: 400;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  letter-spacing: 0em;
+  line-height: 16px;
+  text-decoration: none;
+  width: 100%;
+  height: 16px;
+}
+
+.Pixso-instance-5573_24006,.Pixso-instance-5573_24009,.Pixso-instance-5573_24062,.Pixso-instance-5573_24065,.Pixso-vector-5573_24068 {
+  width: 64px;
+  height: 64px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-5573_24006 {
+  background-image: url(@/assets/images/Calculator10.svg);
+}
+
+.Pixso-instance-5573_24009 {
+  background-image: url(@/assets/images/Weather9.svg);
+}
+
+.Pixso-instance-5573_24012,.Pixso-instance-5573_24065 .Pixso-symbol-1_10333 ,.Pixso-instance-5573_24062 .Pixso-symbol-1_10313 ,.Pixso-instance-5573_24058 .Pixso-symbol-1_10303 ,.Pixso-instance-5573_24028 .Pixso-symbol-1_10263 ,.Pixso-instance-5573_24012 .Pixso-symbol-3001_8038 ,.Pixso-instance-5573_24003 .Pixso-symbol-1_10193 ,.Pixso-instance-5573_24023 .Pixso-symbol-1_10252 ,.Pixso-instance-5573_24017 .Pixso-symbol-1_10247 ,.Pixso-instance-5573_24006 .Pixso-symbol-1_10200 ,.Pixso-instance-5573_24009 .Pixso-symbol-1_10221  {
+  width: 64px;
+  height: 64px;
+}
+
+.Pixso-vector-461_21926,.Pixso-vector-461_21925,.Pixso-vector-461_21924,.Pixso-vector-461_21913,.Pixso-vector-461_21912,.Pixso-vector-461_21911,.Pixso-vector-461_21921,.Pixso-vector-5573_24078,.Pixso-vector-5573_24079 {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+}
+
+.Pixso-vector-461_21926,.Pixso-vector-461_21925,.Pixso-vector-461_21924 {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Pixso-vector-461_21926 {
+  width: 4.008px;
+  height: 5.696px;
+  background-image: url(@/assets/images/Vector_461_21926.svg);
+  left: -118.996px;
+  right: 118.996px;
+  top: 29.053711px;
+}
+
+.Pixso-vector-461_21925 {
+  width: 2px;
+  height: 18px;
+  background-image: url(@/assets/images/Vector_461_21925.svg);
+  left: -47.53034699999999px;
+  right: 47.53034699999999px;
+  top: 2.603683px;
+  transform: rotate(60.000001deg);
+}
+
+.Pixso-vector-461_21924 {
+  width: 3.848px;
+  height: 5.696px;
+  background-image: url(@/assets/images/Vector_461_21924.svg);
+  left: -8.7285445px;
+  right: 8.7285445px;
+  top: 0px;
+}
+
+.Pixso-vector-461_21913,.Pixso-vector-461_21912 {
+  width: 34px;
+  height: 34px;
+  left: 15px;
+  top: 15px;
+}
+
+.Pixso-vector-461_21913 {
+  background-image: url(@/assets/images/Ellipse357.png);
+}
+
+.Pixso-vector-461_21912 {
+  background-image: url(@/assets/images/Ellipse347.svg);
+}
+
+.Pixso-vector-461_21911 {
+  width: 22.66%;
+  height: 23.44%;
+  background-image: url(@/assets/images/Star1213.svg);
+  left: 1.17%;
+  right: 76.17%;
+  top: 0.78%;
+  bottom: 75.78%;
+}
+
+.Pixso-vector-461_21921 {
+  width: 1.968px;
+  height: 5.6px;
+  background-image: url(@/assets/images/Group_461_21921.svg);
+  left: 0.000488px;
+  top: 0.095703px;
+}
+
+.Pixso-frame-5573_24016 {
+  width: 64px;
+  height: 64px;
+  flex-direction: column;
+  isolation: isolate;
+  gap: 4px;
+  align-items: center;
+}
+
+.Pixso-instance-5573_24017 {
+  width: 64px;
+  height: 64px;
+  z-index: 1;
+  background-image: url(@/assets/images/Phone10.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-5573_24019 {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  z-index: 2;
+  left: 46px;
+  top: 3px;
+  background-color: var(--system-system-error-primary);
+  border-radius: 8px 8px 8px 8px;
+}
+
+.Pixso-paragraph-461_24589,.Pixso-paragraph-461_12939,.Pixso-paragraph-461_23745 {
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--content-content-primary);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-frame-5573_24022 {
+  width: 64px;
+  height: 64px;
+  flex-direction: column;
+  isolation: isolate;
+  align-items: center;
+}
+
+.frame-content-5573_24022 {
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.Pixso-instance-5573_24023 {
+  width: 64px;
+  height: 64px;
+  z-index: 1;
+  background-image: url(@/assets/images/SMS9.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-5573_24025 {
+  width: 22px;
+  height: 20px;
+  position: absolute;
+  z-index: 2;
+  left: 45px;
+  top: 3px;
+  background-color: var(--system-system-error-primary);
+  border-radius: 8px 8px 8px 8px;
+}
+
+.Pixso-instance-5573_24028 {
+  width: 64px;
+  height: 64px;
+  background-image: url(@/assets/images/Calendar9.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-frame-5573_24055 {
+  flex-direction: column;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.Pixso-frame-5573_24057 {
+  width: 86px;
+  height: 84px;
+  flex-direction: column;
+  isolation: isolate;
+  align-items: center;
+}
+
+.Pixso-instance-5573_24058 {
+  width: 64px;
+  height: 64px;
+  z-index: 1;
+  background-image: url(@/assets/images/Mail11.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-paragraph-5573_24059 {
+  font-size: 12px;
+  font-family: "Kaspersky Sans Text-Regular";
+  font-weight: 400;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  letter-spacing: 0em;
+  line-height: 16px;
+  text-decoration: none;
+  width: 100%;
+  height: 16px;
+  z-index: 2;
+}
+
+.Pixso-instance-5573_24060 {
+  width: 22px;
+  height: 20px;
+  position: absolute;
+  z-index: 3;
+  left: 56px;
+  top: 3px;
+  background-color: var(--system-system-error-primary);
+  border-radius: 8px 8px 8px 8px;
+}
+
+.Pixso-instance-5573_24062 {
+  background-image: url(@/assets/images/Notes10.svg);
+}
+
+.Pixso-instance-5573_24065 {
+  background-image: url(@/assets/images/VPN9.svg);
+}
+
+.Pixso-vector-5573_24068 {
+  background-image: url(@/assets/images/Frame276944467.svg);
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+.Pixso-frame-5573_24072 {
+  position: absolute;
+  left: 0px;
+  top: 112px;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px 16px 0px 16px;
+}
+
+.Pixso-paragraph-5573_24073,.Pixso-paragraph-5573_24074 {
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  font-feature-settings: "locl" 0;
+  text-decoration: none;
+  width: 328px;
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-paragraph-5573_24073 {
+  font-size: 80px;
+  font-family: "Kaspersky Sans Text-Clock Regular";
+  font-weight: 400;
+  letter-spacing: 0em;
+}
+
+.Pixso-rectangle-5573_24075 {
+  width: 360px;
+  height: 800px;
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  background-color: rgba(255, 255, 255, 0.01);
+  backdrop-filter: blur(8px) saturate(1);
+  -webkit-backdrop-filter: blur(8px) saturate(1);
+}
+
+.Pixso-frame-5573_24076 {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  position: absolute;
+  left: 251px;
+  top: 590px;
+}
+
+.Pixso-group-5573_24077 {
+  width: 90.625px;
+  height: 93.75px;
+  position: absolute;
+  left: 4.6875px;
+  top: 3.125px;
+}
+
+.Pixso-vector-5573_24078 {
+  width: 100%;
+  height: 100%;
+  background-image: url(@/assets/images/Star1117.svg);
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+}
+
+.Pixso-vector-5573_24079 {
+  inset: -8.701535685523805e-7% -3.1578677495048844% -8.579308422551877% -7.240986149764348e-7% ;
+  background-image: url(@/assets/images/Polygon67.svg);
+}
+
+.vector-wrapper-5573_24079 {
+  position: absolute;
+  left: 21.42%;
+  right: 21.43%;
+  top: 22.25%;
+  bottom: 22.2%;
+  width: 51.788418px;
+  height: 52.074146px;
+}
+
+.Pixso-group-5573_24080 {
+  width: 57.82579px;
+  height: 58.903606px;
+  position: absolute;
+  left: 16.400391px;
+  top: 17.42334px;
+}
+
+.Pixso-vector-5573_24081 {
+  position: absolute;
+  inset: -6.020040036364756% -6.134384848007757% -6.019968972166905% -6.137103358206118% ;
+  background-image: url(@/assets/images/Union16.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.vector-wrapper-5573_24081 {
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+  width: 57.82579px;
+  height: 58.903606px;
+}
+
+.Pixso-vector-5573_24083,.Pixso-vector-5573_24084 {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+}
+
+.Pixso-vector-5573_24083 {
+  width: 95.18%;
+  height: 41.17%;
+  background-image: url(@/assets/images/Union15.svg);
+  left: 2.42%;
+  right: 2.4%;
+  top: 1.24%;
+  bottom: 57.59%;
+}
+
+.Pixso-vector-5573_24084 {
+  inset: -14.575225401487213% -15.613437492360768% -14.575578737931544% -15.610514771371097% ;
+  background-image: url(@/assets/images/Vector3357.svg);
+}
+
+.vector-wrapper-5573_24084 {
+  position: absolute;
+  left: 25.41%;
+  right: 58.34%;
+  top: 11.41%;
+  bottom: 71.5%;
+  width: 9.39621px;
+  height: 10.066981px;
+}
+
+.Pixso-vector-5573_24085 {
+  position: absolute;
+  inset: -114.5755837046633% -15.610516101693909% 85.42477956524453% -15.613436162037958% ;
+  background-image: url(@/assets/images/Vector3367.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.vector-wrapper-5573_24085 {
+  position: absolute;
+  left: 58.85%;
+  right: 24.9%;
+  top: 70.83%;
+  bottom: 12.08%;
+  width: 9.39621px;
+  height: 10.066981px;
+}
+
+.Pixso-vector-5573_24086 {
+  position: absolute;
+  inset: -9.563374662115104% -10.555470912490728% -9.563914726619291% -10.553700902913105% ;
+  background-image: url(@/assets/images/Vector3427.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.vector-wrapper-5573_24086 {
+  position: absolute;
+  left: 52.41%;
+  right: 23.56%;
+  top: 49.06%;
+  bottom: 24.89%;
+  width: 13.89823px;
+  height: 15.342496px;
+}
+
+.Pixso-vector-5573_24087 {
+  position: absolute;
+  inset: -14.127080215854711% -9.430569775457823% -14.127272250083223% -9.434319584590613% ;
+  background-image: url(@/assets/images/Vector3417.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.vector-wrapper-5573_24087 {
+  position: absolute;
+  left: 33.08%;
+  right: 40.03%;
+  top: 24.3%;
+  bottom: 58.07%;
+  width: 15.547458px;
+  height: 10.386332px;
+}
+
+.Pixso-vector-5573_24088 {
+  position: absolute;
+  inset: -16.116005755052036% -25.784281726755708% -15.703768502295235% -20.96225599393319% ;
+  background-image: url(@/assets/images/Vector3387.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.vector-wrapper-5573_24088 {
+  position: absolute;
+  left: 24.43%;
+  right: 59.25%;
+  top: 70.91%;
+  bottom: 12.07%;
+  width: 9.435114px;
+  height: 10.025581px;
+}
+
+.Pixso-vector-5573_24089 {
+  position: absolute;
+  inset: -15.088464014737102% -20.182498133016587% -15.49197139879257% -20.416917864903812% ;
+  background-image: url(@/assets/images/Vector3397.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.vector-wrapper-5573_24089 {
+  position: absolute;
+  left: 7.8%;
+  right: 75.88%;
+  top: 40.88%;
+  bottom: 42.11%;
+  width: 9.436439px;
+  height: 10.024166px;
+}
+
+.Pixso-vector-5573_24090 {
+  position: absolute;
+  inset: 32.08181749115761% 73.24893558892613% -62.662265931252115% -113.84835158684655% ;
+  background-image: url(@/assets/images/Vector3407.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.vector-wrapper-5573_24090 {
+  position: absolute;
+  left: 91%;
+  right: -7.32%;
+  top: 32.85%;
+  bottom: 50.13%;
+  width: 9.436439px;
+  height: 10.024165px;
+}
+
+.Pixso-vector-5573_24091 {
+  position: absolute;
+  inset: -15.978253906884305% -21.206898178198035% -16.393625830043003% -25.756801235716615% ;
+  background-image: url(@/assets/images/Vector3377.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.vector-wrapper-5573_24091 {
+  position: absolute;
+  left: 58.62%;
+  right: 25.07%;
+  top: 12.03%;
+  bottom: 70.95%;
+  width: 9.434462px;
+  height: 10.026278px;
+}
+
+.Pixso-vector-5573_24092 {
+  position: absolute;
+  inset: -5.4879374652805675% -5.5918233446630445% -5.487903264924525% -5.5910839477667915% ;
+  background-image: url(@/assets/images/UnionStroke7.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.vector-wrapper-5573_24092 {
+  position: absolute;
+  left: 0.83%;
+  right: 0.82%;
+  top: 0.74%;
+  bottom: 0.91%;
+  width: 56.870674px;
+  height: 57.930683px;
+}
+
+.Pixso-vector-5573_24093,.Pixso-vector-5573_24094,.Pixso-vector-5573_24095,.Pixso-vector-5573_24096 {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+}
+
+.Pixso-vector-5573_24093 {
+  width: 58.47%;
+  height: 57.7%;
+  background-image: url(@/assets/images/Ellipse3227.png);
+  left: 21.6%;
+  right: 19.93%;
+  top: 21.96%;
+  bottom: 20.34%;
+}
+
+.Pixso-vector-5573_24094 {
+  width: 60%;
+  height: 59.22%;
+  background-image: url(@/assets/images/Ellipse3237.png);
+  left: 20.21%;
+  right: 19.79%;
+  top: 20.55%;
+  bottom: 20.23%;
+}
+
+.Pixso-vector-5573_24095 {
+  width: 54.91%;
+  height: 54.2%;
+  background-image: url(@/assets/images/Ellipse3247.png);
+  left: 22.77%;
+  right: 22.32%;
+  top: 23.09%;
+  bottom: 22.71%;
+}
+
+.Pixso-vector-5573_24096 {
+  inset: -4.981905188124329% -5.427178257967542% -4.981934724779711% -5.432457216664574% ;
+  background-image: url(@/assets/images/Polygon77.png);
+}
+
+.vector-wrapper-5573_24096 {
+  position: absolute;
+  left: 38.32%;
+  right: 38.31%;
+  top: 37.08%;
+  bottom: 37.1%;
+  width: 13.518291px;
+  height: 15.208857px;
+}
+
+.Pixso-vector-5573_24097 {
+  width: 27.31%;
+  height: 30.14%;
+  background-image: url(@/assets/images/Polygon87.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 36.78%;
+  right: 35.91%;
+  top: 35.37%;
+  bottom: 34.49%;
+}
+
+.Pixso-frame-5573_24098 {
+  width: 360px;
+  height: 800px;
+  overflow: hidden;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  border-radius: 10px 10px 10px 10px;
+  background-image: url(@/assets/images/913a3265f65521ab137d06cfcc5d1097e4552a91.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.Pixso-instance-5573_24099 {
+  width: 96px;
+  height: 96px;
+  position: absolute;
+  left: 132px;
+  top: 352px;
+}
+
+.Pixso-vector-461_23673 {
+  width: 145%;
+  height: 145.16%;
+  background-image: url(@/assets/images/Grid.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 2.5%;
+  right: -47.5%;
+  top: 2.43%;
+  bottom: -47.59%;
+}
+
+.Pixso-instance-5573_23998 .Pixso-frame-421_11167 ,.Pixso-instance-5573_23998 .Pixso-vector-421_11171 ,.Pixso-instance-5573_23998 .Pixso-vector-421_11172  {
+  display: none;
+}
+
+.Pixso-instance-461_41396 .Pixso-symbol-421_9828  {
+  width: 48px;
+  flex-shrink: 0;
+}
+
+.Pixso-instance-5573_23997 .Pixso-instance-3007_9529 .Pixso-paragraph-421_9830  {
+  width: auto;
+  height: auto;
+}
+
+.Pixso-instance-5573_24012 .Pixso-vector-3001_8040 ,.Pixso-instance-5573_24012 .Pixso-vector-3001_8041  {
+  width: 34px;
+  height: 34px;
+}
+
+.Pixso-instance-5573_24012 .Pixso-group-3001_8042  {
+  width: 39.237164px;
+  height: 19.696642px;
+}
+
+.Pixso-instance-5573_24012 .Pixso-vector-3001_8043  {
+  width: 2px;
+  height: 18px;
+}
+
+.Pixso-instance-5573_24012 .Pixso-vector-3001_8044  {
+  width: 29.000977px;
+  height: 6px;
+}
+
+.Pixso-instance-5573_24012 .Pixso-group-3001_8049  {
+  width: 6.805032px;
+  height: 5.696px;
+}
+
+.Pixso-instance-5573_24012 .Pixso-vector-3001_8050  {
+  width: 3.848px;
+  height: 5.696px;
+}
+
+.Pixso-instance-5573_24012 .Pixso-vector-3001_8051  {
+  width: 1.968px;
+  height: 5.6px;
+}
+
+.Pixso-instance-5573_24012 .Pixso-vector-3001_8052  {
+  width: 4.008px;
+  height: 5.696001px;
+}
+
+.Pixso-instance-5573_24012 .Pixso-vector-3001_8053  {
+  width: 3.936px;
+  height: 5.696001px;
+}
+
+.Pixso-instance-5573_24012 .Pixso-vector-3001_8054  {
+  width: 4.008px;
+  height: 5.696px;
+}
+
+.Pixso-instance-5573_24099 .Pixso-symbol-3662_10644  {
+  width: 96px;
+  height: 96px;
+}
+
+.Pixso-instance-5573_24099 .Pixso-vector-3662_10646  {
+  width: 96.66%;
+  height: 96.77%;
+}
+
+.Pixso-instance-5573_24099 .Pixso-vector-3662_10650  {
+  width: 85.503906px;
+  height: 82.535156px;
+}
+
+.Pixso-instance-5573_24019 .Pixso-symbol-1_824  {
+  width: 20px;
+}
+
+.Pixso-instance-5573_24019 .Pixso-paragraph-1_825 ,.Pixso-instance-5573_24025 .Pixso-paragraph-1_825 ,.Pixso-instance-5573_24060 .Pixso-paragraph-1_825  {
+  color: var(--content-content-primary);
+}

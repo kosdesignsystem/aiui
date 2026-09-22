@@ -1,0 +1,35 @@
+
+.Pixso-symbol-421_9840 {
+  width: 48px;
+  height: 20px;
+  overflow: hidden;
+  flex-direction: row;
+  gap: 4px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.Pixso-instance-421_9841,.Pixso-instance-421_9841 .Pixso-symbol-421_9821  {
+  width: 16px;
+  height: 16px;
+}
+
+.Pixso-instance-421_9841 {
+  background-image: url(@/assets/images/battery601.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-paragraph-421_9842 {
+  text-align: right;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--content-content-primary);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.component-421_9840 {
+  width: fit-content;
+  height: fit-content;
+}

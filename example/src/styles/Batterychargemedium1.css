@@ -1,0 +1,16 @@
+
+.Pixso-symbol-421_9810 {
+  width: 100%;
+  height: 100%;
+  background-image: url(@/assets/images/batterychargemedium1.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  right: 0%;
+  bottom: 0%;
+}
+
+.component-421_9810 {
+  width: fit-content;
+  height: fit-content;
+}

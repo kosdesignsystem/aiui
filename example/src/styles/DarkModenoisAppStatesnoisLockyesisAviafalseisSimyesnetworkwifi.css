@@ -1,0 +1,65 @@
+
+.Pixso-symbol-421_10595,.Pixso-frame-421_10755,.Pixso-frame-421_10758 {
+  flex-direction: row;
+  align-items: center;
+}
+
+.Pixso-symbol-421_10595 {
+  width: 360px;
+  height: 40px;
+  justify-content: space-between;
+  padding: 8px 16px 8px 16px;
+  background-color: var(--background-background-primary);
+}
+
+.Pixso-frame-421_10755 {
+  gap: 4px;
+}
+
+.Pixso-paragraph-421_10756 {
+  flex-direction: column;
+  justify-content: center;
+  color: var(--content-content-primary);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-instance-421_10757 {
+  width: 36px;
+  height: 16px;
+}
+
+.Pixso-frame-421_10758 {
+  gap: 4px;
+  justify-content: center;
+}
+
+.Pixso-instance-421_10759,.Pixso-instance-421_10760 {
+  width: 16px;
+  height: 16px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-421_10759 {
+  background-image: url(@/assets/images/signal5058.svg);
+}
+
+.Pixso-instance-421_10760 {
+  background-image: url(@/assets/images/wifil5062.svg);
+}
+
+.Pixso-instance-421_10761 {
+  width: 40px;
+  height: 20px;
+}
+
+.component-421_10595 {
+  width: fit-content;
+  height: fit-content;
+}
+
+.Pixso-instance-421_10759 .Pixso-symbol-421_9800 ,.Pixso-instance-421_10760 .Pixso-symbol-421_9803  {
+  width: 16px;
+  height: 16px;
+}

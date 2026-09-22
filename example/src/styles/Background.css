@@ -1,0 +1,42 @@
+
+.Pixso-symbol-3008_19675 {
+  width: 576px;
+  height: 576px;
+  overflow: hidden;
+  border-radius: var(--padding-medium) var(--padding-medium) var(--padding-medium) var(--padding-medium);
+}
+
+.Pixso-frame-3008_19676,.Pixso-frame-3008_19677 {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+}
+
+.Pixso-frame-3008_19676 {
+  overflow: hidden;
+}
+
+.Pixso-frame-3008_19677 {
+  backdrop-filter: blur(60px) saturate(1);
+  -webkit-backdrop-filter: blur(60px) saturate(1);
+}
+
+.Pixso-rectangle-3008_19678 {
+  width: calc(100% - 0px);
+  height: calc(100% - 0px);
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  opacity: 0.65;
+}
+
+.component-3008_19675 {
+  width: fit-content;
+  height: fit-content;
+}

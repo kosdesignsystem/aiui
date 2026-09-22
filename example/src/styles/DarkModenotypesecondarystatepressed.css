@@ -1,0 +1,65 @@
+
+.Pixso-symbol-3001_9890 {
+  width: 84px;
+  height: 52px;
+  overflow: hidden;
+  flex-direction: row;
+  isolation: isolate;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px 8px 16px;
+  border-radius: 12px 12px 12px 12px;
+}
+
+.Pixso-rectangle-3001_9891 {
+  width: 120px;
+  height: 52px;
+  position: absolute;
+  z-index: 1;
+  left: 0px;
+  top: 0px;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.Pixso-instance-3001_9892,.Pixso-instance-3001_9895 {
+  width: 24px;
+  height: 24px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-3001_9892 {
+  z-index: 2;
+  background-image: url(@/assets/images/statusinfo180.svg);
+}
+
+.Pixso-paragraph-3001_9893 {
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 3;
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-instance-3001_9894 {
+  width: 22px;
+  height: 20px;
+  z-index: 4;
+  border-radius: 8px 8px 8px 8px;
+}
+
+.Pixso-instance-3001_9895 {
+  z-index: 5;
+  background-image: url(@/assets/images/actionschevron_right181.svg);
+}
+
+.component-3001_9890 {
+  width: fit-content;
+  height: fit-content;
+}
+
+.Pixso-instance-3001_9892 .Pixso-symbol-3001_9749 .Pixso-symbol-3001_9745 {
+  background-image: url(@/assets/images/statusinfo180.svg);
+}

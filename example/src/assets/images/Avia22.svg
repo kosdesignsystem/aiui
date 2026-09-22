@@ -1,0 +1,15 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64.000000" height="64.000000" fill="none" customFrame="url(#clipPath_78)">
+	<defs>
+		<clipPath id="clipPath_78">
+			<rect width="64.000000" height="64.000000" x="0.000000" y="0.000000" rx="16.000000" fill="rgb(255,255,255)" />
+		</clipPath>
+		<clipPath id="clipPath_79">
+			<rect width="24.000000" height="24.000000" x="20.000000" y="20.000000" fill="rgb(255,255,255)" />
+		</clipPath>
+	</defs>
+	<rect id="Avia" width="64.000000" height="64.000000" x="0.000000" y="0.000000" rx="16.000000" fill="rgb(255,255,255)" fill-opacity="0.119999997" />
+	<g id="volume / notification" clip-path="url(#clipPath_79)" customFrame="url(#clipPath_79)">
+		<rect id="volume / notification" width="24.000000" height="24.000000" x="20.000000" y="20.000000" />
+		<path id="color" d="M32 22C32.5523 22 33 22.4477 33 23L33 24.083C35.8377 24.559 38 27.027 38 30L38 37L39 37C39.5523 37 40 37.4477 40 38C40 38.5523 39.5523 39 39 39L25 39C24.4477 39 24 38.5523 24 38C24 37.4477 24.4477 37 25 37L26 37L26 30C26 27.027 28.1623 24.559 31 24.083L31 23C31 22.4477 31.4477 22 32 22ZM34 40C34 41.1046 33.1046 42 32 42C30.8954 42 30 41.1046 30 40L34 40Z" fill="rgb(255,255,255)" fill-rule="evenodd" />
+	</g>
+</svg>

@@ -1,0 +1,26 @@
+
+.Pixso-symbol-1_824 {
+  width: 22px;
+  height: 20px;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0px 4px 0px 4px;
+  border-radius: 8px 8px 8px 8px;
+  background-color: var(--system-system-error-primary);
+}
+
+.Pixso-paragraph-1_825 {
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--content-content-constant-d73426dc8b2e21cc9b9975385c913a385487c055-10852-349);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.component-1_824 {
+  width: fit-content;
+  height: fit-content;
+}

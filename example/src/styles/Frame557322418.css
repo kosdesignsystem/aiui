@@ -1,0 +1,427 @@
+
+.scroll-container {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.Pixso-frame-5573_22418 {
+  width: 100%;
+  height: 800px;
+  overflow: hidden;
+  border-radius: 24px 24px 24px 24px;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.Pixso-rectangle-5573_22419,.Pixso-rectangle-5573_22420,.Pixso-instance-5573_22456,.Pixso-instance-5573_22461,.Pixso-vector-5573_22467,.Pixso-vector-5573_22471,.Pixso-vector-5573_22475,.Pixso-vector-5573_22479,.Pixso-instance-3001_9869,.Pixso-instance-461_40494,.Pixso-instance-461_40491,.Pixso-vector-461_40474,.Pixso-instance-461_40498,.Pixso-vector-461_31499 {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-rectangle-5573_22419,.Pixso-rectangle-5573_22420 {
+  position: absolute;
+  background-position: center;
+}
+
+.Pixso-rectangle-5573_22419 {
+  width: 480.599945px;
+  height: 1068px;
+  left: -60px;
+  top: -134px;
+  border-radius: 1px 1px 1px 1px;
+  background-image: url(@/assets/images/bglockscreen15.png);
+}
+
+.Pixso-rectangle-5573_22420 {
+  width: 360px;
+  height: 800px;
+  left: 0px;
+  top: 0px;
+  background-image: url(@/assets/images/Call.png);
+}
+
+.Pixso-rectangle-5573_22421 {
+  width: 360px;
+  height: 800px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  background-color: rgba(31.463154, 31.463154, 31.463154, 0.6);
+  backdrop-filter: blur(9.333333333333334px) saturate(1);
+  -webkit-backdrop-filter: blur(9.333333333333334px) saturate(1);
+}
+
+.Pixso-frame-5573_22449,.frame-content-5573_22449,.Pixso-frame-5573_22450,.frame-content-5573_22450 {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.Pixso-frame-5573_22449 {
+  width: 360px;
+  position: absolute;
+  left: 0px;
+  top: 112px;
+}
+
+.frame-content-5573_22449 {
+  gap: 74px;
+  width: 100%;
+}
+
+.Pixso-frame-5573_22450 {
+  width: 100%;
+}
+
+.frame-content-5573_22450 {
+  padding: 0px 16px 0px 16px;
+  width: 100%;
+}
+
+.Pixso-paragraph-5573_22451,.Pixso-paragraph-5573_22452,.Pixso-paragraph-5573_22469,.Pixso-paragraph-5573_22473,.Pixso-paragraph-5573_22477,.Pixso-paragraph-5573_22481,.Pixso-paragraph-461_34704,.Pixso-paragraph-461_40501,.Pixso-paragraph-461_40484 {
+  text-decoration: none;
+  flex-grow: 0;
+}
+
+.Pixso-paragraph-5573_22451,.Pixso-paragraph-5573_22452 {
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  font-feature-settings: "locl" 0;
+  width: 328px;
+  white-space: pre;
+}
+
+.Pixso-paragraph-5573_22451 {
+  font-size: 80px;
+  font-family: "Kaspersky Sans Text Clock-Regular";
+  font-weight: 400;
+  letter-spacing: 0em;
+}
+
+.Pixso-frame-5573_22453,.frame-content-5573_22453 {
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.frame-content-5573_22453 {
+  gap: 24px;
+}
+
+.Pixso-frame-5573_22454 {
+  flex-direction: row;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.Pixso-frame-5573_22455,.Pixso-frame-5573_22460 {
+  width: 156px;
+  border-radius: 16px 16px 16px 16px;
+}
+
+.Pixso-frame-5573_22455 {
+  overflow: hidden;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: var(--colors-blue);
+}
+
+.frame-content-5573_22455 {
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 12px 12px 12px 12px;
+  width: 100%;
+}
+
+.Pixso-instance-5573_22456,.Pixso-instance-5573_22461,.Pixso-instance-3001_9869,.Pixso-instance-5573_22456 .Pixso-symbol-3001_9728  {
+  width: 24px;
+  height: 24px;
+}
+
+.Pixso-instance-5573_22456 {
+  background-image: url(@/assets/images/communicationdata_transfer8.svg);
+}
+
+.Pixso-frame-5573_22460,.frame-content-5573_22460 {
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.Pixso-frame-5573_22460 {
+  height: 96px;
+  overflow: hidden;
+  background-color: var(--content-content-background);
+}
+
+.frame-content-5573_22460 {
+  gap: 8px;
+  padding: 12px 12px 12px 12px;
+  width: 100%;
+  height: 100%;
+}
+
+.Pixso-instance-5573_22461 {
+  background-image: url(@/assets/images/CommunicationWiFi8.svg);
+}
+
+.Pixso-frame-5573_22465 {
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.Pixso-frame-5573_22466,.Pixso-frame-5573_22470,.Pixso-frame-5573_22474,.Pixso-frame-5573_22478 {
+  width: 88px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.frame-content-5573_22466,.frame-content-5573_22470,.frame-content-5573_22474,.frame-content-5573_22478 {
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.Pixso-vector-5573_22467,.Pixso-vector-5573_22471,.Pixso-vector-5573_22475,.Pixso-vector-5573_22479 {
+  width: 64px;
+  padding: 10px 20px 10px 20px;
+}
+
+.Pixso-vector-5573_22467 {
+  height: 64px;
+  background-image: url(@/assets/images/Avia.svg);
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.Pixso-paragraph-5573_22469,.Pixso-paragraph-5573_22473,.Pixso-paragraph-5573_22477,.Pixso-paragraph-5573_22481 {
+  text-align: center;
+  font-feature-settings: "locl" 0;
+  width: 100%;
+}
+
+.Pixso-vector-5573_22471,.Pixso-vector-5573_22475,.Pixso-vector-5573_22479 {
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.Pixso-vector-5573_22471 {
+  height: 64.001953125px;
+  background-image: url(@/assets/images/Avia0.svg);
+}
+
+.Pixso-vector-5573_22475 {
+  height: 64px;
+  background-image: url(@/assets/images/Avia2.svg);
+}
+
+.Pixso-vector-5573_22479 {
+  height: 64px;
+  background-image: url(@/assets/images/Avia1.svg);
+}
+
+.Pixso-frame-5573_22482,.Pixso-frame-5573_22486 {
+  width: 328px;
+  height: 48px;
+  overflow: hidden;
+  flex-direction: row;
+  isolation: isolate;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px 12px 12px 12px;
+}
+
+.frame-content-5573_22482 {
+  flex-direction: row;
+  gap: 236px;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 16px 4px 16px;
+  width: 100%;
+  height: 100%;
+}
+
+.Pixso-rectangle-5573_22485,.Pixso-rectangle-5573_22488 {
+  width: 2px;
+  border-radius: 8px 8px 8px 8px;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.Pixso-rectangle-5573_22485 {
+  height: 16px;
+  position: absolute;
+  z-index: 1;
+  left: 324px;
+  top: 15.998047px;
+}
+
+.frame-content-5573_22486,.Pixso-frame-5573_22487,.frame-content-5573_22487 {
+  flex-direction: row;
+  align-items: center;
+}
+
+.frame-content-5573_22486 {
+  gap: 236px;
+  justify-content: center;
+  padding: 0px 16px 0px 16px;
+  width: 100%;
+  height: 100%;
+}
+
+.Pixso-frame-5573_22487 {
+  width: 152px;
+  height: 48px;
+  position: absolute;
+  z-index: 1;
+  left: 0px;
+  top: -0.001953px;
+  justify-content: flex-end;
+  border-radius: 12px 12px 12px 12px;
+}
+
+.frame-content-5573_22487 {
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 8px 2px 8px 2px;
+  width: 100%;
+  height: 100%;
+}
+
+.Pixso-rectangle-5573_22488 {
+  height: 15.999998px;
+}
+
+.Pixso-instance-5573_22491 {
+  width: 328px;
+  height: 52px;
+  border-radius: 12px 12px 12px 12px;
+}
+
+.Pixso-paragraph-461_34704 {
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--content-content-constant);
+  white-space: pre;
+}
+
+.Pixso-instance-3001_9869 {
+  background-image: url(@/assets/images/statusinfo210.svg);
+  overflow: hidden;
+  display: none;
+}
+
+.Pixso-instance-5573_22492 {
+  width: 360px;
+  height: 40px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.Pixso-instance-461_40494,.Pixso-instance-461_40491 {
+  width: 16px;
+  height: 16px;
+  overflow: hidden;
+}
+
+.Pixso-instance-461_40494 {
+  background-image: url(@/assets/images/wifil5017.svg);
+}
+
+.Pixso-instance-461_40491 {
+  background-image: url(@/assets/images/signal5017.svg);
+}
+
+.Pixso-vector-461_40474 {
+  width: 32px;
+  height: 32px;
+  background-image: url(@/assets/images/area15.svg);
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.Pixso-instance-461_40497 {
+  width: 48px;
+  height: 20px;
+}
+
+.Pixso-instance-461_40498 {
+  width: 16px;
+  height: 16px;
+  background-image: url(@/assets/images/batterychargelow17.svg);
+  overflow: hidden;
+}
+
+.Pixso-paragraph-461_40501,.Pixso-paragraph-461_40484 {
+  flex-direction: column;
+  justify-content: center;
+  color: var(--content-content-primary);
+  white-space: pre;
+}
+
+.Pixso-paragraph-461_40501 {
+  text-align: right;
+}
+
+.Pixso-paragraph-461_40484 {
+  text-align: left;
+}
+
+.Pixso-instance-5573_22493 {
+  width: 360px;
+  height: 48px;
+  position: absolute;
+  left: 0px;
+  top: 752px;
+}
+
+.Pixso-vector-461_31499 {
+  width: 100px;
+  height: 48px;
+  background-image: url(@/assets/images/cont_210.svg);
+  position: absolute;
+  left: -130px;
+  right: 130px;
+  margin-left: auto;
+  margin-right: auto;
+  top: 0px;
+  display: none;
+}
+
+.Pixso-instance-5573_22493 .Pixso-frame-421_11167 ,.Pixso-instance-5573_22493 .Pixso-vector-421_11171 ,.Pixso-instance-5573_22493 .Pixso-vector-421_11172  {
+  display: none;
+}
+
+.Pixso-instance-5573_22491 .Pixso-instance-3001_9872 .Pixso-symbol-3001_9747 {
+  background-image: url(@/assets/images/actionschevron_right211.svg);
+}
+
+.Pixso-instance-5573_22491 .Pixso-instance-3001_9869 .Pixso-symbol-3001_9745 {
+  background-image: url(@/assets/images/statusinfo210.svg);
+}
+
+.Pixso-instance-461_40497 .Pixso-symbol-421_9828  {
+  width: 48px;
+  flex-shrink: 0;
+}
+
+.Pixso-instance-5573_22492 .Pixso-instance-3007_9529 .Pixso-paragraph-421_9830  {
+  width: auto;
+  height: auto;
+}
+
+.Pixso-instance-5573_22491 .Pixso-symbol-3001_9868  {
+  width: 328px;
+  flex-shrink: 0;
+}
+
+.Pixso-instance-5573_22492 .Pixso-frame-3007_9523  {
+  width: 31px;
+  height: 18px;
+}

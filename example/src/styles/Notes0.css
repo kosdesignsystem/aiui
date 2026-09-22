@@ -1,0 +1,176 @@
+
+.Pixso-symbol-3001_8120 {
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+}
+
+.Pixso-group-3001_8121 {
+  width: 58px;
+  height: 60.000675px;
+  position: absolute;
+  left: 3px;
+  top: 2px;
+}
+
+.Pixso-group-3001_8122,.Pixso-group-3001_8123,.Pixso-group-3001_8124 {
+  width: 58px;
+  height: 60.000675px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.Pixso-vector-3001_8125,.Pixso-vector-3001_8126,.Pixso-vector-3001_8127 {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+}
+
+.Pixso-vector-3001_8125 {
+  width: 100%;
+  height: 99.99%;
+  background-image: url(@/assets/images/Star1217.svg);
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0.01%;
+}
+
+.Pixso-vector-3001_8126 {
+  width: 55.14%;
+  height: 54.85%;
+  background-image: url(@/assets/images/Star13.svg);
+  left: 44.85%;
+  right: 0.01%;
+  top: 45.15%;
+  bottom: 0%;
+}
+
+.Pixso-vector-3001_8127 {
+  inset: -2.598035011744296% -1.8148695834770607% -7.794101636896287% -1.8148759682694675% ;
+  background-image: url(@/assets/images/Intersect.svg);
+}
+
+.vector-wrapper-3001_8127 {
+  position: absolute;
+  left: 0.861655px;
+  top: 0px;
+  width: 56.268883px;
+  height: 19.653511px;
+}
+
+.Pixso-group-3001_8130 {
+  width: 58px;
+  height: 59.994576px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.Pixso-group-3001_8132 {
+  width: 61.038509px;
+  height: 18.015625px;
+  position: absolute;
+  left: -0.564453px;
+  top: 28.625px;
+}
+
+.Pixso-vector-3001_8133,.Pixso-vector-3001_8134,.Pixso-vector-3001_8135,.Pixso-vector-3001_8136,.Pixso-vector-3001_8137,.Pixso-vector-3001_8138 {
+  height: 5.55%;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+}
+
+.Pixso-vector-3001_8133 {
+  width: 95.34%;
+  background-image: url(@/assets/images/Vector238.svg);
+  left: 0%;
+  right: 4.66%;
+  top: 0%;
+  bottom: 94.45%;
+}
+
+.Pixso-vector-3001_8134 {
+  width: 84.74%;
+  background-image: url(@/assets/images/Vector239.svg);
+  left: 0%;
+  right: 15.26%;
+  top: 50%;
+  bottom: 44.45%;
+}
+
+.Pixso-vector-3001_8135 {
+  width: 69.81%;
+  background-image: url(@/assets/images/Vector240.svg);
+  left: 0%;
+  right: 30.19%;
+  top: 100%;
+  bottom: -5.55%;
+}
+
+.Pixso-vector-3001_8136 {
+  width: 23.55%;
+  background-image: url(@/assets/images/Vector241.svg);
+  left: 70.09%;
+  right: 6.36%;
+  top: 100%;
+  bottom: -5.55%;
+}
+
+.Pixso-vector-3001_8137 {
+  width: 16.42%;
+  background-image: url(@/assets/images/Vector242.svg);
+  left: 83.58%;
+  right: 0%;
+  top: 50.35%;
+  bottom: 44.1%;
+}
+
+.Pixso-vector-3001_8138 {
+  width: 2.71%;
+  background-image: url(@/assets/images/Vector243.svg);
+  left: 95.38%;
+  right: 1.91%;
+  top: 0%;
+  bottom: 94.45%;
+}
+
+.Pixso-group-3001_8139 {
+  width: 31.738281px;
+  height: 32.539063px;
+  position: absolute;
+  left: 26.117188px;
+  top: 27.125px;
+}
+
+.Pixso-vector-3001_8141,.Pixso-vector-3001_8142 {
+  height: 100%;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+}
+
+.Pixso-vector-3001_8141 {
+  width: 99.99%;
+  background-image: url(@/assets/images/Vector248.svg);
+  left: -0.14%;
+  right: 0.15%;
+  top: 0%;
+  bottom: 0%;
+}
+
+.Pixso-vector-3001_8142 {
+  width: 100%;
+  background-image: url(@/assets/images/Vector249.png);
+  left: 0.25%;
+  right: -0.25%;
+  top: 0.02%;
+  bottom: -0.02%;
+}
+
+.component-3001_8120 {
+  width: fit-content;
+  height: fit-content;
+}

@@ -1,0 +1,36 @@
+
+.Pixso-symbol-3078_6233 {
+  width: 32px;
+  height: 32px;
+  flex-direction: row;
+  isolation: isolate;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px 8px 8px 8px;
+  background-color: var(--content-content-background);
+}
+
+.Pixso-instance-3078_6234,.Pixso-instance-3078_6235,.Pixso-instance-3078_6234 .Pixso-symbol-421_9864 ,.Pixso-instance-3078_6235 .Pixso-symbol-3078_6197  {
+  width: 16px;
+  height: 16px;
+}
+
+.Pixso-instance-3078_6234 {
+  z-index: 1;
+  background-image: url(@/assets/images/is_outlinefalse27.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-3078_6235 {
+  position: absolute;
+  z-index: 2;
+  left: 20px;
+  top: 20px;
+}
+
+.component-3078_6233 {
+  width: fit-content;
+  height: fit-content;
+}

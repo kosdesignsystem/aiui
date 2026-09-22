@@ -1,0 +1,14 @@
+
+.Pixso-symbol-3001_9734 {
+  width: 24px;
+  height: 24px;
+  background-image: url(@/assets/images/volumenotification0.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.component-3001_9734 {
+  width: fit-content;
+  height: fit-content;
+}

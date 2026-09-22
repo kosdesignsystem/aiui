@@ -1,0 +1,41 @@
+
+.Pixso-symbol-3078_6336 {
+  width: 360px;
+  height: 52px;
+  overflow: hidden;
+  background-color: var(--background-background-secondary);
+}
+
+.Pixso-frame-3078_6337,.Pixso-vector-3078_6338 {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Pixso-frame-3078_6337 {
+  width: 52px;
+  height: 52px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  border-radius: var(--medium-radius) var(--medium-radius) var(--medium-radius) var(--medium-radius);
+}
+
+.Pixso-vector-3078_6338 {
+  width: 16.321533203125px;
+  height: 17.452770233154297px;
+  background-image: url(@/assets/images/Star1Stroke3.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  left: -0.000015398437499314355px;
+  right: 0.000015398437499314355px;
+  top: 1.1657714793500418e-7px;
+  bottom: -1.1657714793500418e-7px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.component-3078_6336 {
+  width: fit-content;
+  height: fit-content;
+}

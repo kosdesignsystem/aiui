@@ -1,0 +1,116 @@
+
+.Pixso-symbol-3001_8155 {
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+}
+
+.Pixso-group-3001_8156 {
+  width: 58px;
+  height: 60px;
+  position: absolute;
+  left: 3px;
+  top: 2px;
+}
+
+.Pixso-vector-3001_8157 {
+  width: 100%;
+  height: 100%;
+  background-image: url(@/assets/images/Star1124.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+}
+
+.Pixso-group-3001_8158 {
+  width: 36.520962px;
+  height: 24.825176px;
+  position: absolute;
+  left: 10.739566px;
+  top: 17.587414px;
+}
+
+.Pixso-vector-3001_8159 {
+  width: 100%;
+  height: 100%;
+  background-image: url(@/assets/images/Rectangle2849.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+}
+
+.Pixso-group-3001_8160 {
+  width: 36.520962px;
+  height: 24.825176px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.Pixso-vector-3001_8162,.Pixso-vector-3001_8163,.Pixso-vector-3001_8164,.Pixso-vector-3001_8165,.Pixso-vector-3001_8166 {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+}
+
+.Pixso-vector-3001_8162,.Pixso-vector-3001_8163 {
+  width: 76.2%;
+  height: 67.19%;
+  left: 11.9%;
+  right: 11.9%;
+}
+
+.Pixso-vector-3001_8162 {
+  background-image: url(@/assets/images/Polygon9.svg);
+  top: 32.78%;
+  bottom: 0.03%;
+}
+
+.Pixso-vector-3001_8163 {
+  background-image: url(@/assets/images/Polygon88.svg);
+  top: 0%;
+  bottom: 32.81%;
+}
+
+.Pixso-vector-3001_8164 {
+  width: 98.65%;
+  height: 67.12%;
+  background-image: url(@/assets/images/Vector271Stroke.svg);
+  left: 0.84%;
+  right: 0.51%;
+  top: 1.78%;
+  bottom: 31.1%;
+}
+
+.Pixso-vector-3001_8165 {
+  width: 33.75%;
+  height: 48.91%;
+  background-image: url(@/assets/images/Vector272Stroke.svg);
+  left: 1.36%;
+  right: 64.89%;
+  top: 49.17%;
+  bottom: 1.92%;
+}
+
+.Pixso-vector-3001_8166 {
+  width: 33.88%;
+  height: 49.18%;
+  background-image: url(@/assets/images/Vector273Stroke.svg);
+  left: 65.17%;
+  right: 0.95%;
+  top: 49.05%;
+  bottom: 1.77%;
+}
+
+.component-3001_8155 {
+  width: fit-content;
+  height: fit-content;
+}

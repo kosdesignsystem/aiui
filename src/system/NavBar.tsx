@@ -54,6 +54,7 @@ export function NavBar({ isMobileViewport = false, onHomeLongPress }: NavBarProp
 				className="nav-button"
 				type="button"
 				aria-label={onHomeLongPress ? 'Открыть навигацию долгим нажатием' : 'Домой'}
+				onClick={() => navigate('/app/Launcher/main')}
 				onPointerDown={handleHomePressStart}
 				onPointerUp={clearLongPressTimer}
 				onPointerCancel={clearLongPressTimer}

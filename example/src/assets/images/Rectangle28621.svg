@@ -1,0 +1,29 @@
+<svg viewBox="0 0 24.7656 23.2333" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24.765625" height="23.233337" fill="none" customFrame="#000000">
+	<defs>
+		<g id="pixso_custom_effect_13">
+			<effect x="-1.531815" y="-2.042421" visibility="visible" fill="rgb(34,34,34)" style="mix-blend-mode:multiply" fill-opacity="0.400000006" effectType="innerShadow" stdDeviation="4.08484125" radius="0" />
+			<effect x="4.595447" y="4.595447" visibility="visible" fill="rgb(33,33,33)" style="mix-blend-mode:multiply" fill-opacity="0.300000012" effectType="dropShadow" stdDeviation="5.61665678" radius="0" />
+			<effect x="0.000000" y="1.531815" visibility="visible" fill="rgb(0,0,0)" fill-opacity="0.119999997" effectType="dropShadow" stdDeviation="2.55302596" radius="0" />
+		</g>
+		<filter id="filter_13" width="24.765625" height="23.233337" x="0.000000" y="0.000000" filterUnits="userSpaceOnUse" customEffect="url(#pixso_custom_effect_13)" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feOffset dx="4.595447" dy="4.595447" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="1.87221897" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0.129167 0 0 0 0 0.129167 0 0 0 0 0.129167 0 0 0 0.3 0 " />
+			<feBlend result="effect_dropShadow_1" in2="BackgroundImageFix" mode="normal" />
+			<feOffset dx="0.000000" dy="1.531815" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="0.851008654" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0 " />
+			<feBlend result="effect_dropShadow_2" in2="effect_dropShadow_1" mode="normal" />
+			<feBlend result="shape" in="SourceGraphic" in2="effect_dropShadow_2" mode="normal" />
+			<feOffset dx="-1.531815" dy="-2.042421" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="1.36161375" />
+			<feComposite k2="-1" k3="1" in2="SourceAlpha" operator="arithmetic" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0.133333 0 0 0 0 0.133333 0 0 0 0 0.133333 0 0 0 0.4 0 " />
+			<feBlend result="effect_innerShadow_3" in2="shape" mode="normal" />
+		</filter>
+	</defs>
+	<g filter="url(#filter_13)">
+		<path id="Rectangle 2862" d="M0 3C0 1.34315 1.34315 0 3 0L9 0C10.6569 0 12 1.34315 12 3L12 9C12 10.6569 10.6569 12 9 12L3 12C1.34315 12 0 10.6569 0 9L0 3Z" fill="rgb(100,100,100)" fill-rule="nonzero" transform="matrix(-4.34715e-08,1,-1,-4.39526e-08,14.5527,1.02124)" />
+	</g>
+</svg>

@@ -1,0 +1,52 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100.000000" height="100.000000" fill="none">
+	<defs>
+		<linearGradient id="paint_linear_344" x1="50" x2="52.5277634" y1="96.8749847" y2="3.19319916" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(255,115,55)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(255,200,58)" offset="1" stop-opacity="1" />
+		</linearGradient>
+		<g id="pixso_custom_effect_88">
+			<effect x="-0.765908" y="-1.021210" visibility="visible" fill="rgb(187,132,68)" style="mix-blend-mode:multiply" fill-opacity="0.400000006" effectType="innerShadow" stdDeviation="2.04242063" radius="0" />
+			<effect x="2.297723" y="2.297723" visibility="visible" fill="rgb(228,133,64)" style="mix-blend-mode:multiply" fill-opacity="0.200000003" effectType="dropShadow" stdDeviation="2" radius="0" />
+			<effect x="0.000000" y="0.765908" visibility="visible" fill="rgb(0,0,0)" fill-opacity="0.119999997" effectType="dropShadow" stdDeviation="1.27651298" radius="0" />
+		</g>
+		<filter id="filter_88" width="49.638672" height="58.311768" x="26.695312" y="22.719360" filterUnits="userSpaceOnUse" customEffect="url(#pixso_custom_effect_88)" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feOffset dx="2.297723" dy="2.297723" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="0.666666687" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0.895833 0 0 0 0 0.5213 0 0 0 0 0.250087 0 0 0 0.2 0 " />
+			<feBlend result="effect_dropShadow_1" in2="BackgroundImageFix" mode="normal" />
+			<feOffset dx="0.000000" dy="0.765908" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="0.425504327" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0 " />
+			<feBlend result="effect_dropShadow_2" in2="effect_dropShadow_1" mode="normal" />
+			<feBlend result="shape" in="SourceGraphic" in2="effect_dropShadow_2" mode="normal" />
+			<feOffset dx="-0.765908" dy="-1.021210" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="0.680806875" />
+			<feComposite k2="-1" k3="1" in2="SourceAlpha" operator="arithmetic" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0.733333 0 0 0 0 0.518283 0 0 0 0 0.265833 0 0 0 0.4 0 " />
+			<feBlend result="effect_innerShadow_3" in2="shape" mode="normal" />
+		</filter>
+		<g id="pixso_custom_effect_89">
+			<effect x="1.787118" y="1.787118" visibility="visible" fill="rgb(255,255,255)" style="mix-blend-mode:screen" fill-opacity="1" effectType="innerShadow" stdDeviation="1.27651298" radius="0" />
+		</g>
+		<filter id="filter_89" width="45.703125" height="53.503418" x="27.154297" y="23.229980" filterUnits="userSpaceOnUse" customEffect="url(#pixso_custom_effect_89)" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feOffset dx="1.787118" dy="1.787118" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="0.425504327" />
+			<feComposite k2="-1" k3="1" in2="SourceAlpha" operator="arithmetic" />
+			<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0 " />
+			<feBlend result="effect_innerShadow_1" in2="shape" mode="normal" />
+		</filter>
+	</defs>
+	<rect id="Contacts" width="100.000000" height="100.000000" x="0.000000" y="0.000000" />
+	<g id="Group 4425795">
+		<path id="Star 10" d="M27.6337 11.4266C38.605 5.89221 44.0907 3.125 50 3.125C55.9093 3.125 61.395 5.89221 72.3663 11.4266L72.6562 11.5729L72.9416 11.7526C82.9794 18.0739 87.9983 21.2346 91.0034 26.0499C91.2539 26.4513 91.4928 26.8597 91.7199 27.2748C94.4436 32.254 94.7332 38.1694 95.3125 50C94.7332 61.8306 94.4436 67.746 91.7199 72.7252C91.4928 73.1403 91.2539 73.5487 91.0034 73.9501C87.9983 78.7654 82.9794 81.9261 72.9416 88.2474L72.6562 88.4271L72.3662 88.5734C61.395 94.1078 55.9093 96.875 50 96.875C44.0907 96.875 38.605 94.1078 27.6337 88.5734L27.3437 88.4271L27.0584 88.2474C17.0206 81.9261 12.0017 78.7654 8.99656 73.9501C8.74607 73.5487 8.50716 73.1403 8.28014 72.7252C5.55644 67.746 5.26679 61.8306 4.6875 50C5.26679 38.1694 5.55644 32.254 8.28014 27.2748C8.50716 26.8597 8.74607 26.4513 8.99656 26.0499C12.0017 21.2346 17.0206 18.0739 27.0584 11.7526L27.3437 11.5729L27.6337 11.4266Z" fill="url(#paint_linear_344)" fill-rule="nonzero" />
+		<g id="Group 4425463" filter="url(#filter_88)">
+			<g id="Group 4425498" filter="url(#filter_89)">
+				<ellipse id="Ellipse 321" rx="10.654148" ry="10.712931" cx="50.0037575" cy="33.9429092" fill="rgb(255,255,255)" />
+				<path id="Vector 237" d="M42.1795 6.49389L44.7276 18.6658C45.3246 21.5177 44.1918 24.4191 41.4656 25.4474C37.8991 26.7926 31.9081 28.2797 22.8512 28.2797C13.7944 28.2797 7.80335 26.7926 4.23681 25.4474C1.51058 24.4191 0.377864 21.5177 0.974868 18.6658L3.52289 6.49388C4.11698 3.65593 6.26596 1.4094 9.13302 0.977053C12.3194 0.496558 17.0223 0 22.8512 0C28.6801 0 33.3831 0.496559 36.5694 0.977054C39.4365 1.4094 41.5854 3.65594 42.1795 6.49389Z" fill="rgb(255,255,255)" fill-rule="nonzero" transform="matrix(1,0,0,-1,27.1543,76.7334)" />
+			</g>
+		</g>
+	</g>
+</svg>

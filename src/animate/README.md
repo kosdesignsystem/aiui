@@ -11,3 +11,7 @@
 - `fade`
 - `slide-left`
 - `slide-right`
+- `launcher-reveal` — мягкое появление экрана кода-пароля
+- `launcher-home-in` — раскрытие домашнего экрана
+- `launcher-shade-in` — вытягивание панели быстрых настроек
+- `launcher-recents-in` — сборка карточек недавних приложений

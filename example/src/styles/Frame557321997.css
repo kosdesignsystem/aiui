@@ -1,0 +1,159 @@
+
+.scroll-container {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.Pixso-frame-5573_21997 {
+  width: 100%;
+  height: 800px;
+  overflow: hidden;
+  border-radius: 24px 24px 24px 24px;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.Pixso-rectangle-5573_21998 {
+  width: 480.599945px;
+  height: 1068px;
+  position: absolute;
+  left: -60px;
+  top: -134px;
+  border-radius: 1px 1px 1px 1px;
+  background-image: url(@/assets/images/bglockscreen12.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.Pixso-rectangle-5573_22037 {
+  width: 360px;
+  height: 800px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  background-color: rgba(31.463154, 31.463154, 31.463154, 0.12);
+  backdrop-filter: blur(9.333333333333334px) saturate(1);
+  -webkit-backdrop-filter: blur(9.333333333333334px) saturate(1);
+}
+
+.Pixso-rectangle-5573_22039 {
+  width: 155.495132px;
+  height: 308px;
+  position: absolute;
+  left: 16px;
+  top: 134px;
+  border-radius: 12px 12px 12px 12px;
+  background-image: url(@/assets/images/bgcall1.png);
+  background-size: 100.0000% 112.2977%;
+  background-repeat: no-repeat;
+  background-position: 0.00px -19.94px;
+}
+
+.Pixso-instance-5573_22044 {
+  width: 360px;
+  height: 40px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.Pixso-instance-461_39914,.Pixso-instance-461_39911 {
+  width: 16px;
+  height: 16px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.Pixso-instance-461_39914 {
+  background-image: url(@/assets/images/wifil5014.svg);
+}
+
+.Pixso-instance-461_39911 {
+  background-image: url(@/assets/images/signal5014.svg);
+}
+
+.Pixso-vector-461_39894 {
+  width: 32px;
+  height: 32px;
+  background-image: url(@/assets/images/area12.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+.Pixso-instance-461_39917 {
+  width: 48px;
+  height: 20px;
+}
+
+.Pixso-instance-461_39918 {
+  width: 16px;
+  height: 16px;
+  background-image: url(@/assets/images/batterychargelow14.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.Pixso-paragraph-461_39921,.Pixso-paragraph-461_39904 {
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--content-content-primary);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-paragraph-461_39921 {
+  text-align: right;
+}
+
+.Pixso-paragraph-461_39904 {
+  text-align: left;
+}
+
+.Pixso-instance-5573_22045 {
+  width: 360px;
+  height: 48px;
+  position: absolute;
+  left: 0px;
+  top: 752px;
+}
+
+.Pixso-vector-461_31635 {
+  width: 100px;
+  height: 48px;
+  background-image: url(@/assets/images/cont_27.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: -130px;
+  right: 130px;
+  margin-left: auto;
+  margin-right: auto;
+  top: 0px;
+  display: none;
+}
+
+.Pixso-instance-5573_22045 .Pixso-frame-421_11167 ,.Pixso-instance-5573_22045 .Pixso-vector-421_11171 ,.Pixso-instance-5573_22045 .Pixso-vector-421_11172  {
+  display: none;
+}
+
+.Pixso-instance-461_39917 .Pixso-symbol-421_9828  {
+  width: 48px;
+  flex-shrink: 0;
+}
+
+.Pixso-instance-5573_22044 .Pixso-instance-3007_9529 .Pixso-paragraph-421_9830  {
+  width: auto;
+  height: auto;
+}
+
+.Pixso-instance-5573_22044 .Pixso-frame-3007_9523  {
+  width: 31px;
+  height: 18px;
+}

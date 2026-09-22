@@ -1,0 +1,14 @@
+
+.Pixso-symbol-1_848 {
+  width: 24px;
+  height: 24px;
+  background-image: url(@/assets/images/chevronright0.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.component-1_848 {
+  width: fit-content;
+  height: fit-content;
+}

@@ -1,0 +1,23 @@
+<svg viewBox="0 0 91.5 45.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="91.500000" height="45.500000" fill="none" customFrame="#000000">
+	<defs>
+		<g id="pixso_custom_effect_318">
+			<effect x="-1.000000" y="4.000000" visibility="visible" fill="rgb(36,71,75)" fill-opacity="0.200000003" effectType="innerShadow" stdDeviation="4" radius="0" />
+		</g>
+		<filter id="filter_318" width="91.500000" height="45.500000" x="0.000000" y="0.000000" filterUnits="userSpaceOnUse" customEffect="url(#pixso_custom_effect_318)" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feOffset dx="-1.000000" dy="4.000000" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="1.33333337" />
+			<feComposite k2="-1" k3="1" in2="SourceAlpha" operator="arithmetic" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0.141176 0 0 0 0 0.278431 0 0 0 0 0.294118 0 0 0 0.2 0 " />
+			<feBlend result="effect_innerShadow_1" in2="shape" mode="normal" />
+		</filter>
+		<linearGradient id="paint_linear_756" x1="128.5" x2="12.5000153" y1="-11.4999809" y2="7.00003433" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(25,80,87)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(11,36,39)" offset="1" stop-opacity="1" />
+		</linearGradient>
+	</defs>
+	<g filter="url(#filter_318)">
+		<path id="Vector 358" d="M0 45.5C33.4319 20.6386 68.1755 7.24139 91.5001 12.8726C70.5 5.5 48.3152 3.44549 25.5 0L0 45.5Z" fill="url(#paint_linear_756)" fill-rule="nonzero" />
+	</g>
+</svg>

@@ -1,0 +1,73 @@
+
+.Pixso-symbol-3662_10644 {
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+}
+
+.Pixso-frame-3662_10645 {
+  width: 93.75%;
+  height: 96.88%;
+  overflow: hidden;
+  position: absolute;
+  left: 3.12%;
+  right: 3.13%;
+  top: 1.56%;
+  bottom: 1.56%;
+}
+
+.Pixso-vector-3662_10646,.Pixso-vector-3662_10647,.Pixso-vector-3662_10648,.Pixso-vector-3662_10649,.Pixso-vector-3662_10650 {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+}
+
+.Pixso-vector-3662_10646 {
+  width: 97.66%;
+  height: 97.74%;
+  background-image: url(@/assets/images/BG.svg);
+  left: 1.67%;
+  right: 0.67%;
+  top: 1.62%;
+  bottom: 0.64%;
+}
+
+.Pixso-vector-3662_10647,.Pixso-vector-3662_10648 {
+  width: 68.34%;
+  height: 66.13%;
+  left: 15.83%;
+  right: 15.83%;
+  top: 16.94%;
+  bottom: 16.93%;
+}
+
+.Pixso-vector-3662_10647 {
+  background-image: url(@/assets/images/Rectangle2884.svg);
+}
+
+.Pixso-vector-3662_10648 {
+  background-image: url(@/assets/images/Rectangle2884Stroke.svg);
+}
+
+.Pixso-vector-3662_10649 {
+  width: 41%;
+  height: 39.68%;
+  background-image: url(@/assets/images/EllipseStroke.svg);
+  left: 29.5%;
+  right: 29.5%;
+  top: 30.16%;
+  bottom: 30.16%;
+}
+
+.Pixso-vector-3662_10650 {
+  width: 57.002925872802734px;
+  height: 55.023433685302734px;
+  background-image: url(@/assets/images/Union18.svg);
+  left: 1.49707px;
+  top: 3.5px;
+}
+
+.component-3662_10644 {
+  width: fit-content;
+  height: fit-content;
+}

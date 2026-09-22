@@ -1,0 +1,49 @@
+
+.Pixso-symbol-1_1188 {
+  width: 77px;
+  height: var(--medium-size);
+  overflow: hidden;
+  flex-direction: row;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 16px 10px 16px;
+  border-radius: var(--medium-radius) var(--medium-radius) var(--medium-radius) var(--medium-radius);
+  background-color: var(--accent-accent-sub-primary);
+}
+
+.Pixso-instance-1_1189,.Pixso-instance-1_1192 {
+  width: 24px;
+  height: 24px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-1_1189 {
+  background-image: url(@/assets/images/is_outlinetrue38.svg);
+}
+
+.Pixso-paragraph-1_1190 {
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--content-content-constant-d73426dc8b2e21cc9b9975385c913a385487c055-10852-349);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-instance-1_1191 {
+  width: 16px;
+  height: 16px;
+  background-color: var(--background-background-primary-3ebb80646f48fad8c7b735a4cde2621aa78c6dc6-14213-49);
+  border-radius: 6px 6px 6px 6px;
+}
+
+.Pixso-instance-1_1192 {
+  background-image: url(@/assets/images/chevronright0.svg);
+}
+
+.component-1_1188 {
+  width: fit-content;
+  height: fit-content;
+}

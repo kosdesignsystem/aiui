@@ -1,0 +1,67 @@
+
+.Pixso-symbol-3078_6344 {
+  width: 360px;
+  height: 52px;
+  overflow: hidden;
+  background-color: var(--background-background-secondary);
+}
+
+.Pixso-frame-3078_6345,.Pixso-vector-3078_6346,.Pixso-vector-3078_6348 {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Pixso-frame-3078_6345,.Pixso-vector-3078_6346 {
+  position: absolute;
+}
+
+.Pixso-frame-3078_6345,.Pixso-frame-3078_6347 {
+  width: 52px;
+  bottom: 0px;
+  border-radius: var(--medium-radius) var(--medium-radius) var(--medium-radius) var(--medium-radius);
+}
+
+.Pixso-frame-3078_6345 {
+  height: 52px;
+  left: 0px;
+  right: 0px;
+}
+
+.Pixso-vector-3078_6346,.Pixso-vector-3078_6348 {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.Pixso-vector-3078_6346 {
+  width: 16.321533203125px;
+  height: 17.45276641845703px;
+  background-image: url(@/assets/images/Star1Stroke0.svg);
+  left: -0.000015398437499314355px;
+  right: 0.000015398437499314355px;
+  top: -0.0000017907714848774958px;
+  bottom: 0.0000017907714848774958px;
+}
+
+.Pixso-frame-3078_6347 {
+  height: 52px;
+  position: absolute;
+  left: 52px;
+}
+
+.Pixso-vector-3078_6348 {
+  width: 15.5px;
+  height: 16.67218780517578px;
+  background-image: url(@/assets/images/Star1Stroke.svg);
+  position: absolute;
+  left: -1.4392569999999996px;
+  right: 1.4392569999999996px;
+  top: -0.14522009741210873px;
+  bottom: 0.14522009741210873px;
+}
+
+.component-3078_6344 {
+  width: fit-content;
+  height: fit-content;
+}

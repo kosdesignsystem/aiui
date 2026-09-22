@@ -1,0 +1,103 @@
+
+.Pixso-symbol-3078_6325 {
+  width: 360px;
+  height: 68px;
+  flex-direction: row;
+  align-items: center;
+  background-color: var(--background-background-secondary);
+}
+
+.Pixso-frame-3078_6326,.Pixso-frame-3078_6329,.Pixso-frame-3078_6332 {
+  width: 100%;
+  overflow: hidden;
+  flex-shrink: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+  flex-grow: 1;
+  flex-basis: 0;
+  border-radius: 16px 16px 16px 16px;
+}
+
+.frame-content-3078_6326,.frame-content-3078_6329,.frame-content-3078_6332 {
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 16px 24px 12px 24px;
+  width: 100%;
+}
+
+.Pixso-instance-3078_6327 {
+  width: 20px;
+  height: 20px;
+  background-image: url(@/assets/images/is_outlinefalse33.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-paragraph-3078_6328 {
+  font-size: 14px;
+  font-family: "Kaspersky Sans Text-Regular";
+  font-weight: 400;
+  flex-direction: column;
+  justify-content: center;
+  letter-spacing: 0em;
+  line-height: 100%;
+  color: rgba(0, 0, 0, 1);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-instance-3078_6330 {
+  width: 20px;
+  height: 20px;
+  background-image: url(@/assets/images/is_outlinetrue32.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-paragraph-3078_6331,.Pixso-paragraph-3078_6334 {
+  font-size: 14px;
+  font-family: "Kaspersky Sans Text-Regular";
+  font-weight: 400;
+  flex-direction: column;
+  justify-content: center;
+  letter-spacing: 0em;
+  line-height: 100%;
+  color: var(--secondary-2189da27aa8ddbd415e1d6a3b11667cab6aec65e-15195-0);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-instance-3078_6333 {
+  width: 20px;
+  height: 20px;
+  background-image: url(@/assets/images/dialpad4.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.component-3078_6325 {
+  width: fit-content;
+  height: fit-content;
+}
+
+.Pixso-instance-3078_6333 .Pixso-symbol-3078_6323 ,.Pixso-instance-3078_6330 .Pixso-symbol-3078_6320 ,.Pixso-instance-3078_6327 .Pixso-symbol-3078_6313  {
+  width: 20px;
+  height: 20px;
+}
+
+.Pixso-instance-3078_6330 .Pixso-symbol-3078_6320 .Pixso-symbol-3078_6318 {
+  width: 20px;
+  height: 20px;
+  background-image: url(@/assets/images/is_outlinetrue32.svg);
+}
+
+.Pixso-instance-3078_6327 .Pixso-symbol-3078_6313 .Pixso-symbol-3078_6315 {
+  width: 14.93%;
+  height: 55.56%;
+  background-image: url(@/assets/images/is_outlinefalse33.svg);
+}

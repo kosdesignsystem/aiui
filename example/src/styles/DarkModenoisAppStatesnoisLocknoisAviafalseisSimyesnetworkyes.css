@@ -1,0 +1,63 @@
+
+.Pixso-symbol-421_10572,.Pixso-frame-421_10626,.Pixso-frame-421_10629 {
+  flex-direction: row;
+  align-items: center;
+}
+
+.Pixso-symbol-421_10572 {
+  width: 360px;
+  height: 40px;
+  justify-content: space-between;
+  padding: 8px 16px 8px 16px;
+  background-color: var(--background-background-primary);
+}
+
+.Pixso-frame-421_10626 {
+  gap: 4px;
+}
+
+.Pixso-paragraph-421_10627 {
+  flex-direction: column;
+  justify-content: center;
+  color: var(--content-content-primary);
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-instance-421_10628 {
+  width: 36px;
+  height: 16px;
+}
+
+.Pixso-frame-421_10629 {
+  gap: 4px;
+  justify-content: center;
+}
+
+.Pixso-instance-421_10630 {
+  width: 16px;
+  height: 16px;
+  background-image: url(@/assets/images/signal5058.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-421_10631 {
+  width: 37px;
+  height: 20px;
+}
+
+.Pixso-instance-421_10632 {
+  width: 40px;
+  height: 20px;
+}
+
+.component-421_10572 {
+  width: fit-content;
+  height: fit-content;
+}
+
+.Pixso-instance-421_10630 .Pixso-symbol-421_9800  {
+  width: 16px;
+  height: 16px;
+}

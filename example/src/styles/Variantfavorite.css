@@ -1,0 +1,36 @@
+
+.Pixso-symbol-3078_6203 {
+  width: 24px;
+  height: 24px;
+}
+
+.Pixso-vector-3078_6204,.Pixso-vector-3078_6205 {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+}
+
+.Pixso-vector-3078_6204 {
+  width: 83.34%;
+  height: 83.34%;
+  background-image: url(@/assets/images/color5.svg);
+  left: 8.33%;
+  right: 8.33%;
+  top: 8.33%;
+  bottom: 8.33%;
+}
+
+.Pixso-vector-3078_6205 {
+  width: 50%;
+  height: 50%;
+  background-image: url(@/assets/images/path1.svg);
+  left: 25%;
+  right: 25%;
+  top: 25%;
+  bottom: 25%;
+}
+
+.component-3078_6203 {
+  width: fit-content;
+  height: fit-content;
+}

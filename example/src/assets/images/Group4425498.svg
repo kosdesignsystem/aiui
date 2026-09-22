@@ -1,0 +1,29 @@
+<svg viewBox="0 0 18.1953 17.5249" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18.195312" height="17.524902" fill="none" customFrame="#000000">
+	<defs>
+		<g id="pixso_custom_effect_1">
+			<effect x="-0.733663" y="-0.978217" visibility="visible" fill="rgb(24,233,170)" style="mix-blend-mode:multiply" fill-opacity="0.400000006" effectType="innerShadow" stdDeviation="1.95643473" radius="0" />
+			<effect x="2.200989" y="2.200989" visibility="visible" fill="rgb(0,192,100)" style="mix-blend-mode:multiply" fill-opacity="0.300000012" effectType="dropShadow" stdDeviation="2.69009757" radius="0" />
+			<effect x="0.000000" y="0.733663" visibility="visible" fill="rgb(0,0,0)" fill-opacity="0.119999997" effectType="dropShadow" stdDeviation="1.22277176" radius="0" />
+		</g>
+		<filter id="filter_1" width="18.195312" height="17.524902" x="0.000000" y="0.000000" filterUnits="userSpaceOnUse" customEffect="url(#pixso_custom_effect_1)" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feOffset dx="2.200989" dy="2.200989" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="0.89669919" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0.754167 0 0 0 0 0.392167 0 0 0 0.3 0 " />
+			<feBlend result="effect_dropShadow_1" in2="BackgroundImageFix" mode="normal" />
+			<feOffset dx="0.000000" dy="0.733663" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="0.407590598" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0 " />
+			<feBlend result="effect_dropShadow_2" in2="effect_dropShadow_1" mode="normal" />
+			<feBlend result="shape" in="SourceGraphic" in2="effect_dropShadow_2" mode="normal" />
+			<feOffset dx="-0.733663" dy="-0.978217" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="0.652144909" />
+			<feComposite k2="-1" k3="1" in2="SourceAlpha" operator="arithmetic" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0.0950521 0 0 0 0 0.9125 0 0 0 0 0.667265 0 0 0 0.4 0 " />
+			<feBlend result="effect_innerShadow_3" in2="shape" mode="normal" />
+		</filter>
+	</defs>
+	<g id="Group 4425498" filter="url(#filter_1)">
+		<path id="Vector" d="M10.8047 8.10673C10.6172 7.95994 10.3566 7.95042 10.1589 8.08313L8.77606 9.01133C8.55726 9.15819 8.26506 9.12932 8.07924 8.94247L4.8867 5.73232C4.70242 5.54702 4.67389 5.25768 4.81843 5.03997L5.74769 3.64022C5.8782 3.44364 5.86884 3.18573 5.72443 2.99912L3.97471 0.738207C3.73757 0.431784 3.28507 0.403688 3.01185 0.67842L2.12036 1.57482C1.67896 2.01866 1.39205 2.59565 1.30377 3.21702L1.25412 3.56654C1.14929 4.29887 1.32584 5.04782 1.75069 5.65255L1.9107 5.88001C3.56043 8.23233 5.59637 10.2851 7.9413 11.9439L8.16752 12.1048C8.76893 12.532 9.51378 12.7095 10.2421 12.6041L10.5897 12.5542C11.2077 12.4654 11.7815 12.1769 12.2229 11.7331L13.1201 10.8309C13.3913 10.5582 13.3635 10.1098 13.0606 9.87275L10.8047 8.10673Z" fill="rgb(255,255,255)" fill-rule="nonzero" />
+	</g>
+</svg>

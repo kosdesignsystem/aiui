@@ -1,0 +1,23 @@
+
+.Pixso-symbol-3078_6206 {
+  width: 24px;
+  height: 24px;
+}
+
+.Pixso-vector-3078_6207 {
+  width: 66.67%;
+  height: 66.67%;
+  background-image: url(@/assets/images/color3.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 25%;
+  right: 8.33%;
+  top: 25%;
+  bottom: 8.33%;
+}
+
+.component-3078_6206 {
+  width: fit-content;
+  height: fit-content;
+}

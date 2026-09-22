@@ -1,0 +1,77 @@
+
+.Pixso-symbol-421_10616 {
+  width: 360px;
+  height: 40px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px 8px 16px;
+  background-color: var(--background-background-primary);
+}
+
+.Pixso-instance-421_10869 {
+  width: 52px;
+  height: 24px;
+  background-color: var(--background-background-primary);
+}
+
+.Pixso-instance-421_10568,.Pixso-instance-421_10554 {
+  width: 24px;
+  height: 24px;
+}
+
+.Pixso-instance-421_10554 {
+  background-color: var(--system-system-success-primary);
+  border-radius: 12px 12px 12px 12px;
+}
+
+.Pixso-instance-421_10540 {
+  width: 16px;
+  height: 16px;
+  background-image: url(@/assets/images/phone1.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.Pixso-frame-421_10870 {
+  flex-direction: row;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+}
+
+.Pixso-instance-421_10871,.Pixso-instance-421_10872,.Pixso-instance-421_10873 {
+  width: 16px;
+  height: 16px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-421_10871 {
+  background-image: url(@/assets/images/is_outsidefalse0.svg);
+}
+
+.Pixso-instance-421_10872 {
+  background-image: url(@/assets/images/avia24.svg);
+}
+
+.Pixso-instance-421_10873 {
+  background-image: url(@/assets/images/wifil5062.svg);
+}
+
+.Pixso-instance-421_10874 {
+  width: 40px;
+  height: 20px;
+}
+
+.component-421_10616 {
+  width: fit-content;
+  height: fit-content;
+}
+
+.Pixso-instance-421_10872 .Pixso-symbol-421_10523 ,.Pixso-instance-421_10871 .Pixso-symbol-421_10520 ,.Pixso-instance-421_10873 .Pixso-symbol-421_9803  {
+  width: 16px;
+  height: 16px;
+}

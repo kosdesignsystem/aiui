@@ -1,0 +1,57 @@
+
+.Pixso-symbol-3078_6212 {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px 12px 12px 12px;
+  z-index: 1;
+}
+
+.stroke-wrapper-3078_6212 {
+  isolation: isolate;
+  width: 44px;
+  height: 44px;
+}
+
+.stroke-3078_6212,.Pixso-rectangle-3078_6213 {
+  position: absolute;
+  border-radius: 12px 12px 12px 12px;
+}
+
+.stroke-3078_6212 {
+  inset: 0px;
+  pointer-events: none;
+  z-index: 0;
+  border-width: 1px;
+  border-style: solid;
+  box-sizing: border-box;
+  border-color: var(--content-content-border);
+}
+
+.Pixso-rectangle-3078_6213 {
+  width: 44px;
+  height: 44px;
+  left: 0px;
+  top: 0px;
+  background-image: url(@/assets/images/3fc415c02073eb1da5931ff123f352bc5f1d85a1.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.Pixso-instance-3078_6214 {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 30px;
+  top: 30px;
+}
+
+.component-3078_6212 {
+  width: fit-content;
+  height: fit-content;
+}
+
+.Pixso-instance-3078_6214 .Pixso-symbol-3078_6197  {
+  width: 20px;
+  height: 20px;
+}

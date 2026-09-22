@@ -1,0 +1,22 @@
+
+.Pixso-symbol-421_9798,.Pixso-instance-421_9799,.Pixso-instance-421_9799 .Pixso-symbol-421_9776  {
+  width: 16px;
+  height: 16px;
+}
+
+.Pixso-symbol-421_9798 {
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+}
+
+.Pixso-instance-421_9799 {
+  background-image: url(@/assets/images/is_outlinefalse31.svg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.component-421_9798 {
+  width: fit-content;
+  height: fit-content;
+}

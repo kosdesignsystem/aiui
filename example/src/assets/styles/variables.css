@@ -1,0 +1,170 @@
+:root, 
+[data-collection-10647-1-mode="mode-1"] {
+  /* Mode 1 */
+  --small-size: 32px;
+  --medium-size: 40px;
+  --small-radius: 8px;
+  --big-radius: 16px;
+  --big-size: 52px;
+  --medium-radius: 12px;
+}
+
+:root, 
+[data-collection-10852-332-mode="light-opacity"] {
+  /* Light Opacity */
+  --accent-accent-disabled: rgba(42, 131, 242, 0.28);
+  --accent-accent-border: rgba(42, 131, 242, 0.2);
+  --accent-accent-sub-primary: rgba(42, 131, 242, 0.72);
+  --accent-accent-secondary: rgba(42, 131, 242, 0.52);
+  --content-content-border-3a9b5f9c6b64eae1133d8e92e07a7d8fdc679df2-10852-400: rgba(33, 37, 41, 0.12);
+  --accent-accent-background: rgba(42, 131, 242, 0.12);
+  --background-background-primary-3ebb80646f48fad8c7b735a4cde2621aa78c6dc6-14213-49: rgba(255, 255, 255, 1);
+  --content-content-primary-d19f126556c8423d899988749bcb72b3645b5ef5-10852-376: rgba(33, 37, 41, 1);
+  --system-system-success-primary-0f91deea51b504171a4167c1ea0aaff774e4e1da-10852-456: rgba(36, 206, 159, 1);
+  --content-content-constant-d73426dc8b2e21cc9b9975385c913a385487c055-10852-349: rgba(255, 255, 255, 1);
+  --accent-accent-primary-1d3dcea5276688a36ab7e7ecf88088bfd47731e6-10852-431: rgba(42, 131, 242, 1);
+  --content-content-disabled-b2ff9154775a62cd8930302b3f575651d7504bbb-10852-399: rgba(33, 37, 41, 0.28);
+  --system-system-warning-primary: rgba(242, 179, 37, 1);
+  --system-system-error-primary: rgba(242, 42, 65, 1);
+  --content-content-background-207c8e338a38c76220b7a415b1de318f805dfbed-10852-401: rgba(33, 37, 41, 0.04);
+}
+
+[data-collection-10852-332-mode="dark-opacity"] {
+  /* Dark Opacity */
+  --accent-accent-disabled: rgba(140, 140, 255, 0.28);
+  --accent-accent-border: rgba(140, 140, 255, 0.2);
+  --accent-accent-sub-primary: rgba(140, 140, 255, 0.72);
+  --accent-accent-secondary: rgba(140, 140, 255, 0.56);
+  --content-content-border-3a9b5f9c6b64eae1133d8e92e07a7d8fdc679df2-10852-400: rgba(255, 255, 255, 0.16);
+  --accent-accent-background: rgba(140, 140, 255, 0.12);
+  --background-background-primary-3ebb80646f48fad8c7b735a4cde2621aa78c6dc6-14213-49: rgba(13, 13, 17, 1);
+  --content-content-primary-d19f126556c8423d899988749bcb72b3645b5ef5-10852-376: rgba(255, 255, 255, 1);
+  --system-system-success-primary-0f91deea51b504171a4167c1ea0aaff774e4e1da-10852-456: rgba(36, 206, 159, 1);
+  --content-content-constant-d73426dc8b2e21cc9b9975385c913a385487c055-10852-349: rgba(255, 255, 255, 1);
+  --accent-accent-primary-1d3dcea5276688a36ab7e7ecf88088bfd47731e6-10852-431: rgba(140, 140, 255, 1);
+  --content-content-disabled-b2ff9154775a62cd8930302b3f575651d7504bbb-10852-399: rgba(255, 255, 255, 0.34);
+  --system-system-warning-primary: rgba(242, 179, 37, 1);
+  --system-system-error-primary: rgba(242, 42, 65, 1);
+  --content-content-background-207c8e338a38c76220b7a415b1de318f805dfbed-10852-401: rgba(255, 255, 255, 0.12);
+}
+
+[data-collection-10852-332-mode="light-solid"] {
+  /* Light Solid */
+  --accent-accent-disabled: rgba(159, 197, 245, 1);
+  --accent-accent-border: rgba(203, 223, 247, 1);
+  --accent-accent-sub-primary: rgba(80, 152, 242, 1);
+  --accent-accent-secondary: rgba(119, 174, 242, 1);
+  --content-content-border-3a9b5f9c6b64eae1133d8e92e07a7d8fdc679df2-10852-400: rgba(210, 212, 214, 1);
+  --accent-accent-background: rgba(230, 239, 250, 1);
+  --background-background-primary-3ebb80646f48fad8c7b735a4cde2621aa78c6dc6-14213-49: rgba(255, 255, 255, 1);
+  --content-content-primary-d19f126556c8423d899988749bcb72b3645b5ef5-10852-376: rgba(33, 37, 41, 1);
+  --system-system-success-primary-0f91deea51b504171a4167c1ea0aaff774e4e1da-10852-456: rgba(36, 206, 159, 1);
+  --content-content-constant-d73426dc8b2e21cc9b9975385c913a385487c055-10852-349: rgba(255, 255, 255, 1);
+  --accent-accent-primary-1d3dcea5276688a36ab7e7ecf88088bfd47731e6-10852-431: rgba(42, 131, 242, 1);
+  --content-content-disabled-b2ff9154775a62cd8930302b3f575651d7504bbb-10852-399: rgba(188, 191, 194, 1);
+  --system-system-warning-primary: rgba(242, 179, 37, 1);
+  --system-system-error-primary: rgba(242, 42, 65, 1);
+  --content-content-background-207c8e338a38c76220b7a415b1de318f805dfbed-10852-401: rgba(233, 234, 235, 1);
+}
+
+[data-collection-10852-332-mode="dark-solid"] {
+  /* Dark Solid */
+  --accent-accent-disabled: rgba(70, 70, 128, 1);
+  --accent-accent-border: rgba(56, 56, 102, 1);
+  --accent-accent-sub-primary: rgba(119, 119, 217, 1);
+  --accent-accent-secondary: rgba(98, 98, 179, 1);
+  --content-content-border-3a9b5f9c6b64eae1133d8e92e07a7d8fdc679df2-10852-400: rgba(51, 51, 51, 1);
+  --accent-accent-background: rgba(42, 42, 77, 1);
+  --background-background-primary-3ebb80646f48fad8c7b735a4cde2621aa78c6dc6-14213-49: rgba(5, 5, 5, 1);
+  --content-content-primary-d19f126556c8423d899988749bcb72b3645b5ef5-10852-376: rgba(255, 255, 255, 1);
+  --system-system-success-primary-0f91deea51b504171a4167c1ea0aaff774e4e1da-10852-456: rgba(36, 206, 159, 1);
+  --content-content-constant-d73426dc8b2e21cc9b9975385c913a385487c055-10852-349: rgba(255, 255, 255, 1);
+  --accent-accent-primary-1d3dcea5276688a36ab7e7ecf88088bfd47731e6-10852-431: rgba(140, 140, 255, 1);
+  --content-content-disabled-b2ff9154775a62cd8930302b3f575651d7504bbb-10852-399: rgba(71, 71, 71, 1);
+  --system-system-warning-primary: rgba(242, 179, 37, 1);
+  --system-system-error-primary: rgba(242, 42, 65, 1);
+  --content-content-background-207c8e338a38c76220b7a415b1de318f805dfbed-10852-401: rgba(41, 41, 41, 1);
+}
+
+:root, 
+[data-collection-17178-132-mode="light"] {
+  /* Light */
+  --content-content-background: rgba(33, 37, 41, 0.04);
+  --colors-purple: rgba(140, 140, 255, 1);
+  --system-system-success-background: rgba(36, 206, 159, 0.16);
+  --background-background-primary: rgba(255, 255, 255, 1);
+  --content-content-border: rgba(33, 37, 41, 0.12);
+  --content-content-secondary: rgba(33, 37, 41, 0.52);
+  --content-content-constant: rgba(255, 255, 255, 1);
+  --background-background-secondary: rgba(247, 248, 250, 1);
+  --content-content-disabled: rgba(33, 37, 41, 0.28);
+  --content-content-primary: rgba(33, 37, 41, 1);
+  --colors-blue: rgba(42, 131, 242, 1);
+  --system-system-success-primary: rgba(36, 206, 159, 1);
+  --system-system-error-primary-b0e6aa706b44c7f616e0228a8ec0fd61a91110f7-17178-128: rgba(242, 42, 65, 1);
+  --accent-accent-primary: rgba(42, 131, 242, 1);
+}
+
+[data-collection-17178-132-mode="dark"] {
+  /* Dark */
+  --content-content-background: rgba(255, 255, 255, 0.12);
+  --colors-purple: rgba(140, 140, 255, 1);
+  --system-system-success-background: rgba(36, 206, 159, 0.16);
+  --background-background-primary: rgba(13, 13, 17, 1);
+  --content-content-border: rgba(255, 255, 255, 0.16);
+  --content-content-secondary: rgba(255, 255, 255, 0.56);
+  --content-content-constant: rgba(255, 255, 255, 1);
+  --background-background-secondary: rgba(27, 27, 34, 1);
+  --content-content-disabled: rgba(255, 255, 255, 0.34);
+  --content-content-primary: rgba(255, 255, 255, 1);
+  --colors-blue: rgba(42, 131, 242, 1);
+  --system-system-success-primary: rgba(36, 206, 159, 1);
+  --system-system-error-primary-b0e6aa706b44c7f616e0228a8ec0fd61a91110f7-17178-128: rgba(242, 42, 65, 1);
+  --accent-accent-primary: rgba(140, 140, 255, 1);
+}
+
+:root, 
+[data-collection-17178-143-mode="mode-1"] {
+  /* Mode 1 */
+  --background: rgba(47, 61, 76, 0.04);
+  --secondary: rgba(0, 0, 0, 0.48);
+}
+
+:root, 
+[data-collection-15184-3-mode="mode-1"] {
+  /* Mode 1 */
+  --secondary-2189da27aa8ddbd415e1d6a3b11667cab6aec65e-15195-0: rgba(0, 0, 0, 0.48);
+  --border: rgba(0, 0, 0, 0.08);
+}
+
+:root, 
+[data-collection-12107-109-mode="normal"] {
+  /* normal */
+  --padding-medium: 12px;
+}
+
+:root, 
+[data-collection-10852-332-mode="light-opacity"] {
+  /* Light Opacity */
+  --content-content-constant-e5d63953fd9d21769fc59987de1b0992f44d8cb7-10852-349: rgba(255, 255, 255, 1);
+  --content-content-background-113fa0d588687a52463a208f8d66842ba85c4131-10852-401: rgba(33, 37, 41, 0.04);
+}
+
+[data-collection-10852-332-mode="dark-opacity"] {
+  /* Dark Opacity */
+  --content-content-constant-e5d63953fd9d21769fc59987de1b0992f44d8cb7-10852-349: rgba(255, 255, 255, 1);
+  --content-content-background-113fa0d588687a52463a208f8d66842ba85c4131-10852-401: rgba(255, 255, 255, 0.12);
+}
+
+[data-collection-10852-332-mode="light-solid"] {
+  /* Light Solid */
+  --content-content-constant-e5d63953fd9d21769fc59987de1b0992f44d8cb7-10852-349: rgba(255, 255, 255, 1);
+  --content-content-background-113fa0d588687a52463a208f8d66842ba85c4131-10852-401: rgba(233, 234, 235, 1);
+}
+
+[data-collection-10852-332-mode="dark-solid"] {
+  /* Dark Solid */
+  --content-content-constant-e5d63953fd9d21769fc59987de1b0992f44d8cb7-10852-349: rgba(255, 255, 255, 1);
+  --content-content-background-113fa0d588687a52463a208f8d66842ba85c4131-10852-401: rgba(41, 41, 41, 1);
+}
+

@@ -1,0 +1,39 @@
+
+.Pixso-symbol-1_26974,.Pixso-paragraph-1_26975 {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Pixso-symbol-1_26974 {
+  width: 16px;
+  height: 16px;
+  isolation: isolate;
+  gap: 10px;
+  align-items: center;
+  padding: 0px 4px 0px 4px;
+  border-radius: 6px 6px 6px 6px;
+}
+
+.Pixso-paragraph-1_26975 {
+  text-align: center;
+  z-index: 1;
+  white-space: pre;
+  flex-grow: 0;
+}
+
+.Pixso-rectangle-1_26976 {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 2;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+  border-radius: 6px 6px 6px 6px;
+}
+
+.component-1_26974 {
+  width: fit-content;
+  height: fit-content;
+}

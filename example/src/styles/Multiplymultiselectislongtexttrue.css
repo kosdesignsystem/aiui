@@ -1,0 +1,23 @@
+
+.Pixso-symbol-3078_6309,.Pixso-instance-3078_6310 {
+  width: 320px;
+  height: 80px;
+  border-radius: 16px 16px 16px 16px;
+}
+
+.Pixso-symbol-3078_6309 {
+  flex-direction: row;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 0px 0px 0px 16px;
+  background-color: var(--accent-accent-primary);
+}
+
+.Pixso-instance-3078_6310 {
+  background-color: var(--background-background-primary);
+}
+
+.component-3078_6309 {
+  width: fit-content;
+  height: fit-content;
+}

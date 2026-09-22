@@ -1,0 +1,34 @@
+<svg viewBox="0 0 23.1406 23.0109" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="23.140625" height="23.010864" fill="none" customFrame="#000000">
+	<defs>
+		<linearGradient id="paint_linear_100" x1="11.5722656" x2="11.5722656" y1="0.510620117" y2="23.008585" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(255,255,255)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(225,226,231)" offset="1" stop-opacity="1" />
+		</linearGradient>
+		<linearGradient id="paint_linear_101" x1="19.8669777" x2="17.9881096" y1="19.2462997" y2="17.1577206" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(228,231,241)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(188,189,193)" offset="1" stop-opacity="1" />
+		</linearGradient>
+		<g id="pixso_custom_effect_0">
+			<effect x="0.000000" y="0.510605" visibility="visible" fill="rgb(0,0,0)" fill-opacity="0.119999997" effectType="dropShadow" stdDeviation="1.02121031" radius="0" />
+		</g>
+		<filter id="filter_0" width="23.140625" height="9.412598" x="0.000000" y="0.000000" filterUnits="userSpaceOnUse" customEffect="url(#pixso_custom_effect_0)" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feOffset dx="0.000000" dy="0.510605" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="0.340403438" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0 " />
+			<feBlend result="effect_dropShadow_1" in2="BackgroundImageFix" mode="normal" />
+			<feBlend result="shape" in="SourceGraphic" in2="effect_dropShadow_1" mode="normal" />
+		</filter>
+		<linearGradient id="paint_linear_102" x1="11.5703125" x2="11.5703125" y1="0.510620117" y2="7.8807373" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(255,203,17)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(255,153,0)" offset="1" stop-opacity="1" />
+		</linearGradient>
+	</defs>
+	<g id="Group 4425553">
+		<path id="Star 12" d="M6.20436 2.50283C8.83747 1.17469 10.154 0.51062 11.5723 0.51062C12.9905 0.51062 14.3071 1.17469 16.9402 2.50283L17.0098 2.53794L17.0783 2.58107C19.4873 4.09804 20.6919 4.85653 21.4131 6.0121C21.4732 6.10842 21.5305 6.20644 21.585 6.30604C22.2387 7.50096 22.3082 8.92051 22.4473 11.7596C22.3082 14.5987 22.2387 16.0183 21.585 17.2132C21.5305 17.3128 21.4732 17.4108 21.4131 17.5071C20.6919 18.6627 19.4873 19.4212 17.0783 20.9381L17.0098 20.9813L16.9402 21.0164C14.3071 22.3445 12.9905 23.0086 11.5723 23.0086C10.154 23.0086 8.83748 22.3445 6.20437 21.0164L6.13477 20.9813L6.06627 20.9381C3.65721 19.4212 2.45268 18.6627 1.73144 17.5071C1.67132 17.4108 1.61398 17.3128 1.5595 17.2132C0.905812 16.0183 0.836296 14.5987 0.697266 11.7596C0.836296 8.92051 0.905812 7.50096 1.5595 6.30604C1.61398 6.20644 1.67132 6.10842 1.73144 6.0121C2.45268 4.85653 3.65721 4.09804 6.06627 2.58107L6.13477 2.53794L6.20436 2.50283Z" fill="url(#paint_linear_100)" fill-rule="nonzero" />
+		<path id="Star 13" d="M22.4451 11.7619C22.3061 14.601 22.2365 16.0205 21.5828 17.2154C21.5284 17.315 21.471 17.413 21.4109 17.5094C20.6897 18.6649 19.4851 19.4234 17.0761 20.9404L17.0076 20.9835L16.938 21.0186C14.3048 22.3468 12.9883 23.0109 11.5701 23.0109C11.1992 23.0109 10.8355 22.9623 10.4531 22.8715C11.694 23.0873 14.5379 20.3764 17.2259 17.3006C19.3186 14.906 22.4242 12.2168 22.3916 10.6693C22.4105 11.0333 22.4273 11.3984 22.4451 11.7619Z" fill="url(#paint_linear_101)" fill-rule="nonzero" />
+		<g filter="url(#filter_0)">
+			<path id="Intersect" d="M11.5703 0.51062C12.9885 0.51062 14.3054 1.17467 16.9385 2.50281L17.0078 2.53796L17.0762 2.58093C19.4852 4.09791 20.6899 4.857 21.4111 6.01257C21.4712 6.10881 21.5286 6.20701 21.583 6.30652C21.8383 6.77321 22.0031 7.2743 22.1191 7.88074L1.02148 7.88074C1.13749 7.27433 1.30238 6.77319 1.55762 6.30652C1.61203 6.20706 1.66947 6.10876 1.72949 6.01257C2.45073 4.857 3.65539 4.09791 6.06445 2.58093L6.13281 2.53796L6.20215 2.50281C8.83516 1.17472 10.1521 0.510671 11.5703 0.51062Z" fill="url(#paint_linear_102)" fill-rule="nonzero" />
+		</g>
+	</g>
+</svg>

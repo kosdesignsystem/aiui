@@ -1,0 +1,24 @@
+
+.Pixso-symbol-3078_6180 {
+  width: 72px;
+  height: 44px;
+  overflow: hidden;
+  border-radius: 12px 12px 12px 12px;
+  background-color: var(--content-content-background-113fa0d588687a52463a208f8d66842ba85c4131-10852-401);
+}
+
+.Pixso-frame-3078_6181 {
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  border-radius: 8px 8px 8px 8px;
+  background-color: var(--content-content-constant-e5d63953fd9d21769fc59987de1b0992f44d8cb7-10852-349);
+}
+
+.component-3078_6180 {
+  width: fit-content;
+  height: fit-content;
+}

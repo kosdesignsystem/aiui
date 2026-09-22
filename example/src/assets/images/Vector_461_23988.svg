@@ -1,0 +1,10 @@
+<svg viewBox="0 0 361 760" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="361.000000" height="760.000000" fill="none" customFrame="#000000">
+	<defs>
+		<linearGradient id="paint_linear_340" x1="264.5" x2="331.500061" y1="704" y2="360.000031" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(5,5,5)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(10,21,23)" offset="0.156820059" stop-opacity="1" />
+			<stop stop-color="rgb(23,49,52)" offset="1" stop-opacity="0" />
+		</linearGradient>
+	</defs>
+	<path id="нижнее затемнение" d="M0 0L361 0L361 760L0 760L0 0Z" fill="url(#paint_linear_340)" fill-rule="nonzero" />
+</svg>

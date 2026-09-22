@@ -1,0 +1,63 @@
+
+.Pixso-symbol-421_11157 {
+  width: 360px;
+  height: 48px;
+  background-color: var(--background-background-secondary);
+}
+
+.Pixso-frame-421_11173 {
+  width: 100px;
+  height: 48px;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  top: 0px;
+  bottom: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+  border-radius: var(--medium-radius) var(--medium-radius) var(--medium-radius) var(--medium-radius);
+}
+
+.Pixso-instance-421_11174,.Pixso-vector-421_11175,.Pixso-vector-421_11176 {
+  position: absolute;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.Pixso-instance-421_11174 {
+  width: 24px;
+  height: 24px;
+  left: 38%;
+  right: 38%;
+  top: 25%;
+  bottom: 25%;
+  background-image: url(@/assets/images/is_outlinetrue21.svg);
+}
+
+.Pixso-vector-421_11175 {
+  width: 16px;
+  height: 16px;
+  background-image: url(@/assets/images/corner4.svg);
+  right: 0px;
+  bottom: 48px;
+}
+
+.Pixso-vector-421_11176 {
+  width: 16px;
+  height: 16px;
+  background-image: url(@/assets/images/corner3.svg);
+  left: 0px;
+  bottom: 48px;
+}
+
+.component-421_11157 {
+  width: fit-content;
+  height: fit-content;
+}
+
+.Pixso-instance-421_11174 .Pixso-symbol-421_11146  {
+  width: 24%;
+  height: 50%;
+}

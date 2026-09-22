@@ -1,0 +1,31 @@
+<svg viewBox="0 0 13.6953 9.30945" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="13.695312" height="9.309448" fill="none" customFrame="#000000">
+	<mask id="mask_81" width="13.695360" height="9.309441" x="0.000000" y="0.000000" maskUnits="userSpaceOnUse">
+		<g filter="url(#pixso_custom_mask_type_alpha)">
+			<path id="Rectangle 2850" d="M0 1.125C0 0.503679 0.50368 0 1.125 0L12.5704 0C13.1917 0 13.6954 0.50368 13.6954 1.125L13.6954 8.18444C13.6954 8.80576 13.1917 9.30944 12.5704 9.30944L1.125 9.30944C0.503678 9.30944 0 8.80576 0 8.18444L0 1.125Z" fill="url(#paint_linear_119)" fill-rule="nonzero" />
+		</g>
+	</mask>
+	<defs>
+		<linearGradient id="paint_linear_119" x1="6.84768009" x2="6.84768009" y1="2.8501944e-16" y2="9.30944061" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(255,255,255)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(190,203,236)" offset="1" stop-opacity="1" />
+		</linearGradient>
+		<filter id="pixso_custom_mask_type_alpha">
+			<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0 " />
+		</filter>
+		<linearGradient id="paint_linear_120" x1="5.21776104" x2="5.21776104" y1="2.05248246e-16" y2="6.70391703" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(190,203,236)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(236,239,255)" offset="1" stop-opacity="1" />
+		</linearGradient>
+		<linearGradient id="paint_linear_121" x1="6.84764385" x2="6.84764385" y1="2.0524822e-16" y2="6.70391607" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(245,250,255)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(255,255,255)" offset="0.725034535" stop-opacity="1" />
+		</linearGradient>
+	</defs>
+	<g id="Group 4425812" mask="url(#mask_81)">
+		<path id="Polygon 9" d="M6.00474 5.93344C5.56741 6.36159 4.86806 6.36158 4.43073 5.93344L0.340253 1.92889C-0.380061 1.22371 0.119225 -4.85292e-08 1.12726 1.44341e-15L9.30822 3.9385e-07C10.3163 4.4238e-07 10.8155 1.22371 10.0952 1.9289L6.00474 5.93344Z" fill="url(#paint_linear_120)" fill-rule="nonzero" transform="matrix(1,0,0,-1,1.62988,9.3064)" />
+		<path id="Polygon 8" d="M7.63463 5.93344C7.1973 6.36158 6.49794 6.36158 6.06061 5.93344L1.97014 1.92889C1.24982 1.22371 1.74911 -4.85292e-08 2.75714 1.44341e-15L10.9381 3.9385e-07C11.9461 4.4238e-07 12.4454 1.22371 11.7251 1.92889L7.63463 5.93344Z" fill="url(#paint_linear_121)" fill-rule="nonzero" />
+		<path id="Vector 271 (Stroke)" d="M0.154129 0.207968C0.207067 0.153475 0.294157 0.152215 0.34865 0.205154L6.16942 5.85992C6.55145 6.23106 7.15899 6.23233 7.54257 5.86278L13.3925 0.226789C13.4472 0.174078 13.5343 0.1757 13.587 0.230412C13.6397 0.285125 13.6381 0.372209 13.5834 0.42492L7.73345 6.06091C7.243 6.53342 6.46619 6.53181 5.97771 6.05726L0.156942 0.402489C0.10245 0.349551 0.10119 0.26246 0.154129 0.207968Z" fill="rgb(179,184,232)" fill-rule="evenodd" />
+		<path id="Vector 272 (Stroke)" d="M4.80782 4.77339L0.378496 9.13107L0.185547 8.93495L4.61487 4.57727L4.80782 4.77339Z" fill="rgb(179,184,232)" fill-rule="evenodd" />
+		<path id="Vector 273 (Stroke)" d="M4.6405 0.195953L0.193121 4.57907L0 4.38311L4.44738 0L4.6405 0.195953Z" fill="rgb(179,184,232)" fill-rule="evenodd" transform="matrix(-1,0,0,1,13.5654,4.56604)" />
+	</g>
+</svg>

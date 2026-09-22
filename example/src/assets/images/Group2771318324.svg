@@ -1,0 +1,28 @@
+<svg viewBox="0 0 31.0488 22.0151" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="31.048828" height="22.015137" fill="none" customFrame="#000000">
+	<defs>
+		<linearGradient id="paint_linear_784" x1="14.1019716" x2="13.6707706" y1="22.9612579" y2="14.2825136" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(255,255,255)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(221,221,238)" offset="1" stop-opacity="1" />
+		</linearGradient>
+		<linearGradient id="paint_linear_785" x1="32.2115746" x2="26.4939575" y1="3.38159299" y2="5.08757162" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(255,255,255)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(221,221,238)" offset="1" stop-opacity="1" />
+		</linearGradient>
+		<linearGradient id="paint_linear_786" x1="27.5052929" x2="27.3672886" y1="1.57538319" y2="11.7832642" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(255,255,255)" offset="0.320582598" stop-opacity="1" />
+			<stop stop-color="rgb(228,228,241)" offset="0.82482022" stop-opacity="1" />
+			<stop stop-color="rgb(221,221,238)" offset="1" stop-opacity="1" />
+		</linearGradient>
+		<linearGradient id="paint_linear_787" x1="-1.26262665" x2="12.2058363" y1="-0.301325798" y2="8.33477974" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(255,255,255)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(221,221,238)" offset="1" stop-opacity="1" />
+		</linearGradient>
+	</defs>
+	<g id="Group 277131832">
+		<path id="Intersect" d="M9.82048 14.282L6.82686 21.1743C6.65295 21.5747 6.94484 21.982 7.32685 22.0132C7.387 22.0181 7.44939 22.0137 7.51254 21.9985C7.54348 21.991 7.57461 21.9809 7.60574 21.9681L24.0202 15.097L9.82048 14.282Z" fill="url(#paint_linear_784)" fill-rule="nonzero" />
+		<path id="Intersect" d="M30.9274 4.37675C31.1127 4.5146 31.0793 4.80132 30.8673 4.89286L26.5195 6.77014L27.7616 2.22553C27.9277 2.21991 28.0951 2.26941 28.2348 2.37337L30.9274 4.37675Z" fill="url(#paint_linear_785)" fill-rule="nonzero" />
+		<path id="Intersect" d="M9.84376 14.2395L24.0158 15.0988C24.2128 14.9123 24.3582 14.6734 24.4316 14.405L27.7621 2.22559C27.7288 2.22672 27.6955 2.23007 27.6624 2.23565C27.5591 2.25312 27.4585 2.29241 27.3678 2.35368L9.84376 14.2395Z" fill="url(#paint_linear_786)" fill-rule="nonzero" />
+		<path id="Vector 369" d="M24.0171 15.0972L14.7476 1.72021L9.82031 14.2822L24.0171 15.0972Z" fill="rgb(255,255,255)" fill-rule="nonzero" />
+		<path id="Vector 365" d="M9.82078 14.2821L0.182509 1.44065C-0.289811 0.811361 0.215908 -0.0783482 0.99825 0.00552167L14.2316 1.42418C14.7322 1.47785 15.0388 1.99977 14.8419 2.46317L9.82078 14.2821Z" fill="url(#paint_linear_787)" fill-rule="nonzero" />
+	</g>
+</svg>
