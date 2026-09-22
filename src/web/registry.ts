@@ -10,6 +10,7 @@ import PasswordGeneratorMainPage from './PasswordGenerator/main';
 import SecureByUIMainPage from './SecureByUI/main';
 import SecureByUIPolicyPage from './SecureByUI/policy';
 import SecureByUIWifiPage from './SecureByUI/wifi';
+import NCGalleryPage from './NC';
 import { defineApp, defineFlow, defineScreen } from './definition';
 
 export {
@@ -191,6 +192,24 @@ const passwordGeneratorAppDefinition = defineApp({
 	],
 });
 
+const ncAppDefinition = defineApp({
+	id: 'NC',
+	title: 'NC — Галерея',
+	businessGoal: 'Просматривать фотографии, кадрировать и сохранять отредактированный снимок.',
+	flows: [defineFlow({
+		id: 'gallery',
+		title: 'Фото',
+		businessGoal: 'Редактировать фотографию из меню действий.',
+		screens: [defineScreen({
+			id: 'all',
+			title: 'Все фото',
+			scenario: 'browse',
+			businessGoal: 'Открыть редактор, выбрать формат и сохранить фотографию.',
+			Component: NCGalleryPage,
+		})],
+	})],
+});
+
 export const appRegistry = [
 	nikitaAppDefinition,
 	radioAppDefinition,
@@ -199,4 +218,5 @@ export const appRegistry = [
 	callsAppDefinition,
 	secureByUIAppDefinition,
 	passwordGeneratorAppDefinition,
+	ncAppDefinition,
 ];
