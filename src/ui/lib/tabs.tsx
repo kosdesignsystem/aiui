@@ -10,10 +10,7 @@ export type TabItem = {
 	disabled?: boolean;
 };
 
-export type TabItemList<T extends TabItem = TabItem> =
-	| readonly [T]
-	| readonly [T, T]
-	| readonly [T, T, T];
+export type TabItemList<T extends TabItem = TabItem> = readonly [T, ...T[]];
 
 export type TabsActionPosition = 'left' | 'right';
 export type LegacyTabsLayout = 'tabs-only' | 'button-left' | 'button-right';

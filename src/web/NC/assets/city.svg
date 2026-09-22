@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#6aa7ce"/><stop offset=".56" stop-color="#d9e3e4"/><stop offset="1" stop-color="#e5c8a5"/></linearGradient>
+    <linearGradient id="road" x2="0" y2="1"><stop stop-color="#8d9290"/><stop offset="1" stop-color="#2a3032"/></linearGradient>
+    <filter id="grain"><feTurbulence baseFrequency=".65" numOctaves="2" seed="8" result="n"/><feBlend in="SourceGraphic" in2="n" mode="soft-light"/></filter>
+  </defs>
+  <rect width="900" height="1200" fill="url(#sky)"/>
+  <g opacity=".68" fill="#fff"><ellipse cx="180" cy="180" rx="210" ry="70"/><ellipse cx="530" cy="270" rx="260" ry="82"/><ellipse cx="820" cy="130" rx="170" ry="58"/></g>
+  <g fill="#bd6c43"><rect x="90" y="470" width="150" height="250"/><rect x="655" y="415" width="190" height="305"/></g>
+  <g fill="#e8d1ae"><rect x="270" y="515" width="145" height="205"/><rect x="445" y="450" width="175" height="270"/></g>
+  <g fill="#273f47"><path d="M120 470l45-105 45 105z"/><path d="M680 415l70-135 70 135z"/><path d="M475 450l58-135 58 135z"/></g>
+  <g fill="#dfe8e6"><path d="M110 510h28v42h-28zm52 0h28v42h-28zm-52 74h28v42h-28zm52 0h28v42h-28zM690 470h34v48h-34zm62 0h34v48h-34zm-62 82h34v48h-34zm62 0h34v48h-34z"/></g>
+  <path d="M0 700h900v500H0z" fill="url(#road)"/>
+  <path d="M430 1200l38-500h48l82 500z" fill="#e8e1cc" opacity=".9"/>
+  <g fill="#173b31"><circle cx="45" cy="690" r="105"/><circle cx="870" cy="670" r="130"/><circle cx="265" cy="690" r="68"/></g>
+  <g transform="translate(210 790)"><path d="M0 150l30-120h265l58 120v120H0z" fill="#f4f2ea"/><path d="M48 46h225l40 91H27z" fill="#60808a"/><circle cx="70" cy="267" r="41" fill="#171b1c"/><circle cx="286" cy="267" r="41" fill="#171b1c"/><rect x="131" y="170" width="95" height="30" rx="6" fill="#e9d55d"/></g>
+  <rect width="900" height="1200" filter="url(#grain)" opacity=".12"/>
+</svg>

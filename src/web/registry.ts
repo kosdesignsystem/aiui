@@ -4,12 +4,12 @@ import CallsSearchPage from './Calls/search';
 import CallsDialpadPage from './Calls/dialpad';
 import { componentsAppDefinition } from './Components';
 import OfflineTransferMainPage from './OfflineTransfer/main';
-import NikitaMainPage from './Nikita';
 import RadioMainPage from './Radio';
 import PasswordGeneratorMainPage from './PasswordGenerator/main';
 import SecureByUIMainPage from './SecureByUI/main';
 import SecureByUIPolicyPage from './SecureByUI/policy';
 import SecureByUIWifiPage from './SecureByUI/wifi';
+import NCGalleryPage from './NC';
 import { defineApp, defineFlow, defineScreen } from './definition';
 
 export {
@@ -26,20 +26,20 @@ export {
 
 const nikitaAppDefinition = defineApp({
 	id: 'Nikita',
-	title: 'Радио — Никита',
-	businessGoal: 'Открывать приложение радио по адресу Никиты.',
+	title: 'NC — Галерея',
+	businessGoal: 'Просматривать фотографии, кадрировать и сохранять отредактированный снимок.',
 	flows: [
 		defineFlow({
 			id: 'main',
-			title: 'Радио',
-			businessGoal: 'Открыть полнофункциональный экран радио.',
+			title: 'Фото',
+			businessGoal: 'Редактировать фотографию из меню действий.',
 			screens: [
 				defineScreen({
 					id: 'main',
-					title: 'Главный экран',
+					title: 'Все фото',
 					scenario: 'browse',
-					businessGoal: 'Слушать и переключать интернет-радиостанции.',
-					Component: NikitaMainPage,
+					businessGoal: 'Открыть редактор, выбрать формат и сохранить фотографию.',
+					Component: NCGalleryPage,
 				}),
 			],
 		}),
