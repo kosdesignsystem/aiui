@@ -89,11 +89,34 @@
 .weather-footer { padding: 28px 0 4px; text-align: center; font-size: 14px; }
 .weather-footer a { color: inherit; text-underline-offset: 2px; }
 
-.device-mockup:has(.weather-screen) .device-statusbar,
-.device-mockup:has(.weather-screen) .device-navbar { color: #fff; }
+.device-mockup:has(.weather-screen) .device-statusbar {
+	z-index: 10;
+	color: #fff;
+}
+.device-mockup:has(.weather-screen) .device-camera { z-index: 11; }
 .device-mockup:has(.weather-screen) .device-statusbar__time,
 .device-mockup:has(.weather-screen) .device-statusbar__battery-value { color: #fff; }
-.device-mockup:has(.weather-screen) .device-navbar svg { color: #fff !important; }
-.layout:has(.weather-screen) .device-navbar--mobile { background: rgb(62 154 227 / .82); border-top-color: transparent; }
+.device-mockup:has(.weather-screen) .device-navbar,
+.layout:has(.weather-screen) .device-navbar--mobile {
+	z-index: 6;
+	isolation: isolate;
+	color: #fff;
+	background: transparent;
+	border-top-color: transparent;
+}
+.device-mockup:has(.weather-screen) .device-navbar::before,
+.layout:has(.weather-screen) .device-navbar--mobile::before {
+	content: '';
+	position: absolute;
+	inset: -40px 0 0;
+	z-index: -1;
+	background: rgb(62 154 227 / .48);
+	-webkit-backdrop-filter: blur(12px);
+	backdrop-filter: blur(12px);
+	-webkit-mask-image: linear-gradient(to bottom, transparent, rgb(0 0 0 / .82) 48%, #000 72%);
+	mask-image: linear-gradient(to bottom, transparent, rgb(0 0 0 / .82) 48%, #000 72%);
+}
+.device-mockup:has(.weather-screen) .device-navbar svg,
+.layout:has(.weather-screen) .device-navbar--mobile svg { color: #fff !important; }
 
 @keyframes weather-spin { to { transform: rotate(360deg); } }
