@@ -6,6 +6,7 @@ import { componentsAppDefinition } from './Components';
 import OfflineTransferMainPage from './OfflineTransfer/main';
 import RadioMainPage from './Radio';
 import PasswordGeneratorMainPage from './PasswordGenerator/main';
+import { weatherAppDefinition } from './Weather';
 import SecureByUIMainPage from './SecureByUI/main';
 import SecureByUIPolicyPage from './SecureByUI/policy';
 import SecureByUIWifiPage from './SecureByUI/wifi';
@@ -210,6 +211,7 @@ const ncAppDefinition = defineApp({
 });
 
 export const appRegistry = [
+	weatherAppDefinition,
 	nikitaAppDefinition,
 	radioAppDefinition,
 	offlineTransferAppDefinition,
