@@ -1,6 +1,6 @@
 import type { ImgHTMLAttributes } from 'react';
 
-const appIconModules = import.meta.glob("../assets/app_icons/*.svg", {
+const appIconModules = import.meta.glob("../assets/app_icons/*.{svg,png}", {
   eager: true,
   import: "default",
 }) as Record<string, string>;
@@ -11,8 +11,10 @@ const appIcons = Object.entries(appIconModules).reduce<Record<string, string>>((
     return acc;
   }
 
-  const iconName = fileName.replace(/\.svg$/i, "");
-  acc[iconName] = src;
+  const iconName = fileName.replace(/\.(?:svg|png)$/i, "");
+  if (!acc[iconName] || fileName.toLowerCase().endsWith(".png")) {
+    acc[iconName] = src;
+  }
   return acc;
 }, {});
 

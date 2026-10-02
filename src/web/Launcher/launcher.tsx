@@ -10,15 +10,14 @@ import { useNavigate } from 'react-router-dom';
 import { App } from '../../ui/App';
 import { Icon, type IconName } from '../../ui/Icon';
 import { LoadingAppScreen } from '../LoadingApp/LoadingScreen';
-import calculatorIcon from '../../assets/app_icons/calculator.svg';
-import calendarIcon from '../../assets/app_icons/calendar.svg';
-import clockIcon from '../../assets/app_icons/clock.svg';
-import contactsIcon from '../../assets/app_icons/contacts.svg';
-import mailIcon from '../../assets/app_icons/mail.svg';
-import messengerIcon from '../../assets/app_icons/sms.svg';
-import phoneIcon from '../../assets/app_icons/phone.svg';
-import settingsIcon from '../../assets/app_icons/settings.svg';
-import weatherIcon from '../../assets/app_icons/weather.svg';
+import calendarIcon from '../../assets/app_icons/calendar.png';
+import contactsIcon from '../../assets/app_icons/contacts.png';
+import galleryIcon from '../../assets/app_icons/gallery.png';
+import phoneIcon from '../../assets/app_icons/phone.png';
+import callsPreview from '../../assets/launcher/recents/calls.png';
+import contactsPreview from '../../assets/launcher/recents/contacts.png';
+import galleryPreview from '../../assets/launcher/recents/gallery.png';
+import remindersPreview from '../../assets/launcher/recents/reminders.png';
 import './launcher.scss';
 
 type LauncherMode = 'lock' | 'pin' | 'home' | 'shade' | 'recents';
@@ -27,8 +26,8 @@ type LauncherApp = {
 	id: string;
 	label: string;
 	icon: string;
+	preview: string;
 	path: string;
-	badge?: string;
 };
 
 type LaunchState = {
@@ -40,17 +39,37 @@ type LaunchState = {
 };
 
 const apps: LauncherApp[] = [
-	{ id: 'contacts', label: 'Контакты', icon: contactsIcon, path: '/app/Contacts/main' },
-	{ id: 'calculator', label: 'Калькулятор', icon: calculatorIcon, path: '/app/Components/view' },
-	{ id: 'weather', label: 'Погода', icon: weatherIcon, path: '/app/Gallery/all' },
-	{ id: 'clock', label: 'Часы', icon: clockIcon, path: '/app/LoadingApp/main' },
-	{ id: 'phone', label: 'Телефон', icon: phoneIcon, path: '/app/Calls/main', badge: '1' },
-	{ id: 'messages', label: 'Сообщения', icon: messengerIcon, path: '/app/Contacts/main', badge: '91' },
-	{ id: 'calendar', label: 'Календарь', icon: calendarIcon, path: '/app/Reminders/today' },
-	{ id: 'settings', label: 'Настройки', icon: settingsIcon, path: '/app/Components/navigation' },
+	{
+		id: 'calls',
+		label: 'Звонки',
+		icon: phoneIcon,
+		preview: callsPreview,
+		path: '/app/Calls/main',
+	},
+	{
+		id: 'contacts',
+		label: 'Контакты',
+		icon: contactsIcon,
+		preview: contactsPreview,
+		path: '/app/Contacts/main',
+	},
+	{
+		id: 'reminders',
+		label: 'Напоминания',
+		icon: calendarIcon,
+		preview: remindersPreview,
+		path: '/app/Reminders/today',
+	},
+	{
+		id: 'gallery',
+		label: 'Галерея',
+		icon: galleryIcon,
+		preview: galleryPreview,
+		path: '/app/Gallery/all',
+	},
 ];
 
-const recentApps: LauncherApp[] = [apps[4], apps[1], apps[5], { id: 'mail', label: 'Почта', icon: mailIcon, path: '/app/Reminders/all' }];
+const recentApps: LauncherApp[] = [apps[0], apps[3], apps[2], apps[1]];
 
 const quickControls: Array<{ id: string; label: string; icon: IconName }> = [
 	{ id: 'airplane', label: 'Авиарежим', icon: 'avia' },
@@ -59,12 +78,8 @@ const quickControls: Array<{ id: string; label: string; icon: IconName }> = [
 	{ id: 'flashlight', label: 'Фонарик', icon: 'lighter' },
 ];
 
-const unlockedSessionKey = 'aiui-launcher-unlocked';
 const transitionDuration = 180;
-
-function isUnlocked() {
-	return typeof window !== 'undefined' && window.sessionStorage.getItem(unlockedSessionKey) === 'true';
-}
+let launcherUnlocked = false;
 
 function LauncherStatus() {
 	return (
@@ -101,7 +116,6 @@ function HomeGrid({ onLaunch }: { onLaunch: (event: ReactPointerEvent<HTMLButton
 				>
 					<span className="launcher-app__icon-wrap">
 						<img className="launcher-app__icon" src={app.icon} alt="" />
-						{app.badge ? <span className="launcher-app__badge">{app.badge}</span> : null}
 					</span>
 					<span className="launcher-app__label">{app.label}</span>
 				</button>
@@ -144,6 +158,8 @@ function PinPad({ entered, onDigit, onCancel }: { entered: number; onDigit: (dig
 function ControlShade({ onClose, onSettings }: { onClose: () => void; onSettings: () => void }) {
 	const [mobileEnabled, setMobileEnabled] = useState(true);
 	const [wifiEnabled, setWifiEnabled] = useState(false);
+	const [volume, setVolume] = useState(100);
+	const [brightness, setBrightness] = useState(46);
 
 	return (
 		<div className="launcher-shade" role="dialog" aria-label="Панель быстрых настроек">
@@ -168,14 +184,31 @@ function ControlShade({ onClose, onSettings }: { onClose: () => void; onSettings
 					</button>
 				))}
 			</div>
-			<label className="launcher-slider">
+			<label className="launcher-slider" style={{ '--launcher-slider-value': `${volume}%` } as CSSProperties}>
 				<Icon name="volume-0" width={20} height={20} />
-				<input type="range" min="0" max="100" defaultValue="100" aria-label="Громкость" />
+				<input
+					type="range"
+					min="0"
+					max="100"
+					value={volume}
+					onChange={(event) => setVolume(Number(event.target.value))}
+					aria-label="Громкость"
+				/>
 				<Icon name="volume-100" width={20} height={20} />
 			</label>
-			<label className="launcher-slider launcher-slider--brightness">
+			<label
+				className="launcher-slider launcher-slider--brightness"
+				style={{ '--launcher-slider-value': `${brightness}%` } as CSSProperties}
+			>
 				<Icon name="brightness-low-outline" width={20} height={20} />
-				<input type="range" min="0" max="100" defaultValue="48" aria-label="Яркость" />
+				<input
+					type="range"
+					min="0"
+					max="100"
+					value={brightness}
+					onChange={(event) => setBrightness(Number(event.target.value))}
+					aria-label="Яркость"
+				/>
 				<Icon name="brightness" width={20} height={20} />
 			</label>
 			<button className="launcher-shade__settings" type="button" onClick={onSettings}>Перейти в настройки</button>
@@ -189,15 +222,7 @@ function RecentCard({ app, onOpen }: { app: LauncherApp; onOpen: (event: ReactPo
 		<button className={`launcher-recent-card launcher-recent-card--${app.id}`} type="button" onPointerUp={(event) => onOpen(event, app)}>
 			<img src={app.icon} alt="" />
 			<div className="launcher-recent-card__preview">
-				{app.id === 'phone' ? (
-					<><h3>Вызовы</h3><span /><span /><span /><span /></>
-				) : app.id === 'calculator' ? (
-					<><strong>100 000 000</strong><div className="launcher-recent-card__keys">{Array.from({ length: 12 }, (_, i) => <i key={i} />)}</div></>
-				) : app.id === 'messages' ? (
-					<><small>Polyna_12</small><p>Ау?</p><p>Спишь что ли?</p><p className="is-own">Да, спасибо!</p></>
-				) : (
-					<><div className="launcher-recent-card__mail"><img src={app.icon} alt="" /><span>Почта</span></div></>
-				)}
+				<img src={app.preview} alt={`Экран приложения «${app.label}»`} />
 			</div>
 		</button>
 	);
@@ -205,7 +230,7 @@ function RecentCard({ app, onOpen }: { app: LauncherApp; onOpen: (event: ReactPo
 
 export function LauncherScreen() {
 	const navigate = useNavigate();
-	const [mode, setMode] = useState<LauncherMode>(() => (isUnlocked() ? 'home' : 'lock'));
+	const [mode, setMode] = useState<LauncherMode>(() => (launcherUnlocked ? 'home' : 'lock'));
 	const [pinLength, setPinLength] = useState(0);
 	const [blackout, setBlackout] = useState(false);
 	const [dragOffset, setDragOffset] = useState(0);
@@ -264,7 +289,7 @@ export function LauncherScreen() {
 		const nextLength = pinLength + 1;
 		setPinLength(nextLength);
 		if (nextLength === 4) {
-			window.sessionStorage.setItem(unlockedSessionKey, 'true');
+			launcherUnlocked = true;
 			schedule(() => completeTransition('home'), 110);
 		}
 	};
@@ -300,8 +325,19 @@ export function LauncherScreen() {
 				<div className="launcher-lock" style={lockStyle}>
 					<Icon name="lock" width={20} height={20} aria-hidden="true" />
 					<ClockBlock />
-					<span className="launcher-lock__handle" />
-					<span className="launcher-hint">Проведите вверх</span>
+					<div className="launcher-unlock">
+						<svg className="launcher-unlock__handle" viewBox="0 0 72 11" aria-hidden="true">
+							<defs>
+								<linearGradient id="launcher-unlock-stroke" x1="0" y1="0" x2="1" y2="0">
+									<stop offset="0" stopColor="#fff" stopOpacity=".42" />
+									<stop offset=".5" stopColor="#fff" stopOpacity=".86" />
+									<stop offset="1" stopColor="#fff" stopOpacity=".42" />
+								</linearGradient>
+							</defs>
+							<path d="M .75 10 C 11.5 .9 60.5 .9 71.25 10" stroke="url(#launcher-unlock-stroke)" />
+						</svg>
+						<span className="launcher-unlock__hint">Проведите вверх</span>
+					</div>
 				</div>
 			) : null}
 
@@ -336,7 +372,9 @@ export function LauncherScreen() {
 				<div className={`launcher-launch${launch.active ? ' is-active' : ''}${launch.loading ? ' is-loading' : ''}`} style={launchStyle}>
 					<div className="launcher-launch__wash" />
 					<img className="launcher-launch__icon" src={launch.app.icon} alt="" />
-					<div className="launcher-launch__loader"><LoadingAppScreen /></div>
+					<div className="launcher-launch__loader">
+						<LoadingAppScreen icon={launch.app.icon} appName={launch.app.label} />
+					</div>
 				</div>
 			) : null}
 		</App>

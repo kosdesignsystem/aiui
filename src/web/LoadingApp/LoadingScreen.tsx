@@ -2,12 +2,20 @@ import { App } from '../../ui/App';
 import clockIcon from '../../assets/icons/loading-clock.svg';
 import './LoadingScreen.scss';
 
-export function LoadingAppScreen() {
+type LoadingAppScreenProps = {
+	icon?: string;
+	appName?: string;
+};
+
+export function LoadingAppScreen({
+	icon = clockIcon,
+	appName = 'приложения',
+}: LoadingAppScreenProps = {}) {
 	return (
-		<App className="loading-screen" aria-label="Loading App">
+		<App className="loading-screen" aria-label={`Загрузка ${appName}`}>
 			<div className="loading-screen__stage">
 				<div className="loading-screen__clock-wrap" aria-hidden="true">
-					<img className="loading-screen__clock" src={clockIcon} alt="" />
+					<img className="loading-screen__clock" src={icon} alt="" />
 				</div>
 			</div>
 		</App>
