@@ -96,7 +96,9 @@ jobs:
                 ! -name "ae" \
                 ! -name "mk" \
                 -exec rm -rf {} +
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" ./
+              rsync -av --delete --exclude="/.git/" --exclude="/.nojekyll" \
+                --exclude="/core/" --exclude="/nc/" --exclude="/ae/" --exclude="/mk/" \
+                "${GITHUB_WORKSPACE}/dist/" ./
             else
               rm -rf "${SITE_PATH}"
               mkdir -p "${SITE_PATH}"
@@ -153,7 +155,9 @@ jobs:
                 ! -name "ae" \
                 ! -name "mk" \
                 -exec rm -rf {} +
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" ./
+              rsync -av --delete --exclude="/.git/" --exclude="/.nojekyll" \
+                --exclude="/core/" --exclude="/nc/" --exclude="/ae/" --exclude="/mk/" \
+                "${GITHUB_WORKSPACE}/dist/" ./
             else
               rm -rf "${SITE_PATH}"
               mkdir -p "${SITE_PATH}"
