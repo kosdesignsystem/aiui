@@ -4,6 +4,7 @@ import { contactsAppDefinition } from './Contacts';
 import { galleryAppDefinition } from './Gallery';
 import { remindersAppDefinition } from './Reminders';
 import { radioAppDefinition } from './Radio';
+import { focusAppDefinition } from './Focus';
 
 export {
 	createAppScreenPath,
@@ -18,6 +19,7 @@ export {
 } from './definition';
 
 export const appRegistry = [
+	focusAppDefinition,
 	radioAppDefinition,
 	contactsAppDefinition,
 	componentsAppDefinition,
