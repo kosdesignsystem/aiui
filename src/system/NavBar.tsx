@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { flushSync } from 'react-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Icon } from '../ui/Icon';
 import './navbar.scss';
 
@@ -9,9 +10,23 @@ type NavBarProps = {
 };
 
 const homeLongPressDurationMs = 650;
+const launcherPath = '/app/Launcher/main';
+const launcherAppIds: Record<string, string> = {
+	Calls: 'calls',
+	Contacts: 'contacts',
+	Gallery: 'gallery',
+	Reminders: 'reminders',
+};
+
+type ViewTransitionDocument = Document & {
+	startViewTransition?: (update: () => void) => {
+		finished: Promise<void>;
+	};
+};
 
 export function NavBar({ isMobileViewport = false, onHomeLongPress }: NavBarProps) {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const longPressTimerRef = useRef<number | null>(null);
 
 	const clearLongPressTimer = () => {
@@ -35,6 +50,39 @@ export function NavBar({ isMobileViewport = false, onHomeLongPress }: NavBarProp
 
 	useEffect(() => clearLongPressTimer, []);
 
+	const handleHomeClick = () => {
+		if (location.pathname === launcherPath) return;
+
+		const appId = location.pathname.match(/^\/app\/([^/]+)\//)?.[1];
+		const launcherAppId = appId ? launcherAppIds[appId] : undefined;
+		const transitionDocument = document as ViewTransitionDocument;
+		const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+		const navigateHome = () => navigate(launcherPath, {
+			state: launcherAppId ? { skipHomeEntrance: true } : undefined,
+		});
+
+		if (!launcherAppId || !transitionDocument.startViewTransition || reduceMotion) {
+			navigateHome();
+			return;
+		}
+
+		document.documentElement.dataset.launcherMinimize = launcherAppId;
+		const clearTransitionState = () => {
+			delete document.documentElement.dataset.launcherMinimize;
+		};
+
+		try {
+			const transition = transitionDocument.startViewTransition(() => {
+				flushSync(navigateHome);
+			});
+
+			void transition.finished.then(clearTransitionState, clearTransitionState);
+		} catch {
+			clearTransitionState();
+			navigateHome();
+		}
+	};
+
 	return (
 		<div className={`device-navbar${isMobileViewport ? ' device-navbar--mobile' : ''}`}>
 			<button
@@ -54,7 +102,7 @@ export function NavBar({ isMobileViewport = false, onHomeLongPress }: NavBarProp
 				className="nav-button"
 				type="button"
 				aria-label={onHomeLongPress ? 'Открыть навигацию долгим нажатием' : 'Домой'}
-				onClick={() => navigate('/app/Launcher/main')}
+				onClick={handleHomeClick}
 				onPointerDown={handleHomePressStart}
 				onPointerUp={clearLongPressTimer}
 				onPointerCancel={clearLongPressTimer}
