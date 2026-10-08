@@ -51,7 +51,10 @@ export function NavBar({ isMobileViewport = false, onHomeLongPress }: NavBarProp
 	useEffect(() => clearLongPressTimer, []);
 
 	const handleHomeClick = () => {
-		if (location.pathname === launcherPath) return;
+		if (location.pathname === launcherPath) {
+			window.dispatchEvent(new Event('launcher:home'));
+			return;
+		}
 
 		const appId = location.pathname.match(/^\/app\/([^/]+)\//)?.[1];
 		const launcherAppId = appId ? launcherAppIds[appId] : undefined;
