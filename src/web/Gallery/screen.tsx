@@ -156,9 +156,19 @@ type PhotoScreenProps = {
 	onBack?: () => void;
 	onScroll?: (scrollTop: number) => void;
 	onViewerClose?: () => void;
+	onViewerStateChange?: (state: {
+		activePhoto: GalleryPhoto | null;
+		closeViewer: () => void;
+		viewerPhase: ViewerState['phase'] | null;
+	}) => void;
 	scrollKey?: string;
 	showMarks?: boolean;
 	showNav?: boolean;
+	renderOverlayControls?: (context: {
+		activePhoto: GalleryPhoto | null;
+		closeViewer: () => void;
+		viewerPhase: ViewerState['phase'] | null;
+	}) => ReactNode;
 };
 
 export function PhotoScreen({
@@ -175,13 +185,16 @@ export function PhotoScreen({
 	onBack,
 	onScroll,
 	onViewerClose,
+	onViewerStateChange,
 	scrollKey,
 	showMarks = true,
 	showNav = false,
+	renderOverlayControls,
 }: PhotoScreenProps) {
 	const scrollRef = useRef<HTMLDivElement | null>(null);
 	const viewerShellRef = useRef<HTMLDivElement | null>(null);
 	const viewerFrameRef = useRef<HTMLDivElement | null>(null);
+	const viewerMediaRef = useRef<HTMLDivElement | null>(null);
 	const railRefs = useRef(new Map<string, HTMLButtonElement | null>());
 	const originRefs = useRef(new Map<string, HTMLElement | null>());
 	const animationsRef = useRef<Animation[]>([]);
@@ -219,6 +232,7 @@ export function PhotoScreen({
 	const activePhotoTakenAt = activePhoto ? splitTakenAtLabel(activePhoto.takenAtLabel) : null;
 
 	const dismissProgress = Math.min(Math.abs(viewerTransform.dismissY) / 260, 0.86);
+	const backdropOpacity = 1 - Math.min(Math.abs(viewerTransform.dismissY) / 136, 1);
 	const chromeOpacity = 1 - dismissProgress * 0.64;
 	const dismissScale = 1 - dismissProgress * 0.1;
 
@@ -230,6 +244,7 @@ export function PhotoScreen({
 
 	const viewerChromeStyle: CSSProperties = {
 		'--gallery-viewer-chrome-opacity': `${chromeOpacity}`,
+		'--gallery-viewer-backdrop-opacity': `${backdropOpacity}`,
 	} as CSSProperties;
 
 	useLayoutEffect(() => {
@@ -294,14 +309,15 @@ export function PhotoScreen({
 		}
 
 		const closeTarget = onViewerClose ? null : findCloseTarget();
-		const shell = viewerShellRef.current;
+		const media = viewerMediaRef.current;
+		const frame = viewerFrameRef.current;
 
 		activePointersRef.current.clear();
 		gestureRef.current = null;
-		resetViewerTransform(false);
 
-		if (immediate || !shell || !closeTarget) {
+		if (immediate || !media || !frame || !closeTarget) {
 			stopAnimations();
+			resetViewerTransform(false);
 			setViewer(null);
 			onViewerClose?.();
 			return;
@@ -316,27 +332,27 @@ export function PhotoScreen({
 				: current,
 		);
 
-		const currentRect = shell.getBoundingClientRect();
-		const translateX = closeTarget.left - currentRect.left;
-		const translateY = closeTarget.top - currentRect.top;
-		const scaleX = closeTarget.width / currentRect.width;
-		const scaleY = closeTarget.height / currentRect.height;
+		const frameRect = frame.getBoundingClientRect();
+		const translateX =
+			closeTarget.left + closeTarget.width / 2 - (frameRect.left + frameRect.width / 2);
+		const translateY =
+			closeTarget.top + closeTarget.height / 2 - (frameRect.top + frameRect.height / 2);
+		const scaleX = closeTarget.width / frameRect.width;
+		const scaleY = closeTarget.height / frameRect.height;
 
 		stopAnimations();
 
-		const mediaAnimation = shell.animate(
+		const mediaAnimation = media.animate(
 			[
 				{
-					transform: 'translate3d(0, 0, 0) scale(1, 1)',
-					borderRadius: '28px',
+					transform: viewerMediaStyle.transform,
 				},
 				{
 					transform: `translate3d(${translateX}px, ${translateY}px, 0) scale(${scaleX}, ${scaleY})`,
-					borderRadius: '18px',
 				},
 			],
 			{
-				duration: 280,
+				duration: 360,
 				easing: PHOTO_EASING,
 				fill: 'forwards',
 			},
@@ -344,11 +360,20 @@ export function PhotoScreen({
 		animationsRef.current = [mediaAnimation];
 
 		mediaAnimation.onfinish = () => {
-			stopAnimations();
+			animationsRef.current = [];
+			resetViewerTransform(false);
 			setViewer(null);
 			onViewerClose?.();
 		};
 	};
+
+	useLayoutEffect(() => {
+		onViewerStateChange?.({
+			activePhoto,
+			closeViewer,
+			viewerPhase: viewer?.phase ?? null,
+		});
+	}, [activePhoto, onViewerStateChange, viewer?.phase]);
 
 	const openViewer = ({
 		photoId,
@@ -972,9 +997,12 @@ export function PhotoScreen({
 					<div
 						className={`gallery-screen__viewer${
 							isViewerChromeSuppressed ? ' is-gesture-active' : ''
-						}`}
+						} is-${viewer.phase}`}
 						aria-label={`Просмотр фото: ${activePhoto.title}`}
 					>
+						<div className="gallery-viewer__backdrop" aria-hidden="true">
+							<img src={activePhoto.imageSrc} alt="" draggable={false} />
+						</div>
 						<div className="gallery-viewer__stage">
 							<div ref={viewerShellRef} className="gallery-viewer__media-shell">
 								<div
@@ -1006,7 +1034,11 @@ export function PhotoScreen({
 										});
 									}}
 								>
-									<div className="gallery-viewer__media" style={viewerMediaStyle}>
+									<div
+										ref={viewerMediaRef}
+										className="gallery-viewer__media"
+										style={viewerMediaStyle}
+									>
 										<img
 											src={activePhoto.imageSrc}
 											alt={activePhoto.title}
@@ -1050,6 +1082,11 @@ export function PhotoScreen({
 						</div>
 					</div>
 				) : null}
+				{renderOverlayControls?.({
+					activePhoto,
+					closeViewer: () => closeViewer(),
+					viewerPhase: viewer?.phase ?? null,
+				})}
 			</div>
 		</App>
 	);

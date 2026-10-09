@@ -289,6 +289,10 @@
 	background-color: transparent;
 }
 
+.gallery-viewer__backdrop {
+	display: none;
+}
+
 .gallery-viewer__rail,
 .gallery-screen__toolbar {
 	opacity: var(--gallery-viewer-chrome-opacity);

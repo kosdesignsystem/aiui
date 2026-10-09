@@ -3,6 +3,7 @@ import { componentsAppDefinition } from './Components';
 import { contactsAppDefinition } from './Contacts';
 import { galleryAppDefinition } from './Gallery';
 import { gallery2AppDefinition } from './Gallery2';
+import { gallery3AppDefinition } from './Gallery3';
 import { galleryCatalogAppDefinition } from './GalleryCatalog';
 import { loadingAppDefinition } from './LoadingApp';
 import { launcherAppDefinition } from './Launcher';
@@ -27,6 +28,7 @@ export const appRegistry = [
 	callsAppDefinition,
 	galleryAppDefinition,
 	gallery2AppDefinition,
+	gallery3AppDefinition,
 	galleryCatalogAppDefinition,
 	loadingAppDefinition,
 	remindersAppDefinition,
