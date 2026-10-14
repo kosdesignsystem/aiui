@@ -20,6 +20,8 @@
 - `member/NC` -> `https://kosdesignsystem.github.io/aiui/nc/`
 - `member/AE` -> `https://kosdesignsystem.github.io/aiui/ae/`
 - `member/MK` -> `https://kosdesignsystem.github.io/aiui/mk/`
+- `member/VE` -> `https://kosdesignsystem.github.io/aiui/ve/`
+- `member/NT` -> `https://kosdesignsystem.github.io/aiui/nt/`
 
 Перед публикацией всегда проверяй, что изменения делаются именно в той ветке, чей URL нужен.
 
