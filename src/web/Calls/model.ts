@@ -1,3 +1,8 @@
+import type { IconName } from '../../ui/Icon';
+import { createAppScreenPath } from '../definition';
+
+export const CALLS_APP_ID = 'Calls';
+
 export type CallsFilter = 'all' | 'missed';
 
 export type CallDirection = 'incoming' | 'outgoing' | 'missed';
@@ -5,7 +10,7 @@ export type CallDirection = 'incoming' | 'outgoing' | 'missed';
 export type CallsNavItem = {
 	id: string;
 	label: string;
-	icon: string;
+	icon: IconName;
 	path?: string;
 };
 
@@ -19,9 +24,9 @@ export type CallLogEntry = {
 };
 
 export const callsRoutes = {
-	main: '/app/Calls/main',
-	missed: '/app/Calls/missed',
-	search: '/app/Calls/search',
+	main: createAppScreenPath(CALLS_APP_ID, 'main'),
+	missed: createAppScreenPath(CALLS_APP_ID, 'missed'),
+	search: createAppScreenPath(CALLS_APP_ID, 'search'),
 } as const;
 
 export const callsFilterTabs = [
@@ -186,4 +191,32 @@ export function searchCalls(calls: CallLogEntry[], rawQuery: string) {
 
 		return contact.includes(query) || (compactQuery.length > 0 && compactContact.includes(compactQuery));
 	});
+}
+
+export function getCallsEmptyStateCopy(filter: CallsFilter) {
+	if (filter === 'missed') {
+		return {
+			title: 'Пропущенных вызовов нет',
+			description: 'Новые пропущенные вызовы появятся здесь.',
+		};
+	}
+
+	return {
+		title: 'История вызовов пуста',
+		description: 'Совершите звонок, чтобы увидеть его в списке.',
+	};
+}
+
+export function createCallsScreenState(filter: CallsFilter, rawSearchQuery: string) {
+	const filteredCalls = getCallsByFilter(filter);
+	const groupedCalls = splitCallsByGroup(filteredCalls);
+	const searchQuery = rawSearchQuery.trim();
+
+	return {
+		filteredCalls,
+		groupedCalls,
+		searchQuery,
+		searchResults: searchCalls(filteredCalls, searchQuery),
+		emptyState: getCallsEmptyStateCopy(filter),
+	};
 }

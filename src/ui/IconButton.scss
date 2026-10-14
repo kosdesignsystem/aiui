@@ -1,18 +1,17 @@
+@use './styles/action-control' as action;
+
 .ui-icon-button {
-	--ui-icon-button-size: 44px;
-	--ui-icon-button-radius: 12px;
-	--ui-icon-button-background: var(--accent-primary);
-	--ui-icon-button-color: var(--content-constant);
-	--ui-icon-button-border: transparent;
+	@include action.icon-button-size(44px, 12px);
+	@include action.control-variant(var(--accent-primary), var(--content-constant));
 
 	appearance: none;
-	border: 1px solid var(--ui-icon-button-border);
+	border: 1px solid var(--ui-control-border);
 	width: var(--ui-icon-button-size);
 	min-width: var(--ui-icon-button-size);
 	height: var(--ui-icon-button-size);
 	border-radius: var(--ui-icon-button-radius);
-	background: var(--ui-icon-button-background);
-	color: var(--ui-icon-button-color);
+	background: var(--ui-control-background);
+	color: var(--ui-control-color);
 	cursor: pointer;
 	display: inline-flex;
 	align-items: center;
@@ -22,78 +21,53 @@
 		color 0.2s ease,
 		filter 0.2s ease,
 		transform 0.2s ease;
-}
 
-.ui-icon-button:not(:disabled):hover {
-	filter: brightness(1.08);
-}
-
-.ui-icon-button:not(:disabled):active {
-	transform: translateY(1px);
-}
-
-.ui-icon-button:disabled {
-	background: var(--content-background);
-	color: var(--content-disabled);
-	cursor: not-allowed;
-	filter: none;
-	transform: none;
+	@include action.interactive;
 }
 
 .ui-icon-button--h60 {
-	--ui-icon-button-size: 60px;
-	border-radius: 16px;
+	@include action.icon-button-size(60px, 16px);
 }
 
 .ui-icon-button--h52 {
-	--ui-icon-button-size: 52px;
-	border-radius: 16px;
+	@include action.icon-button-size(52px, 16px);
 }
 
 .ui-icon-button--h44 {
-	--ui-icon-button-size: 44px;
-	border-radius: 12px;
+	@include action.icon-button-size(44px, 12px);
 }
 
 .ui-icon-button--h32 {
-	--ui-icon-button-size: 32px;
-	border-radius: 8px;
+	@include action.icon-button-size(32px, 8px);
 }
 
 .ui-icon-button--accent {
-	--ui-icon-button-background: var(--accent-primary);
-	--ui-icon-button-color: var(--content-constant);
+	@include action.control-variant(var(--accent-primary), var(--content-constant));
 }
 
 .ui-icon-button--danger {
-	--ui-icon-button-background: var(--system-error-primary);
-	--ui-icon-button-color: var(--content-constant);
+	@include action.control-variant(var(--system-error-primary), var(--content-constant));
 }
 
 .ui-icon-button--success {
-	--ui-icon-button-background: var(--system-success-primary);
-	--ui-icon-button-color: var(--content-constant);
+	@include action.control-variant(var(--system-success-primary), var(--content-constant));
 }
 
 .ui-icon-button--primary {
-	--ui-icon-button-background: var(--content-background);
-	--ui-icon-button-color: var(--content-primary);
+	@include action.control-variant(var(--content-background), var(--content-primary));
 }
 
 .ui-icon-button--secondary {
-	--ui-icon-button-background: transparent;
-	--ui-icon-button-color: var(--content-primary);
+	@include action.control-variant(transparent, var(--content-primary));
 }
 
 .ui-icon-button--link {
-	--ui-icon-button-background: transparent;
-	--ui-icon-button-color: var(--accent-primary);
+	@include action.control-variant(transparent, var(--accent-primary));
 }
 
 .ui-icon-button--secondary:not(:disabled):hover,
 .ui-icon-button--link:not(:disabled):hover {
-	background: var(--content-background);
-	filter: none;
+	@include action.subtle-hover;
 }
 
 .ui-icon-button--link:disabled {

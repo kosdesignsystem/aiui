@@ -1,13 +1,15 @@
-import { ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
+import { cn } from './lib/cn';
 import './View.scss';
 
-export type ViewProps = {
-  children: ReactNode;
-  className?: string;
+export type ViewProps = HTMLAttributes<HTMLElement> & {
+	children: ReactNode;
 };
 
-export function View({ children, className }: ViewProps) {
-  const resolvedClassName = ['ui-view', className].filter(Boolean).join(' ');
-
-  return <main className={resolvedClassName}>{children}</main>;
+export function View({ children, className, ...props }: ViewProps) {
+	return (
+		<main {...props} className={cn('ui-view', className)}>
+			{children}
+		</main>
+	);
 }

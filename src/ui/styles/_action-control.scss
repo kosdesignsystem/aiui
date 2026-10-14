@@ -1,0 +1,41 @@
+@mixin interactive {
+	&:not(:disabled):hover {
+		filter: brightness(1.08);
+	}
+
+	&:not(:disabled):active {
+		transform: translateY(1px);
+	}
+
+	&:disabled {
+		background: var(--content-background);
+		color: var(--content-disabled);
+		cursor: not-allowed;
+		filter: none;
+		transform: none;
+	}
+}
+
+@mixin button-size($height, $radius, $padding-x, $font-size, $min-width) {
+	--ui-button-height: #{$height};
+	--ui-button-radius: #{$radius};
+	--ui-button-padding-x: #{$padding-x};
+	--ui-button-font-size: #{$font-size};
+	--ui-button-min-width: #{$min-width};
+}
+
+@mixin icon-button-size($size, $radius) {
+	--ui-icon-button-size: #{$size};
+	--ui-icon-button-radius: #{$radius};
+}
+
+@mixin control-variant($background, $color, $border: transparent) {
+	--ui-control-background: #{$background};
+	--ui-control-color: #{$color};
+	--ui-control-border: #{$border};
+}
+
+@mixin subtle-hover {
+	background: var(--content-background);
+	filter: none;
+}

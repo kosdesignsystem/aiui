@@ -1,0 +1,43 @@
+@mixin root($height, $padding: null) {
+	width: 100%;
+	height: $height;
+	display: flex;
+	align-items: stretch;
+	gap: 16px;
+
+	@if $padding != null {
+		padding: $padding;
+	}
+}
+
+@mixin list {
+	flex: 1;
+	min-width: 0;
+	border-radius: 12px;
+	border: 1px solid var(--content-border);
+	display: flex;
+	align-items: stretch;
+}
+
+@mixin tab {
+	border: 0;
+	border-radius: 12px;
+	background: transparent;
+	padding: 16px 20px;
+	height: 100%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	overflow: hidden;
+
+	&.is-active {
+		background: var(--content-background);
+		outline: 1px solid var(--content-border);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--accent-primary);
+		outline-offset: -2px;
+	}
+}

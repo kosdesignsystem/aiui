@@ -3,13 +3,13 @@ name: Deploy Pages per branch subpath
 on:
   push:
     branches:
-      - main
-      - core
-      - member/NC
-      - member/AE
-      - member/MK
-      - member/VE
-      - member/NT
+      - "main"
+      - "core"
+      - "member/NC"
+      - "member/AE"
+      - "member/MK"
+      - "member/VE"
+      - "member/NT"
   workflow_dispatch:
 
 permissions:
@@ -110,11 +110,11 @@ jobs:
                 ! -name "ve" \
                 ! -name "nt" \
                 -exec rm -rf {} +
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" ./
+              rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" ./
             else
               rm -rf "${SITE_PATH}"
               mkdir -p "${SITE_PATH}"
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" "${SITE_PATH}/"
+              rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" "${SITE_PATH}/"
             fi
 
             touch .nojekyll
@@ -169,11 +169,11 @@ jobs:
                 ! -name "ve" \
                 ! -name "nt" \
                 -exec rm -rf {} +
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" ./
+              rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" ./
             else
               rm -rf "${SITE_PATH}"
               mkdir -p "${SITE_PATH}"
-              rsync -av --delete "${GITHUB_WORKSPACE}/dist/" "${SITE_PATH}/"
+              rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" "${SITE_PATH}/"
             fi
 
             touch .nojekyll

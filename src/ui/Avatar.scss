@@ -1,5 +1,8 @@
 .ui-avatar {
+	--ui-avatar-background: var(--content-background);
+
 	border-radius: 12px;
+	background: var(--ui-avatar-background);
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;

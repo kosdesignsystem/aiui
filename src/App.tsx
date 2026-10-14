@@ -1,20 +1,30 @@
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DeviceFrame } from './system/DeviceFrame';
+import { NavBar } from './system/NavBar';
 import { ThemeName, ThemeProvider } from './ui/Tokens';
 import { IconButton } from './ui/IconButton';
 import { Icon } from './ui/Icon';
 import { List, ListContainer } from './ui/List';
 import { Cell } from './ui/Cell';
 import { Header } from './ui/Header';
-import { appRegistry, flattenScreens } from './web/registry';
+import {
+	appRegistry,
+	findAppScreen,
+	getDefaultAppScreenPath,
+} from './web/registry';
+import { resetGoalSetupModalSessionState } from './web/Reminders/session';
 import { Text } from './ui/Fonts';
 import './app.scss';
-import { Button } from './ui/Button';
 
-const screenList = flattenScreens();
-const defaultScreenPath = screenList[0]?.path;
+const defaultScreenPath = getDefaultAppScreenPath(appRegistry);
 const mobileMediaQuery = '(max-width: 768px), (hover: none) and (pointer: coarse)';
+const themeOptions: Array<{ value: ThemeName; label: string }> = [
+	{ value: 'light', label: 'Light' },
+	{ value: 'dark', label: 'Dark' },
+	{ value: 'hexa-light', label: 'Hexa Light' },
+	{ value: 'hexa-dark', label: 'Hexa Dark' },
+];
 
 function getIsMobileViewport() {
 	if (typeof window === 'undefined' || !window.matchMedia) {
@@ -30,7 +40,7 @@ type AppScreenProps = {
 
 function AppScreen({ isMobile = false }: AppScreenProps) {
 	const { appId, screenId } = useParams();
-	const match = screenList.find((item) => item.app.id === appId && item.screen.id === screenId);
+	const match = findAppScreen(appRegistry, appId, screenId);
 
 	if (!match) {
 		if (defaultScreenPath) {
@@ -62,11 +72,11 @@ function AppScreen({ isMobile = false }: AppScreenProps) {
 
 type NavigationProps = {
 	theme: ThemeName;
-	onToggleTheme: () => void;
+	onThemeChange: (theme: ThemeName) => void;
 	onNavigate?: () => void;
 };
 
-function Navigation({ theme, onToggleTheme, onNavigate }: NavigationProps) {
+function Navigation({ theme, onThemeChange, onNavigate }: NavigationProps) {
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -94,47 +104,84 @@ function Navigation({ theme, onToggleTheme, onNavigate }: NavigationProps) {
 		<nav className="sidebar">
 			<Header
 				title="AI UI"
-				button={
-					<Button variant={'primary'} size={44} type={'button'} onClick={onToggleTheme}>
-						{`Тема: ${theme}`}
-					</Button>
+				action={
+					<label className="theme-select">
+						<select
+							className="theme-select__field"
+							value={theme}
+							onChange={(event) => onThemeChange(event.target.value as ThemeName)}
+						>
+							{themeOptions.map((option) => (
+								<option key={option.value} value={option.value}>
+									{option.label}
+								</option>
+							))}
+						</select>
+					</label>
 				}
 			/>
 
 			<ListContainer>
 				{appRegistry.map((app) => (
-					<List key={app.id} title={app.title} collapsible>
-						{app.screens.map((screen) => {
-							const routePath = `/app/${app.id}/${screen.id}`;
-							const isActive = location.pathname === routePath;
+					<List
+						key={app.id}
+						title={app.title}
+						collapsible
+						action={
+							app.id === 'Reminders' ? (
+								<IconButton
+									type="button"
+									size={32}
+									variant="secondary"
+									aria-label="Сбросить показ модалки задач"
+									title="Сбросить показ модалки задач"
+									onClick={resetGoalSetupModalSessionState}
+								>
+									<Icon
+										name="delete-history-outline"
+										width={20}
+										height={20}
+										alt=""
+										aria-hidden="true"
+									/>
+								</IconButton>
+							) : undefined
+						}
+					>
+						{app.flows.flatMap((flow) =>
+							flow.screens.map((screen) => {
+								const routePath = `/app/${app.id}/${screen.id}`;
+								const sourcePath = `./src/web/${app.id}/${screen.id}`;
+								const isActive = location.pathname === routePath;
 
-							return (
-								<Cell
-									key={`${app.id}-${screen.id}`}
-									variant={isActive ? 'primary' : 'default'}
-									onClick={() => {
-										navigate(routePath);
-										onNavigate?.();
-									}}
-									title={<Text variant="regular-18">{screen.title}</Text>}
-									trailing={
-										<IconButton
-											type="button"
-											variant="secondary"
-											aria-label="Копировать путь"
-											title="Копировать путь"
-											onClick={(event) => {
-												event.stopPropagation();
-												void copyToClipboard(routePath);
-											}}
-											onKeyDown={(event) => event.stopPropagation()}
-										>
-											<Icon name="copy-outline" alt="" aria-hidden="true" />
-										</IconButton>
-									}
-								/>
-							);
-						})}
+								return (
+									<Cell
+										key={`${app.id}-${flow.id}-${screen.id}`}
+										variant={isActive ? 'primary' : 'default'}
+										onClick={() => {
+											navigate(routePath);
+											onNavigate?.();
+										}}
+										title={<Text variant="regular-18">{screen.title}</Text>}
+										trailing={
+											<IconButton
+												type="button"
+												variant="secondary"
+												aria-label="Копировать путь"
+												title="Копировать путь"
+												onClick={(event) => {
+													event.stopPropagation();
+													void copyToClipboard(sourcePath);
+												}}
+												onKeyDown={(event) => event.stopPropagation()}
+											>
+												<Icon name="copy-outline" alt="" aria-hidden="true" />
+											</IconButton>
+										}
+									/>
+								);
+							}),
+						)}
 					</List>
 				))}
 			</ListContainer>
@@ -143,10 +190,9 @@ function Navigation({ theme, onToggleTheme, onNavigate }: NavigationProps) {
 }
 
 export default function App() {
-	const [theme, setTheme] = useState<ThemeName>('dark');
+	const [theme, setTheme] = useState<ThemeName>('light');
 	const [isMobile, setIsMobile] = useState(getIsMobileViewport);
 	const [isNavigationVisible, setIsNavigationVisible] = useState(false);
-	const longPressTimerRef = useRef<number | null>(null);
 
 	useEffect(() => {
 		if (typeof window === 'undefined' || !window.matchMedia) {
@@ -175,51 +221,6 @@ export default function App() {
 		return () => mediaQuery.removeListener(handleChange);
 	}, []);
 
-	useEffect(() => {
-		if (!isMobile || typeof document === 'undefined') {
-			return undefined;
-		}
-
-		const clearLongPressTimer = () => {
-			if (longPressTimerRef.current !== null) {
-				window.clearTimeout(longPressTimerRef.current);
-				longPressTimerRef.current = null;
-			}
-		};
-
-		const handleTouchStart = (event: TouchEvent) => {
-			if (event.touches.length !== 2 || isNavigationVisible) {
-				clearLongPressTimer();
-				return;
-			}
-
-			clearLongPressTimer();
-			longPressTimerRef.current = window.setTimeout(() => {
-				setIsNavigationVisible(true);
-				longPressTimerRef.current = null;
-			}, 650);
-		};
-
-		const handleTouchMove = (event: TouchEvent) => {
-			if (event.touches.length !== 2) {
-				clearLongPressTimer();
-			}
-		};
-
-		document.addEventListener('touchstart', handleTouchStart, { passive: true });
-		document.addEventListener('touchmove', handleTouchMove, { passive: true });
-		document.addEventListener('touchend', clearLongPressTimer, { passive: true });
-		document.addEventListener('touchcancel', clearLongPressTimer, { passive: true });
-
-		return () => {
-			clearLongPressTimer();
-			document.removeEventListener('touchstart', handleTouchStart);
-			document.removeEventListener('touchmove', handleTouchMove);
-			document.removeEventListener('touchend', clearLongPressTimer);
-			document.removeEventListener('touchcancel', clearLongPressTimer);
-		};
-	}, [isMobile, isNavigationVisible]);
-
 	return (
 		<ThemeProvider theme={theme}>
 			<div className={`layout${isMobile ? ' layout--mobile' : ''}`}>
@@ -235,7 +236,7 @@ export default function App() {
 				{(!isMobile || isNavigationVisible) && (
 					<Navigation
 						theme={theme}
-						onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+						onThemeChange={setTheme}
 						onNavigate={() => {
 							if (isMobile) {
 								setIsNavigationVisible(false);
@@ -259,7 +260,10 @@ export default function App() {
 								)
 							}
 						/>
-						<Route path="/app/:appId/:screenId" element={<AppScreen isMobile={isMobile} />} />
+						<Route
+							path="/app/:appId/:screenId"
+							element={<AppScreen isMobile={isMobile} />}
+						/>
 						<Route
 							path="*"
 							element={
@@ -274,6 +278,17 @@ export default function App() {
 						/>
 					</Routes>
 				</main>
+
+				{isMobile ? (
+					<NavBar
+						isMobileViewport
+						onHomeLongPress={() => {
+							if (!isNavigationVisible) {
+								setIsNavigationVisible(true);
+							}
+						}}
+					/>
+				) : null}
 			</div>
 		</ThemeProvider>
 	);

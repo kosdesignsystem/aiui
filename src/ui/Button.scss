@@ -1,22 +1,18 @@
+@use './styles/action-control' as action;
+
 .ui-button {
-	--ui-button-height: 44px;
-	--ui-button-radius: 14px;
-	--ui-button-padding-x: 16px;
-	--ui-button-font-size: 16px;
+	@include action.button-size(44px, 14px, 16px, 16px, 44px);
 	--ui-button-font-weight: 500;
-	--ui-button-background: var(--accent-primary);
-	--ui-button-color: var(--content-constant);
-	--ui-button-border: transparent;
-	--ui-button-min-width: 44px;
+	@include action.control-variant(var(--accent-primary), var(--content-constant));
 
 	appearance: none;
-	border: 1px solid var(--ui-button-border);
+	border: 1px solid var(--ui-control-border);
 	min-width: var(--ui-button-min-width);
 	height: var(--ui-button-height);
 	padding: 0 var(--ui-button-padding-x);
 	border-radius: var(--ui-button-radius);
-	background: var(--ui-button-background);
-	color: var(--ui-button-color);
+	background: var(--ui-control-background);
+	color: var(--ui-control-color);
 	font-size: var(--ui-button-font-size);
 	font-weight: var(--ui-button-font-weight);
 	line-height: 1;
@@ -31,6 +27,8 @@
 		color 0.2s ease,
 		filter 0.2s ease,
 		transform 0.2s ease;
+
+	@include action.interactive;
 }
 
 .ui-button__label {
@@ -52,88 +50,49 @@
 	padding: 0;
 }
 
-.ui-button:not(:disabled):hover {
-	filter: brightness(1.08);
-}
-
-.ui-button:not(:disabled):active {
-	transform: translateY(1px);
-}
-
-.ui-button:disabled {
-	background: var(--content-background);
-	color: var(--content-disabled);
-	cursor: not-allowed;
-	filter: none;
-	transform: none;
-}
-
 .ui-button--h60 {
-	--ui-button-height: 60px;
-	--ui-button-radius: 16px;
-	--ui-button-padding-x: 16px;
-	--ui-button-font-size: 18px;
-	--ui-button-min-width: 120px;
+	@include action.button-size(60px, 16px, 16px, 18px, 120px);
 }
 
 .ui-button--h52 {
-	--ui-button-height: 52px;
-	--ui-button-radius: 16px;
-	--ui-button-padding-x: 16px;
-	--ui-button-font-size: 16px;
-	--ui-button-min-width: 100px;
+	@include action.button-size(52px, 16px, 16px, 16px, 100px);
 }
 
 .ui-button--h44 {
-	--ui-button-height: 44px;
-	--ui-button-radius: 12px;
-	--ui-button-padding-x: 12px;
-	--ui-button-font-size: 16px;
-	--ui-button-min-width: 100px;
+	@include action.button-size(44px, 12px, 12px, 16px, 100px);
 }
 
 .ui-button--h32 {
-	--ui-button-height: 32px;
-	--ui-button-radius: 8px;
-	--ui-button-padding-x: 8px;
-	--ui-button-font-size: 14px;
-	--ui-button-min-width: 80px;
+	@include action.button-size(32px, 8px, 8px, 14px, 80px);
 }
 
 .ui-button--accent {
-	--ui-button-background: var(--accent-primary);
-	--ui-button-color: var(--content-constant);
+	@include action.control-variant(var(--accent-primary), var(--content-constant));
 }
 
 .ui-button--danger {
-	--ui-button-background: var(--system-error-primary);
-	--ui-button-color: var(--content-constant);
+	@include action.control-variant(var(--system-error-primary), var(--content-constant));
 }
 
 .ui-button--success {
-	--ui-button-background: var(--system-success-primary);
-	--ui-button-color: var(--content-constant);
+	@include action.control-variant(var(--system-success-primary), var(--content-constant));
 }
 
 .ui-button--primary {
-	--ui-button-background: var(--content-background);
-	--ui-button-color: var(--content-primary);
+	@include action.control-variant(var(--content-background), var(--content-primary));
 }
 
 .ui-button--secondary {
-	--ui-button-background: transparent;
-	--ui-button-color: var(--content-primary);
+	@include action.control-variant(transparent, var(--content-primary));
 }
 
 .ui-button--link {
-	--ui-button-background: transparent;
-	--ui-button-color: var(--accent-primary);
+	@include action.control-variant(transparent, var(--accent-primary));
 }
 
 .ui-button--secondary:not(:disabled):hover,
 .ui-button--link:not(:disabled):hover {
-	background: var(--content-background);
-	filter: none;
+	@include action.subtle-hover;
 }
 
 .ui-button--link:disabled {

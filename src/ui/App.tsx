@@ -1,10 +1,15 @@
-import { ReactNode } from "react";
-import "./App.scss";
+import type { HTMLAttributes, ReactNode } from 'react';
+import { cn } from './lib/cn';
+import './App.scss';
 
-export type AppProps = {
-  children: ReactNode;
+export type AppProps = HTMLAttributes<HTMLElement> & {
+	children: ReactNode;
 };
 
-export function App({ children }: AppProps) {
-  return <section className="ui-app">{children}</section>;
+export function App({ children, className, ...props }: AppProps) {
+	return (
+		<section {...props} className={cn('ui-app', className)}>
+			{children}
+		</section>
+	);
 }

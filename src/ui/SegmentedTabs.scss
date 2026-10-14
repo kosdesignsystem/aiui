@@ -1,0 +1,20 @@
+@use './styles/tab-group' as tabs;
+
+.ui-segmented-tabs {
+	@include tabs.root(72px, 0 20px 16px 20px);
+}
+
+.ui-segmented-tabs__list {
+	@include tabs.list;
+}
+
+.ui-segmented-tabs__tab {
+	@include tabs.tab;
+
+	min-width: 100px;
+	max-width: 100%;
+	flex: 0 1 auto;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

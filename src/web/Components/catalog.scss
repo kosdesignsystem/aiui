@@ -1,0 +1,116 @@
+.components-catalog__switch {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.components-catalog__section-note {
+	padding: 0 12px;
+}
+
+.components-catalog__field,
+.components-catalog__select {
+	width: min(180px, 48vw);
+	max-width: 100%;
+	min-height: 44px;
+	padding: 0 12px;
+	border: 1px solid var(--content-border);
+	border-radius: 12px;
+	background: var(--background-primary);
+	color: var(--content-primary);
+	font: inherit;
+	outline: none;
+	transition:
+		border-color 0.2s ease,
+		background-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.components-catalog__field:hover,
+.components-catalog__select:hover {
+	border-color: var(--content-secondary);
+}
+
+.components-catalog__field:focus-visible,
+.components-catalog__select:focus-visible {
+	border-color: var(--accent-primary);
+	box-shadow: 0 0 0 3px var(--accent-background);
+}
+
+.components-catalog__select {
+	appearance: none;
+	padding-right: 36px;
+	background:
+		linear-gradient(45deg, transparent 50%, var(--content-secondary) 50%) calc(100% - 18px)
+			calc(50% - 1px) / 7px 7px no-repeat,
+		linear-gradient(135deg, var(--content-secondary) 50%, transparent 50%) calc(100% - 13px)
+			calc(50% - 1px) / 7px 7px no-repeat,
+		var(--background-primary);
+}
+
+.components-catalog__preview {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	padding: 16px;
+	border: 1px solid var(--content-border);
+	border-radius: 20px;
+	background: var(--background-secondary);
+}
+
+.components-catalog__preview--center {
+	justify-content: center;
+}
+
+.components-catalog__preview--stack {
+	flex-direction: column;
+	align-items: stretch;
+}
+
+.components-catalog__preview .ui-field,
+.components-catalog__preview .ui-header,
+.components-catalog__preview .ui-list,
+.components-catalog__preview .ui-nav,
+.components-catalog__preview .ui-search,
+.components-catalog__preview .ui-segmented-tabs,
+.components-catalog__preview .ui-tabs {
+	width: 100%;
+}
+
+.components-catalog__preview .ui-list {
+	background: var(--background-primary);
+	border-radius: 20px;
+	overflow: hidden;
+}
+
+.components-catalog__preview-header {
+	padding: 0;
+	overflow: hidden;
+}
+
+.components-catalog__preview-nav {
+	padding: 0 8px;
+}
+
+.components-catalog__preview-text {
+	gap: 8px;
+}
+
+.components-catalog__preview-text p {
+	margin: 0;
+}
+
+.components-catalog__preview-stretch > * {
+	flex: 1 1 0;
+	min-width: 0;
+}
+
+.components-catalog__app-icon-shell {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 12px;
+	border-radius: 20px;
+	background: var(--background-primary);
+}

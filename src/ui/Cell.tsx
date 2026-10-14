@@ -1,9 +1,10 @@
-import { KeyboardEvent, ReactNode } from "react";
-import "./Cell.scss";
+import type { HTMLAttributes, KeyboardEvent, ReactNode } from 'react';
+import { cn } from './lib/cn';
+import './Cell.scss';
 
-export type CellVariant = "accent" | "primary" | "default";
+export type CellVariant = 'accent' | 'primary' | 'default';
 
-export type CellProps = {
+export type CellProps = Omit<HTMLAttributes<HTMLDivElement>, 'title' | 'onClick'> & {
   title: ReactNode;
   subtitle?: ReactNode;
   leading?: ReactNode;
@@ -17,44 +18,50 @@ export function Cell({
   subtitle,
   leading,
   trailing,
-  variant = "default",
+  variant = 'default',
   onClick,
+  className,
+  onKeyDown,
+  ...props
 }: CellProps) {
-  const isInteractive = typeof onClick === "function";
-  const shellClassName = [
-    "ui-cell-shell",
+  const isInteractive = typeof onClick === 'function';
+  const shellClassName = cn(
+    'ui-cell-shell',
     `ui-cell-shell--${variant}`,
-    isInteractive ? "is-interactive" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+    isInteractive ? 'is-interactive' : '',
+    className,
+  );
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (!onClick) {
+      onKeyDown?.(event);
       return;
     }
 
-    if (event.key === "Enter" || event.key === " ") {
+    if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       onClick();
     }
+
+    onKeyDown?.(event);
   };
 
   return (
     <div
+      {...props}
       className={shellClassName}
-      role={isInteractive ? "button" : undefined}
+      role={isInteractive ? 'button' : undefined}
       tabIndex={isInteractive ? 0 : undefined}
       onClick={onClick}
       onKeyDown={handleKeyDown}
     >
-      <div className="ui-cell">
-        <div className="ui-cell__leading">{leading}</div>
+      <div className={cn('ui-cell', !leading ? 'ui-cell--without-leading' : '')}>
+        {leading ? <div className="ui-cell__leading">{leading}</div> : null}
         <div className="ui-cell__content">
           <div className="ui-cell__title">{title}</div>
-          <div className="ui-cell__subtitle">{subtitle}</div>
+          {subtitle ? <div className="ui-cell__subtitle">{subtitle}</div> : null}
         </div>
-        <div className="ui-cell__trailing">{trailing}</div>
+        {trailing ? <div className="ui-cell__trailing">{trailing}</div> : null}
       </div>
     </div>
   );

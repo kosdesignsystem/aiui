@@ -1,4 +1,6 @@
-const appIconModules = import.meta.glob("../assets/app_icons/*.svg", {
+import type { ImgHTMLAttributes } from 'react';
+
+const appIconModules = import.meta.glob("../assets/app_icons/*.{svg,png}", {
   eager: true,
   import: "default",
 }) as Record<string, string>;
@@ -9,8 +11,10 @@ const appIcons = Object.entries(appIconModules).reduce<Record<string, string>>((
     return acc;
   }
 
-  const iconName = fileName.replace(/\.svg$/i, "");
-  acc[iconName] = src;
+  const iconName = fileName.replace(/\.(?:svg|png)$/i, "");
+  if (!acc[iconName] || fileName.toLowerCase().endsWith(".png")) {
+    acc[iconName] = src;
+  }
   return acc;
 }, {});
 
@@ -18,12 +22,8 @@ export const appIconNames = Object.keys(appIcons).sort();
 
 export type AppIconName = string;
 
-export type AppIconProps = {
+export type AppIconProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
   name: AppIconName;
-  alt?: string;
-  width?: number;
-  height?: number;
-  "aria-hidden"?: boolean | "true" | "false";
 };
 
 export function AppIcon({
@@ -32,6 +32,8 @@ export function AppIcon({
   width = 48,
   height = 48,
   "aria-hidden": ariaHidden = false,
+  className,
+  ...imgProps
 }: AppIconProps) {
   const src = appIcons[name] ?? appIcons.placeholder ?? null;
 
@@ -44,11 +46,13 @@ export function AppIcon({
 
   return (
     <img
+      {...imgProps}
       src={src}
+      className={className}
       width={width}
       height={height}
       alt={resolvedAlt}
-      aria-hidden={ariaHidden}
+      aria-hidden={isAriaHidden || undefined}
     />
   );
 }

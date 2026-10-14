@@ -1,0 +1,1097 @@
+import {
+	CSSProperties,
+	MouseEvent as ReactMouseEvent,
+	PointerEvent as ReactPointerEvent,
+	type ReactNode,
+	useEffect,
+	useLayoutEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
+import { App } from '../../ui/App';
+import { Text } from '../../ui/Fonts';
+import { Icon } from '../../ui/Icon';
+import {
+	galleryPhotos,
+	getPhotoCountLabel,
+	type GalleryPhoto,
+} from './model';
+import { GalleryControls, GalleryHeader } from './header';
+import { GalleryNav, type GalleryRoutes } from './nav';
+import './screen.scss';
+
+type RectSnapshot = {
+	left: number;
+	top: number;
+	width: number;
+	height: number;
+};
+
+type ViewerState = {
+	phase: 'opening' | 'open' | 'closing';
+	currentPhotoId: string;
+	photoIds: string[];
+	originRect: RectSnapshot | null;
+	originKey: string | null;
+};
+
+type ViewerTransform = {
+	zoom: number;
+	panX: number;
+	panY: number;
+	dismissX: number;
+	dismissY: number;
+	gestureActive: boolean;
+};
+
+type PointerPoint = {
+	x: number;
+	y: number;
+};
+
+type GestureState =
+	| {
+			mode: 'dismiss' | 'pan';
+			startX: number;
+			startY: number;
+			startPanX: number;
+			startPanY: number;
+	  }
+	| {
+			mode: 'pinch';
+			startDistance: number;
+			startCenterX: number;
+			startCenterY: number;
+			startZoom: number;
+			startPanX: number;
+			startPanY: number;
+	  };
+
+const PHOTO_EASING = 'cubic-bezier(0.22, 1, 0.36, 1)';
+const DEFAULT_VIEWER_TRANSFORM: ViewerTransform = {
+	zoom: 1,
+	panX: 0,
+	panY: 0,
+	dismissX: 0,
+	dismissY: 0,
+	gestureActive: false,
+};
+
+function clamp(value: number, min: number, max: number) {
+	return Math.min(max, Math.max(min, value));
+}
+
+function splitTakenAtLabel(label: string) {
+	const segments = label.trim().split(/\s+/);
+	const time = segments.pop() ?? '';
+
+	return {
+		date: segments.join(' '),
+		time,
+	};
+}
+
+function toSnapshot(rect: DOMRect): RectSnapshot {
+	return {
+		left: rect.left,
+		top: rect.top,
+		width: rect.width,
+		height: rect.height,
+	};
+}
+
+function getDistance(points: PointerPoint[]) {
+	if (points.length < 2) {
+		return 0;
+	}
+
+	const [first, second] = points;
+	return Math.hypot(second.x - first.x, second.y - first.y);
+}
+
+function getCenter(points: PointerPoint[]) {
+	if (points.length < 2) {
+		return null;
+	}
+
+	const [first, second] = points;
+	return {
+		x: (first.x + second.x) / 2,
+		y: (first.y + second.y) / 2,
+	};
+}
+
+function clampPan(transform: ViewerTransform, photo: GalleryPhoto, frame: DOMRect | null) {
+	if (!frame || transform.zoom <= 1) {
+		return {
+			panX: 0,
+			panY: 0,
+		};
+	}
+
+	const fitScale = Math.min(frame.width / photo.width, frame.height / photo.height);
+	const displayWidth = photo.width * fitScale;
+	const displayHeight = photo.height * fitScale;
+	const maxX = Math.max(0, (displayWidth * transform.zoom - displayWidth) / 2);
+	const maxY = Math.max(0, (displayHeight * transform.zoom - displayHeight) / 2);
+
+	return {
+		panX: clamp(transform.panX, -maxX, maxX),
+		panY: clamp(transform.panY, -maxY, maxY),
+	};
+}
+
+type PhotoScreenProps = {
+	className?: string;
+	title: string;
+	photos: GalleryPhoto[];
+	cover?: GalleryPhoto;
+	gridMode?: 'grid' | 'feed';
+	gridHeader?: ReactNode;
+	headerAction?: ReactNode;
+	initialPhotoId?: string;
+	navActive?: 'all' | 'albums';
+	navRoutes?: GalleryRoutes;
+	onBack?: () => void;
+	onScroll?: (scrollTop: number) => void;
+	onViewerClose?: () => void;
+	onViewerStateChange?: (state: {
+		activePhoto: GalleryPhoto | null;
+		closeViewer: () => void;
+		viewerPhase: ViewerState['phase'] | null;
+	}) => void;
+	scrollKey?: string;
+	showMarks?: boolean;
+	showNav?: boolean;
+	renderOverlayControls?: (context: {
+		activePhoto: GalleryPhoto | null;
+		closeViewer: () => void;
+		viewerPhase: ViewerState['phase'] | null;
+	}) => ReactNode;
+};
+
+export function PhotoScreen({
+	className,
+	title,
+	photos,
+	cover,
+	gridMode = 'grid',
+	gridHeader,
+	headerAction,
+	initialPhotoId,
+	navActive = 'all',
+	navRoutes,
+	onBack,
+	onScroll,
+	onViewerClose,
+	onViewerStateChange,
+	scrollKey,
+	showMarks = true,
+	showNav = false,
+	renderOverlayControls,
+}: PhotoScreenProps) {
+	const scrollRef = useRef<HTMLDivElement | null>(null);
+	const viewerShellRef = useRef<HTMLDivElement | null>(null);
+	const viewerFrameRef = useRef<HTMLDivElement | null>(null);
+	const viewerMediaRef = useRef<HTMLDivElement | null>(null);
+	const railRefs = useRef(new Map<string, HTMLButtonElement | null>());
+	const originRefs = useRef(new Map<string, HTMLElement | null>());
+	const animationsRef = useRef<Animation[]>([]);
+	const activePointersRef = useRef(new Map<number, PointerPoint>());
+	const gestureRef = useRef<GestureState | null>(null);
+	const [viewer, setViewer] = useState<ViewerState | null>(() =>
+		initialPhotoId && photos.some((photo) => photo.id === initialPhotoId)
+			? {
+					phase: 'open',
+					currentPhotoId: initialPhotoId,
+					photoIds: photos.map((photo) => photo.id),
+					originRect: null,
+					originKey: null,
+				}
+			: null,
+	);
+	const [viewerTransform, setViewerTransform] =
+		useState<ViewerTransform>(DEFAULT_VIEWER_TRANSFORM);
+
+	const photosById = useMemo(() => new Map(photos.map((photo) => [photo.id, photo])), [photos]);
+
+	const activePhoto = viewer ? (photosById.get(viewer.currentPhotoId) ?? null) : null;
+	const isViewerChromeSuppressed =
+		Boolean(viewer && viewer.phase === 'closing') || viewerTransform.gestureActive;
+	const activeTrack = useMemo(() => {
+		if (!viewer) {
+			return [];
+		}
+
+		return viewer.photoIds
+			.map((photoId) => photosById.get(photoId))
+			.filter((photo): photo is GalleryPhoto => Boolean(photo));
+	}, [photosById, viewer]);
+	const activePhotoIndex = activeTrack.findIndex((photo) => photo.id === activePhoto?.id);
+	const activePhotoTakenAt = activePhoto ? splitTakenAtLabel(activePhoto.takenAtLabel) : null;
+
+	const dismissProgress = Math.min(Math.abs(viewerTransform.dismissY) / 260, 0.86);
+	const backdropOpacity = 1 - Math.min(Math.abs(viewerTransform.dismissY) / 136, 1);
+	const chromeOpacity = 1 - dismissProgress * 0.64;
+	const dismissScale = 1 - dismissProgress * 0.1;
+
+	const viewerMediaStyle: CSSProperties = {
+		transform: `translate3d(${viewerTransform.panX + viewerTransform.dismissX}px, ${
+			viewerTransform.panY + viewerTransform.dismissY
+		}px, 0) scale(${viewerTransform.zoom * dismissScale})`,
+	};
+
+	const viewerChromeStyle: CSSProperties = {
+		'--gallery-viewer-chrome-opacity': `${chromeOpacity}`,
+		'--gallery-viewer-backdrop-opacity': `${backdropOpacity}`,
+	} as CSSProperties;
+
+	useLayoutEffect(() => {
+		if (scrollKey !== undefined && scrollRef.current) {
+			scrollRef.current.scrollTop = 0;
+		}
+	}, [scrollKey]);
+
+	const stopAnimations = () => {
+		animationsRef.current.forEach((animation) => animation.cancel());
+		animationsRef.current = [];
+	};
+
+	const resetViewerTransform = (gestureActive = false) => {
+		setViewerTransform({
+			...DEFAULT_VIEWER_TRANSFORM,
+			gestureActive,
+		});
+	};
+
+	const registerOriginRef = (key: string) => (node: HTMLElement | null) => {
+		if (node) {
+			originRefs.current.set(key, node);
+			return;
+		}
+
+		originRefs.current.delete(key);
+	};
+
+	const registerRailRef = (photoId: string) => (node: HTMLButtonElement | null) => {
+		if (node) {
+			railRefs.current.set(photoId, node);
+			return;
+		}
+
+		railRefs.current.delete(photoId);
+	};
+
+	const findCloseTarget = () => {
+		if (!viewer) {
+			return null;
+		}
+
+		const currentPhotoNode = originRefs.current.get(`photo:${viewer.currentPhotoId}`);
+		if (currentPhotoNode) {
+			return toSnapshot(currentPhotoNode.getBoundingClientRect());
+		}
+
+		if (viewer.originKey) {
+			const originNode = originRefs.current.get(viewer.originKey);
+			if (originNode) {
+				return toSnapshot(originNode.getBoundingClientRect());
+			}
+		}
+
+		return viewer.originRect;
+	};
+
+	const closeViewer = (immediate = false) => {
+		if (!viewer || viewer.phase === 'closing') {
+			return;
+		}
+
+		const closeTarget = onViewerClose ? null : findCloseTarget();
+		const media = viewerMediaRef.current;
+		const frame = viewerFrameRef.current;
+
+		activePointersRef.current.clear();
+		gestureRef.current = null;
+
+		if (immediate || !media || !frame || !closeTarget) {
+			stopAnimations();
+			resetViewerTransform(false);
+			setViewer(null);
+			onViewerClose?.();
+			return;
+		}
+
+		setViewer((current) =>
+			current
+				? {
+						...current,
+						phase: 'closing',
+					}
+				: current,
+		);
+
+		const frameRect = frame.getBoundingClientRect();
+		const translateX =
+			closeTarget.left + closeTarget.width / 2 - (frameRect.left + frameRect.width / 2);
+		const translateY =
+			closeTarget.top + closeTarget.height / 2 - (frameRect.top + frameRect.height / 2);
+		const scaleX = closeTarget.width / frameRect.width;
+		const scaleY = closeTarget.height / frameRect.height;
+
+		stopAnimations();
+
+		const mediaAnimation = media.animate(
+			[
+				{
+					transform: viewerMediaStyle.transform,
+				},
+				{
+					transform: `translate3d(${translateX}px, ${translateY}px, 0) scale(${scaleX}, ${scaleY})`,
+				},
+			],
+			{
+				duration: 360,
+				easing: PHOTO_EASING,
+				fill: 'forwards',
+			},
+		);
+		animationsRef.current = [mediaAnimation];
+
+		mediaAnimation.onfinish = () => {
+			animationsRef.current = [];
+			resetViewerTransform(false);
+			setViewer(null);
+			onViewerClose?.();
+		};
+	};
+
+	useLayoutEffect(() => {
+		onViewerStateChange?.({
+			activePhoto,
+			closeViewer,
+			viewerPhase: viewer?.phase ?? null,
+		});
+	}, [activePhoto, onViewerStateChange, viewer?.phase]);
+
+	const openViewer = ({
+		photoId,
+		photoIds,
+		sourceElement,
+		sourceKey,
+	}: {
+		photoId: string;
+		photoIds: string[];
+		sourceElement: HTMLElement;
+		sourceKey: string;
+	}) => {
+		if (viewer) {
+			return;
+		}
+
+		resetViewerTransform(false);
+		setViewer({
+			phase: 'opening',
+			currentPhotoId: photoId,
+			photoIds,
+			originRect: toSnapshot(sourceElement.getBoundingClientRect()),
+			originKey: sourceKey,
+		});
+	};
+
+	const handleGridOpen = (photoId: string) => (event: ReactMouseEvent<HTMLButtonElement>) => {
+		openViewer({
+			photoId,
+			photoIds: photos.map((photo) => photo.id),
+			sourceElement: event.currentTarget,
+			sourceKey: `photo:${photoId}`,
+		});
+	};
+
+	useLayoutEffect(() => {
+		if (!viewer || viewer.phase !== 'opening') {
+			return undefined;
+		}
+
+		const shell = viewerShellRef.current;
+
+		if (!shell || !viewer.originRect) {
+			setViewer((current) =>
+				current
+					? {
+							...current,
+							phase: 'open',
+						}
+					: current,
+			);
+			return undefined;
+		}
+
+		const originRect = viewer.originRect;
+		const animationFrame = window.requestAnimationFrame(() => {
+			const finalRect = shell.getBoundingClientRect();
+			const translateX = originRect.left - finalRect.left;
+			const translateY = originRect.top - finalRect.top;
+			const scaleX = originRect.width / finalRect.width;
+			const scaleY = originRect.height / finalRect.height;
+
+			stopAnimations();
+
+			const mediaAnimation = shell.animate(
+				[
+					{
+						transform: `translate3d(${translateX}px, ${translateY}px, 0) scale(${scaleX}, ${scaleY})`,
+						borderRadius: '18px',
+					},
+					{
+						transform: 'translate3d(0, 0, 0) scale(1, 1)',
+						borderRadius: '28px',
+					},
+				],
+				{
+					duration: 320,
+					easing: PHOTO_EASING,
+					fill: 'forwards',
+				},
+			);
+			animationsRef.current = [mediaAnimation];
+
+			mediaAnimation.onfinish = () => {
+				stopAnimations();
+				setViewer((current) =>
+					current
+						? {
+								...current,
+								phase: 'open',
+							}
+						: current,
+				);
+			};
+		});
+
+		return () => {
+			window.cancelAnimationFrame(animationFrame);
+		};
+	}, [viewer]);
+
+	useEffect(() => {
+		if (!viewer) {
+			return undefined;
+		}
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') {
+				event.preventDefault();
+				closeViewer();
+			}
+
+			if (!activeTrack.length) {
+				return;
+			}
+
+			if (event.key === 'ArrowLeft' && activePhotoIndex > 0) {
+				event.preventDefault();
+				setViewer((current) =>
+					current
+						? {
+								...current,
+								currentPhotoId: activeTrack[activePhotoIndex - 1].id,
+							}
+						: current,
+				);
+				resetViewerTransform(false);
+			}
+
+			if (event.key === 'ArrowRight' && activePhotoIndex < activeTrack.length - 1) {
+				event.preventDefault();
+				setViewer((current) =>
+					current
+						? {
+								...current,
+								currentPhotoId: activeTrack[activePhotoIndex + 1].id,
+							}
+						: current,
+				);
+				resetViewerTransform(false);
+			}
+		};
+
+		window.addEventListener('keydown', handleKeyDown);
+
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown);
+		};
+	}, [activePhotoIndex, activeTrack, viewer]);
+
+	useEffect(() => {
+		if (!activePhoto) {
+			return;
+		}
+
+		railRefs.current.get(activePhoto.id)?.scrollIntoView({
+			block: 'nearest',
+			inline: 'center',
+			behavior: 'smooth',
+		});
+	}, [activePhoto]);
+
+	useEffect(
+		() => () => {
+			stopAnimations();
+		},
+		[],
+	);
+
+	const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+		if (!activePhoto || !viewer || viewer.phase !== 'open') {
+			return;
+		}
+
+		event.preventDefault();
+		const nextPointers = activePointersRef.current;
+		nextPointers.set(event.pointerId, {
+			x: event.clientX,
+			y: event.clientY,
+		});
+		event.currentTarget.setPointerCapture(event.pointerId);
+
+		if (nextPointers.size >= 2) {
+			const points = Array.from(nextPointers.values()).slice(0, 2);
+			const center = getCenter(points);
+
+			if (!center) {
+				return;
+			}
+
+			gestureRef.current = {
+				mode: 'pinch',
+				startDistance: getDistance(points),
+				startCenterX: center.x,
+				startCenterY: center.y,
+				startZoom: viewerTransform.zoom,
+				startPanX: viewerTransform.panX,
+				startPanY: viewerTransform.panY,
+			};
+			setViewerTransform((current) => ({
+				...current,
+				dismissX: 0,
+				dismissY: 0,
+				gestureActive: true,
+			}));
+			return;
+		}
+
+		if (viewerTransform.zoom > 1.02) {
+			gestureRef.current = {
+				mode: 'pan',
+				startX: event.clientX,
+				startY: event.clientY,
+				startPanX: viewerTransform.panX,
+				startPanY: viewerTransform.panY,
+			};
+			setViewerTransform((current) => ({
+				...current,
+				gestureActive: true,
+			}));
+			return;
+		}
+
+		gestureRef.current = {
+			mode: 'dismiss',
+			startX: event.clientX,
+			startY: event.clientY,
+			startPanX: 0,
+			startPanY: 0,
+		};
+		setViewerTransform((current) => ({
+			...current,
+			gestureActive: true,
+		}));
+	};
+
+	const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+		if (!activePhoto || !viewer || viewer.phase !== 'open') {
+			return;
+		}
+
+		const nextPointers = activePointersRef.current;
+		if (!nextPointers.has(event.pointerId)) {
+			return;
+		}
+
+		nextPointers.set(event.pointerId, {
+			x: event.clientX,
+			y: event.clientY,
+		});
+
+		const gesture = gestureRef.current;
+
+		if (!gesture) {
+			return;
+		}
+
+		event.preventDefault();
+
+		if (nextPointers.size >= 2) {
+			const points = Array.from(nextPointers.values()).slice(0, 2);
+			const center = getCenter(points);
+			const distance = getDistance(points);
+			const frame = viewerFrameRef.current?.getBoundingClientRect() ?? null;
+
+			if (!center || distance <= 0) {
+				return;
+			}
+
+			const startDistance =
+				gesture.mode === 'pinch' ? gesture.startDistance : Math.max(distance, 1);
+			const startZoom = gesture.mode === 'pinch' ? gesture.startZoom : viewerTransform.zoom;
+			const startPanX = gesture.mode === 'pinch' ? gesture.startPanX : viewerTransform.panX;
+			const startPanY = gesture.mode === 'pinch' ? gesture.startPanY : viewerTransform.panY;
+			const startCenterX = gesture.mode === 'pinch' ? gesture.startCenterX : center.x;
+			const startCenterY = gesture.mode === 'pinch' ? gesture.startCenterY : center.y;
+
+			const nextZoom = clamp((startZoom * distance) / Math.max(startDistance, 1), 1, 4);
+			const nextTransform = {
+				zoom: nextZoom,
+				panX: startPanX + (center.x - startCenterX),
+				panY: startPanY + (center.y - startCenterY),
+				dismissX: 0,
+				dismissY: 0,
+				gestureActive: true,
+			};
+			const bounded = clampPan(nextTransform, activePhoto, frame);
+
+			gestureRef.current = {
+				mode: 'pinch',
+				startDistance,
+				startCenterX,
+				startCenterY,
+				startZoom,
+				startPanX,
+				startPanY,
+			};
+			setViewerTransform({
+				...nextTransform,
+				...bounded,
+			});
+			return;
+		}
+
+		if (gesture.mode === 'pan') {
+			const frame = viewerFrameRef.current?.getBoundingClientRect() ?? null;
+			const nextTransform = {
+				zoom: viewerTransform.zoom,
+				panX: gesture.startPanX + (event.clientX - gesture.startX),
+				panY: gesture.startPanY + (event.clientY - gesture.startY),
+				dismissX: 0,
+				dismissY: 0,
+				gestureActive: true,
+			};
+			const bounded = clampPan(nextTransform, activePhoto, frame);
+
+			setViewerTransform({
+				...nextTransform,
+				...bounded,
+			});
+			return;
+		}
+
+		if (gesture.mode === 'pinch') {
+			gestureRef.current = {
+				mode: viewerTransform.zoom > 1.02 ? 'pan' : 'dismiss',
+				startX: event.clientX,
+				startY: event.clientY,
+				startPanX: viewerTransform.panX,
+				startPanY: viewerTransform.panY,
+			};
+			return;
+		}
+
+		const deltaX = event.clientX - gesture.startX;
+		const deltaY = event.clientY - gesture.startY;
+		const horizontalBias = Math.abs(deltaX) * 0.18;
+
+		setViewerTransform({
+			zoom: 1,
+			panX: 0,
+			panY: 0,
+			dismissX: horizontalBias * Math.sign(deltaX),
+			dismissY: deltaY,
+			gestureActive: true,
+		});
+	};
+
+	const handlePointerFinish = (event: ReactPointerEvent<HTMLDivElement>) => {
+		if (!activePhoto || !viewer) {
+			return;
+		}
+
+		activePointersRef.current.delete(event.pointerId);
+
+		if (activePointersRef.current.size >= 2) {
+			const points = Array.from(activePointersRef.current.values()).slice(0, 2);
+			const center = getCenter(points);
+
+			if (!center) {
+				return;
+			}
+
+			gestureRef.current = {
+				mode: 'pinch',
+				startDistance: getDistance(points),
+				startCenterX: center.x,
+				startCenterY: center.y,
+				startZoom: viewerTransform.zoom,
+				startPanX: viewerTransform.panX,
+				startPanY: viewerTransform.panY,
+			};
+			return;
+		}
+
+		if (activePointersRef.current.size === 1 && viewerTransform.zoom > 1.02) {
+			const remainingPoint = Array.from(activePointersRef.current.values())[0];
+			gestureRef.current = {
+				mode: 'pan',
+				startX: remainingPoint.x,
+				startY: remainingPoint.y,
+				startPanX: viewerTransform.panX,
+				startPanY: viewerTransform.panY,
+			};
+			return;
+		}
+
+		gestureRef.current = null;
+
+		const horizontalSwipe =
+			viewerTransform.zoom <= 1.02 &&
+			Math.abs(viewerTransform.dismissX) > 18 &&
+			Math.abs(viewerTransform.dismissX) * 5 > Math.abs(viewerTransform.dismissY);
+
+		if (horizontalSwipe) {
+			const nextIndex = activePhotoIndex + (viewerTransform.dismissX < 0 ? 1 : -1);
+
+			if (nextIndex >= 0 && nextIndex < activeTrack.length) {
+				setViewer((current) =>
+					current
+						? {
+								...current,
+								currentPhotoId: activeTrack[nextIndex].id,
+							}
+						: current,
+				);
+			}
+
+			resetViewerTransform(false);
+			return;
+		}
+
+		if (Math.abs(viewerTransform.dismissY) > 136 && viewerTransform.zoom <= 1.02) {
+			closeViewer();
+			return;
+		}
+
+		const frame = viewerFrameRef.current?.getBoundingClientRect() ?? null;
+		const normalizedTransform = {
+			...viewerTransform,
+			zoom: viewerTransform.zoom < 1.02 ? 1 : viewerTransform.zoom,
+			dismissX: 0,
+			dismissY: 0,
+			gestureActive: false,
+		};
+		const bounded = clampPan(normalizedTransform, activePhoto, frame);
+
+		setViewerTransform({
+			...normalizedTransform,
+			...bounded,
+		});
+	};
+
+	return (
+		<App className={className}>
+			<div
+				className={`gallery-screen${cover ? ' gallery-screen--cover' : ''}${
+					viewer ? ' is-viewer' : ''
+				}`}
+				style={viewer ? viewerChromeStyle : undefined}
+			>
+				<div className="gallery-screen__surface">
+					{viewer && activePhoto && activePhotoTakenAt ? (
+						<div className="gallery-screen__nav gallery-screen__nav--top is-viewer-mode">
+							<GalleryControls onBack={() => closeViewer()}>
+								<div className="gallery-screen__viewer-title">
+									<Text as="span" variant="semiBold-16">
+										{activePhoto.title}
+									</Text>
+									<Text as="span" variant="regular-12" color="secondary">
+										{activePhotoTakenAt.date}, {activePhotoTakenAt.time}
+									</Text>
+								</div>
+							</GalleryControls>
+						</div>
+					) : cover ? (
+						<div
+							className="gallery-screen__nav gallery-screen__nav--top is-placeholder"
+							aria-hidden="true"
+						/>
+					) : null}
+					{!viewer && !cover ? (
+						<GalleryHeader
+							title={title}
+							showCreate={false}
+							action={headerAction}
+							showMore={!headerAction}
+						/>
+					) : null}
+
+					<div
+						ref={scrollRef}
+						className={`gallery-screen__scroll${viewer ? ' is-viewer-mode' : ''}`}
+						onScroll={
+							onScroll ? (event) => onScroll(event.currentTarget.scrollTop) : undefined
+						}
+					>
+						{cover ? (
+							<header className="gallery-screen__cover">
+								<img src={cover.imageSrc} alt="" aria-hidden="true" />
+								<span className="gallery-screen__cover-shade" />
+								<GalleryControls
+									className="gallery-screen__cover-actions"
+									onBack={() => onBack?.()}
+								/>
+								<div className="gallery-screen__cover-copy">
+									<Text as="div" variant="semiBold-32">
+										{title}
+									</Text>
+									<Text as="div" variant="regular-12">
+										{getPhotoCountLabel(photos.length)}
+									</Text>
+								</div>
+							</header>
+						) : null}
+						{gridHeader ? (
+							<div
+								className="gallery-screen__grid-header"
+								aria-hidden={viewer ? true : undefined}
+							>
+								{gridHeader}
+							</div>
+						) : null}
+						<div
+							className={`gallery-screen__grid is-${gridMode}`}
+							role="list"
+							aria-label={gridMode === 'feed' ? 'Вертикальная лента фотографий' : 'Сетка фотографий'}
+							aria-hidden={viewer ? true : undefined}
+						>
+							{photos.map((photo) => {
+								const hidden = viewer?.currentPhotoId === photo.id;
+
+								return (
+									<button
+										key={photo.id}
+										type="button"
+										role="listitem"
+										ref={registerOriginRef(`photo:${photo.id}`)}
+										className={`gallery-screen__thumb${hidden ? ' is-hidden-origin' : ''}`}
+										onClick={handleGridOpen(photo.id)}
+										aria-label={`Открыть фото: ${photo.title}`}
+									>
+										<img
+											src={photo.imageSrc}
+											alt=""
+											aria-hidden="true"
+											className="gallery-screen__thumb-image"
+										/>
+										{showMarks && photo.favorite ? (
+											<Icon
+												name="star-100"
+												width={24}
+												height={24}
+												className="gallery-screen__thumb-star"
+												colorToken="content-constant"
+												aria-hidden="true"
+											/>
+										) : null}
+									</button>
+								);
+							})}
+						</div>
+					</div>
+
+					{viewer || showNav || cover ? (
+						<div
+							className={`gallery-screen__nav gallery-screen__nav--bottom${
+								viewer ? ' is-viewer-mode' : cover ? ' is-placeholder' : ''
+							}`}
+						>
+							{viewer && activePhoto ? (
+								<div
+									className="gallery-screen__toolbar"
+									role="toolbar"
+									aria-label="Действия с фото"
+								>
+									<button
+										type="button"
+										className="gallery-viewer__action-button"
+										aria-label="В избранное"
+									>
+										<Icon
+											name={activePhoto.favorite ? 'star-100' : 'star-0'}
+											alt=""
+											aria-hidden="true"
+											width={24}
+											height={24}
+											colorToken="content-primary"
+										/>
+									</button>
+									<button
+										type="button"
+										className="gallery-viewer__action-button"
+										aria-label="Информация"
+									>
+										<Icon
+											name="status-info-outline"
+											alt=""
+											aria-hidden="true"
+											width={24}
+											height={24}
+											colorToken="content-primary"
+										/>
+									</button>
+									<button
+										type="button"
+										className="gallery-viewer__action-button"
+										aria-label="Поделиться"
+									>
+										<Icon
+											name="share-outline"
+											alt=""
+											aria-hidden="true"
+											width={24}
+											height={24}
+											colorToken="content-primary"
+										/>
+									</button>
+									<button
+										type="button"
+										className="gallery-viewer__action-button"
+										aria-label="Удалить"
+									>
+										<Icon
+											name="delete-outline"
+											alt=""
+											aria-hidden="true"
+											width={24}
+											height={24}
+											colorToken="content-primary"
+										/>
+									</button>
+								</div>
+							) : showNav ? (
+								<GalleryNav active={navActive} routes={navRoutes} />
+							) : null}
+						</div>
+					) : null}
+				</div>
+				{viewer && activePhoto ? (
+					<div
+						className={`gallery-screen__viewer${
+							isViewerChromeSuppressed ? ' is-gesture-active' : ''
+						} is-${viewer.phase}`}
+						aria-label={`Просмотр фото: ${activePhoto.title}`}
+					>
+						<div className="gallery-viewer__backdrop" aria-hidden="true">
+							<img src={activePhoto.imageSrc} alt="" draggable={false} />
+						</div>
+						<div className="gallery-viewer__stage">
+							<div ref={viewerShellRef} className="gallery-viewer__media-shell">
+								<div
+									ref={viewerFrameRef}
+									className={`gallery-viewer__media-frame${
+										viewerTransform.gestureActive ? ' is-gesture-active' : ''
+									}`}
+									onPointerDown={handlePointerDown}
+									onPointerMove={handlePointerMove}
+									onPointerUp={handlePointerFinish}
+									onPointerCancel={handlePointerFinish}
+									onDoubleClick={() => {
+										if (!activePhoto || viewer.phase !== 'open') {
+											return;
+										}
+
+										if (viewerTransform.zoom > 1.02) {
+											resetViewerTransform(false);
+											return;
+										}
+
+										setViewerTransform({
+											zoom: 2,
+											panX: 0,
+											panY: 0,
+											dismissX: 0,
+											dismissY: 0,
+											gestureActive: false,
+										});
+									}}
+								>
+									<div
+										ref={viewerMediaRef}
+										className="gallery-viewer__media"
+										style={viewerMediaStyle}
+									>
+										<img
+											src={activePhoto.imageSrc}
+											alt={activePhoto.title}
+											draggable={false}
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div
+							className="gallery-viewer__rail"
+							role="tablist"
+							aria-label="Лента фотографий"
+						>
+							{activeTrack.map((photo) => (
+								<button
+									key={photo.id}
+									ref={registerRailRef(photo.id)}
+									type="button"
+									role="tab"
+									aria-selected={photo.id === activePhoto.id}
+									className={`gallery-viewer__rail-item${
+										photo.id === activePhoto.id ? ' is-active' : ''
+									}`}
+									onClick={() => {
+										setViewer((current) =>
+											current
+												? {
+														...current,
+														currentPhotoId: photo.id,
+													}
+												: current,
+										);
+										resetViewerTransform(false);
+									}}
+								>
+									<img src={photo.imageSrc} alt="" aria-hidden="true" />
+								</button>
+							))}
+						</div>
+					</div>
+				) : null}
+				{renderOverlayControls?.({
+					activePhoto,
+					closeViewer: () => closeViewer(),
+					viewerPhase: viewer?.phase ?? null,
+				})}
+			</div>
+		</App>
+	);
+}
+
+export function GalleryScreen() {
+	return <PhotoScreen title="Все фото" photos={galleryPhotos} showNav />;
+}

@@ -1,0 +1,165 @@
+.launcher-recents {
+	position: absolute;
+	inset: 40px 0 52px;
+	z-index: 6;
+	display: flex;
+	flex-direction: column;
+	padding: 18px 0 12px;
+	overflow: hidden;
+	background:
+		linear-gradient(180deg, rgb(1 16 29 / 8%), rgb(1 11 25 / 26%)),
+		#082d30 url('../../assets/launcher/wallpaper.png') center / cover no-repeat;
+	animation: launcher-recents-in 300ms cubic-bezier(.16,.78,.24,1);
+}
+.launcher-recents.is-opened-from-app { animation: none; }
+.launcher-recents.is-opened-from-app .launcher-recents__slide { animation: none; }
+.launcher-recents.is-entering-from-app .launcher-recents__track {
+	scroll-behavior: auto;
+	scroll-snap-type: none;
+}
+.launcher-recents__slide.is-transition-target .launcher-recent-card__preview { visibility: hidden; }
+
+.launcher-recents__close-all {
+	position: relative;
+	z-index: 2;
+	display: block;
+	height: 28px;
+	margin: 0 auto 18px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: #fff;
+	font-size: 20px;
+	font-weight: 400;
+	line-height: 28px;
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	transition: opacity 160ms ease, transform 160ms cubic-bezier(.2,.8,.25,1);
+}
+.launcher-recents__close-all:active { opacity: .68; transform: scale(.95); }
+.launcher-recents__close-all:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.launcher-recents.is-closing-all .launcher-recents__close-all { opacity: 0; transform: translateY(-8px); pointer-events: none; }
+
+.launcher-recents__track {
+	--launcher-recent-width: 222.11px;
+	flex: 1 1 auto;
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	min-height: 0;
+	margin-top: -64px;
+	padding: 72px calc((100% - var(--launcher-recent-width)) / 2) 20px;
+	overflow-x: auto;
+	overflow-y: auto;
+	scroll-behavior: smooth;
+	scroll-snap-type: x mandatory;
+	scroll-padding-inline: calc((100% - var(--launcher-recent-width)) / 2);
+	scrollbar-width: none;
+	overscroll-behavior-x: contain;
+	cursor: grab;
+}
+.launcher-recents__track::-webkit-scrollbar { display: none; }
+.launcher-recents__track.is-dragging { scroll-behavior: auto; scroll-snap-type: none; cursor: grabbing; }
+
+.launcher-recents__slide {
+	--recent-icon-shift: 0px;
+	--recent-lift: 40px;
+	--recent-opacity: .7;
+	--recent-preview-height: 407.2px;
+	--recent-preview-width: 183.24px;
+	flex: 0 0 var(--launcher-recent-width);
+	max-width: var(--launcher-recent-width);
+	height: auto;
+	margin-right: 0;
+	scroll-snap-align: center;
+	scroll-snap-stop: always;
+	transform: translateY(var(--recent-lift));
+	transform-origin: center 58%;
+	transition:
+		flex-basis 330ms cubic-bezier(.2,.82,.22,1),
+		max-width 330ms cubic-bezier(.2,.82,.22,1),
+		margin-right 330ms cubic-bezier(.2,.82,.22,1),
+		transform 110ms cubic-bezier(.2,.72,.3,1);
+	animation: launcher-recent-card-in 440ms cubic-bezier(.16,.82,.24,1) both;
+	animation-delay: calc(var(--recent-index) * 42ms);
+	will-change: transform, opacity;
+}
+.launcher-recents__slide.is-active {
+	--recent-icon-shift: 0px;
+	--recent-lift: 0px;
+	--recent-opacity: 1;
+	--recent-preview-height: 493.58px;
+	--recent-preview-width: 222.11px;
+	z-index: 1;
+}
+.launcher-recents__slide:has(~ .launcher-recents__slide.is-active) { --recent-icon-shift: 94px; }
+.launcher-recents__slide.is-active ~ .launcher-recents__slide { --recent-icon-shift: -94px; }
+.launcher-recents__slide.is-collapsing {
+	flex-basis: 0;
+	max-width: 0;
+	margin-right: -24px;
+	opacity: 0;
+}
+
+.launcher-recent-card {
+	position: relative;
+	width: var(--launcher-recent-width);
+	height: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	cursor: inherit;
+	touch-action: none;
+	-webkit-tap-highlight-color: transparent;
+	transform: translateY(var(--recent-drag-y));
+	transition: transform 320ms cubic-bezier(.2,.9,.22,1), opacity 180ms ease, filter 180ms ease;
+	will-change: transform;
+}
+.launcher-recents__slide.is-being-dragged .launcher-recent-card { transition: none; }
+.launcher-recent-card__app-icon {
+	flex: 0 0 34px;
+	display: grid;
+	place-items: center;
+	width: 34px;
+	height: 34px;
+	filter: drop-shadow(0 4px 8px rgb(0 0 0 / 24%));
+	transform: translateX(var(--recent-icon-shift));
+	transition: transform 160ms cubic-bezier(.2,.8,.25,1);
+}
+.launcher-recent-card__app-icon img { display: block; width: 34px; height: 34px; pointer-events: none; }
+.launcher-recent-card__preview {
+	flex: 0 0 auto;
+	width: var(--recent-preview-width);
+	height: var(--recent-preview-height);
+	display: block;
+	overflow: hidden;
+	border: 0;
+	border-radius: 18px;
+	background: #fff;
+	box-shadow: 0 18px 42px rgb(0 0 0 / 34%), 0 3px 12px rgb(0 0 0 / 18%);
+	opacity: var(--recent-opacity);
+	transition: width 110ms cubic-bezier(.2,.72,.3,1), height 110ms cubic-bezier(.2,.72,.3,1), opacity 110ms linear, box-shadow 260ms ease, filter 260ms ease;
+}
+.launcher-recents__slide.is-active .launcher-recent-card__preview { box-shadow: 0 22px 52px rgb(0 0 0 / 38%), 0 4px 14px rgb(0 0 0 / 18%); }
+.launcher-recent-card__preview > img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	pointer-events: none;
+	user-select: none;
+}
+.launcher-recents__slide.is-closing .launcher-recent-card {
+	pointer-events: none;
+	animation: launcher-recent-card-dismiss 280ms cubic-bezier(.36,.02,.72,.42) forwards;
+}
+.launcher-recents.is-closing-all .launcher-recents__slide.is-closing .launcher-recent-card {
+	animation-delay: calc(var(--recent-index) * 36ms);
+}
+.launcher-recents__slide.is-closing .launcher-recent-card__app-icon { transform: scale(.76); }
+
