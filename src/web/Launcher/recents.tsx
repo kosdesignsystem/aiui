@@ -19,24 +19,40 @@ type RecentDrag = {
 	startY: number;
 	startScrollLeft: number;
 	startedAt: number;
+	lastY: number;
+	lastSampleAt: number;
+	velocityY: number;
 	axis: 'horizontal' | 'vertical' | null;
 	offsetY: number;
+	isExiting: boolean;
 };
 
 type RecentAppsProps = {
 	onOpen: (event: ReactPointerEvent<HTMLButtonElement>, app: LaunchableApp) => void;
 	onEmpty: () => void;
+	onRequestClose?: () => void;
+	onExitDrag?: (progress: number) => void;
+	onExitEnd?: (shouldClose: boolean, velocity: number) => void;
 	initialActiveId?: string;
 	transitioningAppId?: string;
 	onTransitionReady?: (appId: string, bounds: RecentTransitionBounds) => void;
+	motionManaged?: boolean;
+	isTransitioning?: boolean;
+	interactive?: boolean;
 };
 
 export function RecentApps({
 	onOpen,
 	onEmpty,
+	onRequestClose,
+	onExitDrag,
+	onExitEnd,
 	initialActiveId,
 	transitioningAppId,
 	onTransitionReady,
+	motionManaged = false,
+	isTransitioning = false,
+	interactive = true,
 }: RecentAppsProps) {
 	const [items, setItems] = useState(recentApps);
 	const [activeId, setActiveId] = useState(() => (
@@ -124,9 +140,15 @@ export function RecentApps({
 			secondFrame = requestAnimationFrame(() => {
 				const preview = targetSlide.querySelector<HTMLElement>('.launcher-recent-card__preview');
 				const surface = targetSlide.closest<HTMLElement>('.launcher-screen');
-				if (!preview || !surface) return;
+				const recents = targetSlide.closest<HTMLElement>('.launcher-recents');
+				if (!preview || !surface || !recents) return;
+				// Measure the resting card, not the temporarily scaled recents panel.
+				// This keeps the gesture-driven app surface aligned with the card
+				// when the overlay reaches its final position.
+				recents.classList.add('is-measuring-target');
 				const previewRect = preview.getBoundingClientRect();
 				const surfaceRect = surface.getBoundingClientRect();
+				recents.classList.remove('is-measuring-target');
 				onTransitionReady(activeId, {
 					left: previewRect.left - surfaceRect.left,
 					top: previewRect.top - surfaceRect.top,
@@ -222,15 +244,20 @@ export function RecentApps({
 	const handleCardPointerDown = (event: ReactPointerEvent<HTMLButtonElement>, app: LaunchableApp) => {
 		if (closingIds.size > 0) return;
 		event.currentTarget.setPointerCapture(event.pointerId);
+		const now = performance.now();
 		dragRef.current = {
 			pointerId: event.pointerId,
 			appId: app.id,
 			startX: event.clientX,
 			startY: event.clientY,
 			startScrollLeft: trackRef.current?.scrollLeft ?? 0,
-			startedAt: performance.now(),
+			startedAt: now,
+			lastY: event.clientY,
+			lastSampleAt: now,
+			velocityY: 0,
 			axis: null,
 			offsetY: 0,
+			isExiting: false,
 		};
 		setDraggedCard({ id: app.id, offsetY: 0 });
 	};
@@ -240,6 +267,14 @@ export function RecentApps({
 		if (!drag || drag.pointerId !== event.pointerId) return;
 		const deltaX = event.clientX - drag.startX;
 		const deltaY = event.clientY - drag.startY;
+		const now = performance.now();
+		const sampleDuration = now - drag.lastSampleAt;
+		if (sampleDuration > 0) {
+			const sampledVelocityY = (event.clientY - drag.lastY) / sampleDuration;
+			drag.velocityY = drag.velocityY * .58 + sampledVelocityY * .42;
+			drag.lastY = event.clientY;
+			drag.lastSampleAt = now;
+		}
 
 		if (!drag.axis && Math.max(Math.abs(deltaX), Math.abs(deltaY)) > 7) {
 			drag.axis = Math.abs(deltaX) > Math.abs(deltaY) ? 'horizontal' : 'vertical';
@@ -254,7 +289,14 @@ export function RecentApps({
 
 		if (drag.axis === 'vertical') {
 			event.preventDefault();
-			drag.offsetY = deltaY < 0 ? deltaY : Math.min(24, deltaY * .18);
+			if (deltaY > 0 && onExitDrag) {
+				drag.isExiting = true;
+				drag.offsetY = deltaY;
+				setDraggedCard(null);
+				onExitDrag(Math.max(-.04, 1 - deltaY / 230));
+				return;
+			}
+			drag.offsetY = deltaY;
 			setDraggedCard({ id: drag.appId, offsetY: drag.offsetY });
 		}
 	};
@@ -275,6 +317,14 @@ export function RecentApps({
 		}
 
 		if (drag.axis === 'vertical') {
+			if (drag.isExiting && onExitEnd) {
+				const idleTime = performance.now() - drag.lastSampleAt;
+				const velocityY = drag.velocityY * Math.max(0, 1 - idleTime / 100);
+				const shouldClose = !cancelled && (drag.offsetY > 74 || velocityY > .52);
+				setDraggedCard(null);
+				onExitEnd(shouldClose, cancelled ? 0 : -velocityY * 1000 / 230);
+				return;
+			}
 			const elapsed = Math.max(1, performance.now() - drag.startedAt);
 			const isFastUpwardSwipe = drag.offsetY < -32 && drag.offsetY / elapsed < -.42;
 			if (!cancelled && (drag.offsetY < -88 || isFastUpwardSwipe)) dismissCard(app.id);
@@ -287,12 +337,20 @@ export function RecentApps({
 	};
 
 	return (
-		<div className={`launcher-recents${isClosingAll ? ' is-closing-all' : ''}${initialActiveId ? ' is-opened-from-app' : ''}${transitioningAppId ? ' is-entering-from-app' : ''}`} role="dialog" aria-label="Открытые приложения">
-			<button className="launcher-recents__close-all" type="button" onClick={handleCloseAll}>Закрыть все</button>
+		<div
+			className={`launcher-recents${isClosingAll ? ' is-closing-all' : ''}${initialActiveId ? ' is-opened-from-app' : ''}${transitioningAppId ? ' is-entering-from-app' : ''}${motionManaged ? ' is-motion-managed' : ''}${isTransitioning ? ' is-transitioning' : ''}${interactive ? ' is-interactive' : ' is-passive'}`}
+			role="dialog"
+			aria-label="Открытые приложения"
+			aria-hidden={!interactive || undefined}
+		>
+			<button className="launcher-recents__close-all" type="button" disabled={!interactive} onClick={handleCloseAll}>Закрыть все</button>
 			<div
 				ref={trackRef}
 				className={`launcher-recents__track${isScrolling ? ' is-dragging' : ''}`}
 				onScroll={handleScroll}
+				onClick={(event) => {
+					if (event.target === event.currentTarget) onRequestClose?.();
+				}}
 				role="list"
 				aria-label="Открытые приложения"
 			>
@@ -316,6 +374,7 @@ export function RecentApps({
 							<button
 								className={`launcher-recent-card launcher-recent-card--${app.id}`}
 								type="button"
+									disabled={!interactive || isClosing}
 								aria-label={`Открыть приложение «${app.label}». Смахните вверх, чтобы закрыть`}
 								onPointerDown={(event) => handleCardPointerDown(event, app)}
 								onPointerMove={handleCardPointerMove}

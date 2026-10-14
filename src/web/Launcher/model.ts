@@ -82,11 +82,23 @@ export type LauncherDrag = {
 	pointerId: number;
 	startX: number;
 	startY: number;
-	startedAt: number;
 	viewportWidth: number;
+	viewportHeight: number;
 	mode: LauncherMode;
 	homePage: number;
+	homePageOffset: number;
+	lockOffset: number;
+	overlayStartProgress: number;
+	overlayKind: 'shade' | 'recents' | null;
+	overlayTarget: 0 | 1 | null;
+	overlayOrigin: ShadeOrigin | null;
+	lastX: number;
+	lastY: number;
+	lastSampleAt: number;
+	velocityX: number;
+	velocityY: number;
 	axis: 'horizontal' | 'vertical' | null;
+	verticalIntent: 'shade' | 'recents' | 'close-shade' | null;
 };
 
 const apps: ReadonlyArray<LauncherApp> = [

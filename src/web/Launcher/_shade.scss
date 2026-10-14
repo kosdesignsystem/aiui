@@ -14,7 +14,8 @@
 
 .launcher-shade--gesture { transform: translateY(var(--shade-translate)); opacity: var(--shade-surface-opacity); }
 .launcher-shade--pull { pointer-events: none; }
-.launcher-shade--pull, .launcher-shade--gesture.is-dragging { transition: none; }
+.launcher-shade--motion { transition: none; will-change: transform, opacity, backdrop-filter; }
+.launcher-shade--motion.is-settling { pointer-events: none; }
 .launcher-shade__content {
 	min-height: 0;
 	display: flex;
@@ -25,11 +26,36 @@
 	transform-origin: 50% 18%;
 	transition: opacity 340ms ease-out, transform 460ms cubic-bezier(.2,.74,.22,1);
 }
-.launcher-shade--pull .launcher-shade__content,
-.launcher-shade--gesture.is-dragging .launcher-shade__content { transition: none; }
+.launcher-shade--motion .launcher-shade__content { transition: none; }
 .launcher-shade .launcher-clock { margin-bottom: 24px; }
 .launcher-shade__networks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .launcher-shade__quick { display: grid; grid-template-columns: repeat(4, 68px); justify-content: space-between; gap: 0; margin-top: 25px; }
+
+.launcher-shade--motion .launcher-clock {
+	opacity: var(--shade-clock-progress, 1);
+	transform: translate3d(0, var(--shade-clock-y, 0), 0) scale(var(--shade-clock-scale, 1));
+}
+.launcher-shade--motion .launcher-shade__networks {
+	opacity: var(--shade-network-progress, 1);
+	transform: translate3d(0, var(--shade-network-y, 0), 0) scale(var(--shade-network-scale, 1));
+}
+.launcher-shade--motion .launcher-shade__quick {
+	opacity: var(--shade-quick-progress, 1);
+	transform: translate3d(0, var(--shade-quick-y, 0), 0) scale(var(--shade-quick-scale, 1));
+}
+.launcher-shade--motion .launcher-slider {
+	opacity: var(--shade-slider-progress, 1);
+	transform: translate3d(0, var(--shade-slider-y, 0), 0) scale(var(--shade-slider-scale, 1));
+}
+.launcher-shade--motion .launcher-shade__settings {
+	opacity: var(--shade-footer-progress, 1);
+	transform: translate3d(0, var(--shade-footer-y, 0), 0);
+}
+.launcher-shade--motion .launcher-clock,
+.launcher-shade--motion .launcher-shade__networks,
+.launcher-shade--motion .launcher-shade__quick,
+.launcher-shade--motion .launcher-slider,
+.launcher-shade--motion .launcher-shade__settings { will-change: transform, opacity; }
 
 .launcher-shade-toggle {
 	position: relative;
