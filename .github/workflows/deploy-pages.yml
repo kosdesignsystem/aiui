@@ -8,6 +8,8 @@ on:
       - "member/NC"
       - "member/AE"
       - "member/MK"
+      - "member/VE"
+      - "member/NT"
   workflow_dispatch:
 
 permissions:
@@ -62,6 +64,16 @@ jobs:
               echo "SITE_LABEL=mk" >> "$GITHUB_ENV"
               echo "VITE_BASE_PATH=/aiui/mk/" >> "$GITHUB_ENV"
               ;;
+            member/VE)
+              echo "SITE_PATH=ve" >> "$GITHUB_ENV"
+              echo "SITE_LABEL=ve" >> "$GITHUB_ENV"
+              echo "VITE_BASE_PATH=/aiui/ve/" >> "$GITHUB_ENV"
+              ;;
+            member/NT)
+              echo "SITE_PATH=nt" >> "$GITHUB_ENV"
+              echo "SITE_LABEL=nt" >> "$GITHUB_ENV"
+              echo "VITE_BASE_PATH=/aiui/nt/" >> "$GITHUB_ENV"
+              ;;
             *)
               echo "Unsupported branch: ${GITHUB_REF_NAME}" >&2
               exit 1
@@ -95,6 +107,8 @@ jobs:
                 ! -name "nc" \
                 ! -name "ae" \
                 ! -name "mk" \
+                ! -name "ve" \
+                ! -name "nt" \
                 -exec rm -rf {} +
               rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" ./
             else
@@ -152,6 +166,8 @@ jobs:
                 ! -name "nc" \
                 ! -name "ae" \
                 ! -name "mk" \
+                ! -name "ve" \
+                ! -name "nt" \
                 -exec rm -rf {} +
               rsync -avc --delete "${GITHUB_WORKSPACE}/dist/" ./
             else
