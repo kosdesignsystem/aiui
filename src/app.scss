@@ -22,8 +22,16 @@ html[data-launcher-minimize] .layout__content .ui-app:not(.launcher-screen) {
 	view-transition-name: launcher-minimizing-app;
 }
 
+html[data-launcher-minimize] .launcher-app-placeholder {
+	view-transition-name: launcher-minimizing-app;
+}
+
+html[data-launcher-minimize='camera'] [data-launcher-app-id='camera'] .launcher-app__icon-wrap,
 html[data-launcher-minimize='calls'] [data-launcher-app-id='calls'] .launcher-app__icon-wrap,
 html[data-launcher-minimize='contacts'] [data-launcher-app-id='contacts'] .launcher-app__icon-wrap,
+html[data-launcher-minimize='weather'] [data-launcher-app-id='weather'] .launcher-app__icon-wrap,
+html[data-launcher-minimize='files'] [data-launcher-app-id='files'] .launcher-app__icon-wrap,
+html[data-launcher-minimize='settings'] [data-launcher-app-id='settings'] .launcher-app__icon-wrap,
 html[data-launcher-minimize='reminders'] [data-launcher-app-id='reminders'] .launcher-app__icon-wrap,
 html[data-launcher-minimize='gallery'] [data-launcher-app-id='gallery'] .launcher-app__icon-wrap {
 	view-transition-name: launcher-minimizing-app;

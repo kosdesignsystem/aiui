@@ -1,4 +1,18 @@
+# Flutter and Dart build output
 .dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
 .packages
+.pub-cache/
+.pub/
 build/
-pubspec.lock
+
+# Editor and operating-system files
+.idea/
+.vscode/
+*.iml
+.DS_Store
+
+# Symbol and obfuscation output
+app.*.symbols
+app.*.map.json

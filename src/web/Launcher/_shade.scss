@@ -1,20 +1,26 @@
 .launcher-shade {
 	position: absolute;
-	inset: 40px 0 52px;
+	inset: 0;
 	z-index: 5;
 	display: flex;
 	flex-direction: column;
-	padding: 62px 16px 18px;
+	padding: 102px 16px 70px;
 	background: rgb(5 39 42 / 48%);
 	backdrop-filter: blur(28px) saturate(.9);
 	transform: translateY(0);
 	opacity: 1;
-	transition: transform 430ms cubic-bezier(.2,.74,.22,1), opacity 320ms ease-out;
+	transition: transform 280ms var(--launcher-ease-out), opacity 200ms ease-out;
 }
 
 .launcher-shade--gesture { transform: translateY(var(--shade-translate)); opacity: var(--shade-surface-opacity); }
 .launcher-shade--pull { pointer-events: none; }
 .launcher-shade--pull, .launcher-shade--gesture.is-dragging { transition: none; }
+.launcher-shade--gesture.is-closing {
+	transform: translateY(-100%);
+	opacity: 0;
+	pointer-events: none;
+	transition: transform 240ms cubic-bezier(.4, 0, .65, .35), opacity 180ms ease-in;
+}
 .launcher-shade__content {
 	min-height: 0;
 	display: flex;
@@ -23,7 +29,7 @@
 	opacity: var(--shade-content-opacity, 1);
 	transform: scale(var(--shade-content-scale, 1));
 	transform-origin: 50% 18%;
-	transition: opacity 340ms ease-out, transform 460ms cubic-bezier(.2,.74,.22,1);
+	transition: opacity 220ms ease-out, transform 300ms var(--launcher-ease-out);
 }
 .launcher-shade--pull .launcher-shade__content,
 .launcher-shade--gesture.is-dragging .launcher-shade__content { transition: none; }
@@ -37,18 +43,18 @@
 	-webkit-tap-highlight-color: transparent;
 	cursor: pointer;
 	transition:
-		color 240ms ease,
-		background-color 280ms ease,
-		box-shadow 280ms ease,
-		transform 160ms cubic-bezier(.2,.8,.25,1);
+		color 180ms ease,
+		background-color 200ms ease,
+		box-shadow 200ms ease,
+		transform var(--launcher-motion-instant) ease-out;
 }
-.launcher-shade-toggle:active { transform: scale(.95); }
+.launcher-shade-toggle:active { transform: scale(.97); }
 .launcher-shade-toggle:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .launcher-shade-toggle__icon { position: relative; display: grid; place-items: center; flex: 0 0 auto; }
 .launcher-shade-toggle__motion { position: relative; display: grid; place-items: center; width: 30px; height: 30px; }
 .launcher-shade-toggle__motion > svg { position: relative; z-index: 1; transform-origin: center; }
 .launcher-shade-toggle__pulse { position: absolute; inset: 4px; border: 2px solid currentColor; border-radius: 50%; opacity: 0; pointer-events: none; }
-.launcher-shade-toggle__motion.is-animating .launcher-shade-toggle__pulse { animation: launcher-toggle-pulse 460ms ease-out; }
+.launcher-shade-toggle__motion.is-animating .launcher-shade-toggle__pulse { animation: launcher-toggle-pulse 360ms ease-out; }
 
 .launcher-toggle-glyph { width: 22px; height: 22px; overflow: visible; }
 .launcher-toggle-glyph__segment { transform-box: fill-box; transform-origin: center bottom; }
@@ -71,21 +77,21 @@
 
 .launcher-shade-toggle--cellular.is-active .launcher-shade-toggle__motion.is-animating .launcher-toggle-glyph__segment,
 .launcher-shade-toggle--wifi.is-active .launcher-shade-toggle__motion.is-animating .launcher-toggle-glyph__segment {
-	animation: launcher-toggle-segment-on 360ms cubic-bezier(.2,.85,.25,1) both;
-	animation-delay: calc(var(--launcher-segment-order) * 70ms);
+	animation: launcher-toggle-segment-on 280ms var(--launcher-ease-out) both;
+	animation-delay: calc(var(--launcher-segment-order) * 42ms);
 }
 .launcher-shade-toggle--cellular.is-inactive .launcher-shade-toggle__motion.is-animating .launcher-toggle-glyph__segment,
 .launcher-shade-toggle--wifi.is-inactive .launcher-shade-toggle__motion.is-animating .launcher-toggle-glyph__segment {
-	animation: launcher-toggle-segment-off 420ms cubic-bezier(.2,.8,.25,1) both;
-	animation-delay: calc(var(--launcher-segment-off-order) * 52ms);
+	animation: launcher-toggle-segment-off 300ms var(--launcher-ease-standard) both;
+	animation-delay: calc(var(--launcher-segment-off-order) * 34ms);
 }
-.launcher-shade-toggle--wifi.is-inactive .launcher-shade-toggle__motion.is-animating .launcher-toggle-glyph__slash { animation: launcher-toggle-wifi-slash 360ms 150ms ease-out both; }
-.launcher-shade-toggle--airplane.is-active .launcher-shade-toggle__motion.is-animating > svg { animation: launcher-toggle-airplane-on 520ms cubic-bezier(.2,.82,.25,1); }
-.launcher-shade-toggle--airplane.is-inactive .launcher-shade-toggle__motion.is-animating > svg { animation: launcher-toggle-airplane-off 520ms cubic-bezier(.2,.82,.25,1); }
-.launcher-shade-toggle--location.is-active .launcher-shade-toggle__motion.is-animating > svg { transform-origin: center bottom; animation: launcher-toggle-location-on 520ms cubic-bezier(.2,.8,.25,1); }
-.launcher-shade-toggle--location.is-inactive .launcher-shade-toggle__motion.is-animating > svg { transform-origin: center bottom; animation: launcher-toggle-location-off 420ms cubic-bezier(.2,.8,.25,1); }
-.launcher-shade-toggle--bell .launcher-shade-toggle__motion.is-animating > svg { transform-origin: 50% 18%; animation: launcher-toggle-bell 560ms cubic-bezier(.36,.07,.19,.97); }
-.launcher-shade-toggle--flashlight .launcher-shade-toggle__motion.is-animating > svg { transform-origin: 50% 30%; animation: launcher-toggle-flashlight 480ms cubic-bezier(.2,.85,.25,1); }
+.launcher-shade-toggle--wifi.is-inactive .launcher-shade-toggle__motion.is-animating .launcher-toggle-glyph__slash { animation: launcher-toggle-wifi-slash 260ms 90ms ease-out both; }
+.launcher-shade-toggle--airplane.is-active .launcher-shade-toggle__motion.is-animating > svg { animation: launcher-toggle-airplane-on 360ms var(--launcher-ease-out); }
+.launcher-shade-toggle--airplane.is-inactive .launcher-shade-toggle__motion.is-animating > svg { animation: launcher-toggle-airplane-off 340ms var(--launcher-ease-out); }
+.launcher-shade-toggle--location.is-active .launcher-shade-toggle__motion.is-animating > svg { transform-origin: center bottom; animation: launcher-toggle-location-on 380ms var(--launcher-ease-out); }
+.launcher-shade-toggle--location.is-inactive .launcher-shade-toggle__motion.is-animating > svg { transform-origin: center bottom; animation: launcher-toggle-location-off 300ms var(--launcher-ease-standard); }
+.launcher-shade-toggle--bell .launcher-shade-toggle__motion.is-animating > svg { transform-origin: 50% 18%; animation: launcher-toggle-bell 400ms cubic-bezier(.36,.07,.19,.97); }
+.launcher-shade-toggle--flashlight .launcher-shade-toggle__motion.is-animating > svg { transform-origin: 50% 30%; animation: launcher-toggle-flashlight 340ms var(--launcher-ease-out); }
 
 .launcher-shade-toggle--flashlight .launcher-shade-toggle__pulse { inset: -9px 5px 19px; border: 0; border-radius: 0; background: linear-gradient(0deg, currentColor, transparent); clip-path: polygon(0 0, 100% 0, 62% 100%, 38% 100%); transform-origin: center bottom; }
 .launcher-shade-toggle--flashlight.is-active .launcher-shade-toggle__motion.is-animating .launcher-shade-toggle__pulse { animation-name: launcher-toggle-flashlight-beam; }
@@ -117,7 +123,7 @@
 	color: rgb(255 255 255 / 58%);
 	background: transparent;
 }
-.launcher-shade-toggle--quick:active { transform: scale(.93); }
+.launcher-shade-toggle--quick:active { transform: scale(.96); }
 .launcher-shade-toggle--quick .launcher-shade-toggle__icon {
 	width: 68px;
 	height: 68px;
@@ -125,10 +131,10 @@
 	border-radius: 18px;
 	background: var(--launcher-glass-strong);
 	transition:
-		color 260ms ease,
-		background-color 280ms ease,
-		box-shadow 280ms ease,
-		transform 280ms cubic-bezier(.2,.9,.25,1);
+		color 180ms ease,
+		background-color 200ms ease,
+		box-shadow 200ms ease,
+		transform 200ms var(--launcher-ease-out);
 }
 .launcher-shade-toggle--quick.is-active { color: #fff; }
 .launcher-shade-toggle--quick.is-active .launcher-shade-toggle__icon {
@@ -161,7 +167,9 @@
 	overflow: hidden;
 	border-radius: inherit;
 	background: #fff;
+	transition: width var(--launcher-motion-fast) var(--launcher-ease-out);
 }
+.launcher-slider.is-dragging .launcher-slider__fill { transition: none; }
 .launcher-slider__indicator {
 	position: absolute;
 	top: 50%;
@@ -172,7 +180,9 @@
 	background: #929697;
 	box-shadow: 0 1px 1px rgb(0 0 0 / 8%);
 	transform: translateY(-50%);
+	transition: transform var(--launcher-motion-fast) var(--launcher-ease-out), background-color var(--launcher-motion-fast) ease;
 }
+.launcher-slider.is-dragging .launcher-slider__indicator { background: #767b7c; transform: translateY(-50%) scaleY(1.12); }
 .launcher-slider__icon-shell {
 	position: relative;
 	z-index: 1;
@@ -203,7 +213,7 @@
 .launcher-slider__icon-shell.is-entering-fill .launcher-slider__icon { animation: launcher-slider-icon-fill 420ms cubic-bezier(.2,.9,.24,1); }
 .launcher-slider__icon-shell.is-entering-fill::after { animation: launcher-slider-icon-ripple 440ms ease-out; }
 .launcher-slider__icon-shell.is-leaving-fill .launcher-slider__icon { animation: launcher-slider-icon-unfill 300ms cubic-bezier(.25,.75,.28,1); }
-.launcher-slider:active .launcher-slider__icon { transform: scale(.94); }
+.launcher-slider:active .launcher-slider__icon { transform: scale(.96); }
 .launcher-slider input {
 	position: absolute;
 	z-index: 2;
@@ -234,8 +244,16 @@
 	border: 0;
 	background: transparent;
 }
-.launcher-shade__settings { margin: 44px auto 0; border: 0; background: transparent; color: #fff; font-size: 16px; line-height: 22px; font-weight: 600; cursor: pointer; transition: opacity 150ms ease, transform 150ms cubic-bezier(.2,.8,.25,1); }
-.launcher-shade__settings:active { opacity: .66; transform: scale(.96); }
+.launcher-shade__settings { margin: 44px auto 0; border: 0; background: transparent; color: #fff; font-size: 16px; line-height: 22px; font-weight: 600; cursor: pointer; transition: opacity var(--launcher-motion-instant) ease, transform var(--launcher-motion-instant) ease-out; }
+.launcher-shade__settings:active { opacity: .7; transform: scale(.98); }
 .launcher-shade__settings:focus-visible { outline: 2px solid #fff; outline-offset: 5px; border-radius: 4px; }
-.launcher-shade__close { position: absolute; inset: auto 0 0; height: 28px; border: 0; background: transparent; }
+.launcher-shade__close { position: absolute; inset: auto 0 52px; height: 28px; border: 0; background: transparent; }
+
+@media (hover: hover) {
+	.launcher-shade-toggle--network:hover { background-color: rgb(255 255 255 / 26%); }
+	.launcher-shade-toggle--network.is-active:hover { background-color: #318ff2; }
+	.launcher-shade-toggle--quick:hover .launcher-shade-toggle__icon { background-color: rgb(229 241 242 / 34%); }
+	.launcher-shade-toggle--quick.is-active:hover .launcher-shade-toggle__icon { background-color: #fff; }
+	.launcher-shade__settings:hover { opacity: .82; }
+}
 

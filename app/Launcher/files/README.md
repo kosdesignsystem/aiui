@@ -1,26 +1,26 @@
 # Launcher
 
-Native Dart/Flutter port of the React launcher in `src/web/Launcher`, packaged
-as a KasperskyOS for Mobile KPA application. No WebView, JavaScript, HTML, or
-CSS runtime is used.
+Нативный Flutter-порт актуального интерфейса `src/web/Launcher`, упакованный
+как KPA-приложение для KasperskyOS for Mobile. В рантайме не используются
+WebView, React, JavaScript, HTML или CSS.
 
-## Included flows
+## Реализованные сценарии
 
-- lock screen and upward unlock gesture;
-- four-digit passcode screen (the demo accepts any four digits);
-- two swipeable application pages;
-- animated launch of applications that have preview screens;
-- full-screen application previews;
-- pull-down quick settings with toggles, volume, and brightness;
-- recent-app carousel, open action, upward dismiss, and close-all action;
-- upward and downward system gestures from the home and application screens.
+- экран блокировки и жест разблокировки вверх;
+- ввод четырёхзначного демо-кода (принимаются любые четыре цифры);
+- две горизонтально перелистываемые страницы приложений;
+- анимированный запуск приложений, для которых есть экран-превью;
+- полноэкранные превью приложений и возврат на главный экран;
+- выдвижная панель быстрых настроек с переключателями и ползунками;
+- карусель недавних приложений, открытие, закрытие свайпом и «Закрыть все»;
+- системные жесты вверх и вниз на главном экране и внутри приложения.
 
-The UI keeps the source design's 40 logical-pixel status area and 52
-logical-pixel navigation area and scales to the available mobile viewport.
+Интерфейс рассчитан на базовую область 360×800 логических пикселей,
+с 40 пикселями под строку состояния и 52 пикселями под системную навигацию.
 
-## Flutter checks
+## Проверка Flutter
 
-Run from this `files` directory:
+Из этого каталога выполните:
 
 ```sh
 flutter pub get
@@ -28,8 +28,8 @@ dart format lib
 flutter analyze
 ```
 
-## KPA build
+## Сборка KPA
 
-Build through the KasperskyOS for Mobile SDK using the repository's regular
-cross-build command for the target architecture. The package target is
-`Launcher`, and the resulting package is named `lk.Launcher.kpa`.
+Подключите каталог `app/Launcher` к дереву KasperskyOS for Mobile SDK и
+запустите штатную cross-build сборку нужной архитектуры. Цель пакета —
+`Launcher`, имя итогового KPA-файла — `lk.Launcher.kpa`.

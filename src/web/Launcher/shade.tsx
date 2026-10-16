@@ -6,6 +6,7 @@ import {
 	type SyntheticEvent,
 } from 'react';
 import { Icon, type IconName } from '../../ui/Icon';
+import { cn } from '../../ui/lib/cn';
 import { ClockBlock } from './chrome';
 import {
 	quickControls,
@@ -32,7 +33,8 @@ function ShadeSlider({
 	endIcon,
 	className = '',
 }: ShadeSliderProps) {
-	// The icon centers are positioned at roughly 9% and 91% of the control.
+	const [isDragging, setIsDragging] = useState(false);
+	// The icon colour follows the layer directly beneath its centre point.
 	const startIconIsOnFill = value >= 9;
 	const endIconIsOnFill = value >= 91;
 	const previousIconStates = useRef({ start: startIconIsOnFill, end: endIconIsOnFill });
@@ -52,13 +54,29 @@ function ShadeSlider({
 	}, [startIconIsOnFill, endIconIsOnFill]);
 
 	const stopPointerPropagation = (event: SyntheticEvent) => event.stopPropagation();
+	const handlePointerStart = (event: SyntheticEvent) => {
+		event.stopPropagation();
+		setIsDragging(true);
+	};
+	const handlePointerEnd = (event: SyntheticEvent) => {
+		event.stopPropagation();
+		setIsDragging(false);
+	};
 
 	return (
-		<label className={`launcher-slider${className ? ` ${className}` : ''}`} style={style}>
+		<label className={cn('launcher-slider', className, isDragging && 'is-dragging')} style={style}>
 			<span className="launcher-slider__fill" aria-hidden="true">
 				<span className="launcher-slider__indicator" />
 			</span>
-			<span className={`launcher-slider__icon-shell launcher-slider__icon-shell--start${startIconIsOnFill ? ' is-on-fill' : ''}${startIconMotion ? ` is-${startIconMotion}` : ''}`} aria-hidden="true">
+			<span
+				className={cn(
+					'launcher-slider__icon-shell',
+					'launcher-slider__icon-shell--start',
+					startIconIsOnFill && 'is-on-fill',
+					startIconMotion && `is-${startIconMotion}`,
+				)}
+				aria-hidden="true"
+			>
 				<Icon className="launcher-slider__icon" name={startIcon} width={20} height={20} />
 			</span>
 			<input
@@ -67,14 +85,23 @@ function ShadeSlider({
 				max="100"
 				value={value}
 				onChange={(event) => onChange(Number(event.target.value))}
-				onPointerDown={stopPointerPropagation}
+				onPointerDown={handlePointerStart}
 				onPointerMove={stopPointerPropagation}
-				onPointerUp={stopPointerPropagation}
-				onPointerCancel={stopPointerPropagation}
+				onPointerUp={handlePointerEnd}
+				onPointerCancel={handlePointerEnd}
 				onClick={stopPointerPropagation}
+				onBlur={() => setIsDragging(false)}
 				aria-label={label}
 			/>
-			<span className={`launcher-slider__icon-shell launcher-slider__icon-shell--end${endIconIsOnFill ? ' is-on-fill' : ''}${endIconMotion ? ` is-${endIconMotion}` : ''}`} aria-hidden="true">
+			<span
+				className={cn(
+					'launcher-slider__icon-shell',
+					'launcher-slider__icon-shell--end',
+					endIconIsOnFill && 'is-on-fill',
+					endIconMotion && `is-${endIconMotion}`,
+				)}
+				aria-hidden="true"
+			>
 				<Icon className="launcher-slider__icon" name={endIcon} width={20} height={20} />
 			</span>
 		</label>
@@ -140,16 +167,20 @@ function ShadeToggleButton({
 
 	return (
 		<button
-			className={`launcher-shade-toggle launcher-shade-toggle--${variant} launcher-shade-toggle--${motion} ${active ? 'is-active' : 'is-inactive'}`}
+			className={cn(
+				'launcher-shade-toggle',
+				`launcher-shade-toggle--${variant}`,
+				`launcher-shade-toggle--${motion}`,
+				active ? 'is-active' : 'is-inactive',
+			)}
 			type="button"
 			aria-pressed={active}
 			onClick={handleClick}
 			style={style}
 		>
 			<span className="launcher-shade-toggle__icon" aria-hidden="true">
-				<span key={motionId} className={`launcher-shade-toggle__motion${motionId > 0 ? ' is-animating' : ''}`}>
+				<span key={motionId} className={cn('launcher-shade-toggle__motion', motionId > 0 && 'is-animating')}>
 					<ShadeToggleGlyph motion={motion} icon={active ? onIcon : offIcon} active={active} />
-					<span className="launcher-shade-toggle__pulse" />
 					<span className="launcher-shade-toggle__pulse" />
 				</span>
 			</span>
@@ -185,7 +216,7 @@ export function ControlShade({ onClose, onSettings, className = '', style, previ
 
 	return (
 		<div
-			className={`launcher-shade${className ? ` ${className}` : ''}`}
+			className={cn('launcher-shade', className)}
 			role={preview ? undefined : 'dialog'}
 			aria-label={preview ? undefined : 'Панель быстрых настроек'}
 			aria-hidden={preview || undefined}

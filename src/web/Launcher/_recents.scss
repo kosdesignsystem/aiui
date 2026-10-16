@@ -9,7 +9,7 @@
 	background:
 		linear-gradient(180deg, rgb(1 16 29 / 8%), rgb(1 11 25 / 26%)),
 		#082d30 url('../../assets/launcher/wallpaper.png') center / cover no-repeat;
-	animation: launcher-recents-in 300ms cubic-bezier(.16,.78,.24,1);
+	animation: launcher-recents-in 260ms var(--launcher-ease-out);
 }
 .launcher-recents.is-opened-from-app { animation: none; }
 .launcher-recents.is-opened-from-app .launcher-recents__slide { animation: none; }
@@ -34,9 +34,9 @@
 	line-height: 28px;
 	cursor: pointer;
 	-webkit-tap-highlight-color: transparent;
-	transition: opacity 160ms ease, transform 160ms cubic-bezier(.2,.8,.25,1);
+	transition: opacity var(--launcher-motion-fast) ease, transform var(--launcher-motion-fast) var(--launcher-ease-out);
 }
-.launcher-recents__close-all:active { opacity: .68; transform: scale(.95); }
+.launcher-recents__close-all:active { opacity: .72; transform: scale(.98); }
 .launcher-recents__close-all:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .launcher-recents.is-closing-all .launcher-recents__close-all { opacity: 0; transform: translateY(-8px); pointer-events: none; }
 
@@ -67,6 +67,8 @@
 	--recent-opacity: .7;
 	--recent-preview-height: 407.2px;
 	--recent-preview-width: 183.24px;
+	--recent-drag-opacity: 1;
+	--recent-drag-scale: 1;
 	flex: 0 0 var(--launcher-recent-width);
 	max-width: var(--launcher-recent-width);
 	height: auto;
@@ -76,12 +78,12 @@
 	transform: translateY(var(--recent-lift));
 	transform-origin: center 58%;
 	transition:
-		flex-basis 330ms cubic-bezier(.2,.82,.22,1),
-		max-width 330ms cubic-bezier(.2,.82,.22,1),
-		margin-right 330ms cubic-bezier(.2,.82,.22,1),
-		transform 110ms cubic-bezier(.2,.72,.3,1);
-	animation: launcher-recent-card-in 440ms cubic-bezier(.16,.82,.24,1) both;
-	animation-delay: calc(var(--recent-index) * 42ms);
+		flex-basis 290ms var(--launcher-ease-out),
+		max-width 290ms var(--launcher-ease-out),
+		margin-right 290ms var(--launcher-ease-out),
+		transform 90ms linear;
+	animation: launcher-recent-card-in 340ms var(--launcher-ease-out) both;
+	animation-delay: calc(var(--recent-index) * 26ms);
 	will-change: transform, opacity;
 }
 .launcher-recents__slide.is-active {
@@ -116,10 +118,13 @@
 	cursor: inherit;
 	touch-action: none;
 	-webkit-tap-highlight-color: transparent;
-	transform: translateY(var(--recent-drag-y));
-	transition: transform 320ms cubic-bezier(.2,.9,.22,1), opacity 180ms ease, filter 180ms ease;
+	opacity: var(--recent-drag-opacity);
+	transform: translateY(var(--recent-drag-y)) scale(var(--recent-drag-scale));
+	transition: transform 240ms var(--launcher-ease-out), opacity 180ms ease-out;
 	will-change: transform;
 }
+.launcher-recent-card:focus-visible { outline: none; }
+.launcher-recent-card:focus-visible .launcher-recent-card__preview { outline: 2px solid #fff; outline-offset: 4px; }
 .launcher-recents__slide.is-being-dragged .launcher-recent-card { transition: none; }
 .launcher-recent-card__app-icon {
 	flex: 0 0 34px;
@@ -129,7 +134,7 @@
 	height: 34px;
 	filter: drop-shadow(0 4px 8px rgb(0 0 0 / 24%));
 	transform: translateX(var(--recent-icon-shift));
-	transition: transform 160ms cubic-bezier(.2,.8,.25,1);
+	transition: transform var(--launcher-motion-fast) var(--launcher-ease-out), opacity var(--launcher-motion-fast) ease;
 }
 .launcher-recent-card__app-icon img { display: block; width: 34px; height: 34px; pointer-events: none; }
 .launcher-recent-card__preview {
@@ -143,7 +148,7 @@
 	background: #fff;
 	box-shadow: 0 18px 42px rgb(0 0 0 / 34%), 0 3px 12px rgb(0 0 0 / 18%);
 	opacity: var(--recent-opacity);
-	transition: width 110ms cubic-bezier(.2,.72,.3,1), height 110ms cubic-bezier(.2,.72,.3,1), opacity 110ms linear, box-shadow 260ms ease, filter 260ms ease;
+	transition: width 90ms linear, height 90ms linear, opacity 90ms linear, box-shadow 220ms ease;
 }
 .launcher-recents__slide.is-active .launcher-recent-card__preview { box-shadow: 0 22px 52px rgb(0 0 0 / 38%), 0 4px 14px rgb(0 0 0 / 18%); }
 .launcher-recent-card__preview > img {
@@ -156,10 +161,17 @@
 }
 .launcher-recents__slide.is-closing .launcher-recent-card {
 	pointer-events: none;
-	animation: launcher-recent-card-dismiss 280ms cubic-bezier(.36,.02,.72,.42) forwards;
+	animation: launcher-recent-card-dismiss 240ms cubic-bezier(.4, 0, .7, .32) forwards;
 }
 .launcher-recents.is-closing-all .launcher-recents__slide.is-closing .launcher-recent-card {
-	animation-delay: calc(var(--recent-index) * 36ms);
+	animation-delay: calc(var(--recent-index) * 28ms);
 }
 .launcher-recents__slide.is-closing .launcher-recent-card__app-icon { transform: scale(.76); }
+
+@media (hover: hover) {
+	.launcher-recents__close-all:hover { opacity: .82; }
+	.launcher-recents__slide.is-active:not(.is-being-dragged) .launcher-recent-card:hover .launcher-recent-card__preview {
+		box-shadow: 0 24px 56px rgb(0 0 0 / 40%), 0 4px 14px rgb(0 0 0 / 18%);
+	}
+}
 

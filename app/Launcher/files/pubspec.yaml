@@ -47,20 +47,12 @@ flutter:
     - assets/screens/phone.png
     - assets/screens/settings.png
     - assets/screens/weather.png
-    - assets/fonts/text_regular.woff2
-    - assets/fonts/text_medium.woff2
-    - assets/fonts/text_semibold.woff2
     - assets/fonts/clock_regular.otf
+    - assets/fonts/text_medium.woff2
+    - assets/fonts/text_regular.woff2
+    - assets/fonts/text_semibold.woff2
 
   fonts:
-    - family: Kaspersky Sans Text
-      fonts:
-        - asset: assets/fonts/text_regular.woff2
-          weight: 400
-        - asset: assets/fonts/text_medium.woff2
-          weight: 500
-        - asset: assets/fonts/text_semibold.woff2
-          weight: 600
     - family: Kaspersky Sans Clock
       fonts:
         - asset: assets/fonts/clock_regular.otf

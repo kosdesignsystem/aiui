@@ -1,20 +1,21 @@
 import {
-	CSSProperties,
-	PointerEvent as ReactPointerEvent,
+	useCallback,
 	useEffect,
-	useMemo,
 	useRef,
 	useState,
+	type CSSProperties,
+	type MouseEvent as ReactMouseEvent,
+	type PointerEvent as ReactPointerEvent,
 } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { App } from '../../ui/App';
 import { Icon } from '../../ui/Icon';
-import { LoadingAppScreen } from '../LoadingApp/LoadingScreen';
+import { cn } from '../../ui/lib/cn';
 import { ClockBlock, HomeGrid, LauncherStatus, PinPad } from './chrome';
 import {
 	homePages,
+	getHomePageForApp,
 	isLauncherUnlocked,
-	TRANSITION_DURATION_MS,
 	unlockLauncher,
 	type LaunchableApp,
 	type LauncherDrag,
@@ -25,54 +26,83 @@ import {
 	type RecentTransitionState,
 	type ShadeOrigin,
 } from './model';
+import {
+	clamp,
+	launcherGesture,
+	launcherMotion,
+	prefersReducedMotion,
+	progress,
+	resist,
+} from './motion';
 import { RecentApps } from './recents';
 import { ControlShade } from './shade';
+import { AppLaunchTransition, RecentAppTransition } from './transitions';
+import { useManagedTimeouts } from './useManagedTimeouts';
+import { runLauncherMinimizeTransition } from './viewTransition';
 import './launcher.scss';
 
 export function LauncherScreen() {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const skipHomeEntrance = Boolean((location.state as LauncherLocationState | null)?.skipHomeEntrance);
+	const locationState = location.state as LauncherLocationState | null;
+	const skipHomeEntrance = Boolean(locationState?.skipHomeEntrance);
 	const [mode, setMode] = useState<LauncherMode>(() => (isLauncherUnlocked() ? 'home' : 'lock'));
 	const [pinLength, setPinLength] = useState(0);
 	const [blackout, setBlackout] = useState(false);
 	const [dragOffset, setDragOffset] = useState(0);
-	const [homePage, setHomePage] = useState(0);
+	const [homePage, setHomePage] = useState(() => getHomePageForApp(locationState?.focusAppId));
 	const [homePageDrag, setHomePageDrag] = useState(0);
 	const [isHomePageDragging, setIsHomePageDragging] = useState(false);
+	const [isHomeSettled, setIsHomeSettled] = useState(skipHomeEntrance);
 	const [launch, setLaunch] = useState<LaunchState | null>(null);
 	const [recentTransition, setRecentTransition] = useState<RecentTransitionState | null>(null);
 	const [activeApp, setActiveApp] = useState<LaunchableApp | null>(null);
 	const [shadeOrigin, setShadeOrigin] = useState<ShadeOrigin>('home');
-	const timersRef = useRef<number[]>([]);
+	const [isShadeClosing, setIsShadeClosing] = useState(false);
 	const launchTokenRef = useRef(0);
 	const dragRef = useRef<LauncherDrag | null>(null);
 	const dragDeltaRef = useRef(0);
+	const { schedule, clearAll: clearScheduledWork } = useManagedTimeouts();
 
-	const schedule = (callback: () => void, delay: number) => {
-		const timer = window.setTimeout(callback, delay);
-		timersRef.current.push(timer);
-	};
+	const resetGesture = useCallback(() => {
+		dragRef.current = null;
+		dragDeltaRef.current = 0;
+		setDragOffset(0);
+		setHomePageDrag(0);
+		setIsHomePageDragging(false);
+	}, []);
 
-	useEffect(() => () => timersRef.current.forEach(window.clearTimeout), []);
+	const showHome = useCallback(() => {
+		clearScheduledWork();
+		launchTokenRef.current += 1;
+		setLaunch(null);
+		setRecentTransition(null);
+		setActiveApp(null);
+		setShadeOrigin('home');
+		setIsShadeClosing(false);
+		setHomePage(0);
+		setIsHomeSettled(true);
+		resetGesture();
+		setMode('home');
+	}, [clearScheduledWork, resetGesture]);
 
 	useEffect(() => {
 		const handleSystemHome = () => {
-			launchTokenRef.current += 1;
-			setLaunch(null);
-			setRecentTransition(null);
-			setActiveApp(null);
-			setShadeOrigin('home');
-			setDragOffset(0);
-			setHomePage(0);
-			setHomePageDrag(0);
-			setIsHomePageDragging(false);
-			setMode('home');
+			const isClosingApp = Boolean(activeApp && (
+				mode === 'app' || (mode === 'shade' && shadeOrigin === 'app')
+			));
+
+			if (!isClosingApp || !activeApp) {
+				showHome();
+				return;
+			}
+
+			runLauncherMinimizeTransition(activeApp.id, showHome);
 		};
 
 		window.addEventListener('launcher:home', handleSystemHome);
 		return () => window.removeEventListener('launcher:home', handleSystemHome);
-	}, []);
+	}, [activeApp, mode, shadeOrigin, showHome]);
 
 	const completeTransition = (nextMode: LauncherMode) => {
 		setBlackout(true);
@@ -80,11 +110,34 @@ export function LauncherScreen() {
 			setMode(nextMode);
 			setDragOffset(0);
 			schedule(() => setBlackout(false), 30);
-		}, TRANSITION_DURATION_MS);
+		}, launcherMotion.modeFade);
 	};
 
+	const closeShade = useCallback(() => {
+		if (isShadeClosing) return;
+		const nextMode = shadeOrigin === 'app' && activeApp ? 'app' : 'home';
+		if (prefersReducedMotion()) {
+			setMode(nextMode);
+			resetGesture();
+			return;
+		}
+
+		setIsShadeClosing(true);
+		schedule(() => {
+			setMode(nextMode);
+			setIsShadeClosing(false);
+			resetGesture();
+		}, launcherMotion.shadeClose);
+	}, [activeApp, isShadeClosing, resetGesture, schedule, shadeOrigin]);
+
 	const handlePointerDown = (event: ReactPointerEvent<HTMLElement>) => {
-		if (launch || (mode !== 'lock' && mode !== 'home' && mode !== 'app' && mode !== 'shade')) return;
+		if (
+			!event.isPrimary
+			|| event.button !== 0
+			|| launch
+			|| isShadeClosing
+			|| (mode !== 'lock' && mode !== 'home' && mode !== 'app' && mode !== 'shade')
+		) return;
 		dragRef.current = {
 			pointerId: event.pointerId,
 			startX: event.clientX,
@@ -105,7 +158,7 @@ export function LauncherScreen() {
 		const deltaY = event.clientY - drag.startY;
 		dragDeltaRef.current = Math.max(dragDeltaRef.current, Math.hypot(deltaX, deltaY));
 
-		if (!drag.axis && Math.max(Math.abs(deltaX), Math.abs(deltaY)) > 7) {
+		if (!drag.axis && Math.max(Math.abs(deltaX), Math.abs(deltaY)) > launcherGesture.axisLockDistance) {
 			drag.axis = drag.mode === 'home' && Math.abs(deltaX) > Math.abs(deltaY)
 				? 'horizontal'
 				: 'vertical';
@@ -117,15 +170,15 @@ export function LauncherScreen() {
 			event.preventDefault();
 			const isPastFirstPage = drag.homePage === 0 && deltaX > 0;
 			const isPastLastPage = drag.homePage === homePages.length - 1 && deltaX < 0;
-			const resistedDelta = isPastFirstPage || isPastLastPage ? deltaX * .24 : deltaX;
+			const resistedDelta = isPastFirstPage || isPastLastPage ? resist(deltaX) : deltaX;
 			const limit = drag.viewportWidth * .72;
-			setHomePageDrag(Math.max(-limit, Math.min(limit, resistedDelta)));
+			setHomePageDrag(clamp(resistedDelta, -limit, limit));
 			return;
 		}
 
 		if (drag.axis !== 'vertical') return;
 		if (drag.mode === 'lock') setDragOffset(Math.min(0, deltaY));
-		if (drag.mode === 'home' || drag.mode === 'app') setDragOffset(Math.max(-180, Math.min(260, deltaY)));
+		if (drag.mode === 'home' || drag.mode === 'app') setDragOffset(clamp(deltaY, -180, 260));
 		if (drag.mode === 'shade') setDragOffset(Math.min(0, deltaY));
 	};
 
@@ -141,8 +194,9 @@ export function LauncherScreen() {
 
 		if (drag.axis === 'horizontal') {
 			const elapsed = Math.max(1, performance.now() - drag.startedAt);
-			const isFastSwipe = Math.abs(deltaX) > 24 && Math.abs(deltaX / elapsed) > .38;
-			const crossesThreshold = Math.abs(deltaX) > drag.viewportWidth * .18;
+			const isFastSwipe = Math.abs(deltaX) > launcherGesture.pageVelocityDistance
+				&& Math.abs(deltaX / elapsed) > launcherGesture.pageVelocity;
+			const crossesThreshold = Math.abs(deltaX) > drag.viewportWidth * launcherGesture.pageDistanceRatio;
 			if (!cancelled && (isFastSwipe || crossesThreshold)) {
 				if (deltaX < 0) setHomePage(Math.min(homePages.length - 1, drag.homePage + 1));
 				if (deltaX > 0) setHomePage(Math.max(0, drag.homePage - 1));
@@ -161,18 +215,19 @@ export function LauncherScreen() {
 			return;
 		}
 
-		if (drag.mode === 'lock' && deltaY < -64) completeTransition('pin');
-		else if ((drag.mode === 'home' || drag.mode === 'app') && deltaY > 72) {
+		if (drag.mode === 'lock' && deltaY < -launcherGesture.shadeCloseDistance) completeTransition('pin');
+		else if ((drag.mode === 'home' || drag.mode === 'app') && deltaY > launcherGesture.shadeOpenDistance) {
 			setShadeOrigin(drag.mode);
+			setIsShadeClosing(false);
 			setMode('shade');
 			setDragOffset(0);
 		}
-		else if ((drag.mode === 'home' || drag.mode === 'app') && deltaY < -72) {
+		else if ((drag.mode === 'home' || drag.mode === 'app') && deltaY < -launcherGesture.recentsOpenDistance) {
 			if (drag.mode === 'app' && activeApp) setRecentTransition({ app: activeApp });
 			setMode('recents');
 			setDragOffset(0);
 		}
-		else if (drag.mode === 'shade' && deltaY < -64) { setMode(shadeOrigin === 'app' && activeApp ? 'app' : 'home'); setDragOffset(0); }
+		else if (drag.mode === 'shade' && deltaY < -launcherGesture.shadeCloseDistance) closeShade();
 		else setDragOffset(0);
 		setHomePageDrag(0);
 		setIsHomePageDragging(false);
@@ -180,6 +235,7 @@ export function LauncherScreen() {
 	};
 
 	const handleDigit = () => {
+		if (pinLength >= 4) return;
 		const nextLength = pinLength + 1;
 		setPinLength(nextLength);
 		if (nextLength === 4) {
@@ -188,12 +244,15 @@ export function LauncherScreen() {
 		}
 	};
 
-	const startHomeLaunch = (event: ReactPointerEvent<HTMLButtonElement>, app: LaunchableApp) => {
+	const startHomeLaunch = (
+		event: ReactPointerEvent<HTMLButtonElement> | ReactMouseEvent<HTMLButtonElement>,
+		app: LaunchableApp,
+	) => {
 		const activeDrag = dragRef.current;
 		const pointerDistance = activeDrag
 			? Math.hypot(event.clientX - activeDrag.startX, event.clientY - activeDrag.startY)
 			: dragDeltaRef.current;
-		if (pointerDistance > 6 || launch) return;
+		if (pointerDistance > launcherGesture.tapSlop || launch) return;
 		const launchToken = ++launchTokenRef.current;
 		const surfaceRect = event.currentTarget.closest('.launcher-screen')?.getBoundingClientRect();
 		const targetRect = event.currentTarget.getBoundingClientRect();
@@ -204,7 +263,7 @@ export function LauncherScreen() {
 		schedule(() => {
 			if (launchTokenRef.current !== launchToken) return;
 			setLaunch((value) => value?.kind === 'home' ? { ...value, loading: true } : value);
-		}, 330);
+		}, launcherMotion.homeLaunchReveal);
 		schedule(() => {
 			if (launchTokenRef.current !== launchToken) return;
 			setActiveApp(app);
@@ -212,10 +271,13 @@ export function LauncherScreen() {
 			setMode('app');
 			setDragOffset(0);
 			setLaunch(null);
-		}, 1020);
+		}, launcherMotion.homeLaunchComplete);
 	};
 
-	const startRecentLaunch = (event: ReactPointerEvent<HTMLButtonElement>, app: LaunchableApp) => {
+	const startRecentLaunch = (
+		event: ReactPointerEvent<HTMLButtonElement> | ReactMouseEvent<HTMLButtonElement>,
+		app: LaunchableApp,
+	) => {
 		if (launch) return;
 		const preview = event.currentTarget.querySelector<HTMLElement>('.launcher-recent-card__preview');
 		const surfaceRect = event.currentTarget.closest('.launcher-screen')?.getBoundingClientRect();
@@ -242,48 +304,30 @@ export function LauncherScreen() {
 			setMode('app');
 			setDragOffset(0);
 			setLaunch(null);
-		}, 440);
+		}, launcherMotion.recentLaunch);
 	};
 
 	const handleRecentTransitionReady = (appId: string, bounds: RecentTransitionBounds) => {
 		if (!recentTransition || recentTransition.app.id !== appId || recentTransition.target) return;
 		setRecentTransition({ ...recentTransition, target: bounds });
-		schedule(() => setRecentTransition(null), 440);
+		schedule(() => setRecentTransition(null), launcherMotion.recentTransition);
 	};
 
-	const launchStyle = useMemo(() => {
-		if (!launch) return undefined;
-		if (launch.kind === 'home') {
-			return { '--launch-x': `${launch.x}px`, '--launch-y': `${launch.y}px` } as CSSProperties;
-		}
-		return {
-			'--launch-left': `${launch.left}px`,
-			'--launch-top': `${launch.top}px`,
-			'--launch-width': `${launch.width}px`,
-			'--launch-height': `${launch.height}px`,
-		} as CSSProperties;
-	}, [launch]);
-	const recentTransitionStyle = useMemo(() => recentTransition?.target ? ({
-		'--recent-transition-left': `${recentTransition.target.left}px`,
-		'--recent-transition-top': `${recentTransition.target.top}px`,
-		'--recent-transition-width': `${recentTransition.target.width}px`,
-		'--recent-transition-height': `${recentTransition.target.height}px`,
-	} as CSSProperties) : undefined, [recentTransition]);
 	const lockStyle = { '--launcher-drag': `${dragOffset}px` } as CSSProperties;
-	const shadePullProgress = mode === 'home' || mode === 'app' ? Math.max(0, Math.min(1, dragOffset / 220)) : 0;
+	const shadePullProgress = mode === 'home' || mode === 'app' ? progress(dragOffset, 220) : 0;
 	const shadeGestureProgress = mode === 'shade'
-		? Math.max(0, Math.min(1, 1 + dragOffset / 220))
+		? clamp(1 + dragOffset / 220, 0, 1)
 		: shadePullProgress;
 	const shadeGestureStyle = {
 		'--shade-translate': `${(shadeGestureProgress - 1) * 100}%`,
-		'--shade-surface-opacity': .42 + shadeGestureProgress * .58,
-		'--shade-content-opacity': .16 + shadeGestureProgress * .84,
-		'--shade-content-scale': .78 + shadeGestureProgress * .22,
+		'--shade-surface-opacity': .58 + shadeGestureProgress * .42,
+		'--shade-content-opacity': .35 + shadeGestureProgress * .65,
+		'--shade-content-scale': .92 + shadeGestureProgress * .08,
 	} as CSSProperties;
 
 	return (
 		<App
-			className={`launcher-screen launcher-screen--${mode}${blackout ? ' is-blackout' : ''}`}
+			className={cn('launcher-screen', `launcher-screen--${mode}`, blackout && 'is-blackout')}
 			onPointerDown={handlePointerDown}
 			onPointerMove={handlePointerMove}
 			onPointerUp={handlePointerUp}
@@ -315,7 +359,14 @@ export function LauncherScreen() {
 			{mode === 'pin' ? <PinPad entered={pinLength} onDigit={handleDigit} onCancel={() => { setPinLength(0); completeTransition('lock'); }} /> : null}
 
 			{mode === 'home' || mode === 'shade' || mode === 'recents' ? (
-				<div className={`launcher-home${mode !== 'home' || shadeOrigin === 'app' ? ' is-background' : ''}${skipHomeEntrance ? ' is-settled' : ''}`} style={mode === 'home' ? lockStyle : undefined}>
+				<div
+					className={cn(
+						'launcher-home',
+						((mode !== 'home' && !(mode === 'shade' && isShadeClosing)) || shadeOrigin === 'app') && 'is-background',
+						isHomeSettled && 'is-settled',
+					)}
+					style={mode === 'home' ? lockStyle : undefined}
+				>
 					<HomeGrid
 						activePage={homePage}
 						dragOffset={homePageDrag}
@@ -331,7 +382,7 @@ export function LauncherScreen() {
 
 			{activeApp && (mode === 'app' || (mode === 'shade' && shadeOrigin === 'app')) ? (
 				<div
-					className={`launcher-app-placeholder${mode === 'shade' ? ' is-background' : ''}`}
+					className={cn('launcher-app-placeholder', mode === 'shade' && !isShadeClosing && 'is-background')}
 					style={mode === 'app' ? lockStyle : undefined}
 					aria-label={`Приложение «${activeApp.label}»`}
 				>
@@ -341,10 +392,15 @@ export function LauncherScreen() {
 
 			{mode === 'shade' || ((mode === 'home' || mode === 'app') && shadePullProgress > 0) ? (
 				<ControlShade
-					className={`launcher-shade--gesture${mode !== 'shade' ? ' launcher-shade--pull' : ''}${mode === 'shade' && dragOffset < 0 ? ' is-dragging' : ''}`}
+					className={cn(
+						'launcher-shade--gesture',
+						mode !== 'shade' && 'launcher-shade--pull',
+						mode === 'shade' && dragOffset < 0 && 'is-dragging',
+						isShadeClosing && 'is-closing',
+					)}
 					style={shadeGestureStyle}
 					preview={mode !== 'shade'}
-					onClose={() => setMode(shadeOrigin === 'app' && activeApp ? 'app' : 'home')}
+					onClose={closeShade}
 					onSettings={() => navigate('/app/Components/navigation')}
 				/>
 			) : null}
@@ -352,7 +408,12 @@ export function LauncherScreen() {
 			{mode === 'recents' ? (
 				<RecentApps
 					onOpen={startRecentLaunch}
-					onEmpty={() => { setRecentTransition(null); setActiveApp(null); setMode('home'); }}
+					onEmpty={() => {
+						setRecentTransition(null);
+						setActiveApp(null);
+						setShadeOrigin('home');
+						setMode('home');
+					}}
 					initialActiveId={activeApp?.id}
 					transitioningAppId={recentTransition?.app.id}
 					onTransitionReady={handleRecentTransitionReady}
@@ -361,36 +422,8 @@ export function LauncherScreen() {
 
 			<div className="launcher-blackout" aria-hidden="true" />
 
-			{launch ? (
-				<div
-					className={`launcher-launch launcher-launch--${launch.kind}${launch.active ? ' is-active' : ''}${launch.kind === 'home' && launch.loading ? ' is-loading' : ''}`}
-					style={launchStyle}
-				>
-					{launch.kind === 'home' ? (
-						<>
-							<div className="launcher-launch__wash" />
-							<img className="launcher-launch__icon" src={launch.app.icon} alt="" />
-							<div className="launcher-launch__loader">
-								<LoadingAppScreen icon={launch.app.icon} appName={launch.app.label} />
-							</div>
-						</>
-					) : (
-						<div className="launcher-launch__preview">
-							<img src={launch.app.preview} alt="" draggable="false" />
-						</div>
-					)}
-				</div>
-			) : null}
-
-			{recentTransition ? (
-				<div
-					className={`launcher-recent-transition${recentTransition.target ? ' is-active' : ''}`}
-					style={recentTransitionStyle}
-					aria-hidden="true"
-				>
-					<img src={recentTransition.app.preview} alt="" draggable="false" />
-				</div>
-			) : null}
+			{launch ? <AppLaunchTransition launch={launch} /> : null}
+			{recentTransition ? <RecentAppTransition transition={recentTransition} /> : null}
 		</App>
 	);
 }

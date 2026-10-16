@@ -1,10 +1,15 @@
-import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
+import type {
+	CSSProperties,
+	MouseEvent as ReactMouseEvent,
+	PointerEvent as ReactPointerEvent,
+} from 'react';
 import { Icon } from '../../ui/Icon';
+import { cn } from '../../ui/lib/cn';
 import { homePages, type LaunchableApp } from './model';
 
 export function LauncherStatus({ dark = false }: { dark?: boolean }) {
 	return (
-		<div className={`launcher-status${dark ? ' is-dark' : ''}`} aria-hidden="true">
+		<div className={cn('launcher-status', dark && 'is-dark')} aria-hidden="true">
 			<span>13:52</span>
 			<span className="launcher-status__icons">
 				<Icon name="signal-cellular-100" width={14} height={14} />
@@ -18,7 +23,7 @@ export function LauncherStatus({ dark = false }: { dark?: boolean }) {
 
 export function ClockBlock({ compact = false }: { compact?: boolean }) {
 	return (
-		<div className={`launcher-clock${compact ? ' launcher-clock--compact' : ''}`}>
+		<div className={cn('launcher-clock', compact && 'launcher-clock--compact')}>
 			<time>13:52</time>
 			<span>Понедельник, 24 июня</span>
 		</div>
@@ -29,7 +34,10 @@ type HomeGridProps = {
 	activePage: number;
 	dragOffset: number;
 	isDragging: boolean;
-	onLaunch: (event: ReactPointerEvent<HTMLButtonElement>, app: LaunchableApp) => void;
+	onLaunch: (
+		event: ReactPointerEvent<HTMLButtonElement> | ReactMouseEvent<HTMLButtonElement>,
+		app: LaunchableApp,
+	) => void;
 	onPageChange: (page: number) => void;
 };
 
@@ -40,7 +48,7 @@ export function HomeGrid({ activePage, dragOffset, isDragging, onLaunch, onPageC
 	} as CSSProperties;
 
 	return (
-		<div className={`launcher-home-pages${isDragging ? ' is-dragging' : ''}`} aria-label="Страницы приложений">
+		<div className={cn('launcher-home-pages', isDragging && 'is-dragging')} aria-label="Страницы приложений">
 			<div className="launcher-home-pages__viewport">
 				<div className="launcher-home-pages__track" style={style}>
 					{homePages.map((pageApps, pageIndex) => (
@@ -61,7 +69,13 @@ export function HomeGrid({ activePage, dragOffset, isDragging, onLaunch, onPageC
 											tabIndex={pageIndex === activePage ? 0 : -1}
 											data-launcher-app-id={app.id}
 											aria-disabled={!launchableApp}
-											onPointerUp={launchableApp ? (event) => onLaunch(event, launchableApp) : undefined}
+											disabled={!launchableApp}
+											onPointerUp={launchableApp ? (event) => {
+												if (event.button === 0) onLaunch(event, launchableApp);
+											} : undefined}
+											onClick={launchableApp ? (event) => {
+												if (event.detail === 0) onLaunch(event, launchableApp);
+											} : undefined}
 										>
 											<span className="launcher-app__icon-wrap">
 												<img className="launcher-app__icon" src={app.icon} alt="" draggable="false" />
@@ -78,7 +92,7 @@ export function HomeGrid({ activePage, dragOffset, isDragging, onLaunch, onPageC
 			<div className="launcher-home-pages__indicator" aria-label={`Страница ${activePage + 1} из ${homePages.length}`}>
 				{homePages.map((_, pageIndex) => (
 					<button
-						className={pageIndex === activePage ? 'is-active' : ''}
+						className={cn(pageIndex === activePage && 'is-active')}
 						key={pageIndex}
 						type="button"
 						aria-label={`Перейти на страницу ${pageIndex + 1}`}
@@ -104,7 +118,7 @@ export function PinPad({ entered, onDigit, onCancel }: PinPadProps) {
 			<h1>Введите код-пароль</h1>
 			<div className="launcher-pin__dots" aria-label={`Введено цифр: ${entered}`}>
 				{[0, 1, 2, 3].map((index) => (
-					<span key={index} className={index < entered ? 'is-filled' : ''} />
+					<span key={index} className={cn(index < entered && 'is-filled')} />
 				))}
 			</div>
 			<button className="launcher-pin__forgot" type="button">Не помню</button>

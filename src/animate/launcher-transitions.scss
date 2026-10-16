@@ -1,10 +1,10 @@
 @keyframes launcher-reveal {
-	from { opacity: 0; transform: scale(1.03); }
+	from { opacity: 0; transform: translateY(6px) scale(1.015); }
 	to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes launcher-home-in {
-	from { opacity: 0; transform: scale(1.1); }
+	from { opacity: 0; transform: scale(1.035); }
 	to { opacity: 1; transform: scale(1); }
 }
 
@@ -35,47 +35,39 @@
 }
 
 @keyframes launcher-toggle-airplane-on {
-	0% { opacity: 0; transform: translateX(-22px) scale(.8); }
-	62% { opacity: 1; transform: translateX(3px) scale(1.08); }
-	82% { transform: translateX(-1px) scale(.99); }
+	0% { opacity: .2; transform: translateX(-10px) scale(.9); }
+	68% { opacity: 1; transform: translateX(1.5px) scale(1.04); }
 	100% { transform: translateX(0) scale(1); }
 }
 
 @keyframes launcher-toggle-airplane-off {
-	0% { opacity: 0; transform: translateX(22px) scale(.8); }
-	62% { opacity: 1; transform: translateX(-3px) scale(1.08); }
-	82% { transform: translateX(1px) scale(.99); }
+	0% { opacity: .2; transform: translateX(10px) scale(.9); }
+	68% { opacity: 1; transform: translateX(-1.5px) scale(1.04); }
 	100% { transform: translateX(0) scale(1); }
 }
 
 @keyframes launcher-toggle-location-on {
-	0% { opacity: .25; transform: translateY(-13px) scale(.76); }
-	52% { opacity: 1; transform: translateY(3px) scale(1.12,.84); }
-	72% { transform: translateY(-3px) scale(.95,1.07); }
-	88% { transform: translateY(1px) scale(1.02,.97); }
+	0% { opacity: .3; transform: translateY(-7px) scale(.88); }
+	65% { opacity: 1; transform: translateY(1.5px) scale(1.04,.97); }
 	100% { transform: translateY(0) scale(1); }
 }
 
 @keyframes launcher-toggle-location-off {
 	0% { transform: translateY(0) scale(1); }
-	38% { transform: translateY(-5px) scale(.94,1.08); }
-	72% { transform: translateY(2px) scale(1.06,.9); }
+	48% { transform: translateY(-3px) scale(.96,1.04); }
 	100% { transform: translateY(0) scale(1); }
 }
 
 @keyframes launcher-toggle-bell {
 	0%, 100% { transform: rotate(0) scale(1); }
-	16% { transform: rotate(-15deg) scale(1.03); }
-	32% { transform: rotate(13deg) scale(1.06); }
-	48% { transform: rotate(-10deg) scale(1.04); }
-	64% { transform: rotate(7deg) scale(1.02); }
-	80% { transform: rotate(-3deg) scale(1); }
+	22% { transform: rotate(-8deg) scale(1.03); }
+	48% { transform: rotate(7deg) scale(1.04); }
+	72% { transform: rotate(-3deg) scale(1.01); }
 }
 
 @keyframes launcher-toggle-flashlight {
-	0% { transform: rotate(-9deg) translateY(2px) scale(.88); }
-	42% { transform: rotate(5deg) translateY(-1px) scale(1.12); }
-	70% { transform: rotate(-2deg) scale(.98); }
+	0% { transform: rotate(-5deg) translateY(1px) scale(.93); }
+	58% { transform: rotate(2deg) translateY(-1px) scale(1.05); }
 	100% { transform: rotate(0) scale(1); }
 }
 
@@ -92,23 +84,20 @@
 }
 
 @keyframes launcher-toggle-pulse {
-	0% { opacity: .48; transform: scale(.38); }
-	68% { opacity: 0; transform: scale(1.58); }
-	100% { opacity: 0; transform: scale(1.7); }
+	0% { opacity: .35; transform: scale(.55); }
+	100% { opacity: 0; transform: scale(1.4); }
 }
 
 @keyframes launcher-slider-icon-fill {
 	0% { transform: scale(1) rotate(0); filter: drop-shadow(0 0 0 transparent); }
-	32% { transform: scale(.78) rotate(-7deg); }
-	62% { transform: scale(1.22) rotate(4deg); filter: drop-shadow(0 2px 3px rgb(0 0 0 / 18%)); }
-	82% { transform: scale(.96) rotate(-1deg); }
+	42% { transform: scale(.88) rotate(-3deg); }
+	72% { transform: scale(1.08) rotate(1deg); filter: drop-shadow(0 2px 3px rgb(0 0 0 / 14%)); }
 	100% { transform: scale(1) rotate(0); filter: drop-shadow(0 0 0 transparent); }
 }
 
 @keyframes launcher-slider-icon-unfill {
 	0% { transform: scale(1); }
-	48% { transform: scale(.84); opacity: .72; }
-	76% { transform: scale(1.08); opacity: 1; }
+	52% { transform: scale(.9); opacity: .78; }
 	100% { transform: scale(1); }
 }
 
@@ -119,11 +108,16 @@
 }
 
 @keyframes launcher-recent-card-in {
-	from { opacity: 0; transform: scale(.86) translateY(34px); }
+	from { opacity: 0; transform: scale(.94) translateY(18px); }
 }
 
 @keyframes launcher-recent-card-dismiss {
-	0% { opacity: 1; transform: translateY(var(--recent-drag-y)) rotate(0); filter: blur(0); }
-	55% { opacity: .76; }
-	100% { opacity: 0; transform: translateY(-125%) rotate(-2.5deg) scale(.92); filter: blur(1.5px); }
+	0% { opacity: 1; transform: translateY(var(--recent-drag-y)) rotate(0); }
+	100% { opacity: 0; transform: translateY(-118%) rotate(-1.5deg) scale(.96); }
+}
+
+@keyframes launcher-pin-dot-fill {
+	0% { transform: scale(.7); }
+	62% { transform: scale(1.16); }
+	100% { transform: scale(1); }
 }

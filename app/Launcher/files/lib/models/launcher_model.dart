@@ -110,14 +110,18 @@ const List<LauncherItem> launcherItems = <LauncherItem>[
   ),
 ];
 
-final List<LauncherItem> launchableItems =
-    launcherItems.where((item) => item.launchable).toList(growable: false);
-final List<LauncherItem> unavailableItems =
-    launcherItems.where((item) => !item.launchable).toList(growable: false);
+final List<LauncherItem> launchableItems = launcherItems
+    .where((LauncherItem item) => item.launchable)
+    .toList(growable: false);
+
+final List<LauncherItem> unavailableItems = launcherItems
+    .where((LauncherItem item) => !item.launchable)
+    .toList(growable: false);
+
 final List<List<LauncherItem>> homePages = <List<LauncherItem>>[
   launchableItems,
   unavailableItems,
 ];
 
 LauncherItem get settingsItem =>
-    launcherItems.firstWhere((item) => item.id == 'settings');
+    launcherItems.firstWhere((LauncherItem item) => item.id == 'settings');

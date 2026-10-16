@@ -1,15 +1,14 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
-import '../models/launcher_app.dart';
+import '../models/launcher_model.dart';
 
 typedef LauncherItemTap = void Function(LauncherItem item, Offset globalCenter);
 
 class HomeGrid extends StatefulWidget {
-  const HomeGrid({
-    Key? key,
-    required this.onLaunch,
-    this.background = false,
-  }) : super(key: key);
+  const HomeGrid({Key? key, required this.onLaunch, this.background = false})
+      : super(key: key);
 
   final LauncherItemTap onLaunch;
   final bool background;
@@ -36,88 +35,99 @@ class _HomeGridState extends State<HomeGrid> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      duration: const Duration(milliseconds: 220),
-      opacity: widget.background ? 0.74 : 1,
-      child: ColorFiltered(
-        colorFilter: widget.background
-            ? const ColorFilter.mode(Color(0x52001416), BlendMode.srcATop)
-            : const ColorFilter.mode(Colors.transparent, BlendMode.dst),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: PageView.builder(
-                controller: _controller,
-                itemCount: homePages.length,
-                onPageChanged: (value) => setState(() => _page = value),
-                itemBuilder: (context, pageIndex) {
-                  return Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          mainAxisExtent: 87,
-                          crossAxisSpacing: 0,
-                          mainAxisSpacing: 22,
-                        ),
-                        itemCount: homePages[pageIndex].length,
-                        itemBuilder: (context, index) => _AppTile(
-                          item: homePages[pageIndex][index],
-                          onLaunch: widget.onLaunch,
-                        ),
+    Widget content = Column(
+      children: <Widget>[
+        Expanded(
+          child: PageView.builder(
+            controller: _controller,
+            itemCount: homePages.length,
+            onPageChanged: (int value) => setState(() => _page = value),
+            itemBuilder: (BuildContext context, int pageIndex) {
+              return Align(
+                alignment: Alignment.bottomCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 584),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        mainAxisExtent: 87,
+                        mainAxisSpacing: 22,
+                      ),
+                      itemCount: homePages[pageIndex].length,
+                      itemBuilder: (BuildContext context, int index) =>
+                          _AppTile(
+                        item: homePages[pageIndex][index],
+                        onLaunch: widget.onLaunch,
                       ),
                     ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 26,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List<Widget>.generate(homePages.length, (index) {
-                  return Semantics(
-                    label: 'Перейти на страницу ${index + 1}',
-                    button: true,
-                    child: GestureDetector(
-                      onTap: () => _controller.animateToPage(
-                        index,
-                        duration: const Duration(milliseconds: 320),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 16,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List<Widget>.generate(homePages.length, (int index) {
+              final bool active = _page == index;
+              return Semantics(
+                button: true,
+                selected: active,
+                label: 'Перейти на страницу ${index + 1}',
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => _controller.animateToPage(
+                    index,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutCubic,
+                  ),
+                  child: SizedBox(
+                    width: 18,
+                    height: 16,
+                    child: Center(
+                      child: AnimatedScale(
+                        scale: active ? 1.18 : 1,
+                        duration: const Duration(milliseconds: 150),
                         curve: Curves.easeOutCubic,
-                      ),
-                      child: SizedBox(
-                        width: 18,
-                        height: 16,
-                        child: Center(
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 180),
-                            width: _page == index ? 6.5 : 6,
-                            height: _page == index ? 6.5 : 6,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: _page == index
-                                  ? Colors.white
-                                  : const Color(0x5CFFFFFF),
-                            ),
+                        child: Container(
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color:
+                                active ? Colors.white : const Color(0x5CFFFFFF),
                           ),
                         ),
                       ),
                     ),
-                  );
-                }),
-              ),
-            ),
-            const SizedBox(height: 10),
-          ],
+                  ),
+                ),
+              );
+            }),
+          ),
         ),
-      ),
+        const SizedBox(height: 18),
+      ],
     );
+
+    if (widget.background) {
+      content = Opacity(
+        opacity: 0.72,
+        child: ImageFiltered(
+          imageFilter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+          child: Transform.scale(scale: 1.025, child: content),
+        ),
+      );
+    }
+    return content;
   }
 }
 
@@ -137,8 +147,9 @@ class _AppTileState extends State<_AppTile> {
 
   void _open() {
     if (!widget.item.launchable) return;
-    final box = _iconKey.currentContext?.findRenderObject() as RenderBox?;
-    final center = box == null
+    final RenderBox? box =
+        _iconKey.currentContext?.findRenderObject() as RenderBox?;
+    final Offset center = box == null
         ? Offset.zero
         : box.localToGlobal(box.size.center(Offset.zero));
     widget.onLaunch(widget.item, center);
@@ -166,8 +177,9 @@ class _AppTileState extends State<_AppTile> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             AnimatedScale(
-              duration: const Duration(milliseconds: 130),
-              scale: _pressed ? 0.86 : 1,
+              duration: const Duration(milliseconds: 90),
+              curve: Curves.easeOut,
+              scale: _pressed ? 0.91 : 1,
               child: Image.asset(
                 widget.item.icon,
                 key: _iconKey,
@@ -177,24 +189,28 @@ class _AppTileState extends State<_AppTile> {
               ),
             ),
             const SizedBox(height: 7),
-            SizedBox(
-              width: 76,
-              child: Text(
-                widget.item.label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  height: 14 / 12,
-                  shadows: <Shadow>[
-                    Shadow(
-                      color: Color(0xFF000011),
-                      offset: Offset(0, 1),
-                      blurRadius: 4,
-                    ),
-                  ],
+            AnimatedOpacity(
+              duration: const Duration(milliseconds: 90),
+              opacity: _pressed ? 0.72 : 1,
+              child: SizedBox(
+                width: 76,
+                child: Text(
+                  widget.item.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    height: 14 / 12,
+                    shadows: <Shadow>[
+                      Shadow(
+                        color: Color(0xFF000011),
+                        offset: Offset(0, 1),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

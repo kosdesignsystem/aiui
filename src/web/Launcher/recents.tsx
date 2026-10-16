@@ -1,30 +1,53 @@
 import {
+	useCallback,
 	useEffect,
 	useLayoutEffect,
 	useRef,
 	useState,
 	type CSSProperties,
+	type MouseEvent as ReactMouseEvent,
 	type PointerEvent as ReactPointerEvent,
 } from 'react';
+import { cn } from '../../ui/lib/cn';
 import {
 	recentApps,
 	type LaunchableApp,
 	type RecentTransitionBounds,
 } from './model';
+import { clamp, launcherGesture, launcherMotion } from './motion';
+import { useManagedTimeouts } from './useManagedTimeouts';
+
+const recentCardMetrics = {
+	activeWidth: 222.11,
+	activeHeight: 493.58,
+	inactiveWidth: 183.24,
+	inactiveHeight: 407.2,
+	gap: 24,
+	lift: 40,
+	iconShift: 94,
+} as const;
 
 type RecentDrag = {
 	pointerId: number;
 	appId: string;
+	startActiveId: string;
 	startX: number;
 	startY: number;
 	startScrollLeft: number;
-	startedAt: number;
 	axis: 'horizontal' | 'vertical' | null;
 	offsetY: number;
+	lastX: number;
+	lastY: number;
+	lastAt: number;
+	velocityX: number;
+	velocityY: number;
 };
 
 type RecentAppsProps = {
-	onOpen: (event: ReactPointerEvent<HTMLButtonElement>, app: LaunchableApp) => void;
+	onOpen: (
+		event: ReactPointerEvent<HTMLButtonElement> | ReactMouseEvent<HTMLButtonElement>,
+		app: LaunchableApp,
+	) => void;
 	onEmpty: () => void;
 	initialActiveId?: string;
 	transitioningAppId?: string;
@@ -49,22 +72,17 @@ export function RecentApps({
 	const [isClosingAll, setIsClosingAll] = useState(false);
 	const trackRef = useRef<HTMLDivElement>(null);
 	const dragRef = useRef<RecentDrag | null>(null);
-	const timersRef = useRef<number[]>([]);
+	const initialPresentationRef = useRef({ activeId, transitioningAppId, onTransitionReady });
 	const scrollFrameRef = useRef<number | null>(null);
 	const motionFrameRef = useRef<number | null>(null);
+	const { schedule } = useManagedTimeouts();
 
 	useEffect(() => () => {
-		timersRef.current.forEach(window.clearTimeout);
 		if (scrollFrameRef.current !== null) cancelAnimationFrame(scrollFrameRef.current);
 		if (motionFrameRef.current !== null) cancelAnimationFrame(motionFrameRef.current);
 	}, []);
 
-	const schedule = (callback: () => void, delay: number) => {
-		const timer = window.setTimeout(callback, delay);
-		timersRef.current.push(timer);
-	};
-
-	const updateCardPresentation = () => {
+	const updateCardPresentation = useCallback(() => {
 		const track = trackRef.current;
 		if (!track) return;
 		const trackCenter = track.scrollLeft + track.clientWidth / 2;
@@ -75,13 +93,15 @@ export function RecentApps({
 			if (card.classList.contains('is-closing')) return;
 			const signedDistance = card.offsetLeft + card.offsetWidth / 2 - trackCenter;
 			const distance = Math.abs(signedDistance);
-			const step = card.offsetWidth + 24;
+			const step = card.offsetWidth + recentCardMetrics.gap;
 			const progress = Math.min(1, distance / step);
 			const opacity = 1 - progress * .3;
-			const previewWidth = 222.11 - progress * (222.11 - 183.24);
-			const previewHeight = 493.58 - progress * (493.58 - 407.2);
-			const lift = progress * 40;
-			const iconShift = Math.sign(signedDistance) * progress * -94;
+			const previewWidth = recentCardMetrics.activeWidth
+				- progress * (recentCardMetrics.activeWidth - recentCardMetrics.inactiveWidth);
+			const previewHeight = recentCardMetrics.activeHeight
+				- progress * (recentCardMetrics.activeHeight - recentCardMetrics.inactiveHeight);
+			const lift = progress * recentCardMetrics.lift;
+			const iconShift = Math.sign(signedDistance) * progress * -recentCardMetrics.iconShift;
 
 			card.style.setProperty('--recent-opacity', opacity.toFixed(4));
 			card.style.setProperty('--recent-preview-width', `${previewWidth.toFixed(2)}px`);
@@ -94,10 +114,10 @@ export function RecentApps({
 			}
 		});
 
-		if (nearestId) setActiveId(nearestId);
-	};
+		if (nearestId) setActiveId((currentId) => currentId === nearestId ? currentId : nearestId);
+	}, []);
 
-	const animateCardPresentation = (duration: number) => {
+	const animateCardPresentation = useCallback((duration: number) => {
 		if (motionFrameRef.current !== null) cancelAnimationFrame(motionFrameRef.current);
 		const startedAt = performance.now();
 		const update = (now: number) => {
@@ -106,18 +126,23 @@ export function RecentApps({
 			else motionFrameRef.current = null;
 		};
 		motionFrameRef.current = requestAnimationFrame(update);
-	};
+	}, [updateCardPresentation]);
 
 	useLayoutEffect(() => {
 		const track = trackRef.current;
 		if (!track) return;
+		const initialPresentation = initialPresentationRef.current;
 		const targetSlide = Array.from(track.querySelectorAll<HTMLElement>('[data-recent-id]'))
-			.find((slide) => slide.dataset.recentId === activeId);
+			.find((slide) => slide.dataset.recentId === initialPresentation.activeId);
 		if (!targetSlide) return;
 
 		track.scrollLeft = targetSlide.offsetLeft + targetSlide.offsetWidth / 2 - track.clientWidth / 2;
 		updateCardPresentation();
-		if (!transitioningAppId || transitioningAppId !== activeId || !onTransitionReady) return;
+		if (
+			!initialPresentation.transitioningAppId
+			|| initialPresentation.transitioningAppId !== initialPresentation.activeId
+			|| !initialPresentation.onTransitionReady
+		) return;
 
 		let secondFrame: number | null = null;
 		const firstFrame = requestAnimationFrame(() => {
@@ -127,7 +152,7 @@ export function RecentApps({
 				if (!preview || !surface) return;
 				const previewRect = preview.getBoundingClientRect();
 				const surfaceRect = surface.getBoundingClientRect();
-				onTransitionReady(activeId, {
+				initialPresentation.onTransitionReady?.(initialPresentation.activeId, {
 					left: previewRect.left - surfaceRect.left,
 					top: previewRect.top - surfaceRect.top,
 					width: previewRect.width,
@@ -140,25 +165,25 @@ export function RecentApps({
 			cancelAnimationFrame(firstFrame);
 			if (secondFrame !== null) cancelAnimationFrame(secondFrame);
 		};
-	}, []);
+	}, [updateCardPresentation]);
 
 	useEffect(() => {
 		const frame = requestAnimationFrame(updateCardPresentation);
 		return () => cancelAnimationFrame(frame);
-	}, [items.length]);
+	}, [items.length, updateCardPresentation]);
 
 	const handleScroll = () => {
 		if (scrollFrameRef.current !== null) cancelAnimationFrame(scrollFrameRef.current);
 		scrollFrameRef.current = requestAnimationFrame(updateCardPresentation);
 	};
 
-	const snapToNearestCard = () => {
+	const snapToNearestCard = (direction = 0, fromAppId?: string) => {
 		const track = trackRef.current;
 		if (!track) return;
 		const trackCenter = track.scrollLeft + track.clientWidth / 2;
-		const nearestCard = Array.from(track.querySelectorAll<HTMLElement>('[data-recent-id]'))
-			.filter((card) => !card.classList.contains('is-closing'))
-			.reduce<HTMLElement | null>((nearest, card) => {
+		const cards = Array.from(track.querySelectorAll<HTMLElement>('[data-recent-id]'))
+			.filter((card) => !card.classList.contains('is-closing'));
+		const nearestCard = cards.reduce<HTMLElement | null>((nearest, card) => {
 				if (!nearest) return card;
 				const cardDistance = Math.abs(card.offsetLeft + card.offsetWidth / 2 - trackCenter);
 				const nearestDistance = Math.abs(nearest.offsetLeft + nearest.offsetWidth / 2 - trackCenter);
@@ -166,10 +191,16 @@ export function RecentApps({
 			}, null);
 
 		if (nearestCard) {
+			const fromIndex = direction !== 0 && fromAppId
+				? cards.findIndex((card) => card.dataset.recentId === fromAppId)
+				: -1;
+			const baseIndex = fromIndex >= 0 ? fromIndex : cards.indexOf(nearestCard);
+			const targetCard = cards[clamp(baseIndex + direction, 0, cards.length - 1)] ?? nearestCard;
 			track.scrollTo({
-				left: nearestCard.offsetLeft + nearestCard.offsetWidth / 2 - track.clientWidth / 2,
+				left: targetCard.offsetLeft + targetCard.offsetWidth / 2 - track.clientWidth / 2,
 				behavior: 'smooth',
 			});
+			animateCardPresentation(launcherMotion.recentSnap);
 		}
 	};
 
@@ -184,16 +215,12 @@ export function RecentApps({
 			schedule(() => {
 				setCollapsingIds((ids) => new Set(ids).add(appId));
 				if (promotedApp) setActiveId(promotedApp.id);
-				animateCardPresentation(380);
-			}, 210);
+				animateCardPresentation(launcherMotion.recentTransition);
+			}, launcherMotion.recentCollapseDelay);
 		}
 
 		schedule(() => {
-			setItems((currentItems) => {
-				const nextItems = currentItems.filter((app) => app.id !== appId);
-				if (nextItems.length === 0) schedule(onEmpty, 0);
-				return nextItems;
-			});
+			setItems((currentItems) => currentItems.filter((app) => app.id !== appId));
 			setClosingIds((ids) => {
 				const nextIds = new Set(ids);
 				nextIds.delete(appId);
@@ -209,28 +236,34 @@ export function RecentApps({
 				updateCardPresentation();
 				snapToNearestCard();
 			});
-		}, hasRemainingApps ? 540 : 280);
+			if (!hasRemainingApps) schedule(onEmpty, 0);
+		}, hasRemainingApps ? launcherMotion.recentCollapseComplete : launcherMotion.recentDismiss);
 	};
 
 	const handleCloseAll = () => {
 		if (items.length === 0 || isClosingAll) return;
 		setIsClosingAll(true);
 		setClosingIds(new Set(items.map((app) => app.id)));
-		schedule(onEmpty, 280 + items.length * 36);
+		schedule(onEmpty, launcherMotion.recentDismiss + items.length * launcherMotion.recentCloseAllStagger);
 	};
 
 	const handleCardPointerDown = (event: ReactPointerEvent<HTMLButtonElement>, app: LaunchableApp) => {
-		if (closingIds.size > 0) return;
+		if (!event.isPrimary || event.button !== 0 || closingIds.size > 0) return;
 		event.currentTarget.setPointerCapture(event.pointerId);
 		dragRef.current = {
 			pointerId: event.pointerId,
 			appId: app.id,
+			startActiveId: activeId,
 			startX: event.clientX,
 			startY: event.clientY,
 			startScrollLeft: trackRef.current?.scrollLeft ?? 0,
-			startedAt: performance.now(),
 			axis: null,
 			offsetY: 0,
+			lastX: event.clientX,
+			lastY: event.clientY,
+			lastAt: performance.now(),
+			velocityX: 0,
+			velocityY: 0,
 		};
 		setDraggedCard({ id: app.id, offsetY: 0 });
 	};
@@ -240,8 +273,17 @@ export function RecentApps({
 		if (!drag || drag.pointerId !== event.pointerId) return;
 		const deltaX = event.clientX - drag.startX;
 		const deltaY = event.clientY - drag.startY;
+		const now = performance.now();
+		const sampleDuration = Math.max(1, now - drag.lastAt);
+		const nextVelocityX = (event.clientX - drag.lastX) / sampleDuration;
+		const nextVelocityY = (event.clientY - drag.lastY) / sampleDuration;
+		drag.velocityX = drag.velocityX * .35 + nextVelocityX * .65;
+		drag.velocityY = drag.velocityY * .35 + nextVelocityY * .65;
+		drag.lastX = event.clientX;
+		drag.lastY = event.clientY;
+		drag.lastAt = now;
 
-		if (!drag.axis && Math.max(Math.abs(deltaX), Math.abs(deltaY)) > 7) {
+		if (!drag.axis && Math.max(Math.abs(deltaX), Math.abs(deltaY)) > launcherGesture.axisLockDistance) {
 			drag.axis = Math.abs(deltaX) > Math.abs(deltaY) ? 'horizontal' : 'vertical';
 			setIsScrolling(drag.axis === 'horizontal');
 		}
@@ -270,14 +312,16 @@ export function RecentApps({
 		if (drag.axis === 'horizontal') {
 			setIsScrolling(false);
 			setDraggedCard(null);
-			requestAnimationFrame(snapToNearestCard);
+			const direction = Math.abs(drag.velocityX) > launcherGesture.recentFlingVelocity
+				? drag.velocityX < 0 ? 1 : -1
+				: 0;
+			requestAnimationFrame(() => snapToNearestCard(direction, drag.startActiveId));
 			return;
 		}
 
 		if (drag.axis === 'vertical') {
-			const elapsed = Math.max(1, performance.now() - drag.startedAt);
-			const isFastUpwardSwipe = drag.offsetY < -32 && drag.offsetY / elapsed < -.42;
-			if (!cancelled && (drag.offsetY < -88 || isFastUpwardSwipe)) dismissCard(app.id);
+			const isFastUpwardSwipe = drag.offsetY < -32 && drag.velocityY < -launcherGesture.recentDismissVelocity;
+			if (!cancelled && (drag.offsetY < -launcherGesture.recentDismissDistance || isFastUpwardSwipe)) dismissCard(app.id);
 			else setDraggedCard(null);
 			return;
 		}
@@ -287,11 +331,20 @@ export function RecentApps({
 	};
 
 	return (
-		<div className={`launcher-recents${isClosingAll ? ' is-closing-all' : ''}${initialActiveId ? ' is-opened-from-app' : ''}${transitioningAppId ? ' is-entering-from-app' : ''}`} role="dialog" aria-label="Открытые приложения">
+		<div
+			className={cn(
+				'launcher-recents',
+				isClosingAll && 'is-closing-all',
+				initialActiveId && 'is-opened-from-app',
+				transitioningAppId && 'is-entering-from-app',
+			)}
+			role="dialog"
+			aria-label="Открытые приложения"
+		>
 			<button className="launcher-recents__close-all" type="button" onClick={handleCloseAll}>Закрыть все</button>
 			<div
 				ref={trackRef}
-				className={`launcher-recents__track${isScrolling ? ' is-dragging' : ''}`}
+				className={cn('launcher-recents__track', isScrolling && 'is-dragging')}
 				onScroll={handleScroll}
 				role="list"
 				aria-label="Открытые приложения"
@@ -300,14 +353,24 @@ export function RecentApps({
 					const isClosing = closingIds.has(app.id);
 					const isCollapsing = collapsingIds.has(app.id);
 					const offsetY = draggedCard?.id === app.id ? draggedCard.offsetY : 0;
+					const dragProgress = clamp(-offsetY / 150, 0, 1);
 					const style = {
 						'--recent-drag-y': `${offsetY}px`,
+						'--recent-drag-opacity': 1 - dragProgress * .16,
+						'--recent-drag-scale': 1 - dragProgress * .025,
 						'--recent-index': index,
 					} as CSSProperties;
 
 					return (
 						<div
-							className={`launcher-recents__slide${activeId === app.id ? ' is-active' : ''}${transitioningAppId === app.id ? ' is-transition-target' : ''}${draggedCard?.id === app.id ? ' is-being-dragged' : ''}${isClosing ? ' is-closing' : ''}${isCollapsing ? ' is-collapsing' : ''}`}
+							className={cn(
+								'launcher-recents__slide',
+								activeId === app.id && 'is-active',
+								transitioningAppId === app.id && 'is-transition-target',
+								draggedCard?.id === app.id && 'is-being-dragged',
+								isClosing && 'is-closing',
+								isCollapsing && 'is-collapsing',
+							)}
 							data-recent-id={app.id}
 							role="listitem"
 							style={style}
@@ -321,6 +384,9 @@ export function RecentApps({
 								onPointerMove={handleCardPointerMove}
 								onPointerUp={(event) => finishCardGesture(event, app)}
 								onPointerCancel={(event) => finishCardGesture(event, app, true)}
+								onClick={(event) => {
+									if (event.detail === 0) onOpen(event, app);
+								}}
 							>
 								<span className="launcher-recent-card__app-icon">
 									<img src={app.icon} alt="" />

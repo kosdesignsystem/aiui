@@ -9,10 +9,14 @@ class ControlShade extends StatefulWidget {
     Key? key,
     required this.onClose,
     required this.onSettings,
+    this.contentOpacity = 1,
+    this.contentScale = 1,
   }) : super(key: key);
 
   final VoidCallback onClose;
   final VoidCallback onSettings;
+  final double contentOpacity;
+  final double contentScale;
 
   @override
   State<ControlShade> createState() => _ControlShadeState();
@@ -30,116 +34,158 @@ class _ControlShadeState extends State<ControlShade> {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
-        child: ColoredBox(
-          color: const Color(0x7A05272A),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 62, 16, 18),
-            child: Column(
-              children: <Widget>[
-                const LauncherClock(),
-                const SizedBox(height: 24),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: _NetworkToggle(
-                        active: _mobile,
-                        icon: Icons.signal_cellular_4_bar,
-                        label: 'Моб. интернет',
-                        detail: _mobile ? 'Megafon LTE' : 'Выключено',
-                        onTap: () => setState(() => _mobile = !_mobile),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onVerticalDragEnd: (DragEndDetails details) {
+        if ((details.primaryVelocity ?? 0) < -300) widget.onClose();
+      },
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          ClipRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
+              child: ColoredBox(
+                color: const Color(0x7A05272A),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 102, 16, 70),
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 150),
+                    opacity: widget.contentOpacity.clamp(0.0, 1.0),
+                    child: AnimatedScale(
+                      duration: const Duration(milliseconds: 240),
+                      curve: Curves.easeOutCubic,
+                      alignment: const Alignment(0, -0.64),
+                      scale: widget.contentScale,
+                      child: Column(
+                        children: <Widget>[
+                          const LauncherClock(),
+                          const SizedBox(height: 24),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: _NetworkToggle(
+                                  active: _mobile,
+                                  icon: Icons.signal_cellular_4_bar,
+                                  label: 'Моб. интернет',
+                                  detail: _mobile ? 'Megafon LTE' : 'Выключено',
+                                  onTap: () =>
+                                      setState(() => _mobile = !_mobile),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: _NetworkToggle(
+                                  active: _wifi,
+                                  icon: _wifi ? Icons.wifi : Icons.wifi_off,
+                                  label: 'Wi-Fi',
+                                  detail: _wifi ? 'KLCorp' : 'Выключено',
+                                  onTap: () => setState(() => _wifi = !_wifi),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 25),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              _QuickToggle(
+                                active: _airplane,
+                                icon: Icons.airplanemode_active,
+                                label: 'Режим полета',
+                                accent: const Color(0xFFD9A832),
+                                onTap: () =>
+                                    setState(() => _airplane = !_airplane),
+                              ),
+                              _QuickToggle(
+                                active: _location,
+                                icon: _location
+                                    ? Icons.location_on
+                                    : Icons.location_off,
+                                label: 'Геолокация',
+                                accent: const Color(0xFF287DE0),
+                                onTap: () =>
+                                    setState(() => _location = !_location),
+                              ),
+                              _QuickToggle(
+                                active: _silent,
+                                icon: _silent
+                                    ? Icons.notifications_off
+                                    : Icons.notifications_active,
+                                label: 'Без звука',
+                                accent: const Color(0xFFD63D4D),
+                                onTap: () => setState(() => _silent = !_silent),
+                              ),
+                              _QuickToggle(
+                                active: _flashlight,
+                                icon: _flashlight
+                                    ? Icons.flashlight_on
+                                    : Icons.flashlight_off,
+                                label: 'Фонарик',
+                                accent: const Color(0xFF716CEA),
+                                onTap: () =>
+                                    setState(() => _flashlight = !_flashlight),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 25),
+                          _ShadeSlider(
+                            value: _volume,
+                            startIcon: Icons.volume_off,
+                            endIcon: Icons.volume_up,
+                            semanticLabel: 'Громкость',
+                            onChanged: (double value) =>
+                                setState(() => _volume = value),
+                          ),
+                          const SizedBox(height: 25),
+                          _ShadeSlider(
+                            value: _brightness,
+                            startIcon: Icons.brightness_low_outlined,
+                            endIcon: Icons.brightness_high,
+                            semanticLabel: 'Яркость',
+                            onChanged: (double value) =>
+                                setState(() => _brightness = value),
+                          ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: widget.onSettings,
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              minimumSize: const Size(0, 22),
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: const Text(
+                              'Перейти в настройки',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _NetworkToggle(
-                        active: _wifi,
-                        icon: _wifi ? Icons.wifi : Icons.wifi_off,
-                        label: 'Wi-Fi',
-                        detail: _wifi ? 'KLCorp' : 'Выключено',
-                        onTap: () => setState(() => _wifi = !_wifi),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    _QuickToggle(
-                      active: _airplane,
-                      icon: Icons.airplanemode_active,
-                      label: 'Режим полета',
-                      accent: const Color(0xFFD9A832),
-                      onTap: () => setState(() => _airplane = !_airplane),
-                    ),
-                    _QuickToggle(
-                      active: _location,
-                      icon: _location ? Icons.location_on : Icons.location_off,
-                      label: 'Геолокация',
-                      accent: const Color(0xFF287DE0),
-                      onTap: () => setState(() => _location = !_location),
-                    ),
-                    _QuickToggle(
-                      active: _silent,
-                      icon: _silent
-                          ? Icons.notifications_off
-                          : Icons.notifications_active,
-                      label: 'Без звука',
-                      accent: const Color(0xFFD63D4D),
-                      onTap: () => setState(() => _silent = !_silent),
-                    ),
-                    _QuickToggle(
-                      active: _flashlight,
-                      icon: _flashlight
-                          ? Icons.flashlight_on
-                          : Icons.flashlight_off,
-                      label: 'Фонарик',
-                      accent: const Color(0xFF716CEA),
-                      onTap: () => setState(() => _flashlight = !_flashlight),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 25),
-                _ShadeSlider(
-                  value: _volume,
-                  startIcon: Icons.volume_off,
-                  endIcon: Icons.volume_up,
-                  semanticLabel: 'Громкость',
-                  onChanged: (value) => setState(() => _volume = value),
-                ),
-                const SizedBox(height: 25),
-                _ShadeSlider(
-                  value: _brightness,
-                  startIcon: Icons.brightness_low_outlined,
-                  endIcon: Icons.brightness_high,
-                  semanticLabel: 'Яркость',
-                  onChanged: (value) => setState(() => _brightness = value),
-                ),
-                const Spacer(),
-                TextButton(
-                  onPressed: widget.onSettings,
-                  style: TextButton.styleFrom(foregroundColor: Colors.white),
-                  child: const Text(
-                    'Перейти в настройки',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
-                SizedBox(
-                  height: 28,
-                  width: double.infinity,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: widget.onClose,
-                    child: const SizedBox.expand(),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          Positioned(
+            bottom: 52,
+            left: 0,
+            right: 0,
+            height: 28,
+            child: Semantics(
+              button: true,
+              label: 'Закрыть панель',
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: widget.onClose,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -162,50 +208,59 @@ class _NetworkToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color color = active ? Colors.white : Colors.white54;
     return Semantics(
       button: true,
       toggled: active,
       label: label,
-      child: Material(
-        color: active ? const Color(0xFF2687EE) : launcherGlass,
-        borderRadius: BorderRadius.circular(17),
-        child: InkWell(
-          onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        height: 102,
+        decoration: BoxDecoration(
+          color: active ? const Color(0xFF2687EE) : launcherGlass,
           borderRadius: BorderRadius.circular(17),
-          child: SizedBox(
-            height: 102,
+          boxShadow: active
+              ? const <BoxShadow>[
+                  BoxShadow(
+                    color: Color(0x38105DAC),
+                    blurRadius: 18,
+                    offset: Offset(0, 7),
+                  ),
+                ]
+              : null,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(17),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(17),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(13, 14, 13, 13),
+              padding: const EdgeInsets.fromLTRB(13, 12, 13, 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 260),
-                    transitionBuilder: (child, animation) =>
-                        ScaleTransition(scale: animation, child: child),
-                    child: Icon(
-                      icon,
-                      key: ValueKey<bool>(active),
-                      size: 24,
-                      color: active ? Colors.white : Colors.white54,
-                    ),
-                  ),
-                  const SizedBox(height: 7),
+                  _AnimatedGlyph(icon: icon, active: active, color: color),
+                  const SizedBox(height: 5),
                   Text(
                     label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 17,
                       height: 21 / 17,
                       fontWeight: FontWeight.w600,
-                      color: active ? Colors.white : Colors.white54,
+                      color: color,
                     ),
                   ),
                   Text(
                     detail,
+                    maxLines: 1,
                     style: TextStyle(
                       fontSize: 14,
                       height: 18 / 14,
-                      color: active ? Colors.white : Colors.white54,
+                      color: color,
                     ),
                   ),
                 ],
@@ -247,9 +302,11 @@ class _QuickToggle extends StatelessWidget {
           child: Column(
             children: <Widget>[
               AnimatedContainer(
-                duration: const Duration(milliseconds: 280),
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOutCubic,
                 width: 68,
                 height: 68,
+                transform: Matrix4.translationValues(0, active ? -1 : 0, 0),
                 decoration: BoxDecoration(
                   color: active ? launcherWhite : launcherGlassStrong,
                   borderRadius: BorderRadius.circular(18),
@@ -263,14 +320,10 @@ class _QuickToggle extends StatelessWidget {
                         ]
                       : null,
                 ),
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 280),
-                  transitionBuilder: (child, animation) =>
-                      ScaleTransition(scale: animation, child: child),
-                  child: Icon(
-                    icon,
-                    key: ValueKey<bool>(active),
-                    size: 24,
+                child: Center(
+                  child: _AnimatedGlyph(
+                    icon: icon,
+                    active: active,
                     color: active ? accent : Colors.white54,
                   ),
                 ),
@@ -279,6 +332,7 @@ class _QuickToggle extends StatelessWidget {
               Text(
                 label,
                 maxLines: 1,
+                overflow: TextOverflow.visible,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 12,
@@ -289,6 +343,39 @@ class _QuickToggle extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _AnimatedGlyph extends StatelessWidget {
+  const _AnimatedGlyph({
+    required this.icon,
+    required this.active,
+    required this.color,
+  });
+
+  final IconData icon;
+  final bool active;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      switchInCurve: Curves.easeOutBack,
+      switchOutCurve: Curves.easeIn,
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(scale: animation, child: child),
+        );
+      },
+      child: Icon(
+        icon,
+        key: ValueKey<String>('${icon.codePoint}-$active'),
+        size: 24,
+        color: color,
       ),
     );
   }
@@ -311,7 +398,7 @@ class _ShadeSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fraction = value / 100;
+    final double fraction = value / 100;
     return Semantics(
       slider: true,
       label: semanticLabel,
@@ -324,9 +411,11 @@ class _ShadeSlider extends StatelessWidget {
             fit: StackFit.expand,
             children: <Widget>[
               const ColoredBox(color: Color(0x38FFFFFF)),
-              FractionallySizedBox(
+              AnimatedFractionallySizedBox(
+                duration: const Duration(milliseconds: 150),
+                curve: Curves.easeOutCubic,
                 alignment: Alignment.centerLeft,
-                widthFactor: (fraction + 0.018).clamp(0, 1),
+                widthFactor: (fraction + 0.018).clamp(0.0, 1.0),
                 child: const ColoredBox(color: Colors.white),
               ),
               Padding(
@@ -334,17 +423,26 @@ class _ShadeSlider extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Icon(
-                      startIcon,
-                      size: 20,
-                      color:
-                          value >= 9 ? const Color(0xFF20282A) : Colors.white,
+                    AnimatedScale(
+                      scale: value >= 9 ? 1 : 0.92,
+                      duration: const Duration(milliseconds: 220),
+                      child: Icon(
+                        startIcon,
+                        size: 20,
+                        color:
+                            value >= 9 ? const Color(0xFF20282A) : Colors.white,
+                      ),
                     ),
-                    Icon(
-                      endIcon,
-                      size: 20,
-                      color:
-                          value >= 91 ? const Color(0xFF20282A) : Colors.white,
+                    AnimatedScale(
+                      scale: value >= 91 ? 1.08 : 1,
+                      duration: const Duration(milliseconds: 220),
+                      child: Icon(
+                        endIcon,
+                        size: 20,
+                        color: value >= 91
+                            ? const Color(0xFF20282A)
+                            : Colors.white,
+                      ),
                     ),
                   ],
                 ),

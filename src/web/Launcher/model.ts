@@ -76,6 +76,7 @@ export type RecentTransitionState = {
 
 export type LauncherLocationState = {
 	skipHomeEntrance?: boolean;
+	focusAppId?: string;
 };
 
 export type LauncherDrag = {
@@ -118,6 +119,12 @@ const unavailableApps = apps.filter((app) => !app.preview);
 export const homePages: ReadonlyArray<ReadonlyArray<LauncherApp>> = [launchableApps, unavailableApps];
 export const recentApps = launchableApps;
 
+export function getHomePageForApp(appId?: string) {
+	if (!appId) return 0;
+	const pageIndex = homePages.findIndex((page) => page.some((app) => app.id === appId));
+	return Math.max(0, pageIndex);
+}
+
 export const quickControls = [
 	{ id: 'airplane', label: 'Режим полета', onIcon: 'avia', offIcon: 'avia', accent: '#d9a832', motion: 'airplane' },
 	{ id: 'location', label: 'Геолокация', onIcon: 'place', offIcon: 'place-off', accent: '#287de0', motion: 'location' },
@@ -133,8 +140,6 @@ export const quickControls = [
 }>;
 
 export type QuickControlId = (typeof quickControls)[number]['id'];
-
-export const TRANSITION_DURATION_MS = 180;
 
 let launcherUnlocked = false;
 

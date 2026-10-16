@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
-import { flushSync } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Icon } from '../ui/Icon';
+import { runLauncherMinimizeTransition } from '../web/Launcher/viewTransition';
 import './navbar.scss';
 
 type NavBarProps = {
@@ -16,12 +16,6 @@ const launcherAppIds: Record<string, string> = {
 	Contacts: 'contacts',
 	Gallery: 'gallery',
 	Reminders: 'reminders',
-};
-
-type ViewTransitionDocument = Document & {
-	startViewTransition?: (update: () => void) => {
-		finished: Promise<void>;
-	};
 };
 
 export function NavBar({ isMobileViewport = false, onHomeLongPress }: NavBarProps) {
@@ -58,32 +52,16 @@ export function NavBar({ isMobileViewport = false, onHomeLongPress }: NavBarProp
 
 		const appId = location.pathname.match(/^\/app\/([^/]+)\//)?.[1];
 		const launcherAppId = appId ? launcherAppIds[appId] : undefined;
-		const transitionDocument = document as ViewTransitionDocument;
-		const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 		const navigateHome = () => navigate(launcherPath, {
-			state: launcherAppId ? { skipHomeEntrance: true } : undefined,
+			state: launcherAppId ? { skipHomeEntrance: true, focusAppId: launcherAppId } : undefined,
 		});
 
-		if (!launcherAppId || !transitionDocument.startViewTransition || reduceMotion) {
+		if (!launcherAppId) {
 			navigateHome();
 			return;
 		}
 
-		document.documentElement.dataset.launcherMinimize = launcherAppId;
-		const clearTransitionState = () => {
-			delete document.documentElement.dataset.launcherMinimize;
-		};
-
-		try {
-			const transition = transitionDocument.startViewTransition(() => {
-				flushSync(navigateHome);
-			});
-
-			void transition.finished.then(clearTransitionState, clearTransitionState);
-		} catch {
-			clearTransitionState();
-			navigateHome();
-		}
+		runLauncherMinimizeTransition(launcherAppId, navigateHome);
 	};
 
 	return (

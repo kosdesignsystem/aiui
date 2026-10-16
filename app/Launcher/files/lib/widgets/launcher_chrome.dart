@@ -11,41 +11,31 @@ class LauncherStatusBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = dark ? const Color(0xFF23282F) : Colors.white;
-    return SizedBox(
-      height: 40,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 48, right: 18),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              '13:52',
-              style: TextStyle(
-                color: color,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
+    final Color color = dark ? const Color(0xFF23282F) : Colors.white;
+    return AnimatedDefaultTextStyle(
+      duration: const Duration(milliseconds: 150),
+      style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
+      child: SizedBox(
+        height: 40,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 48, right: 18),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              const Text('13:52'),
+              Row(
+                children: <Widget>[
+                  Icon(Icons.signal_cellular_4_bar, size: 14, color: color),
+                  const SizedBox(width: 4),
+                  Icon(Icons.wifi, size: 14, color: color),
+                  const SizedBox(width: 4),
+                  Icon(Icons.battery_charging_full, size: 14, color: color),
+                  const SizedBox(width: 4),
+                  const Text('98%'),
+                ],
               ),
-            ),
-            Row(
-              children: <Widget>[
-                Icon(Icons.signal_cellular_4_bar, size: 14, color: color),
-                const SizedBox(width: 4),
-                Icon(Icons.wifi, size: 14, color: color),
-                const SizedBox(width: 4),
-                Icon(Icons.battery_charging_full, size: 14, color: color),
-                const SizedBox(width: 4),
-                Text(
-                  '98%',
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -53,19 +43,30 @@ class LauncherStatusBar extends StatelessWidget {
 }
 
 class LauncherNavigationArea extends StatelessWidget {
-  const LauncherNavigationArea({Key? key}) : super(key: key);
+  const LauncherNavigationArea({Key? key, required this.onHome})
+      : super(key: key);
+
+  final VoidCallback onHome;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 52,
-      child: Center(
-        child: Container(
-          width: 104,
-          height: 4,
-          decoration: BoxDecoration(
-            color: const Color(0xD1FFFFFF),
-            borderRadius: BorderRadius.circular(2),
+    return Semantics(
+      button: true,
+      label: 'Домой',
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onHome,
+        child: SizedBox(
+          height: 52,
+          child: Center(
+            child: Container(
+              width: 104,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xD1FFFFFF),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
           ),
         ),
       ),
@@ -95,12 +96,9 @@ class LauncherClock extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5),
-        Text(
+        const Text(
           'Понедельник, 24 июня',
-          style: TextStyle(
-            fontSize: 14,
-            color: const Color(0xB8FFFFFF),
-          ),
+          style: TextStyle(fontSize: 14, color: Color(0xB8FFFFFF)),
         ),
       ],
     );
@@ -114,7 +112,7 @@ class LockView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final opacity = (1 + dragOffset / 250).clamp(0.0, 1.0);
+    final double opacity = (1 + dragOffset / 250).clamp(0.0, 1.0);
     return Transform.translate(
       offset: Offset(0, dragOffset * 0.28),
       child: Opacity(
@@ -132,12 +130,12 @@ class LockView extends StatelessWidget {
                 painter: _UnlockHandlePainter(),
               ),
               const SizedBox(height: 21),
-              Text(
+              const Text(
                 'Проведите вверх',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: const Color(0x33FFFFFF),
+                  color: Color(0x30FFFFFF),
                 ),
               ),
             ],
@@ -149,9 +147,11 @@ class LockView extends StatelessWidget {
 }
 
 class _UnlockHandlePainter extends CustomPainter {
+  const _UnlockHandlePainter();
+
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
+    final Paint paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round
@@ -162,7 +162,7 @@ class _UnlockHandlePainter extends CustomPainter {
           Color(0x6BFFFFFF),
         ],
       ).createShader(Offset.zero & size);
-    final path = Path()
+    final Path path = Path()
       ..moveTo(0.75, 10)
       ..cubicTo(11.5, 0.9, 60.5, 0.9, 71.25, 10);
     canvas.drawPath(path, paint);
@@ -186,7 +186,6 @@ class PinPadView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const digits = <int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
     return Padding(
       padding: const EdgeInsets.fromLTRB(22, 54, 22, 10),
       child: Column(
@@ -204,16 +203,21 @@ class PinPadView extends StatelessWidget {
           const SizedBox(height: 22),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: List<Widget>.generate(4, (index) {
-              return AnimatedContainer(
-                duration: const Duration(milliseconds: 160),
-                width: 12,
-                height: 12,
-                margin: const EdgeInsets.symmetric(horizontal: 6.5),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color:
-                      index < entered ? Colors.white : const Color(0x52FFFFFF),
+            children: List<Widget>.generate(4, (int index) {
+              final bool filled = index < entered;
+              return AnimatedScale(
+                scale: filled ? 1.08 : 1,
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutBack,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  width: 12,
+                  height: 12,
+                  margin: const EdgeInsets.symmetric(horizontal: 6.5),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: filled ? Colors.white : const Color(0x52FFFFFF),
+                  ),
                 ),
               );
             }),
@@ -233,23 +237,28 @@ class PinPadView extends StatelessWidget {
           const SizedBox(height: 6),
           SizedBox(
             width: 264,
-            child: Wrap(
-              spacing: 24,
-              runSpacing: 14,
-              alignment: WrapAlignment.center,
-              children: digits.map((digit) {
-                if (digit == 0) {
-                  return Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      const SizedBox(width: 96),
-                      _PinKey(digit: digit, onPressed: () => onDigit(digit)),
-                      const SizedBox(width: 96),
-                    ],
-                  );
-                }
-                return _PinKey(digit: digit, onPressed: () => onDigit(digit));
-              }).toList(),
+            child: Column(
+              children: <Widget>[
+                for (final List<int> row in const <List<int>>[
+                  <int>[1, 2, 3],
+                  <int>[4, 5, 6],
+                  <int>[7, 8, 9],
+                ]) ...<Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: row
+                        .map(
+                          (int digit) => _PinKey(
+                            digit: digit,
+                            onPressed: () => onDigit(digit),
+                          ),
+                        )
+                        .toList(growable: false),
+                  ),
+                  const SizedBox(height: 14),
+                ],
+                _PinKey(digit: 0, onPressed: () => onDigit(0)),
+              ],
             ),
           ),
           const Spacer(),
@@ -258,23 +267,11 @@ class PinPadView extends StatelessWidget {
             children: <Widget>[
               TextButton(
                 onPressed: () {},
-                child: const Text(
-                  'SOS',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                child: const Text('SOS', style: _actionStyle),
               ),
               TextButton(
                 onPressed: onCancel,
-                child: const Text(
-                  'Отменить',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                child: const Text('Отменить', style: _actionStyle),
               ),
             ],
           ),
@@ -282,6 +279,11 @@ class PinPadView extends StatelessWidget {
       ),
     );
   }
+
+  static const TextStyle _actionStyle = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.w500,
+  );
 }
 
 class _PinKey extends StatelessWidget {
