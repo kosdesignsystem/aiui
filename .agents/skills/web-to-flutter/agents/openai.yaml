@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web → Flutter"
+  short_description: "Перенос React во Flutter для браузера на Mac"
+  default_prompt: "Используй $web-to-flutter для переноса выбранного приложения в полноценную Flutter-версию для проверки в браузере на Mac."

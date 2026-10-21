@@ -1,3 +1,4 @@
+import '../models/launcher_motion.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class _HomeLaunchOverlayState extends State<HomeLaunchOverlay>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 720),
+      duration: launcherDuration(720),
     )
       ..addStatusListener((AnimationStatus status) {
         if (status == AnimationStatus.completed) widget.onComplete();
@@ -154,10 +155,12 @@ class _LoadingStageState extends State<_LoadingStage>
     super.initState();
     _pulse = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1400),
-      lowerBound: 0.98,
-      upperBound: 1.06,
-    )..repeat(reverse: true);
+      duration: launcherDuration(2800),
+    );
+    if (!WidgetsBinding.instance.platformDispatcher.accessibilityFeatures
+        .disableAnimations) {
+      _pulse.repeat();
+    }
   }
 
   @override
@@ -170,7 +173,25 @@ class _LoadingStageState extends State<_LoadingStage>
   Widget build(BuildContext context) {
     return Center(
       child: ScaleTransition(
-        scale: _pulse,
+        scale: TweenSequence<double>([
+          TweenSequenceItem(
+              tween: Tween(begin: 1.0, end: 1.08)
+                  .chain(CurveTween(curve: Curves.easeInOut)),
+              weight: 22),
+          TweenSequenceItem(
+              tween: Tween(begin: 1.08, end: .99)
+                  .chain(CurveTween(curve: Curves.easeInOut)),
+              weight: 20),
+          TweenSequenceItem(
+              tween: Tween(begin: .99, end: 1.045)
+                  .chain(CurveTween(curve: Curves.easeInOut)),
+              weight: 22),
+          TweenSequenceItem(
+              tween: Tween(begin: 1.045, end: 1.0)
+                  .chain(CurveTween(curve: Curves.easeInOut)),
+              weight: 18),
+          TweenSequenceItem(tween: ConstantTween(1.0), weight: 18),
+        ]).animate(_pulse),
         child: Container(
           width: 112,
           height: 112,
@@ -196,11 +217,13 @@ class RecentTransitionOverlay extends StatefulWidget {
     Key? key,
     required this.item,
     required this.toOverview,
+    this.bounds,
     required this.onComplete,
   }) : super(key: key);
 
   final LauncherItem item;
   final bool toOverview;
+  final Rect? bounds;
   final VoidCallback onComplete;
 
   @override
@@ -217,7 +240,7 @@ class _RecentTransitionOverlayState extends State<RecentTransitionOverlay>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 380),
+      duration: launcherDuration(widget.toOverview ? 380 : 360),
     )
       ..addStatusListener((AnimationStatus status) {
         if (status == AnimationStatus.completed) widget.onComplete();
@@ -238,7 +261,8 @@ class _RecentTransitionOverlayState extends State<RecentTransitionOverlay>
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             final Rect full = Offset.zero & constraints.biggest;
-            final Rect overview = recentPreviewRect(constraints.biggest);
+            final Rect overview =
+                widget.bounds ?? recentPreviewRect(constraints.biggest);
             return AnimatedBuilder(
               animation: _controller,
               builder: (BuildContext context, Widget? child) {
@@ -308,7 +332,7 @@ class _HomeMinimizeOverlayState extends State<HomeMinimizeOverlay>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 280),
+      duration: launcherDuration(280),
     )
       ..addStatusListener((AnimationStatus status) {
         if (status == AnimationStatus.completed) widget.onComplete();
@@ -389,10 +413,10 @@ Rect _homeIconRect(Size size, LauncherItem item) {
   final double cellWidth = (size.width - 32) / 4;
   final double centerX = 16 + cellWidth * (column + 0.5);
   final int rowCount = (launchableItems.length / 4).ceil();
-  final double gridHeight = rowCount * 87 + math.max(0, rowCount - 1) * 22;
+  final double gridHeight = rowCount * 79 + math.max(0, rowCount - 1) * 22;
   final double gridBottom = size.height - 52 - 46;
   final double gridTop = gridBottom - gridHeight;
-  final double centerY = gridTop + row * 109 + 29;
+  final double centerY = gridTop + row * 101 + 29;
   return Rect.fromCenter(
     center: Offset(centerX, centerY),
     width: 58,

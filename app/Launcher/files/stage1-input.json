@@ -1,0 +1,343 @@
+{
+  "version": 1,
+  "description": "User-verified browser Flutter working tree before KOS handoff changes, 2026-10-21",
+  "base_commit": "9ef3446a1af0c80953d0ec46d7ce4350c20cb9f0",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "83794d1f60e60338884818ea1a71299a56cae12577ab799bc8fbc834eb87dafe"
+    },
+    {
+      "path": ".metadata",
+      "sha256": "9311244c800e57035a29f0c7f60f1af65025ffa96b86f8263b892b3db5ebd152"
+    },
+    {
+      "path": "README.md",
+      "sha256": "f0c0f0182463d2a26fd94495967ac45ae48cf123486c729bc673b55059a68d4e"
+    },
+    {
+      "path": "analysis_options.yaml",
+      "sha256": "c1e9534c05acb3643e72a82ad3d92d56d2ba9b0df2add014c18f7e1d462f24e4"
+    },
+    {
+      "path": "assets/fonts/clock_regular.otf",
+      "sha256": "bffa52b56eae992b4c96c69befb6b2c1d85ca3908f0c4e9809d3e4660f6f8932"
+    },
+    {
+      "path": "assets/fonts/text_medium.woff2",
+      "sha256": "9d0e57e0747a4b62e98a8f302f9b6bad125195c4049d3815ddeba7cd47a9cb89"
+    },
+    {
+      "path": "assets/fonts/text_regular.woff2",
+      "sha256": "85e9070ee1b2863ea5299d3de6c93288c33d574a86e22755eb7b2f6119dc7235"
+    },
+    {
+      "path": "assets/fonts/text_semibold.woff2",
+      "sha256": "936523ca6de6d24f6efd7d31ac945cac730995d39ebdb9b5d1edda7fad2af0b6"
+    },
+    {
+      "path": "assets/icons/browser.png",
+      "sha256": "d2c725c664bb5bacc929a0135222d43f4e6d855752266108a3ce2b00e6dfb697"
+    },
+    {
+      "path": "assets/icons/calculator.png",
+      "sha256": "10bba0674f04cd43423393fe159d81363d0ffa4b7d38d3548c97eddcde80e9de"
+    },
+    {
+      "path": "assets/icons/calendar.png",
+      "sha256": "04f4dd9355d0187e0d6f0cd2815b26cc26f2ad48342982284fe91e5d830e064d"
+    },
+    {
+      "path": "assets/icons/camera.png",
+      "sha256": "b55e9f33edc5fe446d2ecc070ca7fcc030ea5f34871c5436851a76cb62426dae"
+    },
+    {
+      "path": "assets/icons/clock.png",
+      "sha256": "c76f98dd6e6ebbd940c9ee82ab65ff4cfb53e97be3b0da1bce37d2df9fa925f2"
+    },
+    {
+      "path": "assets/icons/compass.png",
+      "sha256": "035347781527693fa90e99818bf0fe2f6730312b3582f3ad72a992472e4c1103"
+    },
+    {
+      "path": "assets/icons/contacts.png",
+      "sha256": "c716246b9048049fff6c1a2b5f3b95500311d995d2ff2f10cd95c0733ce54bfa"
+    },
+    {
+      "path": "assets/icons/dictaphone.png",
+      "sha256": "6b9b8e2ddc7cd0d4b6ec221f11c4e7ce5fbb2c7910305b72631f1fea45b91e01"
+    },
+    {
+      "path": "assets/icons/files.png",
+      "sha256": "eafdc6ec40e88c017d61e882b7908b4608bed335f03c55e7e53b8c0c8db3a5bd"
+    },
+    {
+      "path": "assets/icons/gallery.png",
+      "sha256": "f27162e77871a7d259cfe6e6887c7b6d2f6139f7fa5393469544f1d436f6347a"
+    },
+    {
+      "path": "assets/icons/mail.png",
+      "sha256": "a2c0b0103c3f949562973d6148701bc5682e25a4b281d80eff0df2cf359084ff"
+    },
+    {
+      "path": "assets/icons/maps.png",
+      "sha256": "de7503cb9a16da5aedd40fb002f6f21afb5a60717a21ba70666f57cb8bfe6d05"
+    },
+    {
+      "path": "assets/icons/messenger.png",
+      "sha256": "28ca05308a8ec3a71cd9616c5d39a983c317d7a776a804f86303d4ed04da94b7"
+    },
+    {
+      "path": "assets/icons/my_office.png",
+      "sha256": "dd0b3030abb9e3c855e14fb1f4365f3c97d376f55bd0743617931fbffe2a3002"
+    },
+    {
+      "path": "assets/icons/notes.png",
+      "sha256": "4ec6492e8e03c583e09a4e97031182341598be35c22ac3e1cdb7c571e512b98c"
+    },
+    {
+      "path": "assets/icons/phone.png",
+      "sha256": "68ab6a08b7a7151a4ba82474845314ca83f6fb693175ed275e0610637049bad7"
+    },
+    {
+      "path": "assets/icons/settings.png",
+      "sha256": "5ce5f66ec1bf0b56cd0ca03f78a1be7d82492c0d3e561a0c045dfcad6f1054b3"
+    },
+    {
+      "path": "assets/icons/sms.png",
+      "sha256": "72b7a722dda1366e81113857984ffca587700d6591ba9bd8b45ddf8ad6ad0756"
+    },
+    {
+      "path": "assets/icons/video.png",
+      "sha256": "eeba4fd46bc9aeb61106320304ee3bf15422545bc380a2b378c25bf209830e28"
+    },
+    {
+      "path": "assets/icons/vpn.png",
+      "sha256": "14506ff625de4649863a5811336c9a2e2debc7cf36100143c1c300b60a5dcae8"
+    },
+    {
+      "path": "assets/icons/weather.png",
+      "sha256": "e0573e71fff1ea274aeb3bc3d65a2a372bb1c29d5900f701767f4c5df80356a1"
+    },
+    {
+      "path": "assets/screens/camera.png",
+      "sha256": "7c364bbed82fd198c6faff0e39586392267faed83a790201ee8f99844b837f1f"
+    },
+    {
+      "path": "assets/screens/files.png",
+      "sha256": "1bd9e01d21eceade6a5aa3465d2e0565892a57821f205a4c7363b03765098bc4"
+    },
+    {
+      "path": "assets/screens/gallery.png",
+      "sha256": "b7c70ee2760db5c6fd4ed3124d44cf2562c65be61395791236226eca5746629d"
+    },
+    {
+      "path": "assets/screens/phone.png",
+      "sha256": "51ab6f78ba2e5714e280b0f48cf2eddc75481898103b20fe822e8c4cdb1bc05a"
+    },
+    {
+      "path": "assets/screens/settings.png",
+      "sha256": "b85ab02016c04bdb7deb93dbf6eb34aab727b9d22ccccd0ef8088c1ba908c0ac"
+    },
+    {
+      "path": "assets/screens/weather.png",
+      "sha256": "b49e2c0ff22c2778aad78fb1c78fab11ff00d03864c762cf5ed89be6700516e1"
+    },
+    {
+      "path": "assets/svg/apps.svg",
+      "sha256": "08a7d6aa5923ce0fb16caa589d4b5179b14a5f4b1285117c5a2abb0482497030"
+    },
+    {
+      "path": "assets/svg/avia.svg",
+      "sha256": "75fb8ad4a6440554941b4818aa65d193690663930da4cdf1882ddf1a055e33e0"
+    },
+    {
+      "path": "assets/svg/battery-charge-medium.svg",
+      "sha256": "49f617d758709c3c6288f3830c030a9e311f4365af2d3d4cb2dc1638dda39f97"
+    },
+    {
+      "path": "assets/svg/brightness-low-outline.svg",
+      "sha256": "66038bb032ae0fbff4fe85e7e90c9c27c3aa8776a78f51e9c713bf3895389115"
+    },
+    {
+      "path": "assets/svg/brightness.svg",
+      "sha256": "006ff1de563ea4d69c6c329736ef4142375bbe58ba31058fe50ab5625ac5bfe6"
+    },
+    {
+      "path": "assets/svg/cellular.svg",
+      "sha256": "6839ff17a40638b1dd50b3b4db51d3c69a60c950a082bba4ae9844d2c6c1ad85"
+    },
+    {
+      "path": "assets/svg/chat.svg",
+      "sha256": "c37d08365f295042d3cea1e5d55ee222440e28435baa29208ea689b6dbb916ea"
+    },
+    {
+      "path": "assets/svg/copy-outline.svg",
+      "sha256": "3ffaa8ee6129bcdc919b13f61e2b6bea3c247b260579737b65fd6f475c50c381"
+    },
+    {
+      "path": "assets/svg/filter.svg",
+      "sha256": "c8a237a407995ca0bd14474fd574ae05034a37998826c8bf6e5268fd82e6abe8"
+    },
+    {
+      "path": "assets/svg/lighter-outline.svg",
+      "sha256": "fcc73a22aeb70ef90537647af92873a531939f5e817f6a9d55bf83652deab4f8"
+    },
+    {
+      "path": "assets/svg/lighter.svg",
+      "sha256": "a9fa759288f6c46a700ac126d4bffb0240ca86964828902b868e1fe6e50efcf4"
+    },
+    {
+      "path": "assets/svg/lock.svg",
+      "sha256": "8f52f82920e4195e52f57cd1c849fe03db0429bbfbd9a41d239252af921afbe6"
+    },
+    {
+      "path": "assets/svg/mobile-back-outline.svg",
+      "sha256": "e2d40cf1c94ff971e8e0f4da5c8a9cc762748b9a210f8db0fe0221924d7bf594"
+    },
+    {
+      "path": "assets/svg/mobile-home.svg",
+      "sha256": "983be309c5ec8ff0cf746721e36a4d504b632a25ffdccbde2835085dedbf7554"
+    },
+    {
+      "path": "assets/svg/notification-active.svg",
+      "sha256": "fc4284a8084b2ec567526c997aef506da49b3e47dfc17f34b8db1a426c8a0e12"
+    },
+    {
+      "path": "assets/svg/notification-off.svg",
+      "sha256": "16cf1e119134f96a6a1b8986db964aa40d9cc79c1db9b71cdbef78efaf2c05fc"
+    },
+    {
+      "path": "assets/svg/place-off.svg",
+      "sha256": "b2d4f1c5f755c8adc9fefd8103a2310980cbb0e1c05928cc69fcb6c3077d8188"
+    },
+    {
+      "path": "assets/svg/place.svg",
+      "sha256": "977148aeab2b74d3d86ee3e23843d4e21e7ae66bb2372100331e02c89e46fec7"
+    },
+    {
+      "path": "assets/svg/search.svg",
+      "sha256": "b13d278eba4146d6f3ae2e0c51aa9083f3ab3377c9cb9fed491f058f3925e8e4"
+    },
+    {
+      "path": "assets/svg/settings.svg",
+      "sha256": "cc55a267236de8e7ce5a85594ad1b17853f9764afeb75c58b1599f5dbb337fad"
+    },
+    {
+      "path": "assets/svg/signal-cellular-100.svg",
+      "sha256": "99bb012935bc9afefc4ccf80eb954de49fcba1e3b97ed8847bf4e0091ed23a99"
+    },
+    {
+      "path": "assets/svg/unlock.svg",
+      "sha256": "d03f41fd354af209f40e4bed86856df3c428b901ea055114105609fbc3453866"
+    },
+    {
+      "path": "assets/svg/volume-0.svg",
+      "sha256": "04b5047859853da79948904b3880bb060353bc960b90e3f636d548dedf3fb064"
+    },
+    {
+      "path": "assets/svg/volume-100.svg",
+      "sha256": "ea9aeb080aa2223b6a3264d985af96093488319e1c835cc0ad5edef2efb4f829"
+    },
+    {
+      "path": "assets/svg/wifi-off.svg",
+      "sha256": "e2a40bc30cb9babd2db6f0ce30a610dfc1e2d2f93f3922df291a2501fbc22e41"
+    },
+    {
+      "path": "assets/svg/wifi-on.svg",
+      "sha256": "8e2d3c703a5becd58beffc91d64ac8223546dca0bdfd2c659fd0949c21f01a5d"
+    },
+    {
+      "path": "assets/svg/wifi.svg",
+      "sha256": "54f5ca014c957fd6396515a4a7d4e6fede5b17daa9a6fe1952e93000f51c0127"
+    },
+    {
+      "path": "assets/wallpaper.png",
+      "sha256": "2b0a5522b70bacc13a728dca1093948642473586a104fcfe4287926e1aecd37f"
+    },
+    {
+      "path": "assets-manifest.json",
+      "sha256": "f83a03cfb94179167e4e177d1693a1abbd08e36a009a55a2e8800a857bd0c2ea"
+    },
+    {
+      "path": "lib/main.dart",
+      "sha256": "ccf275e67e27addf78be8a27fba387c38da978f61b9b3e3054dc1ffe82bae719"
+    },
+    {
+      "path": "lib/models/launcher_model.dart",
+      "sha256": "4783c94ada9a242f9b7fd4a60f710ca106c6aadfcb45d8788a6a01c011794737"
+    },
+    {
+      "path": "lib/models/launcher_motion.dart",
+      "sha256": "f15b21c527621be7878b87348432a697d6604ad80a5ee0a7d79c3f68ed14449f"
+    },
+    {
+      "path": "lib/platform/launcher_platform.dart",
+      "sha256": "8d341ea2356009d6b0fb295b6917c864dee358f4c628b34847e58cc483b53fe0"
+    },
+    {
+      "path": "lib/screens/launcher_screen.dart",
+      "sha256": "b7d91b39eb1ac1d02104538f2d03a3eb20beef86bd33a75bb1dbabb5f1906719"
+    },
+    {
+      "path": "lib/screens/navigation_catalog.dart",
+      "sha256": "897c7ff7e7a9fe7eff87e8485776caaff0125f29a2bbdbbb7b7c5601887eb86c"
+    },
+    {
+      "path": "lib/widgets/control_shade.dart",
+      "sha256": "b4aaf9fcd0a0d9c29d712e234a6eed573a95eec0599e5c8554f25b7a5637d08f"
+    },
+    {
+      "path": "lib/widgets/home_grid.dart",
+      "sha256": "664da5f1d215c564da15e97ae98218b7e801eeacc06b82d6d942274d64358b5a"
+    },
+    {
+      "path": "lib/widgets/launch_transitions.dart",
+      "sha256": "f68109ab3fa0e4ce5f460c0752df4b12d1089bc2c96682279809d22f863bf17c"
+    },
+    {
+      "path": "lib/widgets/launcher_action.dart",
+      "sha256": "b94c41d4295c94c5eca8e2b6f5aedfc2ddde18f6aa585254de40082efad7f765"
+    },
+    {
+      "path": "lib/widgets/launcher_chrome.dart",
+      "sha256": "3dd0e18d72022e3b7111ff79de97c76b3aef2ee6b864601e6ae0080a08f1a926"
+    },
+    {
+      "path": "lib/widgets/original_icon.dart",
+      "sha256": "382de960f51452adbebc4e592dcf26b388ffb4270f93df4689ac20e266b26e2e"
+    },
+    {
+      "path": "lib/widgets/recents_view.dart",
+      "sha256": "7571ade173c26b375233b713a1619ba06a19268d55dbcee92e496717344a8a7f"
+    },
+    {
+      "path": "pubspec.lock",
+      "sha256": "25d77e9f8dd45de21be2443285f940ad0a94486ae9c43621016ab8b380fa4173"
+    },
+    {
+      "path": "pubspec.yaml",
+      "sha256": "efd783afc4e8504e929b51e06f3351e38876aeba197e322030cd39282dbff95b"
+    },
+    {
+      "path": "test/launcher_scenarios_test.dart",
+      "sha256": "d2c37229522ea5bf3b364671c1755332dcc29de12a0e03a2c7db0ba2e35d9c13"
+    },
+    {
+      "path": "tool/prepare_assets.py",
+      "sha256": "e0e54188da1194a5c8f7cdfc78b23705e9c9723854299a23ffca808aaa47e819"
+    },
+    {
+      "path": "tool/test_in_chrome.py",
+      "sha256": "2d205d460b993d8b12895f6b0695762a3d1aa9f81fd7ce129e4bf63991c4ea14"
+    },
+    {
+      "path": "web/index.html",
+      "sha256": "ad08c50da14a12755b3b03e24bce6f08684551d02ce3d3776e63bcbd3acccd7f"
+    },
+    {
+      "path": "web/manifest.json",
+      "sha256": "4840e90141b208049c843eaf3b21d961f1b8fadb401c400bc421c8ba09c579d7"
+    }
+  ]
+}

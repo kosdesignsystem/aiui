@@ -8,5 +8,5 @@ add_flutter_app(Launcher
                 INCREMENTAL
                 KPA
                 KPA_DEVELOPER_ID lk
-                KPA_ICON resources/icons/flutter.png
+                KPA_ICON resources/icons/launcher.svg
                 KPA_LOCALE resources/locale/names)

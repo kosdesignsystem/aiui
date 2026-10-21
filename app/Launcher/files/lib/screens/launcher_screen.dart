@@ -1,16 +1,21 @@
+import '../models/launcher_motion.dart';
 import 'dart:async';
+import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
 
 import '../models/launcher_model.dart';
+import '../platform/launcher_platform.dart';
 import '../widgets/control_shade.dart';
 import '../widgets/home_grid.dart';
 import '../widgets/launch_transitions.dart';
 import '../widgets/launcher_chrome.dart';
 import '../widgets/recents_view.dart';
+import 'navigation_catalog.dart';
 
 class LauncherScreen extends StatefulWidget {
-  const LauncherScreen({Key? key}) : super(key: key);
+  const LauncherScreen({Key? key, required this.platform}) : super(key: key);
+  final LauncherPlatform platform;
 
   @override
   State<LauncherScreen> createState() => _LauncherScreenState();
@@ -28,6 +33,7 @@ class _LauncherScreenState extends State<LauncherScreen>
   LauncherItem? _recentTransitionApp;
   LauncherItem? _minimizingApp;
   bool _transitioningToOverview = false;
+  Rect? _recentBounds;
   bool _shadeClosing = false;
   Offset _launchOrigin = Offset.zero;
   int _pinLength = 0;
@@ -36,6 +42,9 @@ class _LauncherScreenState extends State<LauncherScreen>
   int? _pointer;
   Offset _pointerStart = Offset.zero;
   String? _dragAxis;
+  bool _sliderInteraction = false;
+  int _generation = 0;
+  int _homeEpoch = 0;
   Timer? _pinTimer;
   Timer? _shadeTimer;
 
@@ -44,7 +53,7 @@ class _LauncherScreenState extends State<LauncherScreen>
     super.initState();
     _shadeAnimation = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 240),
+      duration: launcherDuration(240),
     )..addListener(_redrawShade);
   }
 
@@ -73,15 +82,20 @@ class _LauncherScreenState extends State<LauncherScreen>
           _mode == LauncherMode.shade);
 
   void _onPointerDown(PointerDownEvent event) {
-    if (!_canTrackPointer || event.buttons != 1) return;
+    if (!_canTrackPointer ||
+        _sliderInteraction ||
+        event.buttons != 1 ||
+        event.localPosition.dy >= 748) {
+      return;
+    }
     _pointer = event.pointer;
-    _pointerStart = event.position;
+    _pointerStart = event.localPosition;
     _dragAxis = null;
   }
 
   void _onPointerMove(PointerMoveEvent event) {
     if (_pointer != event.pointer) return;
-    final Offset delta = event.position - _pointerStart;
+    final Offset delta = event.localPosition - _pointerStart;
     if (_dragAxis == null && mathMax(delta.dx.abs(), delta.dy.abs()) > 7) {
       _dragAxis = _mode == LauncherMode.home && delta.dx.abs() > delta.dy.abs()
           ? 'horizontal'
@@ -109,7 +123,7 @@ class _LauncherScreenState extends State<LauncherScreen>
 
   void _finishPointer(PointerEvent event, {required bool cancelled}) {
     if (_pointer != event.pointer) return;
-    final Offset delta = event.position - _pointerStart;
+    final Offset delta = event.localPosition - _pointerStart;
     final String? axis = _dragAxis;
     _pointer = null;
     _dragAxis = null;
@@ -138,6 +152,7 @@ class _LauncherScreenState extends State<LauncherScreen>
       setState(() {
         if (_mode == LauncherMode.app && _activeApp != null) {
           _recentTransitionApp = _activeApp;
+          _recentBounds = null;
           _transitioningToOverview = true;
         }
         _mode = LauncherMode.recents;
@@ -154,15 +169,17 @@ class _LauncherScreenState extends State<LauncherScreen>
   }
 
   Future<void> _transitionTo(LauncherMode next) async {
+    final int generation = ++_generation;
+    final bool reduced = MediaQuery.of(context).disableAnimations;
     setState(() => _blackout = true);
-    await Future<void>.delayed(const Duration(milliseconds: 170));
-    if (!mounted) return;
+    await Future<void>.delayed(Duration(milliseconds: reduced ? 1 : 170));
+    if (!mounted || generation != _generation) return;
     setState(() {
       _mode = next;
       _dragOffset = 0;
     });
-    await Future<void>.delayed(const Duration(milliseconds: 30));
-    if (mounted) setState(() => _blackout = false);
+    await Future<void>.delayed(launcherDuration(30));
+    if (mounted && generation == _generation) setState(() => _blackout = false);
   }
 
   void _onDigit(int _) {
@@ -171,7 +188,7 @@ class _LauncherScreenState extends State<LauncherScreen>
     setState(() => _pinLength = next);
     if (next == 4) {
       _pinTimer?.cancel();
-      _pinTimer = Timer(const Duration(milliseconds: 110), () {
+      _pinTimer = Timer(launcherDuration(110), () {
         if (mounted) _transitionTo(LauncherMode.home);
       });
     }
@@ -200,10 +217,17 @@ class _LauncherScreenState extends State<LauncherScreen>
     });
   }
 
-  void _openRecent(LauncherItem item) {
+  Rect _localBounds(Rect global) {
+    final box = _surfaceKey.currentContext!.findRenderObject() as RenderBox;
+    return Rect.fromPoints(box.globalToLocal(global.topLeft),
+        box.globalToLocal(global.bottomRight));
+  }
+
+  void _openRecent(LauncherItem item, Rect globalBounds) {
     if (_recentTransitionApp != null) return;
     setState(() {
       _recentTransitionApp = item;
+      _recentBounds = _localBounds(globalBounds);
       _transitioningToOverview = false;
     });
   }
@@ -222,6 +246,16 @@ class _LauncherScreenState extends State<LauncherScreen>
   }
 
   void _showHome() {
+    _generation++;
+    _homeEpoch++;
+    _pinTimer?.cancel();
+    _shadeTimer?.cancel();
+    _pointer = null;
+    _sliderInteraction = false;
+    _shadeClosing = false;
+    _blackout = false;
+    _launchingApp = null;
+    _recentTransitionApp = null;
     final bool shouldMinimize = _activeApp != null &&
         (_mode == LauncherMode.app ||
             (_mode == LauncherMode.shade && _shadeOrigin == ShadeOrigin.app));
@@ -256,11 +290,11 @@ class _LauncherScreenState extends State<LauncherScreen>
     });
     _shadeAnimation.animateTo(
       0,
-      duration: const Duration(milliseconds: 240),
+      duration: launcherDuration(240),
       curve: Curves.easeInCubic,
     );
     _shadeTimer?.cancel();
-    _shadeTimer = Timer(const Duration(milliseconds: 240), () {
+    _shadeTimer = Timer(launcherDuration(240), () {
       if (!mounted) return;
       setState(() {
         _mode = _shadeOrigin == ShadeOrigin.app && _activeApp != null
@@ -272,13 +306,17 @@ class _LauncherScreenState extends State<LauncherScreen>
   }
 
   void _openSettings() {
-    setState(() {
-      _activeApp = settingsItem;
-      _shadeOrigin = ShadeOrigin.app;
-      _mode = LauncherMode.app;
-      _dragOffset = 0;
-      _shadeAnimation.value = 0;
-    });
+    _pointer = null;
+    _closeShade();
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      settings: const RouteSettings(name: '/app/Components/navigation'),
+      builder: (_) => NavigationCatalog(
+          platform: widget.platform,
+          onHome: () {
+            Navigator.of(context).pop();
+            _showHome();
+          }),
+    ));
   }
 
   double get _shadeProgress {
@@ -334,7 +372,7 @@ class _LauncherScreenState extends State<LauncherScreen>
                     _mode == LauncherMode.home ? _dragOffset * 0.12 : 0,
                   ),
                   child: HomeGrid(
-                    key: const ValueKey<String>('launcher-home'),
+                    key: ValueKey<String>('launcher-home-$_homeEpoch'),
                     background: homeInBackground,
                     onLaunch: _startLaunch,
                   ),
@@ -346,7 +384,9 @@ class _LauncherScreenState extends State<LauncherScreen>
                   0,
                   _mode == LauncherMode.app ? _dragOffset * 0.08 : 0,
                 ),
-                child: _AppPreview(item: _activeApp!),
+                child: _AppPreview(
+                    item: _activeApp!,
+                    background: _mode == LauncherMode.shade && !_shadeClosing),
               ),
             if (_mode == LauncherMode.lock)
               Positioned(
@@ -382,6 +422,11 @@ class _LauncherScreenState extends State<LauncherScreen>
                   initialActiveId: _activeApp?.id,
                   transitioningAppId: _recentTransitionApp?.id,
                   onOpen: _openRecent,
+                  onTransitionReady: (bounds) {
+                    if (mounted && _recentTransitionApp != null) {
+                      setState(() => _recentBounds = _localBounds(bounds));
+                    }
+                  },
                   onEmpty: _showHome,
                 ),
               ),
@@ -391,13 +436,43 @@ class _LauncherScreenState extends State<LauncherScreen>
                 child: Opacity(
                   opacity: 0.58 + shadeProgress * 0.42,
                   child: ControlShade(
+                    platform: widget.platform,
                     contentOpacity: 0.35 + shadeProgress * 0.65,
                     contentScale: 0.92 + shadeProgress * 0.08,
                     onClose: _closeShade,
                     onSettings: _openSettings,
+                    preview: _mode != LauncherMode.shade,
+                    onSliderInteraction: (active) {
+                      _sliderInteraction = active;
+                      if (active) _pointer = null;
+                    },
                   ),
                 ),
               ),
+            Positioned(
+              top: 8,
+              left: 18,
+              width: 24,
+              height: 24,
+              child: IgnorePointer(
+                  child: DecoratedBox(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: const RadialGradient(
+                              center: Alignment(-.4, -.4),
+                              colors: [
+                                Color(0xFF5C6B82),
+                                Color(0xFF1B2331),
+                                Color(0xFF0C111B)
+                              ],
+                              stops: [
+                                0,
+                                .45,
+                                1
+                              ]),
+                          border: Border.all(
+                              color: const Color(0xE606090E), width: 2)))),
+            ),
             Positioned(
               top: 0,
               left: 0,
@@ -412,7 +487,7 @@ class _LauncherScreenState extends State<LauncherScreen>
             ),
             IgnorePointer(
               child: AnimatedOpacity(
-                duration: const Duration(milliseconds: 170),
+                duration: launcherDuration(170),
                 opacity: _blackout ? 1 : 0,
                 child: const ColoredBox(color: Color(0xFF021113)),
               ),
@@ -427,6 +502,7 @@ class _LauncherScreenState extends State<LauncherScreen>
               RecentTransitionOverlay(
                 item: _recentTransitionApp!,
                 toOverview: _transitioningToOverview,
+                bounds: _recentBounds,
                 onComplete: _finishRecentTransition,
               ),
             if (_minimizingApp != null)
@@ -442,13 +518,14 @@ class _LauncherScreenState extends State<LauncherScreen>
 }
 
 class _AppPreview extends StatelessWidget {
-  const _AppPreview({required this.item});
+  const _AppPreview({required this.item, this.background = false});
+  final bool background;
 
   final LauncherItem item;
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
+    Widget content = Semantics(
       label: 'Приложение «${item.label}»',
       image: true,
       child: ColoredBox(
@@ -460,6 +537,14 @@ class _AppPreview extends StatelessWidget {
         ),
       ),
     );
+    if (background) {
+      content = Opacity(
+          opacity: .76,
+          child: ImageFiltered(
+              imageFilter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+              child: Transform.scale(scale: 1.025, child: content)));
+    }
+    return content;
   }
 }
 

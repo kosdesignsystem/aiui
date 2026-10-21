@@ -1,4 +1,7 @@
+import '../models/launcher_motion.dart';
 import 'package:flutter/material.dart';
+import 'original_icon.dart';
+import 'launcher_action.dart';
 
 const Color launcherWhite = Color(0xFFF8FBFB);
 const Color launcherGlass = Color(0x33DBEBEC);
@@ -13,8 +16,12 @@ class LauncherStatusBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color color = dark ? const Color(0xFF23282F) : Colors.white;
     return AnimatedDefaultTextStyle(
-      duration: const Duration(milliseconds: 150),
-      style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
+      duration: launcherDuration(150),
+      style: TextStyle(
+          fontFamily: 'Kaspersky Sans Text',
+          color: color,
+          fontSize: 12,
+          fontWeight: FontWeight.w500),
       child: SizedBox(
         height: 40,
         child: Padding(
@@ -25,11 +32,11 @@ class LauncherStatusBar extends StatelessWidget {
               const Text('13:52'),
               Row(
                 children: <Widget>[
-                  Icon(Icons.signal_cellular_4_bar, size: 14, color: color),
+                  OriginalIcon('signal-cellular-100', size: 14, color: color),
                   const SizedBox(width: 4),
-                  Icon(Icons.wifi, size: 14, color: color),
+                  OriginalIcon('wifi', size: 14, color: color),
                   const SizedBox(width: 4),
-                  Icon(Icons.battery_charging_full, size: 14, color: color),
+                  OriginalIcon('battery-charge-medium', size: 14, color: color),
                   const SizedBox(width: 4),
                   const Text('98%'),
                 ],
@@ -50,25 +57,14 @@ class LauncherNavigationArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: 'Домой',
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onHome,
-        child: SizedBox(
-          height: 52,
-          child: Center(
-            child: Container(
-              width: 104,
-              height: 4,
-              decoration: BoxDecoration(
-                color: const Color(0xD1FFFFFF),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
-        ),
+    return Center(
+      child: SizedBox(
+        width: 52,
+        height: 52,
+        child: LauncherAction(
+            label: 'Домой',
+            onPressed: onHome,
+            child: const Center(child: OriginalIcon('mobile-home', size: 24))),
       ),
     );
   }
@@ -86,6 +82,8 @@ class LauncherClock extends StatelessWidget {
       children: <Widget>[
         Text(
           '13:52',
+          maxLines: 1,
+          softWrap: false,
           style: TextStyle(
             fontFamily: 'Kaspersky Sans Clock',
             fontSize: compact ? 56 : 72,
@@ -98,7 +96,10 @@ class LauncherClock extends StatelessWidget {
         const SizedBox(height: 5),
         const Text(
           'Понедельник, 24 июня',
-          style: TextStyle(fontSize: 14, color: Color(0xB8FFFFFF)),
+          maxLines: 1,
+          softWrap: false,
+          style: TextStyle(
+              fontSize: 14, height: 17 / 14, color: Color(0xB8FFFFFF)),
         ),
       ],
     );
@@ -117,20 +118,17 @@ class LockView extends StatelessWidget {
       offset: Offset(0, dragOffset * 0.28),
       child: Opacity(
         opacity: opacity,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 70, bottom: 12),
+        child: const Padding(
+          padding: EdgeInsets.only(top: 70, bottom: 12),
           child: Column(
             children: <Widget>[
-              const Icon(Icons.lock_outline, size: 20, color: Colors.white),
-              const SizedBox(height: 23),
-              const LauncherClock(),
-              const Spacer(),
-              CustomPaint(
-                size: const Size(72, 11),
-                painter: _UnlockHandlePainter(),
-              ),
-              const SizedBox(height: 21),
-              const Text(
+              OriginalIcon('lock', size: 20),
+              SizedBox(height: 23),
+              LauncherClock(),
+              Spacer(),
+              OriginalIcon('unlock', size: 72, height: 11),
+              SizedBox(height: 21),
+              Text(
                 'Проведите вверх',
                 style: TextStyle(
                   fontSize: 12,
@@ -144,32 +142,6 @@ class LockView extends StatelessWidget {
       ),
     );
   }
-}
-
-class _UnlockHandlePainter extends CustomPainter {
-  const _UnlockHandlePainter();
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
-      ..strokeCap = StrokeCap.round
-      ..shader = const LinearGradient(
-        colors: <Color>[
-          Color(0x6BFFFFFF),
-          Color(0xDBFFFFFF),
-          Color(0x6BFFFFFF),
-        ],
-      ).createShader(Offset.zero & size);
-    final Path path = Path()
-      ..moveTo(0.75, 10)
-      ..cubicTo(11.5, 0.9, 60.5, 0.9, 71.25, 10);
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class PinPadView extends StatelessWidget {
@@ -190,7 +162,7 @@ class PinPadView extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(22, 54, 22, 10),
       child: Column(
         children: <Widget>[
-          const Icon(Icons.lock_outline, size: 22),
+          const OriginalIcon('lock', size: 22),
           const SizedBox(height: 28),
           const Text(
             'Введите код-пароль',
@@ -202,15 +174,16 @@ class PinPadView extends StatelessWidget {
           ),
           const SizedBox(height: 22),
           Row(
+            key: ValueKey<String>('pin-dots-$entered'),
             mainAxisAlignment: MainAxisAlignment.center,
             children: List<Widget>.generate(4, (int index) {
               final bool filled = index < entered;
               return AnimatedScale(
                 scale: filled ? 1.08 : 1,
-                duration: const Duration(milliseconds: 220),
+                duration: launcherDuration(220),
                 curve: Curves.easeOutBack,
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
+                  duration: launcherDuration(150),
                   width: 12,
                   height: 12,
                   margin: const EdgeInsets.symmetric(horizontal: 6.5),

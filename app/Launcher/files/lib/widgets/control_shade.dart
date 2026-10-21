@@ -1,474 +1,532 @@
+import '../models/launcher_motion.dart';
+import 'dart:math' as math;
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import '../platform/launcher_platform.dart';
 import 'launcher_chrome.dart';
+import 'launcher_action.dart';
+import 'original_icon.dart';
 
 class ControlShade extends StatefulWidget {
-  const ControlShade({
-    Key? key,
-    required this.onClose,
-    required this.onSettings,
-    this.contentOpacity = 1,
-    this.contentScale = 1,
-  }) : super(key: key);
-
+  const ControlShade(
+      {Key? key,
+      required this.onClose,
+      required this.onSettings,
+      this.platform = const DemoLauncherPlatform(),
+      this.contentOpacity = 1,
+      this.contentScale = 1,
+      this.preview = false,
+      this.onSliderInteraction})
+      : super(key: key);
   final VoidCallback onClose;
   final VoidCallback onSettings;
+  final LauncherPlatform platform;
   final double contentOpacity;
   final double contentScale;
-
+  final bool preview;
+  final ValueChanged<bool>? onSliderInteraction;
   @override
   State<ControlShade> createState() => _ControlShadeState();
 }
 
 class _ControlShadeState extends State<ControlShade> {
-  bool _mobile = true;
-  bool _wifi = false;
-  bool _airplane = false;
-  bool _location = true;
-  bool _silent = true;
-  bool _flashlight = false;
-  double _volume = 100;
-  double _brightness = 46;
-
+  late final ControlState controls = widget.platform.createControls();
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onVerticalDragEnd: (DragEndDetails details) {
-        if ((details.primaryVelocity ?? 0) < -300) widget.onClose();
-      },
-      child: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          ClipRect(
-            child: BackdropFilter(
+  Widget build(BuildContext context) => IgnorePointer(
+        ignoring: widget.preview,
+        child: Semantics(
+          label: 'Панель быстрых настроек',
+          explicitChildNodes: true,
+          scopesRoute: !widget.preview,
+          child: Stack(fit: StackFit.expand, children: [
+            ClipRect(
+                child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
               child: ColoredBox(
                 color: const Color(0x7A05272A),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 102, 16, 70),
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 150),
+                  child: Opacity(
                     opacity: widget.contentOpacity.clamp(0.0, 1.0),
-                    child: AnimatedScale(
-                      duration: const Duration(milliseconds: 240),
-                      curve: Curves.easeOutCubic,
-                      alignment: const Alignment(0, -0.64),
+                    child: Transform.scale(
                       scale: widget.contentScale,
-                      child: Column(
-                        children: <Widget>[
-                          const LauncherClock(),
-                          const SizedBox(height: 24),
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: _NetworkToggle(
-                                  active: _mobile,
-                                  icon: Icons.signal_cellular_4_bar,
-                                  label: 'Моб. интернет',
-                                  detail: _mobile ? 'Megafon LTE' : 'Выключено',
-                                  onTap: () =>
-                                      setState(() => _mobile = !_mobile),
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: _NetworkToggle(
-                                  active: _wifi,
-                                  icon: _wifi ? Icons.wifi : Icons.wifi_off,
-                                  label: 'Wi-Fi',
-                                  detail: _wifi ? 'KLCorp' : 'Выключено',
-                                  onTap: () => setState(() => _wifi = !_wifi),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 25),
-                          Row(
+                      alignment: const Alignment(0, -.64),
+                      child: SingleChildScrollView(
+                          child:
+                              Column(mainAxisSize: MainAxisSize.min, children: [
+                        const LauncherClock(),
+                        const SizedBox(height: 24),
+                        Row(children: [
+                          Expanded(child: _network(true)),
+                          const SizedBox(width: 16),
+                          Expanded(child: _network(false)),
+                        ]),
+                        const SizedBox(height: 25),
+                        Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              _QuickToggle(
-                                active: _airplane,
-                                icon: Icons.airplanemode_active,
-                                label: 'Режим полета',
-                                accent: const Color(0xFFD9A832),
-                                onTap: () =>
-                                    setState(() => _airplane = !_airplane),
-                              ),
-                              _QuickToggle(
-                                active: _location,
-                                icon: _location
-                                    ? Icons.location_on
-                                    : Icons.location_off,
-                                label: 'Геолокация',
-                                accent: const Color(0xFF287DE0),
-                                onTap: () =>
-                                    setState(() => _location = !_location),
-                              ),
-                              _QuickToggle(
-                                active: _silent,
-                                icon: _silent
-                                    ? Icons.notifications_off
-                                    : Icons.notifications_active,
-                                label: 'Без звука',
-                                accent: const Color(0xFFD63D4D),
-                                onTap: () => setState(() => _silent = !_silent),
-                              ),
-                              _QuickToggle(
-                                active: _flashlight,
-                                icon: _flashlight
-                                    ? Icons.flashlight_on
-                                    : Icons.flashlight_off,
-                                label: 'Фонарик',
-                                accent: const Color(0xFF716CEA),
-                                onTap: () =>
-                                    setState(() => _flashlight = !_flashlight),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 25),
-                          _ShadeSlider(
-                            value: _volume,
-                            startIcon: Icons.volume_off,
-                            endIcon: Icons.volume_up,
-                            semanticLabel: 'Громкость',
-                            onChanged: (double value) =>
-                                setState(() => _volume = value),
-                          ),
-                          const SizedBox(height: 25),
-                          _ShadeSlider(
-                            value: _brightness,
-                            startIcon: Icons.brightness_low_outlined,
-                            endIcon: Icons.brightness_high,
-                            semanticLabel: 'Яркость',
-                            onChanged: (double value) =>
-                                setState(() => _brightness = value),
-                          ),
-                          const Spacer(),
-                          TextButton(
+                            children: [
+                              _quick('airplane', 'Режим полета', 'avia', 'avia',
+                                  const Color(0xFFD9A832)),
+                              _quick('location', 'Геолокация', 'place',
+                                  'place-off', const Color(0xFF287DE0)),
+                              _quick(
+                                  'silent',
+                                  'Без звука',
+                                  'notification-off',
+                                  'notification-active',
+                                  const Color(0xFFD63D4D)),
+                              _quick('flashlight', 'Фонарик', 'lighter',
+                                  'lighter-outline', const Color(0xFF716CEA)),
+                            ]),
+                        const SizedBox(height: 25),
+                        ShadeSlider(
+                            value: controls.volume,
+                            startIcon: 'volume-0',
+                            endIcon: 'volume-100',
+                            label: 'Громкость',
+                            onInteraction: widget.onSliderInteraction,
+                            onChanged: (v) =>
+                                setState(() => controls.volume = v)),
+                        const SizedBox(height: 25),
+                        ShadeSlider(
+                            value: controls.brightness,
+                            startIcon: 'brightness-low-outline',
+                            endIcon: 'brightness',
+                            label: 'Яркость',
+                            onInteraction: widget.onSliderInteraction,
+                            onChanged: (v) =>
+                                setState(() => controls.brightness = v)),
+                        const SizedBox(height: 44),
+                        LauncherAction(
+                            label: 'Перейти в настройки',
                             onPressed: widget.onSettings,
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              minimumSize: const Size(0, 22),
-                              padding: EdgeInsets.zero,
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            child: const Text(
-                              'Перейти в настройки',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                            child: const Text('Перейти в настройки',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    height: 22 / 16,
+                                    fontWeight: FontWeight.w600))),
+                      ])),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-          Positioned(
-            bottom: 52,
-            left: 0,
-            right: 0,
-            height: 28,
-            child: Semantics(
-              button: true,
-              label: 'Закрыть панель',
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: widget.onClose,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _NetworkToggle extends StatelessWidget {
-  const _NetworkToggle({
-    required this.active,
-    required this.icon,
-    required this.label,
-    required this.detail,
-    required this.onTap,
-  });
-
-  final bool active;
-  final IconData icon;
-  final String label;
-  final String detail;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final Color color = active ? Colors.white : Colors.white54;
-    return Semantics(
-      button: true,
+            )),
+            Positioned(
+                bottom: 52,
+                left: 0,
+                right: 0,
+                height: 28,
+                child: LauncherAction(
+                    label: 'Закрыть панель',
+                    onPressed: widget.onClose,
+                    child: const SizedBox.expand())),
+          ]),
+        ),
+      );
+  Widget _network(bool mobile) {
+    final bool active = mobile ? controls.mobile : controls.wifi;
+    final String label = mobile ? 'Моб. интернет' : 'Wi-Fi';
+    final String detail = active
+        ? mobile
+            ? 'Megafon LTE'
+            : 'KLCorp'
+        : 'Выключено';
+    return LauncherAction(
+      label: '$label, $detail',
       toggled: active,
-      label: label,
+      onPressed: () => setState(() {
+        if (mobile) {
+          controls.mobile = !active;
+        } else {
+          controls.wifi = !active;
+        }
+      }),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOut,
+        duration: launcherDuration(200),
         height: 102,
         decoration: BoxDecoration(
-          color: active ? const Color(0xFF2687EE) : launcherGlass,
-          borderRadius: BorderRadius.circular(17),
-          boxShadow: active
-              ? const <BoxShadow>[
-                  BoxShadow(
-                    color: Color(0x38105DAC),
-                    blurRadius: 18,
-                    offset: Offset(0, 7),
-                  ),
-                ]
-              : null,
-        ),
-        child: Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(17),
-          child: InkWell(
-            onTap: onTap,
+            color: active ? const Color(0xFF2687EE) : launcherGlass,
             borderRadius: BorderRadius.circular(17),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(13, 12, 13, 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _AnimatedGlyph(icon: icon, active: active, color: color),
-                  const SizedBox(height: 5),
-                  Text(
-                    label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 17,
-                      height: 21 / 17,
-                      fontWeight: FontWeight.w600,
-                      color: color,
-                    ),
-                  ),
-                  Text(
-                    detail,
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 18 / 14,
-                      color: color,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+            boxShadow: active
+                ? const [
+                    BoxShadow(
+                        color: Color(0x38105DAC),
+                        blurRadius: 18,
+                        offset: Offset(0, 7))
+                  ]
+                : null),
+        padding: const EdgeInsets.fromLTRB(13, 14, 13, 13),
+        child: DefaultTextStyle(
+          style: TextStyle(
+              fontFamily: 'Kaspersky Sans Text',
+              color: active ? Colors.white : Colors.white54),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            AnimatedGlyph(
+                motion: mobile ? 'cellular' : 'wifi',
+                name: mobile
+                    ? 'cellular'
+                    : active
+                        ? 'wifi-on'
+                        : 'wifi-off',
+                active: active,
+                color: active ? Colors.white : Colors.white54),
+            const SizedBox(height: 8),
+            Text(label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    fontSize: 17,
+                    height: 21 / 17,
+                    fontWeight: FontWeight.w600)),
+            const SizedBox(height: 1),
+            Text(detail,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 14, height: 18 / 14)),
+          ]),
         ),
       ),
     );
   }
-}
 
-class _QuickToggle extends StatelessWidget {
-  const _QuickToggle({
-    required this.active,
-    required this.icon,
-    required this.label,
-    required this.accent,
-    required this.onTap,
-  });
-
-  final bool active;
-  final IconData icon;
-  final String label;
-  final Color accent;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _quick(String id, String label, String on, String off, Color accent) {
+    final bool active = controls.quick[id]!;
     return SizedBox(
-      width: 76,
-      child: Semantics(
-        button: true,
-        toggled: active,
-        label: label,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(18),
-          onTap: onTap,
-          child: Column(
-            children: <Widget>[
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeOutCubic,
+        width: 68,
+        child: LauncherAction(
+          label: label,
+          toggled: active,
+          onPressed: () => setState(() => controls.quick[id] = !active),
+          child: Column(children: [
+            AnimatedContainer(
+                duration: launcherDuration(200),
                 width: 68,
                 height: 68,
                 transform: Matrix4.translationValues(0, active ? -1 : 0, 0),
                 decoration: BoxDecoration(
-                  color: active ? launcherWhite : launcherGlassStrong,
-                  borderRadius: BorderRadius.circular(18),
-                  boxShadow: active
-                      ? const <BoxShadow>[
-                          BoxShadow(
-                            color: Color(0x26000000),
-                            blurRadius: 22,
-                            offset: Offset(0, 8),
-                          ),
-                        ]
-                      : null,
-                ),
+                    color: active ? launcherWhite : launcherGlassStrong,
+                    borderRadius: BorderRadius.circular(18),
+                    boxShadow: active
+                        ? const [
+                            BoxShadow(
+                                color: Color(0x26000000),
+                                blurRadius: 22,
+                                offset: Offset(0, 8))
+                          ]
+                        : null),
                 child: Center(
-                  child: _AnimatedGlyph(
-                    icon: icon,
-                    active: active,
-                    color: active ? accent : Colors.white54,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.visible,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 12,
-                  height: 15 / 12,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+                    child: AnimatedGlyph(
+                        motion: id,
+                        name: active ? on : off,
+                        active: active,
+                        color: active ? accent : const Color(0x94FFFFFF)))),
+            const SizedBox(height: 12),
+            SizedBox(
+                height: 15,
+                child: OverflowBox(
+                    maxWidth: 90,
+                    minWidth: 90,
+                    child: Text(label,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 12,
+                            height: 15 / 12,
+                            color: active
+                                ? Colors.white
+                                : const Color(0x94FFFFFF))))),
+          ]),
+        ));
   }
 }
 
-class _AnimatedGlyph extends StatelessWidget {
-  const _AnimatedGlyph({
-    required this.icon,
-    required this.active,
-    required this.color,
-  });
-
-  final IconData icon;
+/// Animate original SVG geometry. Network segments stay separate, as in JSX.
+class AnimatedGlyph extends StatefulWidget {
+  const AnimatedGlyph(
+      {Key? key,
+      required this.name,
+      required this.motion,
+      required this.active,
+      required this.color})
+      : super(key: key);
+  final String name;
+  final String motion;
   final bool active;
   final Color color;
-
   @override
-  Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
-      switchInCurve: Curves.easeOutBack,
-      switchOutCurve: Curves.easeIn,
-      transitionBuilder: (Widget child, Animation<double> animation) {
-        return FadeTransition(
-          opacity: animation,
-          child: ScaleTransition(scale: animation, child: child),
-        );
-      },
-      child: Icon(
-        icon,
-        key: ValueKey<String>('${icon.codePoint}-$active'),
-        size: 24,
-        color: color,
-      ),
-    );
-  }
+  State<AnimatedGlyph> createState() => _AnimatedGlyphState();
 }
 
-class _ShadeSlider extends StatelessWidget {
-  const _ShadeSlider({
-    required this.value,
-    required this.startIcon,
-    required this.endIcon,
-    required this.semanticLabel,
-    required this.onChanged,
-  });
+class _AnimatedGlyphState extends State<AnimatedGlyph>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController controller =
+      AnimationController(vsync: this, duration: launcherDuration(420));
+  String? source;
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
 
-  final double value;
-  final IconData startIcon;
-  final IconData endIcon;
-  final String semanticLabel;
-  final ValueChanged<double> onChanged;
+  Future<void> _load() async {
+    if (widget.motion != 'cellular' && widget.motion != 'wifi') return;
+    final name = widget.name;
+    final value = await rootBundle.loadString('assets/svg/$name.svg');
+    if (mounted && widget.name == name) setState(() => source = value);
+  }
 
   @override
-  Widget build(BuildContext context) {
-    final double fraction = value / 100;
-    return Semantics(
-      slider: true,
-      label: semanticLabel,
-      value: '${value.round()}%',
-      child: SizedBox(
-        height: 51,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(13),
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              const ColoredBox(color: Color(0x38FFFFFF)),
-              AnimatedFractionallySizedBox(
-                duration: const Duration(milliseconds: 150),
-                curve: Curves.easeOutCubic,
-                alignment: Alignment.centerLeft,
-                widthFactor: (fraction + 0.018).clamp(0.0, 1.0),
-                child: const ColoredBox(color: Colors.white),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 19),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    AnimatedScale(
-                      scale: value >= 9 ? 1 : 0.92,
-                      duration: const Duration(milliseconds: 220),
-                      child: Icon(
-                        startIcon,
-                        size: 20,
-                        color:
-                            value >= 9 ? const Color(0xFF20282A) : Colors.white,
-                      ),
-                    ),
-                    AnimatedScale(
-                      scale: value >= 91 ? 1.08 : 1,
-                      duration: const Duration(milliseconds: 220),
-                      child: Icon(
-                        endIcon,
-                        size: 20,
-                        color: value >= 91
-                            ? const Color(0xFF20282A)
-                            : Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: Colors.transparent,
-                  inactiveTrackColor: Colors.transparent,
-                  trackHeight: 51,
-                  thumbColor: const Color(0xFF929697),
-                  thumbShape: const RoundSliderThumbShape(
-                    enabledThumbRadius: 2,
-                  ),
-                  overlayShape: SliderComponentShape.noOverlay,
-                ),
-                child: Slider(
-                  value: value,
-                  min: 0,
-                  max: 100,
-                  onChanged: onChanged,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  void didUpdateWidget(AnimatedGlyph oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.name != widget.name) _load();
+    if (oldWidget.active != widget.active) {
+      if (MediaQuery.of(context).disableAnimations) {
+        controller.value = 1;
+      } else {
+        controller.forward(from: 0);
+      }
+    }
   }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+        width: 22,
+        height: 22,
+        child: AnimatedBuilder(
+            animation: controller,
+            builder: (context, _) {
+              final t = controller.isAnimating ? controller.value : 1.0;
+              final wave = math.sin(t * math.pi);
+              Widget icon;
+              if (source != null) {
+                var markup = source!;
+                var index = 0;
+                markup = markup.replaceAllMapped(
+                    RegExp(r'<(rect|circle|path)\b[^>]*/>'), (m) {
+                  final i = index++;
+                  final local =
+                      ((t * 420 - (widget.active ? i : 3 - i) * 34) / 280)
+                          .clamp(0.0, 1.0);
+                  final scale = widget.active
+                      ? .16 + .84 * Curves.easeOutBack.transform(local)
+                      : 1 - .68 * math.sin(local * math.pi);
+                  final opacity = widget.active
+                      ? local
+                      : 1 - .88 * math.sin(local * math.pi);
+                  final cx = widget.motion == 'cellular' ? 4.5 + i * 5 : 12.0;
+                  final cy = widget.motion == 'cellular'
+                      ? 20.0
+                      : i == 0
+                          ? 18.0
+                          : i == 1
+                              ? 13.3
+                              : 8.6;
+                  if (!controller.isAnimating) return m[0]!;
+                  return '<g opacity="$opacity" transform="translate($cx $cy) scale(1 $scale) translate(${-cx} ${-cy})">${m[0]}</g>';
+                });
+                icon = SvgPicture.string(markup,
+                    width: 22,
+                    height: 22,
+                    theme: SvgTheme(currentColor: widget.color));
+              } else {
+                icon = OriginalIcon(widget.name, color: widget.color);
+              }
+              var offset = Offset.zero;
+              var angle = 0.0;
+              var scale = 1.0;
+              switch (widget.motion) {
+                case 'airplane':
+                  offset = Offset((widget.active ? -10 : 10) * (1 - t), 0);
+                  scale = 1 - .1 * (1 - t);
+                  break;
+                case 'location':
+                  offset = Offset(0, widget.active ? -7 * (1 - t) : -3 * wave);
+                  scale = 1 - .12 * (1 - t);
+                  break;
+                case 'silent':
+                  angle = math.sin(t * math.pi * 4) * .14 * (1 - t);
+                  break;
+                case 'flashlight':
+                  angle = -.087 * (1 - t);
+                  offset = Offset(0, math.sin(t * math.pi * 2));
+                  scale = 1 - .07 * (1 - t);
+                  break;
+              }
+              return Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.center,
+                  children: [
+                    if (controller.isAnimating)
+                      Transform.scale(
+                          scale: .55 + .85 * t,
+                          child: Opacity(
+                              opacity: .35 * (1 - t),
+                              child: Container(
+                                  width: 22,
+                                  height: 22,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          color: widget.color, width: 2))))),
+                    Transform.translate(
+                        offset: offset,
+                        child: Transform.rotate(
+                            angle: angle,
+                            child: Transform.scale(scale: scale, child: icon))),
+                  ]);
+            }),
+      );
+}
+
+class ShadeSlider extends StatefulWidget {
+  const ShadeSlider(
+      {Key? key,
+      required this.value,
+      required this.startIcon,
+      required this.endIcon,
+      required this.label,
+      required this.onChanged,
+      this.onInteraction})
+      : super(key: key);
+  final double value;
+  final String startIcon;
+  final String endIcon;
+  final String label;
+  final ValueChanged<double> onChanged;
+  final ValueChanged<bool>? onInteraction;
+  @override
+  State<ShadeSlider> createState() => _ShadeSliderState();
+}
+
+class _ShadeSliderState extends State<ShadeSlider> {
+  bool dragging = false;
+  void _set(Offset position, double width) => widget.onChanged(
+      ((position.dx - 4) / (width - 8) * 100).roundToDouble().clamp(0, 100));
+  void _finish() {
+    setState(() => dragging = false);
+    widget.onInteraction?.call(false);
+  }
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+        slider: true,
+        label: widget.label,
+        value: '${widget.value.round()}%',
+        increasedValue: '${(widget.value + 1).clamp(0, 100).round()}%',
+        decreasedValue: '${(widget.value - 1).clamp(0, 100).round()}%',
+        onIncrease: () => widget.onChanged((widget.value + 1).clamp(0, 100)),
+        onDecrease: () => widget.onChanged((widget.value - 1).clamp(0, 100)),
+        child: Focus(
+            onKeyEvent: (_, event) {
+              if (event is KeyDownEvent || event is KeyRepeatEvent) {
+                double? value;
+                if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
+                    event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                  value = widget.value + 1;
+                }
+                if (event.logicalKey == LogicalKeyboardKey.arrowLeft ||
+                    event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                  value = widget.value - 1;
+                }
+                if (event.logicalKey == LogicalKeyboardKey.home) value = 0;
+                if (event.logicalKey == LogicalKeyboardKey.end) value = 100;
+                if (value != null) {
+                  widget.onChanged(value.clamp(0, 100));
+                  return KeyEventResult.handled;
+                }
+              }
+              return KeyEventResult.ignored;
+            },
+            child: Builder(
+                builder: (context) => LayoutBuilder(
+                    builder: (context, constraints) => Listener(
+                          onPointerDown: (e) {
+                            Focus.of(context).requestFocus();
+                            widget.onInteraction?.call(true);
+                            setState(() => dragging = true);
+                            _set(e.localPosition, constraints.maxWidth);
+                          },
+                          onPointerMove: (e) {
+                            if (dragging) {
+                              _set(e.localPosition, constraints.maxWidth);
+                            }
+                          },
+                          onPointerUp: (_) => _finish(),
+                          onPointerCancel: (_) => _finish(),
+                          child: SizedBox(
+                              height: 51,
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(13),
+                                  child: Stack(fit: StackFit.expand, children: [
+                                    const ColoredBox(color: Color(0x38FFFFFF)),
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: AnimatedContainer(
+                                            duration: Duration(
+                                                milliseconds:
+                                                    dragging ? 0 : 150),
+                                            curve: Curves.easeOutCubic,
+                                            width: math.min(
+                                                constraints.maxWidth,
+                                                constraints.maxWidth *
+                                                        widget.value /
+                                                        100 +
+                                                    6),
+                                            height: 51,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(13)),
+                                            alignment: Alignment.centerRight,
+                                            padding:
+                                                const EdgeInsets.only(right: 4),
+                                            child: Container(
+                                                width: 3,
+                                                height: dragging ? 31.36 : 28,
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xFF929697),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2))))),
+                                    Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              _sliderIcon(widget.startIcon,
+                                                  widget.value >= 9),
+                                              _sliderIcon(widget.endIcon,
+                                                  widget.value >= 91),
+                                            ])),
+                                    if (Focus.of(context).hasFocus)
+                                      DecoratedBox(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 2),
+                                              borderRadius:
+                                                  BorderRadius.circular(13))),
+                                  ]))),
+                        )))),
+      );
+  Widget _sliderIcon(String name, bool filled) => TweenAnimationBuilder<double>(
+      key: ValueKey('$name-$filled'),
+      tween: Tween(begin: .88, end: 1),
+      duration: launcherDuration(420),
+      curve: Curves.easeOutBack,
+      builder: (_, scale, child) => Transform.scale(scale: scale, child: child),
+      child: OriginalIcon(name,
+          size: 20, color: filled ? const Color(0xFF20282A) : Colors.white));
 }

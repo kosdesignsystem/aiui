@@ -1,7 +1,6 @@
-name: "Launcher"
-description: "Native Flutter launcher application for KasperskyOS Mobile."
+name: launcher
+description: Native Flutter port of src/web/Launcher (browser stage).
 publish_to: 'none'
-
 version: 1.0.0+1
 
 environment:
@@ -10,8 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_svg: 2.2.3
 
 dev_dependencies:
+  http: 1.6.0
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
@@ -19,7 +20,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/wallpaper.png
+    - assets-manifest.json
     - assets/icons/browser.png
     - assets/icons/calculator.png
     - assets/icons/calendar.png
@@ -29,30 +30,61 @@ flutter:
     - assets/icons/contacts.png
     - assets/icons/dictaphone.png
     - assets/icons/files.png
-    - assets/icons/gallery.png
     - assets/icons/mail.png
     - assets/icons/maps.png
     - assets/icons/messenger.png
     - assets/icons/my_office.png
     - assets/icons/notes.png
     - assets/icons/phone.png
+    - assets/icons/gallery.png
     - assets/icons/settings.png
     - assets/icons/sms.png
     - assets/icons/video.png
     - assets/icons/vpn.png
     - assets/icons/weather.png
-    - assets/screens/camera.png
     - assets/screens/files.png
-    - assets/screens/gallery.png
     - assets/screens/phone.png
+    - assets/screens/camera.png
+    - assets/screens/gallery.png
     - assets/screens/settings.png
     - assets/screens/weather.png
-    - assets/fonts/clock_regular.otf
-    - assets/fonts/text_medium.woff2
-    - assets/fonts/text_regular.woff2
-    - assets/fonts/text_semibold.woff2
-
+    - assets/wallpaper.png
+    - assets/svg/lock.svg
+    - assets/svg/mobile-home.svg
+    - assets/svg/mobile-back-outline.svg
+    - assets/svg/signal-cellular-100.svg
+    - assets/svg/wifi.svg
+    - assets/svg/battery-charge-medium.svg
+    - assets/svg/avia.svg
+    - assets/svg/place.svg
+    - assets/svg/place-off.svg
+    - assets/svg/notification-off.svg
+    - assets/svg/notification-active.svg
+    - assets/svg/lighter.svg
+    - assets/svg/lighter-outline.svg
+    - assets/svg/volume-0.svg
+    - assets/svg/volume-100.svg
+    - assets/svg/brightness-low-outline.svg
+    - assets/svg/brightness.svg
+    - assets/svg/search.svg
+    - assets/svg/filter.svg
+    - assets/svg/apps.svg
+    - assets/svg/chat.svg
+    - assets/svg/settings.svg
+    - assets/svg/copy-outline.svg
+    - assets/svg/unlock.svg
+    - assets/svg/cellular.svg
+    - assets/svg/wifi-on.svg
+    - assets/svg/wifi-off.svg
   fonts:
+    - family: Kaspersky Sans Text
+      fonts:
+        - asset: assets/fonts/text_regular.woff2
+          weight: 400
+        - asset: assets/fonts/text_medium.woff2
+          weight: 500
+        - asset: assets/fonts/text_semibold.woff2
+          weight: 600
     - family: Kaspersky Sans Clock
       fonts:
         - asset: assets/fonts/clock_regular.otf

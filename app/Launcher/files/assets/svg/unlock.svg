@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="launcher-unlock__handle" viewBox="0 0 72 11" aria-hidden="true">
+							<defs>
+								<linearGradient id="launcher-unlock-stroke" x1="0" y1="0" x2="1" y2="0">
+									<stop offset="0" stop-color="#fff" stop-opacity=".42" />
+									<stop offset=".5" stop-color="#fff" stop-opacity=".86" />
+									<stop offset="1" stop-color="#fff" stop-opacity=".42" />
+								</linearGradient>
+							</defs>
+							<path fill="none" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke" d="M .75 10 C 11.5 .9 60.5 .9 71.25 10" stroke="url(#launcher-unlock-stroke)" />
+						</svg>

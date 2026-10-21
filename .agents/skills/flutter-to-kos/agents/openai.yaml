@@ -1,0 +1,4 @@
+interface:
+  display_name: "Flutter → KOS/KPA"
+  short_description: "KOS-адаптация Flutter и передача разработчикам"
+  default_prompt: "Используй $flutter-to-kos для адаптации выбранной Flutter-версии под KOS/KPA и подготовки исходников к передаче разработчикам."
