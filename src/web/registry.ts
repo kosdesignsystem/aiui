@@ -8,6 +8,7 @@ import { galleryCatalogAppDefinition } from './GalleryCatalog';
 import { loadingAppDefinition } from './LoadingApp';
 import { launcherAppDefinition } from './Launcher';
 import { remindersAppDefinition } from './Reminders';
+import { testAppDefinition } from './Test';
 
 export {
 	createAppScreenPath,
@@ -32,4 +33,5 @@ export const appRegistry = [
 	galleryCatalogAppDefinition,
 	loadingAppDefinition,
 	remindersAppDefinition,
+	testAppDefinition,
 ];
