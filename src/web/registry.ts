@@ -6,6 +6,7 @@ import CameraMainPage from './Camera/main';
 import { componentsAppDefinition } from './Components';
 import KidCallsMainPage from './KidCalls/main';
 import { sashaAppDefinition } from './Sasha';
+import { testAppDefinition } from './Test';
 import { defineApp, defineFlow, defineScreen } from './definition';
 
 export {
@@ -128,5 +129,6 @@ export const appRegistry = [
 	cameraAppDefinition,
 	calculatorAppDefinition,
 	sashaAppDefinition,
+	testAppDefinition,
 	componentsAppDefinition,
 ];
