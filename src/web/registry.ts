@@ -8,6 +8,7 @@ import RadioMainPage from './Radio';
 import PasswordGeneratorMainPage from './PasswordGenerator/main';
 import { weatherAppDefinition } from './Weather';
 import { focusAppDefinition } from './Focus';
+import { secureGalleryAppDefinition } from './SecureGallery';
 import SecureByUIMainPage from './SecureByUI/main';
 import SecureByUIPolicyPage from './SecureByUI/policy';
 import SecureByUIWifiPage from './SecureByUI/wifi';
@@ -222,4 +223,5 @@ export const appRegistry = [
 	secureByUIAppDefinition,
 	passwordGeneratorAppDefinition,
 	ncAppDefinition,
+	secureGalleryAppDefinition,
 ];

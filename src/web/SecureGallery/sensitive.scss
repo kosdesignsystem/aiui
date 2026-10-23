@@ -1,0 +1,296 @@
+.sensitive-media {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	background: #2a2c30;
+	isolation: isolate;
+}
+
+.sensitive-media__veil {
+	position: absolute;
+	inset: -24px;
+	width: calc(100% + 48px);
+	height: calc(100% + 48px);
+	object-fit: cover;
+	filter: blur(22px) grayscale(0.85) brightness(0.62);
+	transform: scale(1.08);
+	opacity: 0;
+	transition: opacity 0.4s ease;
+}
+
+.sensitive-media.is-thumb .sensitive-media__veil {
+	filter: blur(10px) grayscale(0.85) brightness(0.55);
+}
+
+.sensitive-media__noise {
+	position: absolute;
+	inset: -20%;
+	opacity: 0;
+	mix-blend-mode: overlay;
+	pointer-events: none;
+	transition: opacity 0.4s ease;
+}
+
+.sensitive-media.is-locked .sensitive-media__veil {
+	opacity: 1;
+}
+
+.sensitive-media.is-locked .sensitive-media__noise {
+	opacity: 0.5;
+}
+
+.sensitive-media__spoiler {
+	position: absolute;
+	inset: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.sensitive-media__spoiler > * {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.sensitive-media__image {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	pointer-events: none;
+	user-select: none;
+}
+
+.sensitive-thumb-mark {
+	position: absolute;
+	left: 6px;
+	bottom: 6px;
+	z-index: 1;
+	filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.55));
+}
+
+.sensitive-thumb-mark.is-locked {
+	left: 50%;
+	top: 50%;
+	bottom: auto;
+	transform: translate(-50%, -50%);
+}
+
+.gallery-viewer__rail-item.is-sensitive img {
+	filter: blur(6px) grayscale(0.85) brightness(0.62);
+	transform: scale(1.2);
+}
+
+.sensitive-notice {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding: 24px;
+	color: var(--content-constant);
+	text-align: center;
+	cursor: default;
+	animation: sensitive-notice-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.sensitive-notice__title {
+	text-shadow: 0 1px 8px rgb(0 0 0 / 0.4);
+}
+
+.sensitive-notice__text {
+	max-width: 280px;
+	margin: 0;
+	color: rgb(255 255 255 / 0.72);
+}
+
+.sensitive-notice__button {
+	margin-top: 12px;
+	--ui-control-background: rgb(255 255 255 / 0.14);
+	color: var(--content-constant);
+	backdrop-filter: blur(12px);
+}
+
+.sensitive-notice__button .ui-button__label {
+	color: var(--content-constant);
+}
+
+.sensitive-badge {
+	position: absolute;
+	right: 12px;
+	bottom: 12px;
+	z-index: 2;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: 0;
+	border-radius: 8px;
+	background: var(--system-warning-primary);
+	box-shadow: 0 2px 8px rgb(0 0 0 / 0.24);
+	cursor: pointer;
+	animation: sensitive-notice-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.sensitive-passcode {
+	position: absolute;
+	top: var(--gallery-screen-safe-top);
+	right: 0;
+	bottom: var(--gallery-screen-safe-bottom);
+	left: 0;
+	z-index: 10;
+	display: flex;
+	flex-direction: column;
+	background: var(--background-primary);
+	color: var(--content-primary);
+	animation: sensitive-passcode-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.sensitive-passcode__top {
+	display: flex;
+	align-items: center;
+	min-height: 56px;
+	padding: 8px 16px 0;
+}
+
+.sensitive-passcode__head {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+	padding: 24px 24px 0;
+}
+
+.sensitive-passcode__dots {
+	display: flex;
+	gap: 12px;
+	margin-top: 8px;
+}
+
+.sensitive-passcode__dots.is-error {
+	animation: sensitive-shake 0.4s ease;
+}
+
+.sensitive-passcode__dot {
+	width: 12px;
+	height: 12px;
+	border: 1.5px solid var(--content-primary);
+	border-radius: 50%;
+	transition:
+		background-color 0.12s ease,
+		transform 0.12s ease;
+}
+
+.sensitive-passcode__dot.is-filled {
+	background: var(--content-primary);
+	transform: scale(1.08);
+}
+
+.sensitive-passcode__dots.is-error .sensitive-passcode__dot {
+	border-color: var(--system-error-primary, #e5484d);
+}
+
+.sensitive-passcode__hint {
+	min-height: 16px;
+}
+
+.sensitive-passcode__hint.is-error {
+	color: var(--system-error-primary, #e5484d);
+}
+
+.sensitive-passcode__keypad {
+	display: grid;
+	grid-template-columns: repeat(3, 64px);
+	justify-content: center;
+	gap: 16px 24px;
+	margin-top: auto;
+	padding: 0 24px 32px;
+}
+
+.sensitive-passcode__key {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 64px;
+	height: 64px;
+	padding: 0;
+	border: 0;
+	border-radius: 20px;
+	background: var(--content-background);
+	color: var(--content-primary);
+	cursor: pointer;
+	transition:
+		transform 0.12s ease,
+		background-color 0.12s ease;
+}
+
+.sensitive-passcode__key:active {
+	transform: scale(0.94);
+	background: var(--content-border);
+}
+
+.sensitive-passcode__key.is-text {
+	width: auto;
+	background: transparent;
+	white-space: nowrap;
+}
+
+@keyframes sensitive-notice-in {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes sensitive-passcode-in {
+	from {
+		opacity: 0;
+		transform: translateY(24px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes sensitive-shake {
+	0%,
+	100% {
+		transform: translateX(0);
+	}
+	20%,
+	60% {
+		transform: translateX(-8px);
+	}
+	40%,
+	80% {
+		transform: translateX(8px);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sensitive-notice,
+	.sensitive-badge,
+	.sensitive-passcode,
+	.sensitive-passcode__dots.is-error {
+		animation: none;
+	}
+}
+
+.gallery-viewer__media {
+	position: relative;
+}
+
+.sensitive-media.is-viewer {
+	border-radius: 24px;
+}
