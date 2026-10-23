@@ -8,6 +8,7 @@ import { galleryCatalogAppDefinition } from './GalleryCatalog';
 import { loadingAppDefinition } from './LoadingApp';
 import { launcherAppDefinition } from './Launcher';
 import { remindersAppDefinition } from './Reminders';
+import { voiceAssistantAppDefinition } from './VoiceAssistant/definition';
 import { testAppDefinition } from './Test';
 
 export {
@@ -34,4 +35,5 @@ export const appRegistry = [
 	loadingAppDefinition,
 	remindersAppDefinition,
 	testAppDefinition,
+	voiceAssistantAppDefinition,
 ];
