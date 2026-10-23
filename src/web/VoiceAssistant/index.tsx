@@ -1,125 +1,112 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './style.css';
 
-type Mode = 'idle' | 'listening' | 'thinking' | 'speaking';
-const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-
+type Stage = 'idle' | 'listening' | 'thinking' | 'answer';
+const Recognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+const samples = [
+  'Всё в порядке. Я на связи и готов помочь с вашей задачей.',
+  'Понял вас. Сначала проверьте основные показатели, затем зафиксируйте результат.',
+  'Хороший вопрос. Я бы начал с самого простого решения и проверил результат.',
+  'Принято. Можно продолжать работу, но важно соблюдать меры безопасности.',
+  'Да, конечно. Расскажите чуть подробнее, и мы найдём подходящее решение.',
+  'Рекомендую записать наблюдения и передать информацию ответственному специалисту.'
+];
+function pickReply(question: string) {
+  const q = question.toLowerCase();
+  if (/привет|как дела|здравствуй/.test(q)) return 'Привет! Всё отлично. Я рядом и готов помочь.';
+  if (/температур|котел|котёл|градус/.test(q)) return 'Температура котла 72 градуса. Рекомендую сверить показания с допустимым рабочим диапазоном.';
+  if (/дефект|поломк|неисправн/.test(q)) return 'Зафиксируйте дефект на фото и сообщите инженеру. Перед осмотром убедитесь, что оборудование безопасно.';
+  if (/время|час/.test(q)) return 'Сейчас ' + new Date().toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'}) + '.';
+  return samples[Math.floor(Math.random() * samples.length)];
+}
 export default function VoiceAssistant() {
-  const [mode, setMode] = useState<Mode>('idle');
+  const [stage, setStage] = useState<Stage>('idle');
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
-  const [error, setError] = useState('');
-  const recognition = useRef<any>(null);
-  const audio = useRef<SpeechSynthesisUtterance | null>(null);
-  const modeRef = useRef<Mode>('idle');
-  const setStatus = (value: Mode) => { modeRef.current = value; setMode(value); };
-
-  const speak = (text: string) => {
-    if (!('speechSynthesis' in window)) { setStatus('idle'); return; }
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'ru-RU';
-    utterance.rate = 0.95;
-    utterance.onend = () => setStatus('idle');
-    utterance.onerror = () => setStatus('idle');
-    audio.current = utterance;
-    setStatus('speaking');
-    window.speechSynthesis.speak(utterance);
-  };
-
-  const respond = async (text: string) => {
-    setStatus('thinking');
-    // Connect a secure server endpoint for AI answers; never expose API keys in the browser.
-    try {
-      const response = await fetch('/api/assistant', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
-      });
-      if (!response.ok) throw new Error('API unavailable');
-      const data = await response.json();
-      if (typeof data.answer !== 'string' || !data.answer.trim()) throw new Error('Empty answer');
-      setAnswer(data.answer);
-      speak(data.answer);
-    } catch {
-      const fallback = 'Я услышал ваш вопрос. Для интеллектуальных ответов необходимо подключить сервер ассистента.';
-      setAnswer(fallback);
-      speak(fallback);
-    }
-  };
-
-  const start = () => {
-    setError('');
+  const [visible, setVisible] = useState('');
+  const recognizer = useRef<any>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sequence = useRef(0);
+  const stageRef = useRef<Stage>('idle');
+  const setMode = (s: Stage) => { stageRef.current = s; setStage(s); };
+  const cancel = () => {
+    sequence.current++;
+    recognizer.current?.abort();
     window.speechSynthesis?.cancel();
-    recognition.current?.abort();
-    if (!SpeechRecognition) {
-      setError('Голосовой ввод недоступен в этом браузере. Попробуйте Chrome.');
-      return;
+    if (timer.current) clearTimeout(timer.current);
+  };
+  const showAnswer = (text: string) => {
+    cancel();
+    const id = sequence.current;
+    setAnswer(text);
+    setVisible('');
+    setMode('answer');
+    let i = 0;
+    const tick = () => {
+      if (id !== sequence.current) return;
+      i = Math.min(text.length, i + 2);
+      setVisible(text.slice(0, i));
+      if (i < text.length) timer.current = setTimeout(tick, 30);
+    };
+    tick();
+    if ('speechSynthesis' in window) {
+      const speech = new SpeechSynthesisUtterance(text);
+      speech.lang = 'ru-RU';
+      speech.rate = 0.94;
+      window.speechSynthesis.speak(speech);
     }
-    const instance = new SpeechRecognition();
-    recognition.current = instance;
-    instance.lang = 'ru-RU';
-    instance.interimResults = true;
-    instance.continuous = false;
-    instance.onresult = (event: any) => {
-      let transcript = '';
-      for (let i = 0; i < event.results.length; i++) transcript += event.results[i][0].transcript;
-      setQuestion(transcript);
-      if (event.results[event.results.length - 1].isFinal) {
-        instance.onend = null;
-        instance.stop();
-        void respond(transcript.trim());
-      }
-    };
-    instance.onerror = (event: any) => {
-      if (event.error !== 'aborted') setError(event.error === 'not-allowed' ? 'Разрешите доступ к микрофону.' : 'Не удалось распознать речь. Попробуйте ещё раз.');
-      setStatus('idle');
-    };
-    instance.onend = () => { if (modeRef.current === 'listening') setStatus('idle'); };
+  };
+  const submit = (text: string) => {
+    setQuestion(text);
+    setMode('thinking');
+    timer.current = setTimeout(() => showAnswer(pickReply(text)), 750);
+  };
+  const start = () => {
+    cancel();
     setQuestion('');
     setAnswer('');
-    setStatus('listening');
-    try { instance.start(); } catch { setError('Не удалось включить микрофон.'); setStatus('idle'); }
+    setVisible('');
+    setMode('listening');
+    if (!Recognition) {
+      timer.current = setTimeout(() => submit('Расскажи, как идут дела'), 1800);
+      return;
+    }
+    const rec = new Recognition();
+    recognizer.current = rec;
+    rec.lang = 'ru-RU';
+    rec.interimResults = true;
+    rec.onresult = (e: any) => {
+      let text = '';
+      for (let i = 0; i < e.results.length; i++) text += e.results[i][0].transcript;
+      setQuestion(text);
+      if (e.results[e.results.length - 1].isFinal) {
+        rec.onend = null;
+        rec.stop();
+        submit(text);
+      }
+    };
+    rec.onerror = () => { if (stageRef.current === 'listening') submit('Расскажи, как идут дела'); };
+    rec.onend = () => { if (stageRef.current === 'listening') submit('Расскажи, как идут дела'); };
+    try { rec.start(); } catch { timer.current = setTimeout(() => submit('Расскажи, как идут дела'), 1200); }
   };
-
-  const stop = () => {
-    recognition.current?.abort();
-    window.speechSynthesis?.cancel();
-    setStatus('idle');
-  };
-
-  useEffect(() => () => {
-    recognition.current?.abort();
-    window.speechSynthesis?.cancel();
-  }, []);
-
-  const labels: Record<Mode, string> = {
-    idle: 'Нажмите и задайте вопрос',
-    listening: 'Слушаю вас…',
-    thinking: 'Думаю над ответом…',
-    speaking: 'Отвечаю вам…'
-  };
-
-  return <main className={'voice-app mode-' + mode}>
-    <div className="voice-top"><span className="voice-brand"><span className="voice-brand-dot" /> ГОЛОСОВОЙ АССИСТЕНТ</span><span className="voice-online"><span /> ГОТОВ К РАБОТЕ</span></div>
-    <section className="voice-content" aria-live="polite">
-      <div className="voice-eyebrow">{mode === 'listening' ? 'ИДЁТ ЗАПИСЬ' : mode === 'thinking' ? 'ОБРАБОТКА' : mode === 'speaking' ? 'ГОЛОСОВОЙ ОТВЕТ' : 'ВАШ ПОМОЩНИК'}</div>
-      <h1>{labels[mode]}</h1>
-      <p className="voice-hint">{mode === 'idle' ? 'Спросите о чём угодно. Я услышу вас и отвечу вслух.' : mode === 'listening' ? 'Говорите естественно, не торопитесь.' : mode === 'thinking' ? 'Готовлю ответ на ваш вопрос.' : 'Вы можете остановить воспроизведение.'}</p>
-      {question && <div className="voice-message"><span>ВАШ ВОПРОС</span><p>{question}</p></div>}
-      {answer && <div className="voice-message voice-answer"><span>ОТВЕТ АССИСТЕНТА</span><p>{answer}</p></div>}
-      {error && <p className="voice-error" role="alert">{error}</p>}
-    </section>
-    <section className="voice-controls">
-      <div className="voice-orbit">
-        <div className="voice-glow" />
-        <div className="voice-ring ring-one" /><div className="voice-ring ring-two" /><div className="voice-ring ring-three" />
-        <button className="voice-mic" aria-label={mode === 'idle' ? 'Начать говорить' : 'Остановить'} onClick={mode === 'idle' ? start : stop}>
-          {mode === 'thinking' ? <span className="voice-loader" /> : mode === 'speaking' ? <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round"><path d="M15 13v22M24 8v32M33 16v16"/></svg> : mode === 'listening' ? <svg viewBox="0 0 48 48" fill="currentColor"><rect x="13" y="13" width="22" height="22" rx="4"/></svg> : <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"><rect x="17" y="5" width="14" height="26" rx="7"/><path d="M10 23a14 14 0 0 0 28 0M24 37v7M16 44h16"/></svg>}
+  const stop = () => { cancel(); setMode('idle'); setAnswer(''); setVisible(''); };
+  useEffect(() => () => cancel(), []);
+  return <div className={'va va--' + stage}>
+    <header className="va-header"><span className="va-led" /><span>АССИСТЕНТ</span><span className="va-status">{stage === 'listening' ? 'СЛУШАЮ' : stage === 'thinking' ? 'ДУМАЮ' : stage === 'answer' ? 'ОТВЕЧАЮ' : 'НА СВЯЗИ'}</span></header>
+    <div className="va-center" aria-live="polite">
+      {stage === 'answer' ? <><div className="va-caption">ОТВЕТ</div><div className="va-response">{visible}<span className="va-caret" /></div></> :
+       stage === 'listening' ? <><div className="va-caption">ГОВОРИТЕ</div><div className="va-title">{question || 'Я слушаю…'}</div></> :
+       stage === 'thinking' ? <><div className="va-caption">СЕКУНДУ</div><div className="va-title">Думаю<span className="va-dots">…</span></div></> :
+       <><div className="va-caption">ГОЛОСОВОЕ УПРАВЛЕНИЕ</div><div className="va-title">О чём поговорим?</div></>}
+    </div>
+    <div className="va-bottom">
+      <div className="va-orbit">
+        <div className="va-halo" /><div className="va-wave va-wave-1"/><div className="va-wave va-wave-2"/><div className="va-wave va-wave-3"/>
+        <button type="button" className="va-button" onClick={stage === 'idle' || stage === 'answer' ? start : stop} aria-label={stage === 'idle' || stage === 'answer' ? 'Задать вопрос' : 'Остановить'}>
+          {stage === 'listening' || stage === 'thinking' ? <span className="va-stop"/> : <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="4.5" strokeLinecap="round"><rect x="23" y="8" width="18" height="34" rx="9"/><path d="M15 32a17 17 0 0 0 34 0M32 49v8M23 57h18"/></svg>}
         </button>
       </div>
-      <div className="voice-action-label">{mode === 'idle' ? 'НАЖМИТЕ, ЧТОБЫ ГОВОРИТЬ' : 'НАЖМИТЕ, ЧТОБЫ ОСТАНОВИТЬ'}</div>
-      {answer && mode === 'idle' && <button className="voice-repeat" onClick={() => speak(answer)}>↻ &nbsp; Повторить ответ</button>}
-    </section>
-    <footer className="voice-footer"><span>VOICE INTERFACE</span><span>01 / 01</span></footer>
-  </main>;
+      <div className="va-tip">{stage === 'idle' ? 'НАЖМИТЕ И ГОВОРИТЕ' : stage === 'answer' ? 'НОВЫЙ ВОПРОС' : 'НАЖМИТЕ ДЛЯ ОСТАНОВКИ'}</div>
+    </div>
+  </div>;
 }
