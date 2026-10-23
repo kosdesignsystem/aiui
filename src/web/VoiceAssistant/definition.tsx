@@ -1,8 +1,8 @@
 import { defineApp, defineFlow, defineScreen } from '../definition';
-import VoiceAssistant from './VoiceAssistant';
+import VoiceAssistant from './index';
 
 export const voiceAssistantAppDefinition = defineApp({
-  id: 'voice-assistant',
+  id: 'VoiceAssistant',
   title: 'Голосовой ассистент',
   businessGoal: 'Задавать вопросы голосом и получать озвученные ответы с управлением в перчатках.',
   flows: [defineFlow({
