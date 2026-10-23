@@ -155,22 +155,30 @@ const stopPointer = (event: ReactPointerEvent) => {
 };
 
 const VEIL_FILTER = 'blur(22px) grayscale(0.85) brightness(0.62)';
-const DISSOLVE_CELL = 5;
-const DISSOLVE_SPREAD = 0.55;
-const DISSOLVE_LIFE = 0.42;
+// Ширина мягкого края волны растворения, px.
+const DISSOLVE_FEATHER = 70;
+// Доля времени, за которую волна проходит всё фото; остаток — догорание частиц.
+const DISSOLVE_WAVE = 0.62;
+const PARTICLE_LIFE = 0.36;
 
-type DissolveCell = {
+type DissolveParticle = {
 	x: number;
 	y: number;
+	distance: number;
+	radius: number;
 	color: string;
-	start: number;
+	glow: boolean;
 	vx: number;
 	vy: number;
-	spark: boolean;
+	phase: number;
 };
 
-function easeOutCubic(value: number) {
-	return 1 - (1 - value) ** 3;
+function easeOutQuart(value: number) {
+	return 1 - (1 - value) ** 4;
+}
+
+function easeInOutSine(value: number) {
+	return -(Math.cos(Math.PI * value) - 1) / 2;
 }
 
 function loadImage(src: string) {
@@ -182,62 +190,81 @@ function loadImage(src: string) {
 	});
 }
 
-function createCells(image: HTMLImageElement, width: number, height: number) {
-	const source = document.createElement('canvas');
-	source.width = width;
-	source.height = height;
-	const sourceContext = source.getContext('2d', { willReadFrequently: true });
+// Пелена: то же фото, растянутое по cover, размытое и обесцвеченное — как CSS-слой veil.
+function renderVeil(image: HTMLImageElement, width: number, height: number, dpr: number) {
+	const veil = document.createElement('canvas');
+	veil.width = Math.round(width * dpr);
+	veil.height = Math.round(height * dpr);
+	const context = veil.getContext('2d', { willReadFrequently: true });
 
-	if (!sourceContext) {
-		return [];
+	if (!context) {
+		return null;
 	}
 
-	// Пелена: то же фото, растянутое по cover, размытое и обесцвеченное.
-	const scale = Math.max(width / image.width, height / image.height) * 1.08;
+	context.scale(dpr, dpr);
+	// Совпадает с CSS-слоем: inset -24px, object-fit: cover, scale(1.08).
+	const scale = Math.max((width + 48) / image.width, (height + 48) / image.height) * 1.08;
 	const drawWidth = image.width * scale;
 	const drawHeight = image.height * scale;
-	sourceContext.fillStyle = '#2a2c30';
-	sourceContext.fillRect(0, 0, width, height);
-	sourceContext.filter = VEIL_FILTER;
-	sourceContext.drawImage(image, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
+	context.fillStyle = '#2a2c30';
+	context.fillRect(0, 0, width, height);
+	context.filter = VEIL_FILTER;
+	context.drawImage(image, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
+	context.filter = 'none';
 
-	const pixels = sourceContext.getImageData(0, 0, width, height).data;
+	return { canvas: veil, context };
+}
+
+function createParticles(
+	veilContext: CanvasRenderingContext2D,
+	width: number,
+	height: number,
+	dpr: number,
+	maxDistance: number,
+) {
+	const pixels = veilContext.getImageData(0, 0, Math.round(width * dpr), Math.round(height * dpr));
+	const count = Math.round((width * height) / 90);
 	const centerX = width / 2;
 	const centerY = height / 2;
-	const maxDistance = Math.hypot(centerX, centerY);
-	const cells: DissolveCell[] = [];
+	const particles: DissolveParticle[] = [];
 
-	for (let y = 0; y < height; y += DISSOLVE_CELL) {
-		for (let x = 0; x < width; x += DISSOLVE_CELL) {
-			const offset = (Math.min(y + 2, height - 1) * width + Math.min(x + 2, width - 1)) * 4;
-			const dx = x - centerX;
-			const dy = y - centerY;
-			const distance = Math.hypot(dx, dy) / maxDistance;
-			const angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 1.2;
-			const speed = 40 + Math.random() * 90;
-			const spark = Math.random() < 0.12;
+	for (let index = 0; index < count; index += 1) {
+		const x = Math.random() * width;
+		const y = Math.random() * height;
+		const offset =
+			(Math.min(Math.round(y * dpr), pixels.height - 1) * pixels.width +
+				Math.min(Math.round(x * dpr), pixels.width - 1)) *
+			4;
+		const glow = Math.random() < 0.35;
+		const angle = Math.atan2(y - centerY, x - centerX) + (Math.random() - 0.5) * 1.6;
+		const speed = 30 + Math.random() * 70;
+		// Частицы светлее пелены, чтобы читались как пыль, а не как куски картинки.
+		const lift = 40 + Math.random() * 50;
+		const red = Math.min(255, pixels.data[offset] + lift);
+		const green = Math.min(255, pixels.data[offset + 1] + lift);
+		const blue = Math.min(255, pixels.data[offset + 2] + lift);
 
-			cells.push({
-				x,
-				y,
-				color: spark
-					? 'rgba(255, 255, 255, 0.95)'
-					: `rgb(${pixels[offset]}, ${pixels[offset + 1]}, ${pixels[offset + 2]})`,
-				start: distance * DISSOLVE_SPREAD + Math.random() * 0.18,
-				vx: Math.cos(angle) * speed,
-				vy: Math.sin(angle) * speed - 30 - Math.random() * 40,
-				spark,
-			});
-		}
+		particles.push({
+			x,
+			y,
+			distance: Math.hypot(x - centerX, y - centerY) / maxDistance,
+			radius: glow ? 0.6 + Math.random() * 1.1 : 0.8 + Math.random() * 1.8,
+			color: glow ? '255, 255, 255' : `${red}, ${green}, ${blue}`,
+			glow,
+			vx: Math.cos(angle) * speed,
+			vy: Math.sin(angle) * speed - 18 - Math.random() * 26,
+			phase: Math.random() * Math.PI * 2,
+		});
 	}
 
-	return cells;
+	return particles;
 }
 
 /**
- * Растворение пелены в частицы (Thanos-snap / Telegram-эффект) и обратная сборка.
- * Пелена режется на клетки 5×5, каждая клетка с задержкой от центра превращается
- * в частицу, разлетается и гаснет. Сборка — то же самое, проигранное назад.
+ * Растворение пелены и обратная сборка (эффект «пыли», как у Telegram).
+ * Пелена тает мягкой круговой волной с размытым краем от центра к краям,
+ * с фронта волны срываются круглые светящиеся частицы: разлетаются с торможением,
+ * слегка закручиваются и гаснут. Сборка — тот же эффект, проигранный назад.
  */
 function DissolveCanvas({ photo, direction }: { photo: GalleryPhoto; direction: 'dissolve' | 'assemble' }) {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -250,14 +277,16 @@ function DissolveCanvas({ photo, direction }: { photo: GalleryPhoto; direction: 
 			return undefined;
 		}
 
-		const width = Math.max(1, Math.round(canvas.clientWidth));
-		const height = Math.max(1, Math.round(canvas.clientHeight));
-		canvas.width = width;
-		canvas.height = height;
+		const dpr = Math.min(window.devicePixelRatio || 1, 2);
+		const width = Math.max(1, canvas.clientWidth);
+		const height = Math.max(1, canvas.clientHeight);
+		canvas.width = Math.round(width * dpr);
+		canvas.height = Math.round(height * dpr);
+		context.setTransform(dpr, 0, 0, dpr, 0, 0);
 
 		if (direction === 'dissolve') {
-			// Первый кадр — сплошная пелена, чтобы фото не мелькнуло до старта частиц.
-			context.fillStyle = '#5a5c60';
+			// Первый кадр — сплошная пелена, чтобы фото не мелькнуло до загрузки.
+			context.fillStyle = '#4a4c50';
 			context.fillRect(0, 0, width, height);
 		}
 
@@ -270,40 +299,99 @@ function DissolveCanvas({ photo, direction }: { photo: GalleryPhoto; direction: 
 				return;
 			}
 
-			const cells = createCells(image, width, height);
+			const veil = renderVeil(image, width, height, dpr);
+
+			if (!veil) {
+				return;
+			}
+
+			const centerX = width / 2;
+			const centerY = height / 2;
+			const maxDistance = Math.hypot(centerX, centerY);
+			const particles = createParticles(veil.context, width, height, dpr, maxDistance);
+			const reach = maxDistance + DISSOLVE_FEATHER;
+			const lobes = [
+				{ angle: 0, offset: 0, scale: 1 },
+				...Array.from({ length: 5 }, (_, index) => ({
+					angle: (index / 5) * Math.PI * 2 + Math.random() * 0.8,
+					offset: 0.28 + Math.random() * 0.12,
+					scale: 0.62 + Math.random() * 0.12,
+				})),
+			];
 			const startedAt = performance.now();
-			const duration = reducedMotion ? 1 : SENSITIVE_TRANSITION_MS - 80;
+			const duration = reducedMotion ? 1 : SENSITIVE_TRANSITION_MS - 60;
 
 			const render = (now: number) => {
 				const elapsed = Math.min((now - startedAt) / duration, 1);
 				const time = direction === 'dissolve' ? elapsed : 1 - elapsed;
-				const timeScale = DISSOLVE_SPREAD + 0.18 + DISSOLVE_LIFE;
-				const t = time * timeScale;
+				const wave = easeInOutSine(Math.min(time / DISSOLVE_WAVE, 1));
+				const frontRadius = wave * reach;
 
 				context.clearRect(0, 0, width, height);
 
-				for (const cell of cells) {
-					const progress = (t - cell.start) / DISSOLVE_LIFE;
-
-					if (progress >= 1) {
-						continue;
-					}
-
-					context.fillStyle = cell.color;
-
-					if (progress <= 0) {
-						if (!cell.spark) {
-							context.fillRect(cell.x, cell.y, DISSOLVE_CELL, DISSOLVE_CELL);
-						}
-						continue;
-					}
-
-					const eased = easeOutCubic(progress);
-					const size = cell.spark ? 2 : DISSOLVE_CELL * (1 - progress * 0.7);
-					context.globalAlpha = 1 - progress;
-					context.fillRect(cell.x + cell.vx * eased, cell.y + cell.vy * eased, size, size);
+				// 1. Пелена с «выеденной» мягкой дырой по радиусу волны.
+				if (frontRadius < reach) {
+					context.globalCompositeOperation = 'source-over';
 					context.globalAlpha = 1;
+					context.drawImage(veil.canvas, 0, 0, width, height);
+					context.globalCompositeOperation = 'destination-out';
+					// Основная волна + «лепестки», чтобы край был живым, а не идеальным кругом.
+					for (const lobe of lobes) {
+						const radius = frontRadius * lobe.scale;
+						const lobeX = centerX + Math.cos(lobe.angle + time * 1.4) * frontRadius * lobe.offset;
+						const lobeY = centerY + Math.sin(lobe.angle + time * 1.4) * frontRadius * lobe.offset;
+						const inner = Math.max(0, radius - DISSOLVE_FEATHER);
+						const hole = context.createRadialGradient(
+							lobeX,
+							lobeY,
+							inner,
+							lobeX,
+							lobeY,
+							Math.max(inner + 1, radius),
+						);
+						hole.addColorStop(0, 'rgba(0, 0, 0, 1)');
+						hole.addColorStop(1, 'rgba(0, 0, 0, 0)');
+						context.fillStyle = hole;
+						context.fillRect(0, 0, width, height);
+					}
 				}
+
+				// 2. Частицы, сорванные фронтом волны.
+				const frontTime = time * (1 + PARTICLE_LIFE);
+
+				for (const particle of particles) {
+					const releaseAt = particle.distance * DISSOLVE_WAVE;
+					const progress = (frontTime - releaseAt) / PARTICLE_LIFE;
+
+					if (progress <= 0 || progress >= 1) {
+						continue;
+					}
+
+					const travel = easeOutQuart(progress);
+					const swirl = Math.sin(particle.phase + progress * 5) * 6 * progress;
+					const x = particle.x + particle.vx * travel + swirl;
+					const y = particle.y + particle.vy * travel;
+					// Вспышка при отрыве и плавное угасание.
+					const alpha = Math.min(progress * 6, 1) * (1 - progress) ** 1.4;
+					const radius = particle.radius * (1 - progress * 0.45);
+
+					context.globalCompositeOperation = particle.glow ? 'lighter' : 'source-over';
+					context.globalAlpha = alpha;
+					context.fillStyle = `rgb(${particle.color})`;
+					context.beginPath();
+					context.arc(x, y, radius, 0, Math.PI * 2);
+					context.fill();
+
+					if (particle.glow) {
+						context.globalAlpha = alpha * 0.25;
+						context.beginPath();
+						context.arc(x, y, radius * 2.6, 0, Math.PI * 2);
+						context.fill();
+					}
+				}
+
+				context.globalCompositeOperation = 'source-over';
+				context.globalAlpha = 1;
 
 				if (elapsed < 1) {
 					frame = window.requestAnimationFrame(render);
