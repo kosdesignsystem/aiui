@@ -11,6 +11,9 @@
 - `fade`
 - `slide-left`
 - `slide-right`
+- `vc-panel-in`, `vc-panel-out` — появление и закрытие панели VoiceControl
+- `vc-content-in`, `vc-fade-in`, `vc-fade-out` — смена содержимого и подложки помощника
+- `vc-wave`, `vc-dots` — демопрослушивание и обработка запроса; учитывают reduced motion
 - `launcher-reveal` — мягкое появление экрана кода-пароля
 - `launcher-home-in` — раскрытие домашнего экрана
 - `launcher-shade-in` — вытягивание панели быстрых настроек

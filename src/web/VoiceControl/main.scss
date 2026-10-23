@@ -1,0 +1,32 @@
+.vc-home {
+	position: relative; height: 100%; min-height: 0; overflow: hidden;
+	background-size: cover; background-position: center; color: var(--content-constant);
+	&::before { content: ''; position: absolute; inset: 0; background: linear-gradient(#151a2530, transparent 45%, #0005); pointer-events: none; }
+	&__clock { position: relative; padding-top: 108px; text-align: center; display: grid; gap: 2px;
+		time { font-family: var(--font-family-clock, var(--font-family-base)); font-size: 76px; font-weight: 400; line-height: 1.15; letter-spacing: -3px; }
+		span { font-size: 16px; opacity: .72; }
+	}
+	&__hint { position: absolute; top: 49%; width: 100%; text-align: center; text-shadow: 0 2px 16px #0008;
+		span { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; opacity: .7; }
+		p { font-size: 15px; margin: 10px 0; }
+	}
+	&__apps { position: absolute; bottom: 122px; left: 16px; right: 16px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 8px;
+		button { border: 0; background: none; color: inherit; padding: 0; display: grid; justify-items: center; gap: 7px; cursor: pointer; font: inherit; font-size: 11px; }
+		img { width: 58px; height: 58px; object-fit: contain; transition: transform 180ms ease; }
+		button:active img { transform: scale(.92); }
+		button:focus-visible { outline: 2px solid var(--content-constant); border-radius: 12px; outline-offset: 4px; }
+	}
+}
+@media (max-height: 650px) {
+	.vc-home__clock { padding-top: 52px; }
+	.vc-home__hint { display: none; }
+	.vc-home__apps { gap: 16px 8px; }
+}
+
+// Keep the existing system chrome legible over this screen's dark wallpaper.
+.device-mockup:has(.vc-home) {
+	.device-statusbar, .device-navbar {
+		--content-primary: var(--content-constant);
+		--content-secondary: var(--content-constant);
+	}
+}

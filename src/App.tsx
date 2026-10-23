@@ -15,6 +15,7 @@ import {
 } from './web/registry';
 import { resetGoalSetupModalSessionState } from './web/Reminders/session';
 import { Text } from './ui/Fonts';
+import { VoiceControlHost } from './web/VoiceControl/overlay';
 import './app.scss';
 
 const defaultScreenPath = getDefaultAppScreenPath(appRegistry);
@@ -58,13 +59,13 @@ function AppScreen({ isMobile = false }: AppScreenProps) {
 	const ScreenComponent = match.screen.Component;
 
 	if (isMobile) {
-		return <ScreenComponent />;
+		return <VoiceControlHost><ScreenComponent /></VoiceControlHost>;
 	}
 
 	return (
 		<div className="wrapper">
 			<DeviceFrame>
-				<ScreenComponent />
+				<VoiceControlHost><ScreenComponent /></VoiceControlHost>
 			</DeviceFrame>
 		</div>
 	);
