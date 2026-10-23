@@ -12,3 +12,4 @@
 - `slide-left`
 - `slide-right`
 - `noise` — анимированное зерно для скрытого (чувствительного) контента, класс `.animation-noise` в `noise.scss`
+- `dissolve` — растворение пелены в частицы и обратная сборка (canvas, JS): `DissolveCanvas` в `src/web/SecureGallery/sensitive.parts.tsx`

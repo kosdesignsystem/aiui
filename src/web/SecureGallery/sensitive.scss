@@ -15,7 +15,6 @@
 	filter: blur(22px) grayscale(0.85) brightness(0.62);
 	transform: scale(1.08);
 	opacity: 0;
-	transition: opacity 0.4s ease;
 }
 
 .sensitive-media.is-thumb .sensitive-media__veil {
@@ -138,107 +137,158 @@
 	animation: sensitive-notice-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+// Экран код-пароля: стили PinPad из Launcher (member/MK, src/web/Launcher/_home.scss).
 .sensitive-passcode {
+	--sensitive-pin-glass: rgb(219 235 236 / 20%);
+	--sensitive-pin-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
 	position: absolute;
 	top: var(--gallery-screen-safe-top);
 	right: 0;
 	bottom: var(--gallery-screen-safe-bottom);
 	left: 0;
 	z-index: 10;
-	display: flex;
-	flex-direction: column;
-	background: var(--background-primary);
-	color: var(--content-primary);
-	animation: sensitive-passcode-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+	overflow: hidden;
+	background: #1b1d22;
+	color: #fff;
+	animation: sensitive-passcode-in 240ms var(--sensitive-pin-ease-out) both;
 }
 
-.sensitive-passcode__top {
-	display: flex;
-	align-items: center;
-	min-height: 56px;
-	padding: 8px 16px 0;
+.sensitive-passcode__backdrop {
+	position: absolute;
+	inset: -40px;
+	width: calc(100% + 80px);
+	height: calc(100% + 80px);
+	object-fit: cover;
+	filter: blur(32px) saturate(1.2) brightness(0.45);
 }
 
-.sensitive-passcode__head {
+.sensitive-passcode__pin {
+	position: absolute;
+	inset: 0;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 16px;
-	padding: 24px 24px 0;
+	padding: 54px 22px 10px;
+}
+
+.sensitive-passcode__pin > svg {
+	color: #fff !important;
+}
+
+.sensitive-passcode__pin h1 {
+	margin: 28px 0 22px;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 28px;
 }
 
 .sensitive-passcode__dots {
 	display: flex;
-	gap: 12px;
-	margin-top: 8px;
+	gap: 13px;
+}
+
+.sensitive-passcode__dots span {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: rgb(255 255 255 / 32%);
+	transition: background 150ms ease;
+}
+
+.sensitive-passcode__dots span.is-filled {
+	background: #fff;
+	animation: sensitive-pin-dot-fill 220ms var(--sensitive-pin-ease-out);
 }
 
 .sensitive-passcode__dots.is-error {
 	animation: sensitive-shake 0.4s ease;
 }
 
-.sensitive-passcode__dot {
-	width: 12px;
-	height: 12px;
-	border: 1.5px solid var(--content-primary);
-	border-radius: 50%;
-	transition:
-		background-color 0.12s ease,
-		transform 0.12s ease;
+.sensitive-passcode__dots.is-error span {
+	background: var(--system-error-primary);
 }
 
-.sensitive-passcode__dot.is-filled {
-	background: var(--content-primary);
-	transform: scale(1.08);
-}
-
-.sensitive-passcode__dots.is-error .sensitive-passcode__dot {
-	border-color: var(--system-error-primary, #e5484d);
-}
-
-.sensitive-passcode__hint {
-	min-height: 16px;
-}
-
-.sensitive-passcode__hint.is-error {
-	color: var(--system-error-primary, #e5484d);
-}
-
-.sensitive-passcode__keypad {
-	display: grid;
-	grid-template-columns: repeat(3, 64px);
-	justify-content: center;
-	gap: 16px 24px;
-	margin-top: auto;
-	padding: 0 24px 32px;
-}
-
-.sensitive-passcode__key {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 64px;
-	height: 64px;
-	padding: 0;
+.sensitive-passcode__forgot,
+.sensitive-passcode__actions button {
 	border: 0;
-	border-radius: 20px;
-	background: var(--content-background);
-	color: var(--content-primary);
-	cursor: pointer;
-	transition:
-		transform 0.12s ease,
-		background-color 0.12s ease;
-}
-
-.sensitive-passcode__key:active {
-	transform: scale(0.94);
-	background: var(--content-border);
-}
-
-.sensitive-passcode__key.is-text {
-	width: auto;
+	color: #fff;
 	background: transparent;
-	white-space: nowrap;
+	font: inherit;
+	cursor: pointer;
+}
+
+.sensitive-passcode__forgot {
+	margin: 18px 0 26px;
+	font-weight: 500;
+}
+
+.sensitive-passcode__keys {
+	width: 264px;
+	display: grid;
+	grid-template-columns: repeat(3, 72px);
+	gap: 14px 24px;
+}
+
+.sensitive-passcode__keys button {
+	width: 72px;
+	height: 72px;
+	border: 0;
+	border-radius: 22px;
+	background: var(--sensitive-pin-glass);
+	color: #fff;
+	font-family: 'Kaspersky Sans Text Clock', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	font-size: 32px;
+	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	transition:
+		transform 90ms ease-out,
+		background-color 150ms ease,
+		box-shadow 150ms ease;
+}
+
+.sensitive-passcode__keys button:active {
+	transform: scale(0.94);
+	background: rgb(255 255 255 / 38%);
+	box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%);
+}
+
+.sensitive-passcode__keys button:focus-visible,
+.sensitive-passcode__forgot:focus-visible,
+.sensitive-passcode__actions button:focus-visible {
+	outline: 2px solid #fff;
+	outline-offset: 3px;
+}
+
+.sensitive-passcode__keys .is-zero {
+	grid-column: 2;
+}
+
+.sensitive-passcode__actions {
+	margin-top: auto;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	padding: 0 14px 4px;
+	font-weight: 500;
+}
+
+@media (hover: hover) {
+	.sensitive-passcode__keys button:hover {
+		background: rgb(255 255 255 / 27%);
+	}
+}
+
+@keyframes sensitive-pin-dot-fill {
+	0% {
+		transform: scale(0.7);
+	}
+	62% {
+		transform: scale(1.16);
+	}
+	100% {
+		transform: scale(1);
+	}
 }
 
 @keyframes sensitive-notice-in {
@@ -255,11 +305,11 @@
 @keyframes sensitive-passcode-in {
 	from {
 		opacity: 0;
-		transform: translateY(24px);
+		transform: translateY(6px) scale(1.015);
 	}
 	to {
 		opacity: 1;
-		transform: translateY(0);
+		transform: scale(1);
 	}
 }
 
@@ -289,4 +339,80 @@
 
 .gallery-viewer__media {
 	position: relative;
+}
+
+.sensitive-media.is-thumb .sensitive-media__veil,
+.sensitive-media.is-thumb .sensitive-media__noise {
+	transition: opacity 0.4s ease;
+}
+
+.sensitive-media__dissolve {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+}
+
+.sensitive-menu__backdrop {
+	position: absolute;
+	inset: 0;
+	z-index: 8;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	cursor: default;
+}
+
+.sensitive-menu {
+	position: absolute;
+	top: calc(var(--gallery-screen-safe-top) + var(--gallery-screen-nav-height) - 8px);
+	right: 16px;
+	z-index: 9;
+	display: flex;
+	flex-direction: column;
+	min-width: 248px;
+	padding: 8px 0;
+	border-radius: 16px;
+	background: var(--background-modal);
+	box-shadow: 0 8px 32px rgb(0 0 0 / 0.18);
+	transform-origin: top right;
+	animation: sensitive-menu-in 0.18s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.sensitive-menu__item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-height: 48px;
+	padding: 0 16px;
+	border: 0;
+	background: transparent;
+	color: var(--content-primary);
+	text-align: left;
+	cursor: pointer;
+}
+
+.sensitive-menu__item:hover,
+.sensitive-menu__item:focus-visible {
+	background: var(--content-background);
+	outline: none;
+}
+
+@keyframes sensitive-menu-in {
+	from {
+		opacity: 0;
+		transform: scale(0.92);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sensitive-menu {
+		animation: none;
+	}
 }

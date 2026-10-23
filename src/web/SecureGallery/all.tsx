@@ -20,12 +20,13 @@ import {
 import { GalleryControls, GalleryHeader } from './header.parts';
 import { GalleryNav, type GalleryRoutes } from './nav.parts';
 import {
-	isPhotoLocked,
 	PasscodeScreen,
 	SensitiveBadge,
 	SensitiveMedia,
+	SensitiveMenu,
 	SensitiveNotice,
 	SensitiveThumbMark,
+	useLockTransition,
 	useSensitiveAccess,
 } from './sensitive.parts';
 import './all.scss';
@@ -224,6 +225,7 @@ export function PhotoScreen({
 		useState<ViewerTransform>(DEFAULT_VIEWER_TRANSFORM);
 	const sensitiveAccess = useSensitiveAccess();
 	const [passcodeOpen, setPasscodeOpen] = useState(false);
+	const [menuOpen, setMenuOpen] = useState(false);
 
 	const photosById = useMemo(() => new Map(photos.map((photo) => [photo.id, photo])), [photos]);
 
@@ -241,9 +243,15 @@ export function PhotoScreen({
 	}, [photosById, viewer]);
 	const activePhotoIndex = activeTrack.findIndex((photo) => photo.id === activePhoto?.id);
 	const activePhotoTakenAt = activePhoto ? splitTakenAtLabel(activePhoto.takenAtLabel) : null;
-	const activePhotoLocked = activePhoto
-		? isPhotoLocked(activePhoto, sensitiveAccess.unlocked)
-		: false;
+	const activePhotoSensitive = activePhoto ? sensitiveAccess.isSensitive(activePhoto) : false;
+	const activePhotoLocked = activePhoto ? sensitiveAccess.isLocked(activePhoto) : false;
+	const lockTransition = useLockTransition(activePhoto?.id ?? null, activePhotoLocked);
+	const showSensitiveMedia = activePhotoSensitive || lockTransition.transition !== null;
+	const sensitiveIdle = activePhotoSensitive && lockTransition.transition === null;
+
+	useEffect(() => {
+		setMenuOpen(false);
+	}, [activePhoto?.id, viewer?.phase]);
 
 	const dismissProgress = Math.min(Math.abs(viewerTransform.dismissY) / 260, 0.86);
 	const backdropOpacity = 1 - Math.min(Math.abs(viewerTransform.dismissY) / 136, 1);
@@ -499,6 +507,12 @@ export function PhotoScreen({
 				return;
 			}
 
+			if (menuOpen && event.key === 'Escape') {
+				event.preventDefault();
+				setMenuOpen(false);
+				return;
+			}
+
 			if (event.key === 'Escape') {
 				event.preventDefault();
 				closeViewer();
@@ -540,7 +554,7 @@ export function PhotoScreen({
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown);
 		};
-	}, [activePhotoIndex, activeTrack, passcodeOpen, viewer]);
+	}, [activePhotoIndex, activeTrack, menuOpen, passcodeOpen, viewer]);
 
 	useEffect(() => {
 		if (!activePhoto) {
@@ -836,7 +850,11 @@ export function PhotoScreen({
 				<div className="gallery-screen__surface">
 					{viewer && activePhoto && activePhotoTakenAt ? (
 						<div className="gallery-screen__nav gallery-screen__nav--top is-viewer-mode">
-							<GalleryControls onBack={() => closeViewer()}>
+							<GalleryControls
+								onBack={() => closeViewer()}
+								onMore={() => setMenuOpen((current) => !current)}
+								moreExpanded={menuOpen}
+							>
 								<div className="gallery-screen__viewer-title">
 									<Text as="span" variant="semiBold-16">
 										{activePhoto.title}
@@ -903,7 +921,8 @@ export function PhotoScreen({
 						>
 							{photos.map((photo) => {
 								const hidden = viewer?.currentPhotoId === photo.id;
-								const locked = isPhotoLocked(photo, sensitiveAccess.unlocked);
+								const sensitive = sensitiveAccess.isSensitive(photo);
+								const locked = sensitiveAccess.isLocked(photo);
 
 								return (
 									<button
@@ -919,7 +938,7 @@ export function PhotoScreen({
 												: `Открыть фото: ${photo.title}`
 										}
 									>
-										{photo.sensitive ? (
+										{sensitive ? (
 											<SensitiveMedia photo={photo} locked={locked} variant="thumb" />
 										) : (
 											<img
@@ -929,7 +948,7 @@ export function PhotoScreen({
 												className="gallery-screen__thumb-image"
 											/>
 										)}
-										{photo.sensitive ? <SensitiveThumbMark locked={locked} /> : null}
+										{sensitive ? <SensitiveThumbMark locked={locked} /> : null}
 										{showMarks && photo.favorite ? (
 											<Icon
 												name="star-100"
@@ -1043,7 +1062,7 @@ export function PhotoScreen({
 									onPointerUp={handlePointerFinish}
 									onPointerCancel={handlePointerFinish}
 									onDoubleClick={() => {
-										if (!activePhoto || viewer.phase !== 'open' || activePhotoLocked) {
+										if (!activePhoto || viewer.phase !== 'open' || activePhotoLocked || lockTransition.transition) {
 											return;
 										}
 
@@ -1067,11 +1086,13 @@ export function PhotoScreen({
 										className="gallery-viewer__media"
 										style={viewerMediaStyle}
 									>
-										{activePhoto.sensitive ? (
+										{showSensitiveMedia ? (
 											<SensitiveMedia
 												key={activePhoto.id}
 												photo={activePhoto}
-												locked={activePhotoLocked}
+												locked={lockTransition.visualLocked}
+												transition={lockTransition.transition}
+												transitionKey={lockTransition.runId}
 												variant="viewer"
 												alt={activePhoto.title}
 											/>
@@ -1083,11 +1104,11 @@ export function PhotoScreen({
 											/>
 										)}
 									</div>
-									{activePhoto.sensitive && viewer.phase === 'open' ? (
-										activePhotoLocked ? (
+									{sensitiveIdle && viewer.phase === 'open' ? (
+										lockTransition.visualLocked ? (
 											<SensitiveNotice onEnterCode={() => setPasscodeOpen(true)} />
 										) : (
-											<SensitiveBadge onHide={sensitiveAccess.lock} />
+											<SensitiveBadge onHide={() => sensitiveAccess.hide(activePhoto)} />
 										)
 									) : null}
 								</div>
@@ -1108,7 +1129,7 @@ export function PhotoScreen({
 									aria-selected={photo.id === activePhoto.id}
 									className={`gallery-viewer__rail-item${
 										photo.id === activePhoto.id ? ' is-active' : ''
-									}${isPhotoLocked(photo, sensitiveAccess.unlocked) ? ' is-sensitive' : ''}`}
+									}${sensitiveAccess.isLocked(photo) ? ' is-sensitive' : ''}`}
 									onClick={() => {
 										setViewer((current) =>
 											current
@@ -1127,11 +1148,23 @@ export function PhotoScreen({
 						</div>
 					</div>
 				) : null}
+				{viewer && activePhoto && menuOpen ? (
+					<SensitiveMenu
+						sensitive={activePhotoSensitive}
+						locked={activePhotoLocked}
+						onClose={() => setMenuOpen(false)}
+						onMark={() => sensitiveAccess.markSensitive(activePhoto)}
+						onUnmark={() => sensitiveAccess.unmarkSensitive(activePhoto)}
+						onHide={() => sensitiveAccess.hide(activePhoto)}
+						onEnterCode={() => setPasscodeOpen(true)}
+					/>
+				) : null}
 				{passcodeOpen ? (
 					<PasscodeScreen
+						backdrop={activePhoto}
 						onBack={() => setPasscodeOpen(false)}
 						onSuccess={() => {
-							sensitiveAccess.unlock();
+							sensitiveAccess.unlockAll();
 							setPasscodeOpen(false);
 						}}
 					/>
@@ -1147,7 +1180,7 @@ export function PhotoScreen({
 }
 
 export function GalleryScreen() {
-	const { unlocked } = useSensitiveAccess();
+	const { hasLocked } = useSensitiveAccess();
 
 	return (
 		<PhotoScreen
@@ -1159,7 +1192,7 @@ export function GalleryScreen() {
 					<Text as="span" variant="regular-14" color="secondary">
 						{getPhotoCountLabel(galleryPhotos.length)}
 					</Text>
-					{unlocked ? null : (
+					{hasLocked ? (
 						<Icon
 							name="shield-done"
 							width={20}
@@ -1167,7 +1200,7 @@ export function GalleryScreen() {
 							colorToken="accent-primary"
 							alt="Чувствительный контент защищён"
 						/>
-					)}
+					) : null}
 				</div>
 			}
 		/>

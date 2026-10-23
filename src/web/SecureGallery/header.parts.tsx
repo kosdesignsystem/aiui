@@ -14,10 +14,18 @@ type GalleryHeaderProps = {
 type GalleryControlsProps = {
 	children?: ReactNode;
 	className?: string;
+	moreExpanded?: boolean;
 	onBack: () => void;
+	onMore?: () => void;
 };
 
-export function GalleryControls({ children, className, onBack }: GalleryControlsProps) {
+export function GalleryControls({
+	children,
+	className,
+	moreExpanded,
+	onBack,
+	onMore,
+}: GalleryControlsProps) {
 	return (
 		<div className={`gallery-controls${className ? ` ${className}` : ''}`}>
 			<IconButton
@@ -29,7 +37,14 @@ export function GalleryControls({ children, className, onBack }: GalleryControls
 				<Icon name="arrow-left" width={24} height={24} aria-hidden="true" />
 			</IconButton>
 			<div className="gallery-controls__content">{children}</div>
-			<IconButton variant="primary" className="gallery-controls__button" aria-label="Ещё">
+			<IconButton
+				variant="primary"
+				className="gallery-controls__button"
+				aria-label="Ещё"
+				aria-haspopup={onMore ? 'menu' : undefined}
+				aria-expanded={onMore ? Boolean(moreExpanded) : undefined}
+				onClick={onMore}
+			>
 				<Icon name="more-vertical" width={24} height={24} aria-hidden="true" />
 			</IconButton>
 		</div>
