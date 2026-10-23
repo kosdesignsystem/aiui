@@ -31,7 +31,7 @@ export function resolveCommand(command: string): CommandResult | null {
 		return { kind: 'reminder', icon: 'calendar-done-outline', title: 'Напоминание создано', value: 'Позвонить', detail: 'Завтра, 12:00' };
 	}
 	if (/включи.*темную тему/.test(text)) {
-		return { kind: 'theme', icon: 'settings-outline', title: 'Настройка применена', value: 'Тёмная тема', detail: 'Демонстрационный режим' };
+		return { kind: 'theme', icon: 'settings-outline', title: 'Тема помощника изменена', value: 'Тёмная тема', detail: 'Применена только к окну помощника' };
 	}
 	if (/открой настройки/.test(text)) {
 		return { kind: 'app', icon: 'settings-outline', title: 'Открываю настройки', value: 'Настройки', detail: 'Демонстрация · без перехода' };

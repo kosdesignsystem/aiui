@@ -7,33 +7,25 @@
 .vc-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: #11172226; backdrop-filter: blur(9px); animation: vc-fade-in 220ms ease both; cursor: default; }
 .vc-panel {
 	position: absolute; left: 12px; right: 12px;
-	bottom: max(calc(64px + env(safe-area-inset-bottom, 0px)), calc(var(--vc-keyboard-inset, 0px) + 12px));
-	max-height: calc(100% - max(64px, var(--vc-keyboard-inset, 0px)) - 48px);
+	bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+	max-height: calc(100% - 112px - env(safe-area-inset-bottom, 0px));
 	overflow: auto; padding: 12px; border-radius: 20px;
 	background: var(--background-modal); color: var(--content-primary);
 	box-shadow: 0 16px 64px #0003, 0 0 0 1px var(--content-border);
 	animation: vc-panel-in 260ms cubic-bezier(.2,.8,.2,1) both;
 	transition: bottom 200ms ease, height 260ms cubic-bezier(.2,.8,.2,1);
 	outline: none;
-	&__top { display: flex; align-items: center; gap: 6px; margin: -4px -4px 8px 2px; }
-	&__label { font-size: 12px; font-weight: 500; color: var(--content-secondary); }
-	&__demo { font-size: 10px; border: 1px solid var(--content-border); padding: 2px 5px; border-radius: 5px; color: var(--content-secondary); }
-	&__top > button { margin-left: auto; }
 	&__body { animation: vc-content-in 200ms ease both; }
 	button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
 }
-.vc-listening { display: flex; gap: 12px; align-items: center; min-height: 44px; margin: 0 0 10px;
+.vc-close.ui-icon-button { position: absolute; top: 12px; right: 12px; z-index: 1; }
+.vc-listening { display: flex; gap: 12px; align-items: center; min-height: 44px; margin: 0 0 10px; padding-right: 40px;
 	> span { color: var(--content-secondary); flex: 1; font-size: 14px; }
 	> button { flex-shrink: 0; }
 }
 .vc-wave { display: flex; gap: 3px; align-items: center; height: 40px;
 	i { width: 3px; border-radius: 3px; background: var(--content-secondary); transform: scaleY(.45); }
 	&.is-listening i { background: var(--accent-primary); animation: vc-wave 850ms ease-in-out infinite alternate; animation-delay: calc(var(--vc-i) * -85ms); }
-}
-.vc-text-toggle.ui-button { width: 100%; }
-.vc-input { display: flex; align-items: center; gap: 8px;
-	.ui-field { flex: 1; min-width: 0; }
-	.ui-icon-button { flex-shrink: 0; }
 }
 .vc-examples { margin-top: 12px; border-top: 1px solid var(--content-border); padding-top: 10px;
 	summary { font-size: 12px; color: var(--content-secondary); cursor: pointer; }
@@ -42,12 +34,12 @@
 		button:hover { background: var(--accent-background); }
 	}
 }
-.vc-transcript { margin: 0; padding: 8px 4px 14px; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
+.vc-transcript { margin: 0; padding: 8px 44px 14px 4px; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
 .vc-processing { display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px;
 	i { width: 11px; height: 11px; background: var(--content-secondary); border-radius: 50%; animation: vc-dots 1s ease-in-out infinite; animation-delay: calc(var(--vc-i) * 150ms); }
 }
 .vc-result { background: var(--content-background); border-radius: 12px; padding: 14px 12px; overflow-wrap: anywhere;
-	&__heading { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--content-secondary); line-height: 1.4;
+	&__heading { display: flex; align-items: center; gap: 7px; padding-right: 28px; font-size: 12px; color: var(--content-secondary); line-height: 1.4;
 		> span { flex: 1; }
 		> svg:last-child { color: var(--system-success-primary); }
 	}
