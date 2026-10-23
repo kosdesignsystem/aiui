@@ -7,7 +7,7 @@ const Recognition = (window as any).SpeechRecognition || (window as any).webkitS
 let enginePromise: Promise<any> | null = null;
 async function getEngine(onProgress: (text: string) => void) {
   if (!enginePromise) {
-    enginePromise = import('@mlc-ai/web-llm').then(({ CreateMLCEngine }) =>
+    enginePromise = import(/* @vite-ignore */ 'https://esm.sh/@mlc-ai/web-llm@0.2.80').then(({ CreateMLCEngine }) =>
       CreateMLCEngine('Qwen2.5-0.5B-Instruct-q4f16_1-MLC', {
         initProgressCallback: (progress: { progress: number }) =>
           onProgress('ЗАГРУЗКА ' + Math.round(progress.progress * 100) + '%'),
