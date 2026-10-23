@@ -3,27 +3,25 @@ import './style.css';
 
 type Stage = 'idle' | 'listening' | 'thinking' | 'answer';
 const Recognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-const samples = [
-  'Всё в порядке. Я на связи и готов помочь с вашей задачей.',
-  'Понял вас. Сначала проверьте основные показатели, затем зафиксируйте результат.',
-  'Хороший вопрос. Я бы начал с самого простого решения и проверил результат.',
-  'Принято. Можно продолжать работу, но важно соблюдать меры безопасности.',
-  'Да, конечно. Расскажите чуть подробнее, и мы найдём подходящее решение.',
-  'Рекомендую записать наблюдения и передать информацию ответственному специалисту.'
-];
-function pickReply(question: string) {
-  const q = question.toLowerCase();
-  if (/привет|как дела|здравствуй/.test(q)) return 'Привет! Всё отлично. Я рядом и готов помочь.';
-  if (/температур|котел|котёл|градус/.test(q)) return 'Температура котла 72 градуса. Рекомендую сверить показания с допустимым рабочим диапазоном.';
-  if (/дефект|поломк|неисправн/.test(q)) return 'Зафиксируйте дефект на фото и сообщите инженеру. Перед осмотром убедитесь, что оборудование безопасно.';
-  if (/время|час/.test(q)) return 'Сейчас ' + new Date().toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'}) + '.';
-  return samples[Math.floor(Math.random() * samples.length)];
+// WebLLM runs a small open-weight language model locally using WebGPU.
+let enginePromise: Promise<any> | null = null;
+async function getEngine(onProgress: (text: string) => void) {
+  if (!enginePromise) {
+    enginePromise = import('@mlc-ai/web-llm').then(({ CreateMLCEngine }) =>
+      CreateMLCEngine('Qwen2.5-0.5B-Instruct-q4f16_1-MLC', {
+        initProgressCallback: (progress: { progress: number }) =>
+          onProgress('ЗАГРУЗКА ' + Math.round(progress.progress * 100) + '%'),
+      })
+    ).catch(error => { enginePromise = null; throw error; });
+  }
+  return enginePromise;
 }
 export default function VoiceAssistant() {
   const [stage, setStage] = useState<Stage>('idle');
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [visible, setVisible] = useState('');
+  const [progress, setProgress] = useState('');
   const recognizer = useRef<any>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sequence = useRef(0);
@@ -56,10 +54,30 @@ export default function VoiceAssistant() {
       window.speechSynthesis.speak(speech);
     }
   };
-  const submit = (text: string) => {
+  const submit = async (text: string) => {
     setQuestion(text);
     setMode('thinking');
-    timer.current = setTimeout(() => showAnswer(pickReply(text)), 750);
+    const requestId = ++sequence.current;
+    try {
+      const engine = await getEngine(setProgress);
+      if (requestId !== sequence.current) return;
+      setProgress('');
+      const result = await engine.chat.completions.create({
+        messages: [
+          { role: 'system', content: 'Ты краткий дружелюбный голосовой помощник. Отвечай на русском, понятно, максимум 2 коротких предложения. Не выдумывай измерения и факты.' },
+          { role: 'user', content: text },
+        ],
+        temperature: 0.7,
+        max_tokens: 110,
+      });
+      if (requestId !== sequence.current) return;
+      showAnswer(result.choices[0]?.message?.content?.trim() || 'Попробуйте переформулировать вопрос.');
+    } catch (error) {
+      if (requestId !== sequence.current) return;
+      console.error('Local AI model error:', error);
+      setProgress('');
+      showAnswer('Не удалось запустить модель на этом устройстве. Для локального ИИ нужен браузер с поддержкой WebGPU.');
+    }
   };
   const start = () => {
     cancel();
@@ -68,7 +86,8 @@ export default function VoiceAssistant() {
     setVisible('');
     setMode('listening');
     if (!Recognition) {
-      timer.current = setTimeout(() => submit('Расскажи, как идут дела'), 1800);
+      setMode('idle');
+      showAnswer('Для голосового ввода откройте приложение в браузере с поддержкой распознавания речи.');
       return;
     }
     const rec = new Recognition();
@@ -85,9 +104,9 @@ export default function VoiceAssistant() {
         submit(text);
       }
     };
-    rec.onerror = () => { if (stageRef.current === 'listening') submit('Расскажи, как идут дела'); };
-    rec.onend = () => { if (stageRef.current === 'listening') submit('Расскажи, как идут дела'); };
-    try { rec.start(); } catch { timer.current = setTimeout(() => submit('Расскажи, как идут дела'), 1200); }
+    rec.onerror = () => { if (stageRef.current === 'listening') { setMode('idle'); showAnswer('Не расслышал вопрос. Нажмите кнопку и попробуйте снова.'); } };
+    rec.onend = () => { if (stageRef.current === 'listening') { setMode('idle'); showAnswer('Не расслышал вопрос. Попробуйте ещё раз.'); } };
+    try { rec.start(); } catch { setMode('idle'); showAnswer('Не удалось включить микрофон.'); }
   };
   const stop = () => { cancel(); setMode('idle'); setAnswer(''); setVisible(''); };
   useEffect(() => () => cancel(), []);
@@ -96,7 +115,7 @@ export default function VoiceAssistant() {
     <div className="va-center" aria-live="polite">
       {stage === 'answer' ? <><div className="va-caption">ОТВЕТ</div><div className="va-response">{visible}<span className="va-caret" /></div></> :
        stage === 'listening' ? <><div className="va-caption">ГОВОРИТЕ</div><div className="va-title">{question || 'Я слушаю…'}</div></> :
-       stage === 'thinking' ? <><div className="va-caption">СЕКУНДУ</div><div className="va-title">Думаю<span className="va-dots">…</span></div></> :
+       stage === 'thinking' ? <><div className="va-caption">{progress || 'СЕКУНДУ'}</div><div className="va-title">Думаю<span className="va-dots">…</span></div></> :
        <><div className="va-caption">ГОЛОСОВОЕ УПРАВЛЕНИЕ</div><div className="va-title">О чём поговорим?</div></>}
     </div>
     <div className="va-bottom">
