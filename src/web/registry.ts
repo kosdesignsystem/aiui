@@ -7,6 +7,7 @@ import { componentsAppDefinition } from './Components';
 import KidCallsMainPage from './KidCalls/main';
 import { sashaAppDefinition } from './Sasha';
 import { testAppDefinition } from './Test';
+import { galleryAppDefinition } from './Gallery';
 import { defineApp, defineFlow, defineScreen } from './definition';
 
 export {
@@ -130,5 +131,6 @@ export const appRegistry = [
 	calculatorAppDefinition,
 	sashaAppDefinition,
 	testAppDefinition,
+	galleryAppDefinition,
 	componentsAppDefinition,
 ];

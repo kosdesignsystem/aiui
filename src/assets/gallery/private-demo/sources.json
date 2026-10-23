@@ -1,0 +1,65 @@
+{
+  "note": "Illustrative demo selection, not actual Beer Party Club event documentation. Unsplash sources; retain original asset IDs.",
+  "photos": [
+    {
+      "id": "1511795409834-ef04bbd61622",
+      "file": "01.jpg",
+      "url": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1000&q=85"
+    },
+    {
+      "id": "1514525253161-7a46d19cd819",
+      "file": "02.jpg",
+      "url": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1000&q=85"
+    },
+    {
+      "id": "1516450360452-9312f5e86fc7",
+      "file": "03.jpg",
+      "url": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1000&q=85"
+    },
+    {
+      "id": "1533174072545-7a4b6ad7a6c3",
+      "file": "04.jpg",
+      "url": "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=1000&q=85"
+    },
+    {
+      "id": "1519671482749-fd09be7ccebf",
+      "file": "05.jpg",
+      "url": "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=1000&q=85"
+    },
+    {
+      "id": "1511632765486-a01980e01a18",
+      "file": "06.jpg",
+      "url": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1000&q=85"
+    },
+    {
+      "id": "1528605248644-14dd04022da1",
+      "file": "07.jpg",
+      "url": "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1000&q=85"
+    },
+    {
+      "id": "1515169067868-5387ec356754",
+      "file": "08.jpg",
+      "url": "https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=1000&q=85"
+    },
+    {
+      "id": "1492684223066-81342ee5ff30",
+      "file": "09.jpg",
+      "url": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1000&q=85"
+    },
+    {
+      "id": "1530103862676-de8c9debad1d",
+      "file": "10.jpg",
+      "url": "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1000&q=85"
+    },
+    {
+      "id": "1470337458703-46ad1756a187",
+      "file": "11.jpg",
+      "url": "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1000&q=85"
+    },
+    {
+      "id": "1514933651103-005eec06c04b",
+      "file": "12.jpg",
+      "url": "https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1000&q=85"
+    }
+  ]
+}
