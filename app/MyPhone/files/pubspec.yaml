@@ -1,0 +1,83 @@
+name: my_phone
+description: Flutter port of MyPhone prepared for browser testing and KasperskyOS KPA hand-off.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.12.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_svg: 1.1.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/extracted/cellular-toggle.svg
+    - assets/extracted/unlock-handle.svg
+    - assets/extracted/wifi-toggle-off.svg
+    - assets/extracted/wifi-toggle-on.svg
+    - assets/icons/avia.svg
+    - assets/icons/battery-charge-medium.svg
+    - assets/icons/brightness-low-outline.svg
+    - assets/icons/brightness.svg
+    - assets/icons/lighter-outline.svg
+    - assets/icons/lighter.svg
+    - assets/icons/lock.svg
+    - assets/icons/mobile-home.svg
+    - assets/icons/notification-active.svg
+    - assets/icons/notification-off.svg
+    - assets/icons/place-off.svg
+    - assets/icons/place.svg
+    - assets/icons/signal-cellular-100.svg
+    - assets/icons/volume-0.svg
+    - assets/icons/volume-100.svg
+    - assets/icons/wifi.svg
+    - assets/launcher/icons/Browser.png
+    - assets/launcher/icons/Calculator.png
+    - assets/launcher/icons/Calendar.png
+    - assets/launcher/icons/Camera.png
+    - assets/launcher/icons/Сlock.png
+    - assets/launcher/icons/Compass.png
+    - assets/launcher/icons/Contacts.png
+    - assets/launcher/icons/Dictaphone.png
+    - assets/launcher/icons/File System.png
+    - assets/launcher/icons/Mail.png
+    - assets/launcher/icons/Maps.png
+    - assets/launcher/icons/Messenger.png
+    - assets/launcher/icons/MyOffice.png
+    - assets/launcher/icons/Notes.png
+    - assets/launcher/icons/Phone.png
+    - assets/launcher/icons/Photo Gallery.png
+    - assets/launcher/icons/SMS.png
+    - assets/launcher/icons/Settings.png
+    - assets/launcher/icons/VPN.png
+    - assets/launcher/icons/Video.png
+    - assets/launcher/icons/Weather.png
+    - assets/launcher/screens/Files.png
+    - assets/launcher/screens/Phone.png
+    - assets/launcher/screens/Photo Gallery.png
+    - assets/launcher/screens/Photo.png
+    - assets/launcher/screens/Settings.png
+    - assets/launcher/screens/Weather.png
+    - assets/launcher/wallpaper.png
+  fonts:
+    - family: KasperskySansText
+      fonts:
+        - asset: assets/fonts/KasperskySansText-Regular.woff2
+          weight: 400
+        - asset: assets/fonts/KasperskySansText-Medium.woff2
+          weight: 500
+        - asset: assets/fonts/KasperskySansText-SemiBold.woff2
+          weight: 600
+    - family: KasperskySansClock
+      fonts:
+        - asset: assets/fonts/KasperskySansTextClock-Regular.otf
+          weight: 400

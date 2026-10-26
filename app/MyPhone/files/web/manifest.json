@@ -1,0 +1,12 @@
+{
+    "name": "MyPhone",
+    "short_name": "MyPhone",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#082D30",
+    "theme_color": "#082D30",
+    "description": "MyPhone launcher — Flutter browser preview.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": []
+}

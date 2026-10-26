@@ -41,7 +41,7 @@ import { useManagedTimeouts } from './useManagedTimeouts';
 import { runLauncherMinimizeTransition } from './viewTransition';
 import './launcher.scss';
 
-export function LauncherScreen() {
+export function MyPhoneScreen() {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const locationState = location.state as LauncherLocationState | null;

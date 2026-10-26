@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Icon } from '../ui/Icon';
-import { runLauncherMinimizeTransition } from '../web/Launcher/viewTransition';
+import { runLauncherMinimizeTransition } from '../web/MyPhone/viewTransition';
 import './navbar.scss';
 
 type NavBarProps = {
@@ -10,7 +10,7 @@ type NavBarProps = {
 };
 
 const homeLongPressDurationMs = 650;
-const launcherPath = '/app/Launcher/main';
+const launcherPath = '/app/MyPhone/main';
 const launcherAppIds: Record<string, string> = {
 	Calls: 'calls',
 	Contacts: 'contacts',

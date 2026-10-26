@@ -1,9 +1,9 @@
 import { defineApp, defineFlow, defineScreen } from '../definition';
-import { LauncherScreen } from './launcher';
+import { MyPhoneScreen } from './launcher';
 
-export const launcherAppDefinition = defineApp({
-	id: 'Launcher',
-	title: 'Launcher',
+export const myPhoneAppDefinition = defineApp({
+	id: 'MyPhone',
+	title: 'MyPhone',
 	businessGoal: 'Оркестрировать системные жесты и запуск уже существующих приложений.',
 	flows: [
 		defineFlow({
@@ -13,10 +13,10 @@ export const launcherAppDefinition = defineApp({
 			screens: [
 				defineScreen({
 					id: 'main',
-					title: 'Launcher',
+					title: 'MyPhone',
 					scenario: 'preview',
 					businessGoal: 'Демонстрация жестов, шторки, недавних приложений и запуска приложений.',
-					Component: LauncherScreen,
+					Component: MyPhoneScreen,
 				}),
 			],
 		}),
