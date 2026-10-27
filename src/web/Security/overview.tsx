@@ -1,0 +1,396 @@
+import { useMemo, useRef, useState } from 'react';
+import { Button } from '../../ui/Button';
+import { Cell } from '../../ui/Cell';
+import { Text } from '../../ui/Fonts';
+import { Icon, type IconName } from '../../ui/Icon';
+import { List, ListContainer } from '../../ui/List';
+import { FlowPage } from '../FlowPage';
+import {
+	SecuritySheet,
+	type SecuritySheetAction,
+	type SecuritySheetFact,
+	type SecurityTone,
+} from './SecuritySheet';
+import './overview.scss';
+
+type SecurityCheck = {
+	id: string;
+	icon: IconName;
+	title: string;
+	issue: string;
+	resolved: string;
+	tone: Exclude<SecurityTone, 'success'>;
+	sheetTitle: string;
+	description: string;
+	facts: ReadonlyArray<SecuritySheetFact>;
+	fixLabel: string;
+	fixVariant: 'accent' | 'danger';
+	laterLabel: string;
+	resolvedDescription: string;
+};
+
+const securityChecks: ReadonlyArray<SecurityCheck> = [
+	{
+		id: 'app',
+		icon: 'shield-warning',
+		title: 'Подозрительное приложение',
+		issue: '«Фонарик Pro» отправляет SMS',
+		resolved: 'Приложение удалено',
+		tone: 'danger',
+		sheetTitle: 'Удалить «Фонарик Pro»?',
+		description:
+			'Приложение отправляет SMS на платные номера без вашего ведома. Деньги списываются со счёта телефона.',
+		facts: [
+			{ label: 'Установлено', value: '12 октября' },
+			{ label: 'Отправлено SMS', value: '14' },
+			{ label: 'Источник', value: 'Неизвестный' },
+		],
+		fixLabel: 'Удалить приложение',
+		fixVariant: 'danger',
+		laterLabel: 'Оставить',
+		resolvedDescription: 'Приложение и его данные удалены. Платные подписки, оформленные через него, стоит проверить у оператора.',
+	},
+	{
+		id: 'link',
+		icon: 'link',
+		title: 'Фишинговая ссылка',
+		issue: 'Заблокирована в «Сообщениях»',
+		resolved: 'Отправитель заблокирован',
+		tone: 'danger',
+		sheetTitle: 'Ссылка ведёт на поддельный сайт банка',
+		description:
+			'Сайт копирует страницу входа и собирает логины и пароли. Мы не дали ему открыться.',
+		facts: [
+			{ label: 'Адрес', value: 'sber-bonus.top' },
+			{ label: 'Отправитель', value: '+7 900 ••• 12 48' },
+		],
+		fixLabel: 'Заблокировать отправителя',
+		fixVariant: 'danger',
+		laterLabel: 'Не сейчас',
+		resolvedDescription: 'Сообщения с этого номера больше не придут. Ссылка останется заблокированной.',
+	},
+	{
+		id: 'wifi',
+		icon: 'wifi-unlock',
+		title: 'Открытая сеть Wi‑Fi',
+		issue: '«Cafe_Free» без пароля',
+		resolved: 'Используется защищённое соединение',
+		tone: 'warning',
+		sheetTitle: 'Сеть «Cafe_Free» не защищена',
+		description:
+			'Трафик в открытой сети может перехватить любой, кто к ней подключён. Включите защищённое соединение или отключитесь.',
+		facts: [
+			{ label: 'Шифрование', value: 'Нет' },
+			{ label: 'Подключено', value: '18 минут' },
+		],
+		fixLabel: 'Включить защищённое соединение',
+		fixVariant: 'accent',
+		laterLabel: 'Отключиться от сети',
+		resolvedDescription: 'Весь трафик идёт через зашифрованный туннель, пока вы подключены к открытым сетям.',
+	},
+	{
+		id: 'lock',
+		icon: 'lock-disable',
+		title: 'Блокировка экрана',
+		issue: 'Не задан PIN-код',
+		resolved: 'PIN-код и отпечаток',
+		tone: 'warning',
+		sheetTitle: 'Задайте блокировку экрана',
+		description:
+			'Без PIN-кода любой, у кого окажется телефон, получит доступ к почте, банку и фотографиям.',
+		facts: [{ label: 'Сейчас', value: 'Свайп' }],
+		fixLabel: 'Задать PIN-код',
+		fixVariant: 'accent',
+		laterLabel: 'Позже',
+		resolvedDescription: 'Телефон блокируется через 30 секунд бездействия. Разблокировать можно PIN-кодом или отпечатком.',
+	},
+	{
+		id: 'mic',
+		icon: 'microphone',
+		title: 'Доступ к микрофону',
+		issue: '3 приложения в фоне',
+		resolved: 'Только во время использования',
+		tone: 'info',
+		sheetTitle: '3 приложения слушают микрофон в фоне',
+		description:
+			'Им не нужен микрофон, когда вы ими не пользуетесь. Ограничьте доступ — работа приложений не изменится.',
+		facts: [
+			{ label: 'Погода', value: 'Всегда' },
+			{ label: 'Магазин', value: 'Всегда' },
+			{ label: 'Карты', value: 'Всегда' },
+		],
+		fixLabel: 'Ограничить доступ',
+		fixVariant: 'accent',
+		laterLabel: 'Оставить как есть',
+		resolvedDescription: 'Приложения получают доступ к микрофону только на экране. В фоне он закрыт.',
+	},
+];
+
+type SheetState =
+	| { kind: 'check'; id: string }
+	| { kind: 'scan'; found: number }
+	| null;
+
+const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
+
+function toneIcon(tone: SecurityTone): IconName {
+	switch (tone) {
+		case 'danger':
+			return 'shield-remove';
+		case 'warning':
+			return 'shield-warning';
+		case 'info':
+			return 'shield-info';
+		default:
+			return 'shield-done';
+	}
+}
+
+export default function SecurityOverviewPage() {
+	const [resolvedIds, setResolvedIds] = useState<ReadonlySet<string>>(new Set());
+	const [sheet, setSheet] = useState<SheetState>(null);
+	const [isScanning, setIsScanning] = useState(false);
+	const [lastScan, setLastScan] = useState('сегодня, 09:41');
+	// Шит, который откроется после анимации закрытия текущего.
+	const nextSheetRef = useRef<SheetState>(null);
+
+	const openChecks = useMemo(
+		() => securityChecks.filter((check) => !resolvedIds.has(check.id)),
+		[resolvedIds],
+	);
+	const doneChecks = useMemo(
+		() => securityChecks.filter((check) => resolvedIds.has(check.id)),
+		[resolvedIds],
+	);
+
+	const heroTone: SecurityTone = openChecks.some((check) => check.tone === 'danger')
+		? 'danger'
+		: openChecks.some((check) => check.tone === 'warning')
+			? 'warning'
+			: openChecks.length > 0
+				? 'info'
+				: 'success';
+	const heroTitle = openChecks.length === 0 ? 'Устройство защищено' : pluralizeIssues(openChecks.length);
+
+	const resolve = (id: string) => {
+		setResolvedIds((current) => new Set(current).add(id));
+	};
+
+	const runScan = async () => {
+		if (isScanning) {
+			return;
+		}
+
+		setIsScanning(true);
+		await wait(1400);
+		setIsScanning(false);
+		const now = new Date();
+		setLastScan(`сегодня, ${now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}`);
+		setSheet({ kind: 'scan', found: openChecks.length });
+	};
+
+	const renderSheet = () => {
+		if (!sheet) {
+			return undefined;
+		}
+
+		const close = () => {
+			setSheet(nextSheetRef.current);
+			nextSheetRef.current = null;
+		};
+
+		if (sheet.kind === 'scan') {
+			const found = sheet.found;
+			const firstOpen = openChecks[0];
+			const actions: SecuritySheetAction[] =
+				found > 0 && firstOpen
+					? [
+						{
+							label: 'Показать первую',
+							onSelect: () => {
+								nextSheetRef.current = { kind: 'check', id: firstOpen.id };
+							},
+						},
+						{ label: 'Закрыть', variant: 'secondary' },
+					]
+					: [{ label: 'Готово' }];
+
+			return (
+				<SecuritySheet
+					key="scan"
+					icon={found > 0 ? 'shield-warning' : 'shield-done'}
+					tone={found > 0 ? 'warning' : 'success'}
+					title={found > 0 ? `Найдено: ${pluralizeIssues(found)}` : 'Угроз не найдено'}
+					description={
+						found > 0
+							? 'Начните с красных пунктов — они угрожают деньгам и данным прямо сейчас.'
+							: 'Приложения, сети и настройки в порядке. Следующая проверка — завтра ночью.'
+					}
+					facts={[
+						{ label: 'Проверено приложений', value: '86' },
+						{ label: 'Файлов', value: '12 408' },
+						{ label: 'Длительность', value: '1,4 с' },
+					]}
+					actions={actions}
+					onClose={close}
+				/>
+			);
+		}
+
+		const check = securityChecks.find((item) => item.id === sheet.id);
+		if (!check) {
+			return undefined;
+		}
+
+		if (resolvedIds.has(check.id)) {
+			return (
+				<SecuritySheet
+					key={`${check.id}-resolved`}
+					icon={check.icon}
+					tone="success"
+					title={check.title}
+					description={check.resolvedDescription}
+					facts={[{ label: 'Статус', value: check.resolved }]}
+					actions={[{ label: 'Понятно' }]}
+					onClose={close}
+				/>
+			);
+		}
+
+		return (
+			<SecuritySheet
+				key={check.id}
+				icon={check.icon}
+				tone={check.tone}
+				title={check.sheetTitle}
+				description={check.description}
+				facts={check.facts}
+				actions={[
+					{
+						label: check.fixLabel,
+						variant: check.fixVariant,
+						onSelect: async () => {
+							await wait(900);
+							resolve(check.id);
+						},
+					},
+					{ label: check.laterLabel, variant: 'secondary' },
+				]}
+				onClose={close}
+			/>
+		);
+	};
+
+	return (
+		<FlowPage
+			header={
+				<div className="security-app__header">
+					<Text as="p" variant="medium-24">Безопасность</Text>
+					<Text as="p" variant="regular-12" color="secondary">
+						Последняя проверка: {lastScan}
+					</Text>
+				</div>
+			}
+			overlayClassName="security-app__overlay"
+			overlay={renderSheet()}
+		>
+			<div className="security-app">
+				<section className={`security-app__hero security-app__hero--${heroTone}`} aria-live="polite">
+					<div className="security-app__hero-badge" aria-hidden="true">
+						<Icon name={toneIcon(heroTone)} width={40} height={40} aria-hidden />
+					</div>
+					<Text as="p" variant="medium-24" className="security-app__hero-title">
+						{heroTitle}
+					</Text>
+					<Text as="p" variant="regular-14" color="secondary">
+						{openChecks.length === 0
+							? 'Все проверки пройдены'
+							: `Решено ${doneChecks.length} из ${securityChecks.length}`}
+					</Text>
+					<Button
+						size={52}
+						variant="secondary"
+						className="security-app__scan"
+						disabled={isScanning || sheet !== null}
+						onClick={() => void runScan()}
+					>
+						{isScanning ? 'Проверяем…' : 'Проверить снова'}
+					</Button>
+				</section>
+
+				<ListContainer>
+					{openChecks.length > 0 ? (
+						<List title="Требует внимания">
+							{openChecks.map((check) => (
+								<Cell
+									key={check.id}
+									leading={<CheckBadge icon={check.icon} tone={check.tone} />}
+									title={<Text variant="regular-16">{check.title}</Text>}
+									subtitle={
+										<Text variant="regular-12" color="secondary">
+											{check.issue}
+										</Text>
+									}
+									trailing={<Icon name="chevron-right" width={20} height={20} aria-hidden />}
+									onClick={() => setSheet({ kind: 'check', id: check.id })}
+								/>
+							))}
+						</List>
+					) : null}
+
+					{doneChecks.length > 0 ? (
+						<List title="Под защитой">
+							{doneChecks.map((check) => (
+								<Cell
+									key={check.id}
+									leading={<CheckBadge icon={check.icon} tone="success" />}
+									title={<Text variant="regular-16">{check.title}</Text>}
+									subtitle={
+										<Text variant="regular-12" color="secondary">
+											{check.resolved}
+										</Text>
+									}
+									trailing={<Icon name="done" width={20} height={20} aria-hidden />}
+									onClick={() => setSheet({ kind: 'check', id: check.id })}
+								/>
+							))}
+						</List>
+					) : null}
+
+					<List title="Сброс" collapsible defaultCollapsed>
+						<Cell
+							title={<Text variant="regular-16">Вернуть угрозы</Text>}
+							subtitle={
+								<Text variant="regular-12" color="secondary">
+									Для повторной проверки сценариев
+								</Text>
+							}
+							trailing={<Icon name="arrow-history" width={20} height={20} aria-hidden />}
+							onClick={() => setResolvedIds(new Set())}
+						/>
+					</List>
+				</ListContainer>
+			</div>
+		</FlowPage>
+	);
+}
+
+function CheckBadge({ icon, tone }: { icon: IconName; tone: SecurityTone }) {
+	return (
+		<span className={`security-app__badge security-app__badge--${tone}`} aria-hidden="true">
+			<Icon name={icon} width={20} height={20} aria-hidden />
+		</span>
+	);
+}
+
+function pluralizeIssues(count: number) {
+	const mod10 = count % 10;
+	const mod100 = count % 100;
+	const noun =
+		mod10 === 1 && mod100 !== 11
+			? 'проблема'
+			: mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)
+				? 'проблемы'
+				: 'проблем';
+	return `${count} ${noun}`;
+}

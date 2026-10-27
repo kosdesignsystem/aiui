@@ -1,0 +1,261 @@
+import {
+	CSSProperties,
+	KeyboardEvent,
+	PointerEvent,
+	ReactNode,
+	useEffect,
+	useId,
+	useRef,
+	useState,
+} from 'react';
+import { Button, type ButtonVariant } from '../../ui/Button';
+import { Text } from '../../ui/Fonts';
+import { Icon, type IconName } from '../../ui/Icon';
+import './SecuritySheet.scss';
+
+export type SecurityTone = 'danger' | 'warning' | 'info' | 'success';
+
+export type SecuritySheetAction = {
+	label: string;
+	variant?: ButtonVariant;
+	/** Может вернуть Promise — пока он не завершится, кнопки заблокированы. */
+	onSelect?: () => void | Promise<void>;
+};
+
+export type SecuritySheetFact = {
+	label: string;
+	value: string;
+};
+
+export type SecuritySheetProps = {
+	icon: IconName;
+	tone: SecurityTone;
+	title: string;
+	description: string;
+	facts?: ReadonlyArray<SecuritySheetFact>;
+	actions: ReadonlyArray<SecuritySheetAction>;
+	children?: ReactNode;
+	onClose: () => void;
+};
+
+const enterDurationMs = 260;
+const exitDurationMs = 200;
+const dismissDistancePx = 96;
+const dismissVelocityPxPerMs = 0.6;
+
+export function SecuritySheet({
+	icon,
+	tone,
+	title,
+	description,
+	facts,
+	actions,
+	children,
+	onClose,
+}: SecuritySheetProps) {
+	const panelRef = useRef<HTMLDivElement | null>(null);
+	const titleRef = useRef<HTMLHeadingElement | null>(null);
+	const returnFocusRef = useRef<HTMLElement | null>(null);
+	const dragRef = useRef<{ startY: number; startTime: number; pointerId: number } | null>(null);
+	const [canInteract, setCanInteract] = useState(false);
+	const [isClosing, setIsClosing] = useState(false);
+	const [pendingIndex, setPendingIndex] = useState<number | null>(null);
+	const [dragOffset, setDragOffset] = useState(0);
+	const [isDragging, setIsDragging] = useState(false);
+	const titleId = useId();
+	const descriptionId = useId();
+
+	useEffect(() => {
+		returnFocusRef.current = document.activeElement as HTMLElement | null;
+		titleRef.current?.focus();
+		const inputTimer = window.setTimeout(() => setCanInteract(true), enterDurationMs);
+
+		return () => {
+			window.clearTimeout(inputTimer);
+			returnFocusRef.current?.focus();
+		};
+	}, []);
+
+	const close = () => {
+		if (!canInteract || isClosing) {
+			return;
+		}
+
+		setIsClosing(true);
+		window.setTimeout(onClose, exitDurationMs);
+	};
+
+	const handleAction = async (action: SecuritySheetAction, index: number) => {
+		if (!canInteract || isClosing || pendingIndex !== null) {
+			return;
+		}
+
+		const result = action.onSelect?.();
+		if (result instanceof Promise) {
+			setPendingIndex(index);
+			await result;
+			setPendingIndex(null);
+		}
+
+		setIsClosing(true);
+		window.setTimeout(onClose, exitDurationMs);
+	};
+
+	const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+		if (event.key === 'Escape') {
+			event.preventDefault();
+			close();
+			return;
+		}
+
+		if (event.key !== 'Tab') {
+			return;
+		}
+
+		const focusable = Array.from(
+			panelRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled)') ?? [],
+		);
+
+		if (focusable.length === 0) {
+			event.preventDefault();
+			titleRef.current?.focus();
+			return;
+		}
+
+		const first = focusable[0];
+		const last = focusable[focusable.length - 1];
+		if (event.shiftKey && (document.activeElement === first || document.activeElement === titleRef.current)) {
+			event.preventDefault();
+			last.focus();
+		} else if (!event.shiftKey && document.activeElement === last) {
+			event.preventDefault();
+			first.focus();
+		}
+	};
+
+	const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
+		if (!canInteract || isClosing || pendingIndex !== null) {
+			return;
+		}
+
+		dragRef.current = {
+			startY: event.clientY,
+			startTime: event.timeStamp,
+			pointerId: event.pointerId,
+		};
+		event.currentTarget.setPointerCapture(event.pointerId);
+		setIsDragging(true);
+	};
+
+	const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+		const drag = dragRef.current;
+		if (!drag || drag.pointerId !== event.pointerId) {
+			return;
+		}
+
+		const delta = event.clientY - drag.startY;
+		// Вверх тянется с сопротивлением, вниз — один к одному.
+		setDragOffset(delta >= 0 ? delta : delta / 4);
+	};
+
+	const handlePointerEnd = (event: PointerEvent<HTMLDivElement>) => {
+		const drag = dragRef.current;
+		if (!drag || drag.pointerId !== event.pointerId) {
+			return;
+		}
+
+		dragRef.current = null;
+		setIsDragging(false);
+		const delta = event.clientY - drag.startY;
+		const velocity = delta / Math.max(event.timeStamp - drag.startTime, 1);
+
+		if (delta > dismissDistancePx || (delta > 16 && velocity > dismissVelocityPxPerMs)) {
+			setIsClosing(true);
+			window.setTimeout(onClose, exitDurationMs);
+			return;
+		}
+
+		setDragOffset(0);
+	};
+
+	const panelHeight = panelRef.current?.offsetHeight ?? 1;
+	const scrimOpacity = isClosing ? 0 : 1 - Math.min(Math.max(dragOffset, 0) / panelHeight, 1);
+	const isBusy = pendingIndex !== null;
+
+	return (
+		<div
+			className={`security-sheet${isClosing ? ' is-closing' : ''}${isDragging ? ' is-dragging' : ''}`}
+			onKeyDown={handleKeyDown}
+		>
+			<div
+				className="security-sheet__scrim"
+				aria-hidden="true"
+				style={{ opacity: scrimOpacity }}
+				onClick={isBusy ? undefined : close}
+			/>
+			<div
+				ref={panelRef}
+				className={`security-sheet__panel security-sheet__panel--${tone}`}
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby={titleId}
+				aria-describedby={descriptionId}
+				style={{ '--security-sheet-drag': `${dragOffset}px` } as CSSProperties}
+			>
+				<div
+					className="security-sheet__grabber"
+					onPointerDown={handlePointerDown}
+					onPointerMove={handlePointerMove}
+					onPointerUp={handlePointerEnd}
+					onPointerCancel={handlePointerEnd}
+				>
+					<span className="security-sheet__handle" aria-hidden="true" />
+					<div className="security-sheet__badge" aria-hidden="true">
+						<Icon name={icon} width={28} height={28} aria-hidden />
+					</div>
+				</div>
+
+				<div className="security-sheet__body">
+					<h2 id={titleId} ref={titleRef} className="security-sheet__title" tabIndex={-1}>
+						{title}
+					</h2>
+					<Text as="p" variant="regular-16" color="secondary" className="security-sheet__description">
+						<span id={descriptionId}>{description}</span>
+					</Text>
+
+					{facts && facts.length > 0 ? (
+						<dl className="security-sheet__facts">
+							{facts.map((fact) => (
+								<div key={fact.label} className="security-sheet__fact">
+									<dt>{fact.label}</dt>
+									<dd>{fact.value}</dd>
+								</div>
+							))}
+						</dl>
+					) : null}
+
+					{children}
+				</div>
+
+				<div className="security-sheet__actions">
+					{actions.map((action, index) => (
+						<Button
+							key={action.label}
+							size={52}
+							variant={action.variant ?? (index === 0 ? 'accent' : 'secondary')}
+							className="security-sheet__action"
+							disabled={isBusy}
+							onClick={() => void handleAction(action, index)}
+						>
+							{pendingIndex === index ? (
+								<span className="security-sheet__spinner" aria-label="Выполняется" />
+							) : (
+								action.label
+							)}
+						</Button>
+					))}
+				</div>
+			</div>
+		</div>
+	);
+}

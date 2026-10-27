@@ -1,0 +1,210 @@
+.security-sheet {
+	--security-sheet-enter: 260ms;
+	--security-sheet-exit: 200ms;
+
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	padding-top: 40px;
+}
+
+.security-sheet__scrim {
+	position: absolute;
+	inset: 0;
+	background: var(--overlay-dark);
+	transition: opacity var(--security-sheet-exit) cubic-bezier(0.4, 0, 1, 1);
+	animation: security-sheet-scrim-in var(--security-sheet-enter) cubic-bezier(0, 0, 0.2, 1) backwards;
+}
+
+.security-sheet.is-dragging .security-sheet__scrim {
+	transition: none;
+}
+
+.security-sheet__panel {
+	--security-tone-fill: var(--accent-background);
+	--security-tone-color: var(--accent-primary);
+
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	max-height: 100%;
+	border-radius: 24px 24px 0 0;
+	background: var(--background-modal);
+	color: var(--content-primary);
+	box-shadow: 0 -8px 28px rgb(20 22 26 / 13%);
+	transform: translateY(var(--security-sheet-drag, 0px));
+	transition: transform var(--security-sheet-exit) cubic-bezier(0.2, 0, 0, 1);
+	animation: security-sheet-panel-in var(--security-sheet-enter) cubic-bezier(0.2, 0, 0, 1) backwards;
+	will-change: transform;
+}
+
+[data-theme='dark'] .security-sheet__panel {
+	box-shadow: 0 -8px 28px rgb(0 0 0 / 45%);
+}
+
+.security-sheet.is-dragging .security-sheet__panel {
+	transition: none;
+}
+
+.security-sheet.is-closing .security-sheet__panel {
+	transform: translateY(100%);
+	transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.security-sheet__panel--danger {
+	--security-tone-fill: var(--system-error-background);
+	--security-tone-color: var(--system-error-primary);
+}
+
+.security-sheet__panel--warning {
+	--security-tone-fill: var(--system-warning-background);
+	--security-tone-color: var(--system-warning-primary);
+}
+
+.security-sheet__panel--success {
+	--security-tone-fill: var(--system-success-background);
+	--security-tone-color: var(--system-success-primary);
+}
+
+.security-sheet__grabber {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 8px 24px 0;
+	touch-action: none;
+	cursor: grab;
+	user-select: none;
+}
+
+.security-sheet.is-dragging .security-sheet__grabber {
+	cursor: grabbing;
+}
+
+.security-sheet__handle {
+	align-self: center;
+	width: 36px;
+	height: 4px;
+	border-radius: 2px;
+	background: var(--content-border);
+}
+
+.security-sheet__badge {
+	display: grid;
+	place-items: center;
+	width: 56px;
+	height: 56px;
+	border-radius: 16px;
+	background: var(--security-tone-fill);
+	color: var(--security-tone-color);
+}
+
+.security-sheet__body {
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	padding: 16px 24px 0;
+}
+
+.security-sheet__title {
+	margin: 0;
+	font-size: 24px;
+	font-weight: 500;
+	line-height: 28px;
+	letter-spacing: -0.01em;
+	outline: none;
+}
+
+.security-sheet__description {
+	margin: 8px 0 0;
+	line-height: 20px;
+}
+
+.security-sheet__facts {
+	margin: 16px 0 0;
+	padding: 0 16px;
+	border-radius: 16px;
+	background: var(--content-background);
+}
+
+.security-sheet__fact {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 12px 0;
+	font-size: 14px;
+	line-height: 18px;
+}
+
+.security-sheet__fact + .security-sheet__fact {
+	border-top: 1px solid var(--content-border);
+}
+
+.security-sheet__fact dt {
+	color: var(--content-secondary);
+}
+
+.security-sheet__fact dd {
+	margin: 0;
+	font-weight: 500;
+	text-align: right;
+}
+
+.security-sheet__actions {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 24px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+}
+
+.security-sheet__action.ui-button {
+	width: 100%;
+}
+
+.security-sheet__spinner {
+	display: block;
+	width: 20px;
+	height: 20px;
+	border: 2px solid currentColor;
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: security-sheet-spinner 700ms linear infinite;
+}
+
+@keyframes security-sheet-scrim-in {
+	from { opacity: 0; }
+}
+
+@keyframes security-sheet-panel-in {
+	from { transform: translateY(100%); }
+}
+
+@keyframes security-sheet-spinner {
+	to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.security-sheet {
+		--security-sheet-enter: 1ms;
+		--security-sheet-exit: 120ms;
+	}
+
+	.security-sheet__panel,
+	.security-sheet.is-closing .security-sheet__panel {
+		transition-property: opacity;
+	}
+
+	.security-sheet.is-closing .security-sheet__panel {
+		transform: translateY(var(--security-sheet-drag, 0px));
+		opacity: 0;
+	}
+
+	.security-sheet__spinner {
+		animation-duration: 1400ms;
+	}
+}
