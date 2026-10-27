@@ -1,0 +1,13 @@
+services:
+  voice-kos:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      VOICE_ALLOWED_ORIGINS: ${VOICE_ALLOWED_ORIGINS:-https://kosdesignsystem.github.io}
+      VOICE_API_TOKEN: ${VOICE_API_TOKEN:-}
+    volumes:
+      - gigaam-models:/models
+    restart: unless-stopped
+volumes:
+  gigaam-models:

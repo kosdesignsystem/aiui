@@ -7,7 +7,7 @@ import OfflineTransferMainPage from './OfflineTransfer/main';
 import RadioMainPage from './Radio';
 import PasswordGeneratorMainPage from './PasswordGenerator/main';
 import { weatherAppDefinition } from './Weather';
-import { focusAppDefinition } from './Focus';
+import { voiceKosAppDefinition } from './VoiceKos';
 import { secureGalleryAppDefinition } from './SecureGallery';
 import SecureByUIMainPage from './SecureByUI/main';
 import SecureByUIPolicyPage from './SecureByUI/policy';
@@ -214,7 +214,7 @@ const ncAppDefinition = defineApp({
 
 export const appRegistry = [
 	weatherAppDefinition,
-	focusAppDefinition,
+	voiceKosAppDefinition,
 	nikitaAppDefinition,
 	radioAppDefinition,
 	offlineTransferAppDefinition,
