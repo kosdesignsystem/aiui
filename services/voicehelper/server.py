@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from engine import GigaAMEngine
 from segments import Segmenter, Snapshot
@@ -39,6 +40,9 @@ def create_app(engine=None):
             await task
 
     app = FastAPI(title="VoiceHelper · GigaAM", lifespan=lifespan)
+    extra_origins = [origin.strip() for origin in os.environ.get("VOICEHELPER_ALLOWED_ORIGINS", "").split(",") if origin.strip()]
+    if extra_origins:
+        app.add_middleware(CORSMiddleware, allow_origins=extra_origins, allow_methods=["GET"])
 
     @app.get("/voicehelper/health")
     async def health():
@@ -51,7 +55,6 @@ def create_app(engine=None):
     async def stream(ws: WebSocket):
         # Same-origin through Vite by default; explicit origins for a separately hosted API.
         origin = ws.headers.get("origin")
-        extra_origins = os.environ.get("VOICEHELPER_ALLOWED_ORIGINS", "").split(",")
         if origin and (urlparse(origin).scheme not in {"http", "https"} or
                        (urlparse(origin).netloc != ws.headers.get("host") and origin not in extra_origins)):
             await ws.close(code=1008)

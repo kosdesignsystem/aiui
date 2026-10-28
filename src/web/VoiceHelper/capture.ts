@@ -3,8 +3,40 @@ import workletUrl from './capture.worklet.js?url';
 export type TranscriptEvent = { type: 'transcript'; segment: number; text: string; final: boolean; latencyMs: number };
 type Callbacks = { transcript: (event: TranscriptEvent) => void; done: () => void; error: (error: Error) => void };
 
+const serviceAddressKey = 'voicehelper-service-address';
+
+export function savedServiceAddress() {
+	try { return localStorage.getItem(serviceAddressKey) || ''; } catch { return ''; }
+}
+
+export function normalizeServiceAddress(value: string) {
+	if (!value.trim()) return '';
+	let url: URL;
+	try { url = new URL(value.trim()); } catch { throw new Error('Укажите полный HTTPS-адрес сервиса GigaAM.'); }
+	const local = ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
+	if (url.protocol !== 'https:' && !(url.protocol === 'http:' && local)) {
+		throw new Error('Для подключения к сервису нужен HTTPS. HTTP разрешён только для localhost.');
+	}
+	if (url.username || url.password || url.search || url.hash) throw new Error('Укажите адрес без пароля, параметров и фрагмента.');
+	url.pathname = url.pathname.replace(/\/(health|stream)\/?$/, '').replace(/\/$/, '') || '/voicehelper';
+	return url.toString().replace(/\/$/, '');
+}
+
+export function saveServiceAddress(value: string) {
+	const address = normalizeServiceAddress(value);
+	try {
+		if (address) localStorage.setItem(serviceAddressKey, address);
+		else localStorage.removeItem(serviceAddressKey);
+	} catch { throw new Error('Браузер не разрешил сохранить адрес подключения.'); }
+	return address;
+}
+
+export function needsServiceAddress() {
+	return !savedServiceAddress() && !import.meta.env.VITE_VOICEHELPER_URL && window.location.hostname.endsWith('.github.io');
+}
+
 export function serviceUrl(path: string) {
-	const base = import.meta.env.VITE_VOICEHELPER_URL || '/voicehelper';
+	const base = savedServiceAddress() || import.meta.env.VITE_VOICEHELPER_URL || '/voicehelper';
 	return new URL(`${base.replace(/\/$/, '')}/${path}`, window.location.origin);
 }
 

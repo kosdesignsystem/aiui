@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '../../ui/Button';
 import { Cell } from '../../ui/Cell';
+import { Field } from '../../ui/Field';
 import { Icon } from '../../ui/Icon';
 import { List } from '../../ui/List';
 import { FlowPage, FlowPageList } from '../FlowPage';
-import { joinTranscripts, microphoneError, serviceUrl, VoiceCapture, type TranscriptEvent } from './capture';
+import { joinTranscripts, microphoneError, needsServiceAddress, saveServiceAddress, savedServiceAddress, serviceUrl, VoiceCapture, type TranscriptEvent } from './capture';
 
 type Phase = 'idle' | 'connecting' | 'recording' | 'finalizing' | 'error';
-type Service = 'checking' | 'loading' | 'ready' | 'offline' | 'error';
+type Service = 'checking' | 'loading' | 'ready' | 'offline' | 'error' | 'unconfigured';
 
 export function VoiceHelperMainScreen() {
 	const [phase, setPhase] = useState<Phase>('idle');
@@ -16,6 +17,9 @@ export function VoiceHelperMainScreen() {
 	const [error, setError] = useState('');
 	const [segments, setSegments] = useState<Record<number, TranscriptEvent>>({});
 	const [copied, setCopied] = useState(false);
+	const [address, setAddress] = useState(savedServiceAddress);
+	const [addressError, setAddressError] = useState('');
+	const [connectionVersion, setConnectionVersion] = useState(0);
 	const captureRef = useRef<VoiceCapture | null>(null);
 	const mounted = useRef(true);
 	const busy = phase === 'connecting' || phase === 'recording' || phase === 'finalizing';
@@ -30,6 +34,11 @@ export function VoiceHelperMainScreen() {
 		let timer: number;
 		let controller: AbortController | undefined;
 		async function check() {
+			if (needsServiceAddress()) {
+				setService('unconfigured');
+				setServiceError('На GitHub Pages нужно подключить адрес работающей модели. Укажите его в разделе «Подключение».');
+				return;
+			}
 			controller = new AbortController();
 			const timeout = window.setTimeout(() => controller?.abort(), 4000);
 			try {
@@ -51,7 +60,15 @@ export function VoiceHelperMainScreen() {
 			controller?.abort(); window.clearTimeout(timer);
 			captureRef.current?.dispose(); captureRef.current = null;
 		};
-	}, []);
+	}, [connectionVersion]);
+
+	const connect = (value: string) => {
+		try {
+			setAddress(saveServiceAddress(value)); setAddressError('');
+			setService('checking'); setServiceError(''); setError(''); setPhase('idle');
+			setConnectionVersion((version) => version + 1);
+		} catch (failure) { setAddressError(microphoneError(failure)); }
+	};
 
 	const start = async () => {
 		if (captureRef.current) return;
@@ -78,8 +95,8 @@ export function VoiceHelperMainScreen() {
 		try { await navigator.clipboard.writeText(text); setCopied(true); }
 		catch { setError('Браузер не разрешил копирование. Выделите текст вручную.'); }
 	};
-	const status = phase === 'recording' ? 'Слушаю вас' : phase === 'connecting' ? 'Подключаю микрофон…' : phase === 'finalizing' ? 'Завершаю расшифровку…' : phase === 'error' ? 'Запись прервана' : 'Готов к записи';
-	const serviceLabel = service === 'ready' ? 'Модель готова' : service === 'loading' ? 'Модель загружается…' : service === 'checking' ? 'Проверяю подключение…' : service === 'error' ? 'Модель не загружена' : 'Сервис недоступен';
+	const status = phase === 'recording' ? 'Слушаю вас' : phase === 'connecting' ? 'Подключаю микрофон…' : phase === 'finalizing' ? 'Завершаю расшифровку…' : phase === 'error' ? 'Запись прервана' : service === 'ready' ? 'Готов к записи' : 'Ожидаю подключения модели';
+	const serviceLabel = service === 'ready' ? 'Модель готова' : service === 'loading' ? 'Модель загружается…' : service === 'checking' ? 'Проверяю подключение…' : service === 'error' ? 'Модель не загружена' : service === 'unconfigured' ? 'Подключите модель' : 'Сервис недоступен';
 
 	return (
 		<FlowPage title="VoiceHelper">
@@ -94,6 +111,11 @@ export function VoiceHelperMainScreen() {
 							? <Button variant="secondary" onClick={cancel}>Отменить запись</Button>
 							: <Button disabled={service !== 'ready'} leftIcon={<Icon name="microphone-outline" />} onClick={() => void start()}>Начать запись</Button>} />
 					{error && <div role="alert"><Cell title="Не удалось выполнить действие" subtitle={error} /></div>}
+				</List>
+				<List title="Подключение">
+					<Cell title={<Field type="url" label="Адрес GigaAM" placeholder="https://адрес-сервиса/voicehelper" value={address} disabled={busy} invalid={Boolean(addressError)} onChange={(event) => setAddress(event.target.value)} autoCapitalize="none" autoCorrect="off" spellCheck={false} />} subtitle="Для демо укажите временную HTTPS-ссылку на запущенную модель. Аудио будет отправляться по этому адресу." />
+					<Cell title={<Button size={32} disabled={busy} onClick={() => connect(address)}>Подключить</Button>} trailing={<Button size={32} variant="secondary" disabled={busy || !address} onClick={() => connect('')}>Сбросить</Button>} />
+					{addressError && <div role="alert"><Cell title="Проверьте адрес" subtitle={addressError} /></div>}
 				</List>
 				<List title={interim ? 'Промежуточный текст' : 'Распознанный текст'}>
 					<Cell title={<div role="log" aria-label="Распознанный текст" aria-live="polite" aria-atomic="true">{text || (phase === 'recording' ? 'Ожидаю речь…' : 'Здесь появится ваша речь.')}</div>} subtitle={latency !== undefined ? `Последний фрагмент: ${(latency / 1000).toFixed(1)} с` : undefined} />

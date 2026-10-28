@@ -127,6 +127,19 @@ def test_cross_origin_websocket_rejected():
                 pass
 
 
+def test_configured_github_origin_can_check_health_and_connect(monkeypatch):
+    origin = 'https://kosdesignsystem.github.io'
+    monkeypatch.setenv('VOICEHELPER_ALLOWED_ORIGINS', origin)
+    with TestClient(create_app(Engine())) as client:
+        ready(client)
+        result = client.get('/voicehelper/health', headers={'Origin': origin})
+        assert result.headers['access-control-allow-origin'] == origin
+        other = client.get('/voicehelper/health', headers={'Origin': 'https://unrelated.example'})
+        assert 'access-control-allow-origin' not in other.headers
+        with client.websocket_connect('/voicehelper/stream', headers={'Origin': origin}) as ws:
+            assert ws.receive_json()['type'] == 'connected'
+
+
 def test_engine_writes_valid_wav_and_removes_temporary_audio():
     captured = []
 
