@@ -8,6 +8,7 @@ import { FlowPage } from '../FlowPage';
 import {
 	SecuritySheet,
 	type SecuritySheetAction,
+	type SecuritySheetActionTone,
 	type SecuritySheetFact,
 	type SecuritySheetOption,
 	type SecurityTone,
@@ -25,7 +26,7 @@ type SecurityCheck = {
 	description: string;
 	facts?: ReadonlyArray<SecuritySheetFact>;
 	fixLabel?: string;
-	fixVariant?: 'accent' | 'danger';
+	fixTone?: SecuritySheetActionTone;
 	laterLabel?: string;
 	/** Если заданы — вместо кнопок шит предлагает выбор безопасного способа. */
 	prompt?: string;
@@ -67,7 +68,7 @@ const securityChecks: ReadonlyArray<SecurityCheck> = [
 			{ label: 'Источник', value: 'Неизвестный' },
 		],
 		fixLabel: 'Удалить приложение',
-		fixVariant: 'danger',
+		fixTone: 'danger',
 		laterLabel: 'Оставить',
 		resolvedDescription: 'Приложение и его данные удалены. Платные подписки, оформленные через него, стоит проверить у оператора.',
 	},
@@ -86,7 +87,7 @@ const securityChecks: ReadonlyArray<SecurityCheck> = [
 			{ label: 'Отправитель', value: '+7 900 ••• 12 48' },
 		],
 		fixLabel: 'Заблокировать отправителя',
-		fixVariant: 'danger',
+		fixTone: 'danger',
 		laterLabel: 'Не сейчас',
 		resolvedDescription: 'Сообщения с этого номера больше не придут. Ссылка останется заблокированной.',
 	},
@@ -105,7 +106,7 @@ const securityChecks: ReadonlyArray<SecurityCheck> = [
 			{ label: 'Подключено', value: '18 минут' },
 		],
 		fixLabel: 'Включить защищённое соединение',
-		fixVariant: 'accent',
+		fixTone: 'accent',
 		laterLabel: 'Отключиться от сети',
 		resolvedDescription: 'Весь трафик идёт через зашифрованный туннель, пока вы подключены к открытым сетям.',
 	},
@@ -121,7 +122,7 @@ const securityChecks: ReadonlyArray<SecurityCheck> = [
 			'Без PIN-кода любой, у кого окажется телефон, получит доступ к почте, банку и фотографиям.',
 		facts: [{ label: 'Сейчас', value: 'Свайп' }],
 		fixLabel: 'Задать PIN-код',
-		fixVariant: 'accent',
+		fixTone: 'accent',
 		laterLabel: 'Позже',
 		resolvedDescription: 'Телефон блокируется через 30 секунд бездействия. Разблокировать можно PIN-кодом или отпечатком.',
 	},
@@ -141,7 +142,7 @@ const securityChecks: ReadonlyArray<SecurityCheck> = [
 			{ label: 'Карты', value: 'Всегда' },
 		],
 		fixLabel: 'Ограничить доступ',
-		fixVariant: 'accent',
+		fixTone: 'accent',
 		laterLabel: 'Оставить как есть',
 		resolvedDescription: 'Приложения получают доступ к микрофону только на экране. В фоне он закрыт.',
 	},
@@ -232,7 +233,7 @@ export default function SecurityOverviewPage() {
 								nextSheetRef.current = { kind: 'check', id: firstOpen.id };
 							},
 						},
-						{ label: 'Закрыть', variant: 'secondary' },
+						{ label: 'Закрыть', tone: 'neutral' },
 					]
 					: [{ label: 'Готово' }];
 
@@ -297,13 +298,13 @@ export default function SecurityOverviewPage() {
 				actions={check.options ? undefined : [
 					{
 						label: check.fixLabel ?? 'Исправить',
-						variant: check.fixVariant ?? 'accent',
+						tone: check.fixTone ?? 'accent',
 						onSelect: async () => {
 							await wait(900);
 							resolve(check.id);
 						},
 					},
-					{ label: check.laterLabel ?? 'Позже', variant: 'secondary' },
+					{ label: check.laterLabel ?? 'Позже', tone: 'neutral' },
 				]}
 				onClose={close}
 			/>

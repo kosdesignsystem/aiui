@@ -8,7 +8,6 @@ import {
 	useRef,
 	useState,
 } from 'react';
-import { Button, type ButtonVariant } from '../../ui/Button';
 import { Cell } from '../../ui/Cell';
 import { Text } from '../../ui/Fonts';
 import { Icon, type IconName } from '../../ui/Icon';
@@ -16,9 +15,12 @@ import './SecuritySheet.scss';
 
 export type SecurityTone = 'danger' | 'warning' | 'info' | 'success';
 
+/** Тона кнопок совпадают с Alert. */
+export type SecuritySheetActionTone = 'accent' | 'danger' | 'neutral';
+
 export type SecuritySheetAction = {
 	label: string;
-	variant?: ButtonVariant;
+	tone?: SecuritySheetActionTone;
 	/** Может вернуть Promise — пока он не завершится, кнопки заблокированы. */
 	onSelect?: () => void | Promise<void>;
 };
@@ -49,8 +51,9 @@ export type SecuritySheetProps = {
 	onClose: () => void;
 };
 
-const enterDurationMs = 260;
-const exitDurationMs = 200;
+// Тайминги Alert: появление 200 мс, закрытие 150 мс, ввод блокируется на 300 мс.
+const inputGuardMs = 300;
+const exitDurationMs = 150;
 const dismissDistancePx = 96;
 const dismissVelocityPxPerMs = 0.6;
 
@@ -81,7 +84,7 @@ export function SecuritySheet({
 	useEffect(() => {
 		returnFocusRef.current = document.activeElement as HTMLElement | null;
 		titleRef.current?.focus({ preventScroll: true });
-		const inputTimer = window.setTimeout(() => setCanInteract(true), enterDurationMs);
+		const inputTimer = window.setTimeout(() => setCanInteract(true), inputGuardMs);
 
 		return () => {
 			window.clearTimeout(inputTimer);
@@ -234,9 +237,9 @@ export function SecuritySheet({
 					<h2 id={titleId} ref={titleRef} className="security-sheet__title" tabIndex={-1}>
 						{title}
 					</h2>
-					<Text as="p" variant="regular-16" color="secondary" className="security-sheet__description">
-						<span id={descriptionId}>{description}</span>
-					</Text>
+					<p id={descriptionId} className="security-sheet__description">
+						{description}
+					</p>
 
 					{facts && facts.length > 0 ? (
 						<div className="security-sheet__cells">
@@ -251,9 +254,7 @@ export function SecuritySheet({
 					) : null}
 
 					{prompt ? (
-						<Text as="p" variant="regular-16" color="secondary" className="security-sheet__prompt">
-							{prompt}
-						</Text>
+						<p className="security-sheet__prompt">{prompt}</p>
 					) : null}
 
 					{options && options.length > 0 ? (
@@ -285,11 +286,10 @@ export function SecuritySheet({
 				{actions.length > 0 ? (
 					<div className="security-sheet__actions">
 						{actions.map((action, index) => (
-							<Button
+							<button
 								key={action.label}
-								size={52}
-								variant={action.variant ?? (index === 0 ? 'accent' : 'secondary')}
-								className="security-sheet__action"
+								type="button"
+								className={`security-sheet__button security-sheet__button--${action.tone ?? (index === 0 ? 'accent' : 'neutral')}`}
 								disabled={isBusy}
 								onClick={() => void handleAction(action, index)}
 							>
@@ -298,7 +298,7 @@ export function SecuritySheet({
 								) : (
 									action.label
 								)}
-							</Button>
+							</button>
 						))}
 					</div>
 				) : (

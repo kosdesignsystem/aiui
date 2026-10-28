@@ -1,13 +1,35 @@
+/*
+ * Все параметры наследуются от Alert (src/web/Alert/playground.scss):
+ * отступы от краёв, ширина, радиус, тень, кнопки, цвета, тайминги.
+ * Отличия: текст по центру и оттеночный градиент на панели.
+ */
 .security-sheet {
-	--security-sheet-enter: 260ms;
-	--security-sheet-exit: 200ms;
+	--security-sheet-enter: 200ms;
+	--security-sheet-exit: 150ms;
+	--security-sheet-on-accent: #9a9aff;
+	--security-sheet-on-danger: #f66474;
+	--security-sheet-body-color: var(--content-secondary);
 
 	position: absolute;
 	inset: 0;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	justify-content: flex-end;
-	padding-top: 40px;
+	padding: 16px;
+	padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+}
+
+[data-theme='light'] .security-sheet {
+	--security-sheet-on-accent: #0d62cd;
+	--security-sheet-on-danger: #cd0d23;
+	--security-sheet-body-color: rgb(33 37 41 / 63%);
+}
+
+[data-theme='hexa-light'] .security-sheet,
+[data-theme='hexa-dark'] .security-sheet {
+	--security-sheet-on-accent: var(--accent-primary);
+	--security-sheet-on-danger: var(--system-error-primary);
 }
 
 .security-sheet__scrim {
@@ -30,29 +52,31 @@
 	z-index: 1;
 	display: flex;
 	flex-direction: column;
+	width: min(100%, 328px);
 	max-height: 100%;
-	border-radius: 28px 28px 0 0;
+	border-radius: 16px;
 	background:
 		linear-gradient(180deg, var(--security-tone-fill) 0%, transparent 72%),
 		var(--background-modal);
 	color: var(--content-primary);
-	box-shadow: 0 -8px 28px rgb(20 22 26 / 13%);
+	box-shadow: 0 8px 28px rgb(20 22 26 / 13%);
 	transform: translateY(var(--security-sheet-drag, 0px));
-	transition: transform var(--security-sheet-exit) cubic-bezier(0.2, 0, 0, 1);
-	animation: security-sheet-panel-in var(--security-sheet-enter) cubic-bezier(0.2, 0, 0, 1) backwards;
+	transition: transform var(--security-sheet-exit) cubic-bezier(0, 0, 0.2, 1);
+	animation: security-sheet-panel-in var(--security-sheet-enter) cubic-bezier(0, 0, 0.2, 1) backwards;
 	will-change: transform;
 }
 
 [data-theme='dark'] .security-sheet__panel {
-	box-shadow: 0 -8px 28px rgb(0 0 0 / 45%);
+	box-shadow: 0 8px 28px rgb(0 0 0 / 45%);
 }
 
 .security-sheet.is-dragging .security-sheet__panel {
 	transition: none;
 }
 
+/* Панель висит в 16 px над низом, поэтому уезжает на свою высоту плюс отступ. */
 .security-sheet.is-closing .security-sheet__panel {
-	transform: translateY(100%);
+	transform: translateY(calc(100% + 16px + env(safe-area-inset-bottom, 0px)));
 	transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
 
@@ -104,14 +128,20 @@
 	outline: none;
 }
 
+.security-sheet__description,
+.security-sheet__prompt {
+	color: var(--security-sheet-body-color);
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 20px;
+}
+
 .security-sheet__description {
 	margin: 8px 0 0;
-	line-height: 24px;
 }
 
 .security-sheet__prompt {
 	margin: 16px 0 0;
-	line-height: 24px;
 }
 
 /* Системные ячейки — без подложки, во всю ширину контента. */
@@ -132,24 +162,60 @@
 
 .security-sheet__bottom-space {
 	flex: 0 0 auto;
-	height: calc(24px + env(safe-area-inset-bottom, 0px));
+	height: 24px;
 }
 
 .security-sheet__actions {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
-	padding: 16px 24px calc(24px + env(safe-area-inset-bottom, 0px));
+	padding: 16px 24px 24px;
 }
 
-.security-sheet__action.ui-button {
+.security-sheet__button {
+	appearance: none;
 	width: 100%;
+	height: 52px;
+	padding: 0 12px;
+	border: 0;
+	border-radius: 16px;
+	font: inherit;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 20px;
+	cursor: pointer;
+}
+
+.security-sheet__button--accent {
+	background: color-mix(in srgb, var(--accent-primary) 20%, var(--background-modal));
+	color: var(--security-sheet-on-accent);
+}
+
+.security-sheet__button--danger {
+	background: color-mix(in srgb, var(--system-error-primary) 16%, var(--background-modal));
+	color: var(--security-sheet-on-danger);
+}
+
+.security-sheet__button--neutral {
+	background: color-mix(in srgb, var(--content-primary) 8%, var(--background-modal));
+	color: var(--content-primary);
+}
+
+.security-sheet__button:focus-visible {
+	outline: 2px solid var(--accent-primary);
+	outline-offset: 2px;
+}
+
+.security-sheet__button:disabled {
+	cursor: default;
+	color: var(--content-disabled);
 }
 
 .security-sheet__spinner {
 	display: block;
-	width: 20px;
-	height: 20px;
+	width: 24px;
+	height: 24px;
+	margin: auto;
 	border: 2px solid currentColor;
 	border-right-color: transparent;
 	border-radius: 50%;
@@ -161,7 +227,7 @@
 }
 
 @keyframes security-sheet-panel-in {
-	from { transform: translateY(100%); }
+	from { transform: translateY(calc(100% + 16px + env(safe-area-inset-bottom, 0px))); }
 }
 
 @keyframes security-sheet-spinner {
@@ -170,8 +236,12 @@
 
 @media (prefers-reduced-motion: reduce) {
 	.security-sheet {
-		--security-sheet-enter: 1ms;
-		--security-sheet-exit: 120ms;
+		--security-sheet-enter: 100ms;
+		--security-sheet-exit: 100ms;
+	}
+
+	.security-sheet__panel {
+		animation-name: security-sheet-scrim-in;
 	}
 
 	.security-sheet__panel,
