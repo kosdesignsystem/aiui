@@ -161,11 +161,21 @@
 	padding-bottom: 0;
 }
 
+/* Варианты: между ячейками 8, плашка 48 вписана в высоту 52. */
+.security-sheet__cells--options {
+	gap: 8px;
+}
+
+.security-sheet__cells--options .ui-cell {
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
 .security-sheet__option-icon {
 	display: grid;
 	place-items: center;
-	width: 40px;
-	height: 40px;
+	width: 48px;
+	height: 48px;
 	border-radius: 12px;
 	background: var(--content-background);
 	color: var(--content-primary);

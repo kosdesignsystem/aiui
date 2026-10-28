@@ -258,7 +258,7 @@ export function SecuritySheet({
 					) : null}
 
 					{options && options.length > 0 ? (
-						<div className="security-sheet__cells">
+						<div className="security-sheet__cells security-sheet__cells--options">
 							{options.map((option, index) => (
 								<Cell
 									key={option.label}
@@ -272,7 +272,7 @@ export function SecuritySheet({
 											)}
 										</span>
 									}
-									title={<Text variant="regular-16">{option.label}</Text>}
+									title={<Text variant="medium-16">{option.label}</Text>}
 									trailing={<Icon name="chevron-right" width={24} height={24} aria-hidden />}
 									onClick={() => void handleAction(option, actions.length + index)}
 								/>
