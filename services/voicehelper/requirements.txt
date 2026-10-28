@@ -1,0 +1,5 @@
+# CPU torch/torchaudio are installed separately by setup.sh from the PyTorch index.
+gigaam @ git+https://github.com/salute-developers/GigaAM.git@7447938d791c4f3e643386ee22c33777004293a5
+fastapi==0.121.3
+uvicorn==0.38.0
+websockets==15.0.1
