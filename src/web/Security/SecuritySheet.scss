@@ -154,6 +154,13 @@
 	min-height: 52px;
 }
 
+/* Детали — строки текста без плашки: высота по тексту, между строками 16. */
+.security-sheet__cells--facts .ui-cell {
+	min-height: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
 .security-sheet__option-icon {
 	display: grid;
 	place-items: center;

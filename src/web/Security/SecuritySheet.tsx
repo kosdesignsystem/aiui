@@ -242,7 +242,7 @@ export function SecuritySheet({
 					</p>
 
 					{facts && facts.length > 0 ? (
-						<div className="security-sheet__cells">
+						<div className="security-sheet__cells security-sheet__cells--facts">
 							{facts.map((fact) => (
 								<Cell
 									key={fact.label}
