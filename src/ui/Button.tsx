@@ -5,6 +5,7 @@ import './Button.scss';
 export type ButtonVariant = ActionVariant;
 export type ButtonSize = ActionSize;
 
+/** Accent is solid; accent-soft, danger and success use pale backgrounds. */
 export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
 	variant?: ButtonVariant;
 	size?: ButtonSize;

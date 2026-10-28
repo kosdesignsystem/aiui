@@ -68,8 +68,14 @@
 	outline-offset: 3px;
 }
 
-.ui-switch:hover .ui-switch__control {
-	filter: brightness(1.03);
+@media (hover: hover) {
+	.ui-switch:hover .ui-switch__input:checked:not(:disabled) + .ui-switch__control {
+		--ui-switch-track-background: var(--accent-hover);
+	}
+}
+
+.ui-switch.is-pressed .ui-switch__input:checked:not(:disabled) + .ui-switch__control {
+	--ui-switch-track-background: var(--accent-pressed);
 }
 
 .ui-switch.is-pressed .ui-switch__input:not(:checked) + .ui-switch__control .ui-switch__thumb {

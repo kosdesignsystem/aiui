@@ -5,6 +5,7 @@ export type ActionSize = (typeof actionSizes)[number];
 
 export const actionVariants = [
 	'accent',
+	'accent-soft',
 	'danger',
 	'success',
 	'primary',

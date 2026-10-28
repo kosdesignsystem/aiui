@@ -1,26 +1,16 @@
+@use '../../ui/styles/action-control' as action;
+
 .alert-app {
-	--alert-accent-fill: color-mix(in srgb, var(--accent-primary) 20%, var(--background-modal));
-	--alert-danger-fill: color-mix(in srgb, var(--system-error-primary) 16%, var(--background-modal));
-	--alert-neutral-fill: color-mix(in srgb, var(--content-primary) 8%, var(--background-modal));
-	--alert-on-accent: #9a9aff;
-	--alert-on-danger: #f66474;
+	--alert-accent-fill: var(--accent-background);
+	--alert-danger-fill: var(--system-error-background);
+	--alert-neutral-fill: var(--content-background);
+	--alert-on-accent: var(--accent-text);
+	--alert-on-danger: var(--system-error-text);
 	--alert-body-color: var(--content-secondary);
 
 	display: flex;
 	flex-direction: column;
 	min-height: 100%;
-}
-
-[data-theme='light'] .alert-app {
-	--alert-on-accent: #0d62cd;
-	--alert-on-danger: #cd0d23;
-	--alert-body-color: rgb(33 37 41 / 63%);
-}
-
-[data-theme='hexa-light'] .alert-app,
-[data-theme='hexa-dark'] .alert-app {
-	--alert-on-accent: var(--accent-primary);
-	--alert-on-danger: var(--system-error-primary);
 }
 
 .alert-app__header {
@@ -207,16 +197,22 @@
 }
 
 .alert-card__button--accent {
+	@include action.surface-states(
+		color-mix(in srgb, var(--accent-hover) 20%, transparent),
+		color-mix(in srgb, var(--accent-pressed) 24%, transparent)
+	);
 	background: var(--alert-accent-fill);
 	color: var(--alert-on-accent);
 }
 
 .alert-card__button--danger {
+	@include action.surface-states(var(--error-hover), var(--error-pressed));
 	background: var(--alert-danger-fill);
 	color: var(--alert-on-danger);
 }
 
 .alert-card__button--neutral {
+	@include action.surface-states(var(--background-hover), var(--background-pressed));
 	background: var(--alert-neutral-fill);
 	color: var(--content-primary);
 }
@@ -234,6 +230,7 @@
 }
 
 .alert-card__help {
+	@include action.surface-states(var(--default-hover), var(--default-pressed));
 	display: block;
 	margin: 14px auto 0;
 	padding: 4px 8px;
@@ -257,24 +254,12 @@
 }
 
 .alert-app__overlay {
-	--alert-accent-fill: color-mix(in srgb, var(--accent-primary) 20%, var(--background-modal));
-	--alert-danger-fill: color-mix(in srgb, var(--system-error-primary) 16%, var(--background-modal));
-	--alert-neutral-fill: color-mix(in srgb, var(--content-primary) 8%, var(--background-modal));
-	--alert-on-accent: #9a9aff;
-	--alert-on-danger: #f66474;
+	--alert-accent-fill: var(--accent-background);
+	--alert-danger-fill: var(--system-error-background);
+	--alert-neutral-fill: var(--content-background);
+	--alert-on-accent: var(--accent-text);
+	--alert-on-danger: var(--system-error-text);
 	--alert-body-color: var(--content-secondary);
-}
-
-[data-theme='light'] .alert-app__overlay {
-	--alert-on-accent: #0d62cd;
-	--alert-on-danger: #cd0d23;
-	--alert-body-color: rgb(33 37 41 / 63%);
-}
-
-[data-theme='hexa-light'] .alert-app__overlay,
-[data-theme='hexa-dark'] .alert-app__overlay {
-	--alert-on-accent: var(--accent-primary);
-	--alert-on-danger: var(--system-error-primary);
 }
 
 .alert-live {

@@ -1,11 +1,17 @@
 @use './styles/action-control' as action;
 
 .ui-button {
-	@include action.button-size(44px, 14px, 16px, 16px, 44px);
+	@include action.button-size(44px, 12px, 12px, 16px, 100px);
 	--ui-button-font-weight: 500;
-	@include action.control-variant(var(--accent-primary), var(--content-constant));
+	@include action.control-variant(
+		var(--accent-primary), var(--content-constant),
+		$hover: var(--accent-hover),
+		$pressed: var(--accent-pressed)
+	);
 
 	appearance: none;
+	box-sizing: border-box;
+	flex-shrink: 0;
 	border: 1px solid var(--ui-control-border);
 	min-width: var(--ui-button-min-width);
 	height: var(--ui-button-height);
@@ -29,6 +35,11 @@
 		transform 0.2s ease;
 
 	@include action.interactive;
+
+	&:focus-visible {
+		outline: 2px solid var(--accent-text);
+		outline-offset: 3px;
+	}
 }
 
 .ui-button__label {
@@ -67,32 +78,59 @@
 }
 
 .ui-button--accent {
-	@include action.control-variant(var(--accent-primary), var(--content-constant));
+	@include action.control-variant(
+		var(--accent-primary), var(--content-constant),
+		$hover: var(--accent-hover),
+		$pressed: var(--accent-pressed)
+	);
+}
+
+.ui-button--accent-soft {
+	@include action.control-variant(
+		var(--accent-background), var(--accent-text),
+		$hover: color-mix(in srgb, var(--accent-primary) 20%, transparent),
+		$pressed: color-mix(in srgb, var(--accent-primary) 24%, transparent)
+	);
 }
 
 .ui-button--danger {
-	@include action.control-variant(var(--system-error-primary), var(--content-constant));
+	@include action.control-variant(
+		var(--system-error-background), var(--system-error-text),
+		$hover: var(--error-hover),
+		$pressed: var(--error-pressed)
+	);
 }
 
 .ui-button--success {
-	@include action.control-variant(var(--system-success-primary), var(--content-constant));
+	@include action.control-variant(
+		var(--system-success-background), var(--system-success-text),
+		$hover: var(--success-hover),
+		$pressed: var(--success-pressed)
+	);
 }
 
 .ui-button--primary {
-	@include action.control-variant(var(--content-background), var(--content-primary));
+	@include action.control-variant(
+		var(--content-background), var(--content-primary),
+		$hover: var(--background-hover),
+		$pressed: var(--background-pressed)
+	);
 }
 
 .ui-button--secondary {
-	@include action.control-variant(transparent, var(--content-primary));
+	@include action.control-variant(
+		transparent, var(--content-primary),
+		$hover: var(--default-hover),
+		$pressed: var(--default-pressed)
+	);
 }
 
 .ui-button--link {
-	@include action.control-variant(transparent, var(--accent-primary));
-}
-
-.ui-button--secondary:not(:disabled):hover,
-.ui-button--link:not(:disabled):hover {
-	@include action.subtle-hover;
+	@include action.control-variant(
+		transparent, var(--accent-text),
+		$hover: var(--default-hover),
+		$pressed: var(--default-pressed)
+	);
 }
 
 .ui-button--link:disabled {

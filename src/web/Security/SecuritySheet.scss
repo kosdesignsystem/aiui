@@ -1,3 +1,5 @@
+@use '../../ui/styles/action-control' as action;
+
 /*
  * Bottom sheet: прилегает к низу на всю ширину, скруглены верхние углы.
  * --security-sheet-inset-bottom — высота прозрачного навбара, который лежит
@@ -9,8 +11,8 @@
 .security-sheet {
 	--security-sheet-enter: 200ms;
 	--security-sheet-exit: 150ms;
-	--security-sheet-on-accent: #9a9aff;
-	--security-sheet-on-danger: #f66474;
+	--security-sheet-on-accent: var(--accent-text);
+	--security-sheet-on-danger: var(--system-error-text);
 	--security-sheet-body-color: var(--content-secondary);
 
 	position: absolute;
@@ -19,18 +21,6 @@
 	flex-direction: column;
 	justify-content: flex-end;
 	padding-top: 40px;
-}
-
-[data-theme='light'] .security-sheet {
-	--security-sheet-on-accent: #0d62cd;
-	--security-sheet-on-danger: #cd0d23;
-	--security-sheet-body-color: rgb(33 37 41 / 63%);
-}
-
-[data-theme='hexa-light'] .security-sheet,
-[data-theme='hexa-dark'] .security-sheet {
-	--security-sheet-on-accent: var(--accent-primary);
-	--security-sheet-on-danger: var(--system-error-primary);
 }
 
 .security-sheet__scrim {
@@ -195,50 +185,31 @@
 }
 
 .security-sheet__button--accent {
-	background: color-mix(in srgb, var(--accent-primary) 20%, var(--background-modal));
+	@include action.surface-states(
+		color-mix(in srgb, var(--accent-hover) 20%, transparent),
+		color-mix(in srgb, var(--accent-pressed) 24%, transparent)
+	);
+	background: var(--accent-background);
 	color: var(--security-sheet-on-accent);
 }
 
 .security-sheet__button--danger {
-	background: color-mix(in srgb, var(--system-error-primary) 16%, var(--background-modal));
+	@include action.surface-states(var(--error-hover), var(--error-pressed));
+	background: var(--system-error-background);
 	color: var(--security-sheet-on-danger);
 }
 
 .security-sheet__button--neutral {
-	background: color-mix(in srgb, var(--content-primary) 8%, var(--background-modal));
+	@include action.surface-states(var(--background-hover), var(--background-pressed));
+	background: var(--content-background);
 	color: var(--content-primary);
 }
 
-/*
- * Hover и pressed: подложка цвета текста кнопки поверх заливки — работает
- * одинаково для accent, danger и neutral; при нажатии кнопка чуть сжимается.
- */
+/* Press feedback complements the semantic hover/pressed backgrounds. */
 .security-sheet__button {
-	position: relative;
-	isolation: isolate;
-	transition: transform 100ms cubic-bezier(0.2, 0, 0, 1);
-}
-
-.security-sheet__button::after {
-	content: '';
-	position: absolute;
-	inset: 0;
-	z-index: -1;
-	border-radius: inherit;
-	background: currentColor;
-	opacity: 0;
-	transition: opacity 150ms cubic-bezier(0.2, 0, 0, 1);
-	pointer-events: none;
-}
-
-@media (hover: hover) {
-	.security-sheet__button:not(:disabled):hover::after {
-		opacity: 0.06;
-	}
-}
-
-.security-sheet__button:not(:disabled):active::after {
-	opacity: 0.12;
+	transition:
+		background-color 150ms cubic-bezier(0.2, 0, 0, 1),
+		transform 100ms cubic-bezier(0.2, 0, 0, 1);
 }
 
 .security-sheet__button:not(:disabled):active {
@@ -254,12 +225,12 @@
 
 @media (hover: hover) {
 	.security-sheet__cells .ui-cell-shell.is-interactive:not([aria-disabled='true']):hover .ui-cell {
-		--ui-cell-background: color-mix(in srgb, var(--content-primary) 6%, transparent);
+		--ui-cell-background: var(--default-hover);
 	}
 }
 
 .security-sheet__cells .ui-cell-shell.is-interactive:not([aria-disabled='true']):active .ui-cell {
-	--ui-cell-background: color-mix(in srgb, var(--content-primary) 12%, transparent);
+	--ui-cell-background: var(--default-pressed);
 	transform: scale(0.98);
 }
 

@@ -7,6 +7,7 @@ import { FlowPage, FlowPageList } from '../FlowPage';
 import {
 	buildPromptSpec,
 	ComponentSection,
+	InputCell,
 	PreviewSurface,
 	SelectCell,
 	ToggleCell,
@@ -29,7 +30,7 @@ const sizeOptions: readonly SelectOption<ActionSizeValue>[] = actionSizes.map((s
 
 const variantOptions: readonly SelectOption<ButtonVariant>[] = actionVariants.map((variant) => ({
 	value: variant,
-	label: `${variant[0].toUpperCase()}${variant.slice(1)}`,
+	label: variant === 'accent-soft' ? 'Accent soft' : `${variant[0].toUpperCase()}${variant.slice(1)}`,
 }));
 
 const contentOptions: readonly SelectOption<ButtonContentMode>[] = [
@@ -63,6 +64,7 @@ export default function ComponentsActionsPage() {
 	const [buttonSize, setButtonSize] = useState<ActionSizeValue>('60');
 	const [buttonContent, setButtonContent] = useState<ButtonContentMode>('text');
 	const [buttonDisabled, setButtonDisabled] = useState(false);
+	const [buttonText, setButtonText] = useState('Сохранить');
 
 	const [iconButtonVariant, setIconButtonVariant] = useState<ButtonVariant>('primary');
 	const [iconButtonSize, setIconButtonSize] = useState<ActionSizeValue>('52');
@@ -73,7 +75,7 @@ export default function ComponentsActionsPage() {
 
 	const resolvedButtonSize = Number(buttonSize) as ButtonSize;
 	const resolvedIconButtonSize = Number(iconButtonSize) as ButtonSize;
-	const buttonLabel = buttonContent === 'icon-only' ? undefined : 'Сохранить';
+	const buttonLabel = buttonContent === 'icon-only' ? undefined : buttonText;
 	const buttonLeftIcon =
 		buttonContent === 'left-icon' ||
 		buttonContent === 'both-icons' ||
@@ -94,9 +96,10 @@ export default function ComponentsActionsPage() {
 						variant: buttonVariant,
 						size: resolvedButtonSize,
 						content: buttonContent,
+						children: buttonLabel,
 						disabled: buttonDisabled,
 					})}
-					description="Основная action-кнопка для экранов и блоков."
+					description="Размеры 60, 52, 44 и 32 px. Accent soft, Danger и Success — бледный фон и текст соответствующего цветового токена."
 				>
 					<SelectCell
 						label="Variant"
@@ -121,6 +124,9 @@ export default function ComponentsActionsPage() {
 						checked={buttonDisabled}
 						onChange={setButtonDisabled}
 					/>
+					{buttonContent !== 'icon-only' ? (
+						<InputCell label="Текст кнопки" value={buttonText} onChange={setButtonText} />
+					) : null}
 
 					<PreviewSurface centered>
 						<Button
@@ -129,6 +135,7 @@ export default function ComponentsActionsPage() {
 							leftIcon={buttonLeftIcon}
 							rightIcon={buttonRightIcon}
 							disabled={buttonDisabled}
+							aria-label={buttonContent === 'icon-only' ? 'Поиск' : undefined}
 						>
 							{buttonLabel}
 						</Button>

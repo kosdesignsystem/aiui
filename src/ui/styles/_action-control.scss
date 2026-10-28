@@ -1,9 +1,12 @@
 @mixin interactive {
 	&:not(:disabled):hover {
-		filter: brightness(1.08);
+		background: var(--ui-control-hover);
+		filter: var(--ui-control-hover-filter);
 	}
 
 	&:not(:disabled):active {
+		background: var(--ui-control-pressed);
+		filter: var(--ui-control-pressed-filter);
 		transform: translateY(1px);
 	}
 
@@ -29,13 +32,33 @@
 	--ui-icon-button-radius: #{$radius};
 }
 
-@mixin control-variant($background, $color, $border: transparent) {
+@mixin control-variant($background, $color, $border: transparent, $hover: null, $pressed: null) {
 	--ui-control-background: #{$background};
 	--ui-control-color: #{$color};
 	--ui-control-border: #{$border};
+	--ui-control-hover: #{$background};
+	--ui-control-pressed: #{$background};
+	--ui-control-hover-filter: brightness(1.08);
+	--ui-control-pressed-filter: none;
+
+	@if $hover != null {
+		--ui-control-hover: #{$hover};
+		--ui-control-hover-filter: none;
+	}
+
+	@if $pressed != null {
+		--ui-control-pressed: #{$pressed};
+	}
 }
 
-@mixin subtle-hover {
-	background: var(--content-background);
-	filter: none;
+@mixin surface-states($hover, $pressed) {
+	@media (hover: hover) {
+		&:not(:disabled):hover {
+			background: $hover;
+		}
+	}
+
+	&:not(:disabled):active {
+		background: $pressed;
+	}
 }

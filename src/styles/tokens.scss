@@ -1,83 +1,130 @@
+// Light and dark palettes match the design token tables.
 :root,
 [data-theme='dark'] {
-	--content-constant: hsl(0 0% 100%);
-	--content-primary: hsl(0 0% 100%);
-	--content-sub-primary: hsl(0 0% 100% / 70%);
-	--content-secondary: hsl(0 0% 100% / 56%);
-	--content-disabled: hsl(0 0% 100% / 34%);
-	--content-border: hsl(0 0% 100% / 16%);
-	--content-background: hsl(0 0% 100% / 8%);
+	--white: #ffffff;
+	--black: #0d0d11;
+	--red: #f34257;
+	--green: #24ce9f;
+	--purple: #8c8cff;
+	--orange: #f3bd3d;
+	--blue: #2a83f2;
 
-	--accent-primary: hsl(240 100% 77%);
-	--accent-sub-primary: hsl(240 100% 77% / 72%);
-	--accent-secondary: hsl(240 100% 77% / 56%);
-	--accent-disabled: hsl(240 100% 77% / 28%);
-	--accent-border: hsl(240 100% 77% / 20%);
-	--accent-background: hsl(240 100% 77% / 12%);
+	--content-constant: var(--white);
+	--content-primary: #ffffff;
+	--content-sub-primary: rgb(255 255 255 / 70%);
+	--content-secondary: rgb(255 255 255 / 56%);
+	--content-disabled: rgb(255 255 255 / 34%);
+	--content-border: rgb(255 255 255 / 16%);
+	--content-background: rgb(255 255 255 / 12%);
 
-	--system-success-primary: hsl(163 70% 47%);
-	--system-success-background: hsl(163 70% 47% / 16%);
-	--system-error-primary: hsl(353 88% 56%);
-	--system-error-background: hsl(353 88% 56% / 16%);
-	--system-warning-primary: hsl(42 89% 55%);
-	--system-warning-background: hsl(42 89% 55% / 16%);
+	--accent-text: #9a9aff;
+	--accent-primary: #8c8cff;
+	--accent-sub-primary: rgb(140 140 255 / 72%);
+	--accent-secondary: rgb(140 140 255 / 56%);
+	--accent-disabled: rgb(140 140 255 / 32%);
+	--accent-border: rgb(140 140 255 / 24%);
+	--accent-background: rgb(140 140 255 / 16%);
 
-	--background-primary: hsl(0 0% 2%);
-	--background-secondary: hsl(0 0% 8%);
-	--background-modal: hsl(0 0% 14%);
-	--background-lvl1: hsl(221 24% 24%);
-	--background-lvl2: hsl(210 24% 34%);
+	--system-success-text: #4de0b6;
+	--system-success-primary: #24ce9f;
+	--system-success-background: rgb(36 206 159 / 16%);
+	--system-error-text: #f66474;
+	--system-error-primary: #f22a41;
+	--system-error-background: rgb(242 42 65 / 16%);
+	--system-warning-primary: #f2b325;
+	--system-warning-background: rgb(242 179 37 / 16%);
 
-	--overlay-dark: hsl(210 11% 15% / 72%);
-	--overlay-light: hsl(210 11% 15% / 52%);
+	--background-primary: #0d0d11;
+	--background-secondary: #1b1b22;
+	--background-modal: #22222f;
+	--background-lvl1: #2f384c;
+	--background-lvl2: #42576c;
+	--overlay-dark: rgb(33 37 41 / 72%);
+	--overlay-light: rgb(33 37 41 / 52%);
 
-	--red: hsl(353 88% 61%);
-	--green: hsl(163 70% 47%);
-	--purple: hsl(240 100% 77%);
-	--orange: hsl(42 88% 60%);
-	--blue: hsl(213 88% 56%);
+	--accent-hover: #6b6bff;
+	--accent-pressed: #4d4dff;
+	--error-hover: rgb(242 42 65 / 20%);
+	--error-pressed: rgb(242 42 65 / 24%);
+	--success-hover: rgb(36 206 159 / 20%);
+	--success-pressed: rgb(36 206 159 / 24%);
+	--background-hover: rgb(255 255 255 / 16%);
+	--background-pressed: rgb(255 255 255 / 20%);
+	--default-hover: rgb(255 255 255 / 8%);
+	--default-pressed: rgb(255 255 255 / 12%);
 }
 
 [data-theme='light'] {
-	--content-constant: hsl(0 0% 100%);
-	--content-primary: hsl(210 11% 15%);
-	--content-sub-primary: hsl(210 11% 15% / 72%);
-	--content-secondary: hsl(210 11% 15% / 52%);
-	--content-disabled: hsl(210 11% 15% / 28%);
-	--content-border: hsl(210 11% 15% / 12%);
-	--content-background: hsl(210 11% 15% / 4%);
+	--white: #ffffff;
+	--black: #212529;
+	--red: #f34257;
+	--green: #24ce9f;
+	--purple: #8c8cff;
+	--orange: #f3bd3d;
+	--blue: #2a83f2;
 
-	--accent-primary: hsl(213 88% 56%);
-	--accent-sub-primary: hsl(213 88% 56% / 72%);
-	--accent-secondary: hsl(213 88% 56% / 52%);
-	--accent-disabled: hsl(213 88% 56% / 28%);
-	--accent-border: hsl(213 88% 56% / 20%);
-	--accent-background: hsl(213 88% 56% / 4%);
+	--content-constant: var(--white);
+	--content-primary: #212529;
+	--content-sub-primary: rgb(33 37 41 / 72%);
+	--content-secondary: rgb(33 37 41 / 52%);
+	--content-disabled: rgb(33 37 41 / 28%);
+	--content-border: rgb(33 37 41 / 12%);
+	--content-background: rgb(33 37 41 / 4%);
 
-	--system-success-primary: hsl(163 70% 47%);
-	--system-success-background: hsl(163 70% 47% / 8%);
-	--system-error-primary: hsl(353 88% 56%);
-	--system-error-background: hsl(353 88% 56% / 8%);
-	--system-warning-primary: hsl(42 89% 55%);
-	--system-warning-background: hsl(42 89% 55% / 8%);
+	--accent-text: #0d62cd;
+	--accent-primary: #2a83f2;
+	--accent-sub-primary: rgb(42 131 242 / 72%);
+	--accent-secondary: rgb(42 131 242 / 52%);
+	--accent-disabled: rgb(42 131 242 / 32%);
+	--accent-border: rgb(42 131 242 / 24%);
+	--accent-background: rgb(42 131 242 / 16%);
 
-	--background-primary: hsl(0 0% 100%);
-	--background-secondary: hsl(220 23% 97%);
-	--background-modal: hsl(0 0% 100%);
-	--background-lvl1: hsl(215 32% 88%);
-	--background-lvl2: hsl(210 31% 80%);
+	--system-success-text: #1b9874;
+	--system-success-primary: #24ce9f;
+	--system-success-background: rgb(36 206 159 / 16%);
+	--system-error-text: #cd0d23;
+	--system-error-primary: #f22a41;
+	--system-error-background: rgb(242 42 65 / 16%);
+	--system-warning-primary: #f2b325;
+	--system-warning-background: rgb(242 179 37 / 16%);
 
-	--overlay-dark: hsl(210 11% 15% / 72%);
-	--overlay-light: hsl(210 11% 15% / 52%);
+	--background-primary: #ffffff;
+	--background-secondary: #f7f8fa;
+	--background-modal: #ffffff;
+	--background-lvl1: #d8e0eb;
+	--background-lvl2: #bcccdc;
+	--overlay-dark: rgb(33 37 41 / 72%);
+	--overlay-light: rgb(33 37 41 / 52%);
 
-	--red: hsl(353 88% 61%);
-	--green: hsl(163 70% 47%);
-	--purple: hsl(240 100% 77%);
-	--orange: hsl(42 88% 60%);
-	--blue: hsl(213 88% 56%);
+	--accent-hover: #0f73f0;
+	--accent-pressed: #0d65d3;
+	--error-hover: rgb(242 42 65 / 20%);
+	--error-pressed: rgb(242 42 65 / 24%);
+	--success-hover: rgb(36 206 159 / 20%);
+	--success-pressed: rgb(36 206 159 / 24%);
+	--background-hover: rgb(33 37 41 / 8%);
+	--background-pressed: rgb(33 37 41 / 12%);
+	--default-hover: rgb(33 37 41 / 4%);
+	--default-pressed: rgb(33 37 41 / 8%);
 }
 
 [data-theme='hexa-light'] {
+	--white: #ffffff;
+	--black: var(--content-primary);
+	--accent-text: var(--accent-primary);
+	--system-success-text: var(--system-success-primary);
+	--system-error-text: var(--system-error-primary);
+	--accent-hover: color-mix(in srgb, var(--accent-primary) 90%, var(--content-primary));
+	--accent-pressed: color-mix(in srgb, var(--accent-primary) 80%, var(--content-primary));
+	--error-hover: color-mix(in srgb, var(--system-error-primary) 20%, transparent);
+	--error-pressed: color-mix(in srgb, var(--system-error-primary) 24%, transparent);
+	--success-hover: color-mix(in srgb, var(--system-success-primary) 20%, transparent);
+	--success-pressed: color-mix(in srgb, var(--system-success-primary) 24%, transparent);
+	--background-hover: rgb(33 37 41 / 8%);
+	--background-pressed: rgb(33 37 41 / 12%);
+	--default-hover: rgb(33 37 41 / 4%);
+	--default-pressed: rgb(33 37 41 / 8%);
+
 	--content-constant: hsla(0, 0%, 100%, 1);
 	--content-primary: hsla(218, 6%, 12%, 1);
 	--content-sub-primary: hsla(218, 7%, 36%, 1);
@@ -117,6 +164,22 @@
 }
 
 [data-theme='hexa-dark'] {
+	--white: #ffffff;
+	--black: var(--background-primary);
+	--accent-text: var(--accent-primary);
+	--system-success-text: var(--system-success-primary);
+	--system-error-text: var(--system-error-primary);
+	--accent-hover: color-mix(in srgb, var(--accent-primary) 90%, var(--content-primary));
+	--accent-pressed: color-mix(in srgb, var(--accent-primary) 80%, var(--content-primary));
+	--error-hover: color-mix(in srgb, var(--system-error-primary) 20%, transparent);
+	--error-pressed: color-mix(in srgb, var(--system-error-primary) 24%, transparent);
+	--success-hover: color-mix(in srgb, var(--system-success-primary) 20%, transparent);
+	--success-pressed: color-mix(in srgb, var(--system-success-primary) 24%, transparent);
+	--background-hover: rgb(255 255 255 / 16%);
+	--background-pressed: rgb(255 255 255 / 20%);
+	--default-hover: rgb(255 255 255 / 8%);
+	--default-pressed: rgb(255 255 255 / 12%);
+
 	--content-constant: hsla(0, 0%, 100%, 1);
 	--content-primary: hsla(218, 15%, 88%, 1);
 	--content-sub-primary: hsla(218, 15%, 88%, 1);
