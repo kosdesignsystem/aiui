@@ -2,6 +2,8 @@
 	display: flex;
 	flex-direction: column;
 	min-height: 100%;
+	/* Контент уходит под прозрачный навбар, но последний пункт докручивается над ним. */
+	padding-bottom: var(--ui-app-navbar-height, 52px);
 }
 
 .security-app__header {
@@ -83,17 +85,48 @@
 	color: var(--security-tone-color);
 }
 
-/* Ячейки: высота 52, между ними 8, от заголовка списка 16. */
+/* Ячейки: высота 52, без отступов между ними, от заголовка списка 16. */
 .security-app__list.ui-list {
 	gap: 16px;
 }
 
 .security-app__list .ui-list__content {
-	gap: 8px;
+	gap: 0;
 }
 
 .security-app__list .ui-cell {
 	min-height: 52px;
 	padding-top: 2px;
 	padding-bottom: 2px;
+}
+
+/*
+ * Прозрачный навбар: экран и оверлей доходят до низа устройства,
+ * навбар лежит поверх них без собственной подложки.
+ */
+.ui-app:has(.security-app) {
+	padding-bottom: 0;
+}
+
+.ui-app:has(.security-app) .ui-view {
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	border-bottom: 0;
+}
+
+.flow-page__overlay.security-app__overlay {
+	--security-sheet-inset-bottom: var(--ui-app-navbar-height, 52px);
+
+	bottom: 0;
+}
+
+.device-mockup:has(.security-app) > .device-navbar {
+	z-index: 30;
+	background: transparent;
+}
+
+.layout:has(.security-app) > .device-navbar--mobile {
+	background: transparent;
+	border-top: 0;
+	backdrop-filter: none;
 }

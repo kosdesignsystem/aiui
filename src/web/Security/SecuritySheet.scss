@@ -1,5 +1,7 @@
 /*
  * Bottom sheet: прилегает к низу на всю ширину, скруглены верхние углы.
+ * --security-sheet-inset-bottom — высота прозрачного навбара, который лежит
+ * поверх шита: на неё увеличивается нижний отступ контента.
  * Внутренние параметры наследуются от Alert (src/web/Alert/playground.scss):
  * отступы 24, радиус 16, тень, кнопки, цвета, текст, тайминги.
  * Отличия от Alert: текст по центру и оттеночный градиент на панели.
@@ -141,11 +143,10 @@
 	margin: 16px 0 0;
 }
 
-/* Системные ячейки — без подложки: высота 52, между ячейками 8. */
+/* Системные ячейки — без подложки: высота 52, без отступов между ними. */
 .security-sheet__cells {
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
 	margin: 16px -6px 0;
 	text-align: left;
 }
@@ -169,14 +170,14 @@
 
 .security-sheet__bottom-space {
 	flex: 0 0 auto;
-	height: calc(24px + env(safe-area-inset-bottom, 0px));
+	height: calc(24px + var(--security-sheet-inset-bottom, 0px) + env(safe-area-inset-bottom, 0px));
 }
 
 .security-sheet__actions {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
-	padding: 16px 24px calc(24px + env(safe-area-inset-bottom, 0px));
+	padding: 16px 24px calc(24px + var(--security-sheet-inset-bottom, 0px) + env(safe-area-inset-bottom, 0px));
 }
 
 .security-sheet__button {
