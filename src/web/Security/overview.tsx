@@ -9,6 +9,7 @@ import {
 	SecuritySheet,
 	type SecuritySheetAction,
 	type SecuritySheetFact,
+	type SecuritySheetOption,
 	type SecurityTone,
 } from './SecuritySheet';
 import './overview.scss';
@@ -22,14 +23,34 @@ type SecurityCheck = {
 	tone: Exclude<SecurityTone, 'success'>;
 	sheetTitle: string;
 	description: string;
-	facts: ReadonlyArray<SecuritySheetFact>;
-	fixLabel: string;
-	fixVariant: 'accent' | 'danger';
-	laterLabel: string;
+	facts?: ReadonlyArray<SecuritySheetFact>;
+	fixLabel?: string;
+	fixVariant?: 'accent' | 'danger';
+	laterLabel?: string;
+	/** Если заданы — вместо кнопок шит предлагает выбор безопасного способа. */
+	prompt?: string;
+	options?: ReadonlyArray<Pick<SecuritySheetOption, 'icon' | 'label'>>;
 	resolvedDescription: string;
 };
 
 const securityChecks: ReadonlyArray<SecurityCheck> = [
+	{
+		id: 'dlp',
+		icon: 'shield-done',
+		title: 'Отправка файла',
+		issue: '«Отчёт Q3.xlsx» остановлен политикой',
+		resolved: 'Отправлен через Squadus',
+		tone: 'info',
+		sheetTitle: 'Файл защищён политикой безопасности',
+		description:
+			'Этот файл нельзя отправить в выбранное приложение, так как он содержит конфиденциальные данные.',
+		prompt: 'Выберите безопасный способ отправки:',
+		options: [
+			{ icon: 'message-send', label: 'Squadus' },
+			{ icon: 'chat', label: 'Корпоративная почта' },
+		],
+		resolvedDescription: 'Файл отправлен по защищённому каналу. Получатель увидит его только внутри корпоративных приложений.',
+	},
 	{
 		id: 'app',
 		icon: 'shield-warning',
@@ -265,16 +286,24 @@ export default function SecurityOverviewPage() {
 				title={check.sheetTitle}
 				description={check.description}
 				facts={check.facts}
-				actions={[
+				prompt={check.prompt}
+				options={check.options?.map((option) => ({
+					...option,
+					onSelect: async () => {
+						await wait(900);
+						resolve(check.id);
+					},
+				}))}
+				actions={check.options ? undefined : [
 					{
-						label: check.fixLabel,
-						variant: check.fixVariant,
+						label: check.fixLabel ?? 'Исправить',
+						variant: check.fixVariant ?? 'accent',
 						onSelect: async () => {
 							await wait(900);
 							resolve(check.id);
 						},
 					},
-					{ label: check.laterLabel, variant: 'secondary' },
+					{ label: check.laterLabel ?? 'Позже', variant: 'secondary' },
 				]}
 				onClose={close}
 			/>
@@ -297,7 +326,7 @@ export default function SecurityOverviewPage() {
 			<div className="security-app">
 				<section className={`security-app__hero security-app__hero--${heroTone}`} aria-live="polite">
 					<div className="security-app__hero-badge" aria-hidden="true">
-						<Icon name={toneIcon(heroTone)} width={40} height={40} aria-hidden />
+						<Icon name={toneIcon(heroTone)} width={56} height={56} aria-hidden />
 					</div>
 					<Text as="p" variant="medium-24" className="security-app__hero-title">
 						{heroTitle}
@@ -378,7 +407,7 @@ export default function SecurityOverviewPage() {
 function CheckBadge({ icon, tone }: { icon: IconName; tone: SecurityTone }) {
 	return (
 		<span className={`security-app__badge security-app__badge--${tone}`} aria-hidden="true">
-			<Icon name={icon} width={20} height={20} aria-hidden />
+			<Icon name={icon} width={24} height={24} aria-hidden />
 		</span>
 	);
 }

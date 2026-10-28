@@ -31,8 +31,10 @@
 	display: flex;
 	flex-direction: column;
 	max-height: 100%;
-	border-radius: 24px 24px 0 0;
-	background: var(--background-modal);
+	border-radius: 28px 28px 0 0;
+	background:
+		linear-gradient(180deg, var(--security-tone-fill) 0%, transparent 72%),
+		var(--background-modal);
 	color: var(--content-primary);
 	box-shadow: 0 -8px 28px rgb(20 22 26 / 13%);
 	transform: translateY(var(--security-sheet-drag, 0px));
@@ -69,12 +71,12 @@
 	--security-tone-color: var(--system-success-primary);
 }
 
+/* Зона захвата для свайпа вниз — верх шита с иконкой. */
 .security-sheet__grabber {
 	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 12px;
-	padding: 8px 24px 0;
+	justify-content: center;
+	padding: 24px 24px 0;
+	color: var(--security-tone-color);
 	touch-action: none;
 	cursor: grab;
 	user-select: none;
@@ -84,30 +86,13 @@
 	cursor: grabbing;
 }
 
-.security-sheet__handle {
-	align-self: center;
-	width: 36px;
-	height: 4px;
-	border-radius: 2px;
-	background: var(--content-border);
-}
-
-.security-sheet__badge {
-	display: grid;
-	place-items: center;
-	width: 56px;
-	height: 56px;
-	border-radius: 16px;
-	background: var(--security-tone-fill);
-	color: var(--security-tone-color);
-}
-
 .security-sheet__body {
 	flex: 1 1 auto;
 	min-height: 0;
 	overflow-y: auto;
 	overscroll-behavior: contain;
 	padding: 16px 24px 0;
+	text-align: center;
 }
 
 .security-sheet__title {
@@ -120,39 +105,34 @@
 }
 
 .security-sheet__description {
-	margin: 8px 0 0;
-	line-height: 20px;
-}
-
-.security-sheet__facts {
 	margin: 16px 0 0;
-	padding: 0 16px;
-	border-radius: 16px;
+	line-height: 24px;
+}
+
+.security-sheet__prompt {
+	margin: 24px 0 0;
+	line-height: 24px;
+}
+
+/* Системные ячейки — без подложки, во всю ширину контента. */
+.security-sheet__cells {
+	margin: 16px -6px 0;
+	text-align: left;
+}
+
+.security-sheet__option-icon {
+	display: grid;
+	place-items: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 12px;
 	background: var(--content-background);
+	color: var(--content-primary);
 }
 
-.security-sheet__fact {
-	display: flex;
-	align-items: baseline;
-	justify-content: space-between;
-	gap: 16px;
-	padding: 12px 0;
-	font-size: 14px;
-	line-height: 18px;
-}
-
-.security-sheet__fact + .security-sheet__fact {
-	border-top: 1px solid var(--content-border);
-}
-
-.security-sheet__fact dt {
-	color: var(--content-secondary);
-}
-
-.security-sheet__fact dd {
-	margin: 0;
-	font-weight: 500;
-	text-align: right;
+.security-sheet__bottom-space {
+	flex: 0 0 auto;
+	height: calc(16px + env(safe-area-inset-bottom, 0px));
 }
 
 .security-sheet__actions {

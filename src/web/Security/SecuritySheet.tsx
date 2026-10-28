@@ -9,6 +9,7 @@ import {
 	useState,
 } from 'react';
 import { Button, type ButtonVariant } from '../../ui/Button';
+import { Cell } from '../../ui/Cell';
 import { Text } from '../../ui/Fonts';
 import { Icon, type IconName } from '../../ui/Icon';
 import './SecuritySheet.scss';
@@ -27,13 +28,23 @@ export type SecuritySheetFact = {
 	value: string;
 };
 
+/** Вариант выбора в виде системной ячейки: иконка, подпись, шеврон. */
+export type SecuritySheetOption = {
+	icon: IconName;
+	label: string;
+	onSelect?: () => void | Promise<void>;
+};
+
 export type SecuritySheetProps = {
 	icon: IconName;
 	tone: SecurityTone;
 	title: string;
 	description: string;
 	facts?: ReadonlyArray<SecuritySheetFact>;
-	actions: ReadonlyArray<SecuritySheetAction>;
+	/** Подводка над списком вариантов, например «Выберите способ отправки:». */
+	prompt?: string;
+	options?: ReadonlyArray<SecuritySheetOption>;
+	actions?: ReadonlyArray<SecuritySheetAction>;
 	children?: ReactNode;
 	onClose: () => void;
 };
@@ -49,7 +60,9 @@ export function SecuritySheet({
 	title,
 	description,
 	facts,
-	actions,
+	prompt,
+	options,
+	actions = [],
 	children,
 	onClose,
 }: SecuritySheetProps) {
@@ -85,7 +98,10 @@ export function SecuritySheet({
 		window.setTimeout(onClose, exitDurationMs);
 	};
 
-	const handleAction = async (action: SecuritySheetAction, index: number) => {
+	const handleAction = async (
+		action: Pick<SecuritySheetAction, 'onSelect'>,
+		index: number,
+	) => {
 		if (!canInteract || isClosing || pendingIndex !== null) {
 			return;
 		}
@@ -113,7 +129,9 @@ export function SecuritySheet({
 		}
 
 		const focusable = Array.from(
-			panelRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled)') ?? [],
+			panelRef.current?.querySelectorAll<HTMLElement>(
+				'button:not(:disabled), [role="button"][tabindex="0"]',
+			) ?? [],
 		);
 
 		if (focusable.length === 0) {
@@ -209,10 +227,7 @@ export function SecuritySheet({
 					onPointerUp={handlePointerEnd}
 					onPointerCancel={handlePointerEnd}
 				>
-					<span className="security-sheet__handle" aria-hidden="true" />
-					<div className="security-sheet__badge" aria-hidden="true">
-						<Icon name={icon} width={28} height={28} aria-hidden />
-					</div>
+					<Icon name={icon} width={48} height={48} className="security-sheet__icon" aria-hidden />
 				</div>
 
 				<div className="security-sheet__body">
@@ -224,37 +239,71 @@ export function SecuritySheet({
 					</Text>
 
 					{facts && facts.length > 0 ? (
-						<dl className="security-sheet__facts">
+						<div className="security-sheet__cells">
 							{facts.map((fact) => (
-								<div key={fact.label} className="security-sheet__fact">
-									<dt>{fact.label}</dt>
-									<dd>{fact.value}</dd>
-								</div>
+								<Cell
+									key={fact.label}
+									title={<Text variant="regular-16" color="secondary">{fact.label}</Text>}
+									trailing={<Text variant="medium-16">{fact.value}</Text>}
+								/>
 							))}
-						</dl>
+						</div>
+					) : null}
+
+					{prompt ? (
+						<Text as="p" variant="regular-16" color="secondary" className="security-sheet__prompt">
+							{prompt}
+						</Text>
+					) : null}
+
+					{options && options.length > 0 ? (
+						<div className="security-sheet__cells">
+							{options.map((option, index) => (
+								<Cell
+									key={option.label}
+									aria-disabled={isBusy || undefined}
+									leading={
+										<span className="security-sheet__option-icon" aria-hidden="true">
+											{pendingIndex === actions.length + index ? (
+												<span className="security-sheet__spinner" />
+											) : (
+												<Icon name={option.icon} width={24} height={24} aria-hidden />
+											)}
+										</span>
+									}
+									title={<Text variant="regular-16">{option.label}</Text>}
+									trailing={<Icon name="chevron-right" width={24} height={24} aria-hidden />}
+									onClick={() => void handleAction(option, actions.length + index)}
+								/>
+							))}
+						</div>
 					) : null}
 
 					{children}
 				</div>
 
-				<div className="security-sheet__actions">
-					{actions.map((action, index) => (
-						<Button
-							key={action.label}
-							size={52}
-							variant={action.variant ?? (index === 0 ? 'accent' : 'secondary')}
-							className="security-sheet__action"
-							disabled={isBusy}
-							onClick={() => void handleAction(action, index)}
-						>
-							{pendingIndex === index ? (
-								<span className="security-sheet__spinner" aria-label="Выполняется" />
-							) : (
-								action.label
-							)}
-						</Button>
-					))}
-				</div>
+				{actions.length > 0 ? (
+					<div className="security-sheet__actions">
+						{actions.map((action, index) => (
+							<Button
+								key={action.label}
+								size={52}
+								variant={action.variant ?? (index === 0 ? 'accent' : 'secondary')}
+								className="security-sheet__action"
+								disabled={isBusy}
+								onClick={() => void handleAction(action, index)}
+							>
+								{pendingIndex === index ? (
+									<span className="security-sheet__spinner" aria-label="Выполняется" />
+								) : (
+									action.label
+								)}
+							</Button>
+						))}
+					</div>
+				) : (
+					<div className="security-sheet__bottom-space" aria-hidden="true" />
+				)}
 			</div>
 		</div>
 	);
