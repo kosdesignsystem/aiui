@@ -340,7 +340,7 @@ export default function SecurityOverviewPage() {
 						size={52}
 						variant="secondary"
 						className="security-app__scan"
-						disabled={isScanning || sheet !== null}
+						disabled={isScanning}
 						onClick={() => void runScan()}
 					>
 						{isScanning ? 'Проверяем…' : 'Проверить снова'}

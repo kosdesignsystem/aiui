@@ -105,12 +105,12 @@
 }
 
 .security-sheet__description {
-	margin: 16px 0 0;
+	margin: 8px 0 0;
 	line-height: 24px;
 }
 
 .security-sheet__prompt {
-	margin: 24px 0 0;
+	margin: 16px 0 0;
 	line-height: 24px;
 }
 
@@ -132,14 +132,14 @@
 
 .security-sheet__bottom-space {
 	flex: 0 0 auto;
-	height: calc(16px + env(safe-area-inset-bottom, 0px));
+	height: calc(24px + env(safe-area-inset-bottom, 0px));
 }
 
 .security-sheet__actions {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
-	padding: 24px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+	padding: 16px 24px calc(24px + env(safe-area-inset-bottom, 0px));
 }
 
 .security-sheet__action.ui-button {

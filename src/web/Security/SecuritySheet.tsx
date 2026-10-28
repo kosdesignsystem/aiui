@@ -80,12 +80,12 @@ export function SecuritySheet({
 
 	useEffect(() => {
 		returnFocusRef.current = document.activeElement as HTMLElement | null;
-		titleRef.current?.focus();
+		titleRef.current?.focus({ preventScroll: true });
 		const inputTimer = window.setTimeout(() => setCanInteract(true), enterDurationMs);
 
 		return () => {
 			window.clearTimeout(inputTimer);
-			returnFocusRef.current?.focus();
+			returnFocusRef.current?.focus({ preventScroll: true });
 		};
 	}, []);
 
@@ -136,7 +136,7 @@ export function SecuritySheet({
 
 		if (focusable.length === 0) {
 			event.preventDefault();
-			titleRef.current?.focus();
+			titleRef.current?.focus({ preventScroll: true });
 			return;
 		}
 
