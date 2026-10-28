@@ -12,6 +12,7 @@ import { Cell } from '../../ui/Cell';
 import { Text } from '../../ui/Fonts';
 import { Icon, type IconName } from '../../ui/Icon';
 import './SecuritySheet.scss';
+import systemBarTokens from '../../../docs/system-bars.tokens.json';
 import { typograph } from './typography';
 
 export type SecurityTone = 'danger' | 'warning' | 'info' | 'success';
@@ -201,7 +202,10 @@ export function SecuritySheet({
 	};
 
 	const panelHeight = panelRef.current?.offsetHeight ?? 1;
-	const scrimOpacity = isClosing ? 0 : 1 - Math.min(Math.max(dragOffset, 0) / panelHeight, 1);
+	// P8: затемнение 0.5 по всему экрану, включая зоны баров; при свайпе ослабевает.
+	const scrimOpacity = isClosing
+		? 0
+		: systemBarTokens.overlay.scrimOpacity * (1 - Math.min(Math.max(dragOffset, 0) / panelHeight, 1));
 	const isBusy = pendingIndex !== null;
 
 	return (

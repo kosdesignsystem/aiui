@@ -17,7 +17,7 @@
 	font-size: 14px;
 	font-weight: 500;
 	line-height: 20px;
-	color: var(--content-primary);
+	color: var(--system-bar-icon, var(--content-primary));
 }
 
 .device-statusbar__indicators {
@@ -55,7 +55,7 @@
 	font-size: 14px;
 	font-weight: 500;
 	line-height: 20px;
-	color: var(--content-primary);
+	color: var(--system-bar-icon, var(--content-primary));
 	min-width: 30px;
 	text-align: right;
 }
@@ -70,4 +70,22 @@
 
 .device-statusbar--power-save {
 	background: var(--overlay-light);
+}
+
+/*
+ * Контракт приложение → ОС (docs/system-bars.md): приложение объявляет цвет
+ * значков атрибутом data-status-bar-icons="light|dark" на своём корне.
+ * Без атрибута — auto, по теме системы. Цвета — icons.onLight / icons.onDark
+ * из docs/system-bars.tokens.json.
+ */
+.device-mockup:has([data-status-bar-icons='dark']) > .device-statusbar {
+	--system-bar-icon: #212529;
+
+	color: var(--system-bar-icon);
+}
+
+.device-mockup:has([data-status-bar-icons='light']) > .device-statusbar {
+	--system-bar-icon: #ffffff;
+
+	color: var(--system-bar-icon);
 }

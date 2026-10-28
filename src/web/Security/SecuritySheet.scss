@@ -20,13 +20,14 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
-	padding-top: 40px;
+	padding-top: var(--ui-app-statusbar-height);
 }
 
 .security-sheet__scrim {
 	position: absolute;
 	inset: 0;
-	background: var(--overlay-dark);
+	/* Цвет затемнения из темы, плотность — overlay.scrimOpacity (0.5) через inline opacity. */
+	background: rgb(from var(--overlay-dark) r g b);
 	transition: opacity var(--security-sheet-exit) cubic-bezier(0.4, 0, 1, 1);
 	animation: security-sheet-scrim-in var(--security-sheet-enter) cubic-bezier(0, 0, 0.2, 1) backwards;
 }

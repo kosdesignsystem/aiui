@@ -14,6 +14,7 @@ import {
 	type SecurityTone,
 } from './SecuritySheet';
 import './overview.scss';
+import { useSystemBarIcons } from './systemBars';
 import { typograph } from './typography';
 
 type SecurityCheck = {
@@ -179,6 +180,9 @@ export default function SecurityOverviewPage() {
 	const [lastScan, setLastScan] = useState('сегодня, 09:41');
 	// Шит, который откроется после анимации закрытия текущего.
 	const nextSheetRef = useRef<SheetState>(null);
+	const rootRef = useRef<HTMLDivElement>(null);
+	// P1 на экране, P8 с шитом: цвет значков баров — по контрасту с фоном под ними.
+	const barIcons = useSystemBarIcons(rootRef, [sheet]);
 
 	const openChecks = useMemo(
 		() => securityChecks.filter((check) => !resolvedIds.has(check.id)),
@@ -328,7 +332,12 @@ export default function SecurityOverviewPage() {
 			overlayClassName="security-app__overlay"
 			overlay={renderSheet()}
 		>
-			<div className="security-app">
+			<div
+				ref={rootRef}
+				className="security-app"
+				data-status-bar-icons={barIcons.statusBar}
+				data-nav-bar-icons={barIcons.navBar}
+			>
 				<section className={`security-app__hero security-app__hero--${heroTone}`} aria-live="polite">
 					<div className="security-app__hero-badge" aria-hidden="true">
 						<Icon name={toneIcon(heroTone)} width={56} height={56} aria-hidden />

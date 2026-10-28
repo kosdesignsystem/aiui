@@ -99,16 +99,19 @@
 }
 
 /*
- * Навбар: высота фиксирована, контент под него не заходит, своего цвета нет —
- * сквозь него виден фон страницы (.ui-app). Открытый шит доходит до низа
- * устройства, и тогда навбар принимает цвет шита.
+ * Системные бары (docs/system-bars.md): прозрачные, без заливки и блюра.
+ * Экран — P1: под барами сплошной фон страницы (.ui-app), контент под них
+ * не заходит. Шит — P8: затемнение 0.5 под обоими барами, шит доходит до низа,
+ * навбар лежит на нём. Отступы — из инсетов --ui-app-statusbar/navbar-height.
  */
 .flow-page__overlay.security-app__overlay {
-	--security-sheet-inset-bottom: var(--ui-app-navbar-height, 52px);
+	--security-sheet-inset-bottom: var(--ui-app-navbar-height);
 
 	bottom: 0;
 }
 
+/* Значки баров лежат поверх затемнения и шита (P8). */
+.device-mockup:has(.security-app) > .device-statusbar,
 .device-mockup:has(.security-app) > .device-navbar {
 	z-index: 30;
 	background: transparent;
