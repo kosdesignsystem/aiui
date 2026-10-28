@@ -40,7 +40,7 @@ const securityChecks: ReadonlyArray<SecurityCheck> = [
 		id: 'dlp',
 		icon: 'shield-done',
 		title: 'Отправка файла',
-		issue: '«Отчёт Q3.xlsx» остановлен политикой',
+		issue: '«Отчёт Q3.xlsx» не отправлен',
 		resolved: 'Отправлен через Squadus',
 		tone: 'info',
 		sheetTitle: 'Файл защищён политикой безопасности',
@@ -97,7 +97,7 @@ const securityChecks: ReadonlyArray<SecurityCheck> = [
 		icon: 'wifi-unlock',
 		title: 'Открытая сеть Wi‑Fi',
 		issue: '«Cafe_Free» без пароля',
-		resolved: 'Используется защищённое соединение',
+		resolved: 'Защищённое соединение',
 		tone: 'warning',
 		sheetTitle: 'Сеть «Cafe_Free» не защищена',
 		description:
@@ -358,7 +358,7 @@ export default function SecurityOverviewPage() {
 									leading={<CheckBadge icon={check.icon} tone={check.tone} />}
 									title={<Text variant="medium-16">{typograph(check.title)}</Text>}
 									subtitle={
-										<Text variant="regular-12" color="secondary">
+										<Text variant="regular-14" color="secondary">
 											{typograph(check.issue)}
 										</Text>
 									}
@@ -377,7 +377,7 @@ export default function SecurityOverviewPage() {
 									leading={<CheckBadge icon={check.icon} tone="success" />}
 									title={<Text variant="medium-16">{typograph(check.title)}</Text>}
 									subtitle={
-										<Text variant="regular-12" color="secondary">
+										<Text variant="regular-14" color="secondary">
 											{typograph(check.resolved)}
 										</Text>
 									}
@@ -392,7 +392,7 @@ export default function SecurityOverviewPage() {
 						<Cell
 							title={<Text variant="medium-16">Вернуть угрозы</Text>}
 							subtitle={
-								<Text variant="regular-12" color="secondary">
+								<Text variant="regular-14" color="secondary">
 									{typograph('Для повторной проверки сценариев')}
 								</Text>
 							}
