@@ -209,6 +209,60 @@
 	color: var(--content-primary);
 }
 
+/*
+ * Hover и pressed: подложка цвета текста кнопки поверх заливки — работает
+ * одинаково для accent, danger и neutral; при нажатии кнопка чуть сжимается.
+ */
+.security-sheet__button {
+	position: relative;
+	isolation: isolate;
+	transition: transform 100ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.security-sheet__button::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	border-radius: inherit;
+	background: currentColor;
+	opacity: 0;
+	transition: opacity 150ms cubic-bezier(0.2, 0, 0, 1);
+	pointer-events: none;
+}
+
+@media (hover: hover) {
+	.security-sheet__button:not(:disabled):hover::after {
+		opacity: 0.06;
+	}
+}
+
+.security-sheet__button:not(:disabled):active::after {
+	opacity: 0.12;
+}
+
+.security-sheet__button:not(:disabled):active {
+	transform: scale(0.98);
+}
+
+/* Ячейки-варианты — тоже кнопки: те же состояния на подложке ячейки. */
+.security-sheet__cells .ui-cell-shell.is-interactive .ui-cell {
+	transition:
+		background 150ms cubic-bezier(0.2, 0, 0, 1),
+		transform 100ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (hover: hover) {
+	.security-sheet__cells .ui-cell-shell.is-interactive:not([aria-disabled='true']):hover .ui-cell {
+		--ui-cell-background: color-mix(in srgb, var(--content-primary) 6%, transparent);
+	}
+}
+
+.security-sheet__cells .ui-cell-shell.is-interactive:not([aria-disabled='true']):active .ui-cell {
+	--ui-cell-background: color-mix(in srgb, var(--content-primary) 12%, transparent);
+	transform: scale(0.98);
+}
+
 .security-sheet__button:focus-visible {
 	outline: 2px solid var(--accent-primary);
 	outline-offset: 2px;
@@ -264,5 +318,10 @@
 
 	.security-sheet__spinner {
 		animation-duration: 1400ms;
+	}
+
+	.security-sheet__button:not(:disabled):active,
+	.security-sheet__cells .ui-cell-shell.is-interactive:active .ui-cell {
+		transform: none;
 	}
 }

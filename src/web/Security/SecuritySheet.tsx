@@ -12,6 +12,7 @@ import { Cell } from '../../ui/Cell';
 import { Text } from '../../ui/Fonts';
 import { Icon, type IconName } from '../../ui/Icon';
 import './SecuritySheet.scss';
+import { typograph } from './typography';
 
 export type SecurityTone = 'danger' | 'warning' | 'info' | 'success';
 
@@ -235,10 +236,10 @@ export function SecuritySheet({
 
 				<div className="security-sheet__body">
 					<h2 id={titleId} ref={titleRef} className="security-sheet__title" tabIndex={-1}>
-						{title}
+						{typograph(title)}
 					</h2>
 					<p id={descriptionId} className="security-sheet__description">
-						{description}
+						{typograph(description)}
 					</p>
 
 					{facts && facts.length > 0 ? (
@@ -254,7 +255,7 @@ export function SecuritySheet({
 					) : null}
 
 					{prompt ? (
-						<p className="security-sheet__prompt">{prompt}</p>
+						<p className="security-sheet__prompt">{typograph(prompt)}</p>
 					) : null}
 
 					{options && options.length > 0 ? (

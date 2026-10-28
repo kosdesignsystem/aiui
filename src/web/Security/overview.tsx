@@ -14,6 +14,7 @@ import {
 	type SecurityTone,
 } from './SecuritySheet';
 import './overview.scss';
+import { typograph } from './typography';
 
 type SecurityCheck = {
 	id: string;
@@ -355,10 +356,10 @@ export default function SecurityOverviewPage() {
 								<Cell
 									key={check.id}
 									leading={<CheckBadge icon={check.icon} tone={check.tone} />}
-									title={<Text variant="medium-16">{check.title}</Text>}
+									title={<Text variant="medium-16">{typograph(check.title)}</Text>}
 									subtitle={
 										<Text variant="regular-12" color="secondary">
-											{check.issue}
+											{typograph(check.issue)}
 										</Text>
 									}
 									trailing={<Icon name="chevron-right" width={20} height={20} aria-hidden />}
@@ -374,10 +375,10 @@ export default function SecurityOverviewPage() {
 								<Cell
 									key={check.id}
 									leading={<CheckBadge icon={check.icon} tone="success" />}
-									title={<Text variant="medium-16">{check.title}</Text>}
+									title={<Text variant="medium-16">{typograph(check.title)}</Text>}
 									subtitle={
 										<Text variant="regular-12" color="secondary">
-											{check.resolved}
+											{typograph(check.resolved)}
 										</Text>
 									}
 									trailing={<Icon name="done" width={20} height={20} aria-hidden />}
@@ -392,7 +393,7 @@ export default function SecurityOverviewPage() {
 							title={<Text variant="medium-16">Вернуть угрозы</Text>}
 							subtitle={
 								<Text variant="regular-12" color="secondary">
-									Для повторной проверки сценариев
+									{typograph('Для повторной проверки сценариев')}
 								</Text>
 							}
 							trailing={<Icon name="arrow-history" width={20} height={20} aria-hidden />}
