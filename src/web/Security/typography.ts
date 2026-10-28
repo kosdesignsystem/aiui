@@ -7,11 +7,17 @@ const shortWords = [
 
 const shortWordPattern = new RegExp(`(?<=^|[\\s\\u00A0«(])(${shortWords.join('|')}) `, 'giu');
 const nbsp = ' ';
+// Word joiner: запрещает перенос после дефиса, не меняя видимый символ.
+const wordJoiner = '⁠';
 
 /**
  * Убирает висящие предлоги: сцепляет короткие слова со следующим словом
- * неразрывным пробелом, а тире — с предыдущим.
+ * неразрывным пробелом, тире — с предыдущим, а аббревиатуру с дефисом
+ * («PIN-код») не даёт разорвать на «PIN-» и «код».
  */
 export function typograph(text: string) {
-	return text.replace(shortWordPattern, `$1${nbsp}`).replace(/ —/g, `${nbsp}—`);
+	return text
+		.replace(shortWordPattern, `$1${nbsp}`)
+		.replace(/ —/g, `${nbsp}—`)
+		.replace(/(\b[A-ZА-ЯЁ0-9]{2,})-(?=\p{L})/gu, `$1-${wordJoiner}`);
 }

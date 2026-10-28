@@ -33,6 +33,8 @@ type SecurityCheck = {
 	prompt?: string;
 	options?: ReadonlyArray<Pick<SecuritySheetOption, 'icon' | 'label'>>;
 	resolvedDescription: string;
+	/** Шит решённой угрозы без кнопки «Понятно»: закрывается фоном, свайпом или Esc. */
+	resolvedWithoutAction?: boolean;
 };
 
 const securityChecks: ReadonlyArray<SecurityCheck> = [
@@ -126,6 +128,7 @@ const securityChecks: ReadonlyArray<SecurityCheck> = [
 		fixTone: 'accent',
 		laterLabel: 'Позже',
 		resolvedDescription: 'Телефон блокируется через 30 секунд бездействия. Разблокировать можно PIN-кодом или отпечатком.',
+		resolvedWithoutAction: true,
 	},
 	{
 		id: 'mic',
@@ -274,7 +277,7 @@ export default function SecurityOverviewPage() {
 					title={check.title}
 					description={check.resolvedDescription}
 					facts={[{ label: 'Статус', value: check.resolved }]}
-					actions={[{ label: 'Понятно' }]}
+					actions={check.resolvedWithoutAction ? undefined : [{ label: 'Понятно' }]}
 					onClose={close}
 				/>
 			);
