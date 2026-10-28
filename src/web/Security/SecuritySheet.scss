@@ -143,8 +143,15 @@
 
 /* Системные ячейки — без подложки, во всю ширину контента. */
 .security-sheet__cells {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
 	margin: 16px -6px 0;
 	text-align: left;
+}
+
+.security-sheet__cells .ui-cell {
+	min-height: 52px;
 }
 
 .security-sheet__option-icon {
