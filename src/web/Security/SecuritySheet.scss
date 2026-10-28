@@ -1,7 +1,8 @@
 /*
- * Все параметры наследуются от Alert (src/web/Alert/playground.scss):
- * отступы от краёв, ширина, радиус, тень, кнопки, цвета, тайминги.
- * Отличия: текст по центру и оттеночный градиент на панели.
+ * Bottom sheet: прилегает к низу на всю ширину, скруглены верхние углы.
+ * Внутренние параметры наследуются от Alert (src/web/Alert/playground.scss):
+ * отступы 24, радиус 16, тень, кнопки, цвета, текст, тайминги.
+ * Отличия от Alert: текст по центру и оттеночный градиент на панели.
  */
 .security-sheet {
 	--security-sheet-enter: 200ms;
@@ -14,10 +15,8 @@
 	inset: 0;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
 	justify-content: flex-end;
-	padding: 16px;
-	padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+	padding-top: 40px;
 }
 
 [data-theme='light'] .security-sheet {
@@ -52,14 +51,13 @@
 	z-index: 1;
 	display: flex;
 	flex-direction: column;
-	width: min(100%, 328px);
 	max-height: 100%;
-	border-radius: 16px;
+	border-radius: 16px 16px 0 0;
 	background:
 		linear-gradient(180deg, var(--security-tone-fill) 0%, transparent 72%),
 		var(--background-modal);
 	color: var(--content-primary);
-	box-shadow: 0 8px 28px rgb(20 22 26 / 13%);
+	box-shadow: 0 -8px 28px rgb(20 22 26 / 13%);
 	transform: translateY(var(--security-sheet-drag, 0px));
 	transition: transform var(--security-sheet-exit) cubic-bezier(0, 0, 0.2, 1);
 	animation: security-sheet-panel-in var(--security-sheet-enter) cubic-bezier(0, 0, 0.2, 1) backwards;
@@ -67,16 +65,15 @@
 }
 
 [data-theme='dark'] .security-sheet__panel {
-	box-shadow: 0 8px 28px rgb(0 0 0 / 45%);
+	box-shadow: 0 -8px 28px rgb(0 0 0 / 45%);
 }
 
 .security-sheet.is-dragging .security-sheet__panel {
 	transition: none;
 }
 
-/* Панель висит в 16 px над низом, поэтому уезжает на свою высоту плюс отступ. */
 .security-sheet.is-closing .security-sheet__panel {
-	transform: translateY(calc(100% + 16px + env(safe-area-inset-bottom, 0px)));
+	transform: translateY(100%);
 	transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
 
@@ -162,14 +159,14 @@
 
 .security-sheet__bottom-space {
 	flex: 0 0 auto;
-	height: 24px;
+	height: calc(24px + env(safe-area-inset-bottom, 0px));
 }
 
 .security-sheet__actions {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
-	padding: 16px 24px 24px;
+	padding: 16px 24px calc(24px + env(safe-area-inset-bottom, 0px));
 }
 
 .security-sheet__button {
@@ -227,7 +224,7 @@
 }
 
 @keyframes security-sheet-panel-in {
-	from { transform: translateY(calc(100% + 16px + env(safe-area-inset-bottom, 0px))); }
+	from { transform: translateY(100%); }
 }
 
 @keyframes security-sheet-spinner {
