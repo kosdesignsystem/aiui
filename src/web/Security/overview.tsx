@@ -350,12 +350,12 @@ export default function SecurityOverviewPage() {
 
 				<ListContainer>
 					{openChecks.length > 0 ? (
-						<List title="Требует внимания">
+						<List title="Требует внимания" className="security-app__list">
 							{openChecks.map((check) => (
 								<Cell
 									key={check.id}
 									leading={<CheckBadge icon={check.icon} tone={check.tone} />}
-									title={<Text variant="regular-16">{check.title}</Text>}
+									title={<Text variant="medium-16">{check.title}</Text>}
 									subtitle={
 										<Text variant="regular-12" color="secondary">
 											{check.issue}
@@ -369,12 +369,12 @@ export default function SecurityOverviewPage() {
 					) : null}
 
 					{doneChecks.length > 0 ? (
-						<List title="Под защитой">
+						<List title="Под защитой" className="security-app__list">
 							{doneChecks.map((check) => (
 								<Cell
 									key={check.id}
 									leading={<CheckBadge icon={check.icon} tone="success" />}
-									title={<Text variant="regular-16">{check.title}</Text>}
+									title={<Text variant="medium-16">{check.title}</Text>}
 									subtitle={
 										<Text variant="regular-12" color="secondary">
 											{check.resolved}
@@ -387,9 +387,9 @@ export default function SecurityOverviewPage() {
 						</List>
 					) : null}
 
-					<List title="Сброс" collapsible defaultCollapsed>
+					<List title="Сброс" collapsible defaultCollapsed className="security-app__list">
 						<Cell
-							title={<Text variant="regular-16">Вернуть угрозы</Text>}
+							title={<Text variant="medium-16">Вернуть угрозы</Text>}
 							subtitle={
 								<Text variant="regular-12" color="secondary">
 									Для повторной проверки сценариев
