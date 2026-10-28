@@ -242,12 +242,12 @@ export function SecuritySheet({
 					</p>
 
 					{facts && facts.length > 0 ? (
-						<div className="security-sheet__cells security-sheet__cells--facts">
+						<div className="security-sheet__cells">
 							{facts.map((fact) => (
 								<Cell
 									key={fact.label}
-									title={<Text variant="regular-16" color="secondary">{fact.label}</Text>}
-									trailing={<Text variant="medium-16">{fact.value}</Text>}
+									title={<Text variant="medium-16">{fact.label}</Text>}
+									trailing={<Text variant="regular-14" color="secondary">{fact.value}</Text>}
 								/>
 							))}
 						</div>
@@ -258,7 +258,7 @@ export function SecuritySheet({
 					) : null}
 
 					{options && options.length > 0 ? (
-						<div className="security-sheet__cells security-sheet__cells--options">
+						<div className="security-sheet__cells">
 							{options.map((option, index) => (
 								<Cell
 									key={option.label}

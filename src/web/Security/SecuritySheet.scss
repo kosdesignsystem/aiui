@@ -141,32 +141,18 @@
 	margin: 16px 0 0;
 }
 
-/* Системные ячейки — без подложки, во всю ширину контента. */
+/* Системные ячейки — без подложки: высота 52, между ячейками 8. */
 .security-sheet__cells {
 	display: flex;
 	flex-direction: column;
-	gap: 16px;
+	gap: 8px;
 	margin: 16px -6px 0;
 	text-align: left;
 }
 
+/* Плашка иконки 48 вписана в высоту 52. */
 .security-sheet__cells .ui-cell {
 	min-height: 52px;
-}
-
-/* Детали — строки текста без плашки: высота по тексту, между строками 16. */
-.security-sheet__cells--facts .ui-cell {
-	min-height: 0;
-	padding-top: 0;
-	padding-bottom: 0;
-}
-
-/* Варианты: между ячейками 8, плашка 48 вписана в высоту 52. */
-.security-sheet__cells--options {
-	gap: 8px;
-}
-
-.security-sheet__cells--options .ui-cell {
 	padding-top: 2px;
 	padding-bottom: 2px;
 }
