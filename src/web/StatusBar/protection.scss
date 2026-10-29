@@ -1,0 +1,59 @@
+.sb-protect {
+	position: absolute;
+	left: 0;
+	right: 0;
+	z-index: 0;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+.sb-protect.is-on {
+	opacity: 1;
+}
+
+.sb-protect--top {
+	top: 0;
+	height: 96px;
+	background: linear-gradient(
+		to bottom,
+		rgb(0 0 0 / 0.6) 0,
+		rgb(0 0 0 / 0.6) 40px,
+		rgb(0 0 0 / 0.3) 70px,
+		rgb(0 0 0 / 0) 96px
+	);
+}
+
+.sb-protect--bottom {
+	bottom: 0;
+	height: 108px;
+	background: linear-gradient(
+		to top,
+		rgb(0 0 0 / 0.72) 0,
+		rgb(0 0 0 / 0.72) 52px,
+		rgb(0 0 0 / 0.36) 82px,
+		rgb(0 0 0 / 0) 108px
+	);
+}
+
+.sb-panel {
+	position: absolute;
+	left: 16px;
+	right: 16px;
+	bottom: 68px;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 4px;
+	border-radius: 24px;
+	background: var(--background-secondary);
+	color: var(--content-primary);
+}
+
+.sb-panel__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 6px 12px 2px;
+}

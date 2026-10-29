@@ -1,17 +1,16 @@
 import { useState } from 'react';
 import { Text } from '../../ui/Fonts';
 import { SegmentedTabs } from '../../ui/SegmentedTabs';
-import { parseColor, pickBarIcons } from '../Security/systemBars';
+import { Switch } from '../../ui/Switch';
+import { BarProtection } from './protection';
 import './fullscreen-image.scss';
 
-type Photo = { id: string; label: string; background: string; top: string; bottom: string; title: string };
+type Photo = { id: string; label: string; background: string; title: string };
 
 const photos: ReadonlyArray<Photo> = [
 	{
 		id: 'night',
 		label: 'Тёмное',
-		top: '#0b1d3a',
-		bottom: '#0e2a2f',
 		title: 'Ночное море',
 		background:
 			'radial-gradient(circle at 74% 20%, #f4f1de 0 22px, transparent 24px), linear-gradient(180deg, #0b1d3a 0%, #1d4e6b 55%, #0e2a2f 100%)',
@@ -19,8 +18,6 @@ const photos: ReadonlyArray<Photo> = [
 	{
 		id: 'day',
 		label: 'Светлое',
-		top: '#bfe3ff',
-		bottom: '#f7d9a8',
 		title: 'Дневное небо',
 		background:
 			'radial-gradient(circle at 26% 22%, #fff7d6 0 30px, transparent 32px), linear-gradient(180deg, #bfe3ff 0%, #fdf0d5 60%, #f7d9a8 100%)',
@@ -28,8 +25,6 @@ const photos: ReadonlyArray<Photo> = [
 	{
 		id: 'sunset',
 		label: 'Закат',
-		top: '#e76f51',
-		bottom: '#264653',
 		title: 'Закат',
 		background:
 			'radial-gradient(circle at 50% 62%, #ffe8a3 0 34px, transparent 36px), linear-gradient(180deg, #e76f51 0%, #f4a261 48%, #264653 100%)',
@@ -37,32 +32,35 @@ const photos: ReadonlyArray<Photo> = [
 ];
 
 /**
- * P2: изображение идёт под оба бара на весь экран. Цвет значков выбирается
- * один раз по самому светлому месту под ними и при смене кадра, не при прокрутке.
+ * P2 + P3: изображение идёт под оба бара. Значки фиксированные (#FFFFFF) и
+ * не подстраиваются под кадр. Читаемость держит градиент под барами.
  */
 export default function StatusBarFullscreenImagePage() {
-	const [photoId, setPhotoId] = useState('night');
+	const [photoId, setPhotoId] = useState('day');
+	const [protect, setProtect] = useState(true);
 	const photo = photos.find((item) => item.id === photoId) ?? photos[0];
-	const statusIcons = pickBarIcons(parseColor(photo.top));
-	const navIcons = pickBarIcons(parseColor(photo.bottom));
-	const ink = statusIcons === 'light' ? '#ffffff' : '#212529';
 
 	return (
 		<div
 			className="sb-photo"
-			data-status-bar-icons={statusIcons}
-			data-nav-bar-icons={navIcons}
-			style={{ background: photo.background, color: ink }}
+			data-status-bar-icons="light"
+			data-nav-bar-icons="light"
+			style={{ background: photo.background }}
 		>
+			<BarProtection enabled={protect} />
 			<div className="sb-photo__caption">
 				<Text as="p" variant="semiBold-24">
 					{photo.title}
 				</Text>
 				<Text as="p" variant="regular-14">
-					Изображение под статус-баром и навбаром
+					Значки всегда белые, кадр их не меняет
 				</Text>
 			</div>
-			<div className="sb-photo__switch">
+			<div className="sb-panel">
+				<div className="sb-panel__row">
+					<Text variant="medium-16">Градиент под барами</Text>
+					<Switch aria-label="Градиент под барами" checked={protect} onChange={(event) => setProtect(event.target.checked)} />
+				</div>
 				<SegmentedTabs
 					tabs={[
 						{ id: photos[0].id, label: photos[0].label },

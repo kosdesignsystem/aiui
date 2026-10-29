@@ -2,6 +2,7 @@ import { defineApp, defineFlow, defineScreen } from '../definition';
 import StatusBarLivePage from './live';
 import StatusBarAppColorPage from './app-color';
 import StatusBarFullscreenImagePage from './fullscreen-image';
+import StatusBarScrollPage from './scroll';
 import StatusBarStatesPage from './states';
 
 export const statusBarAppDefinition = defineApp({
@@ -41,6 +42,13 @@ export const statusBarAppDefinition = defineApp({
 					scenario: 'browse',
 					businessGoal: 'Показать зону баров, закрашенную цветом приложения, при прокрутке контента.',
 					Component: StatusBarAppColorPage,
+				}),
+				defineScreen({
+					id: 'scroll',
+					title: 'Скролл под баром',
+					scenario: 'browse',
+					businessGoal: 'Показать фиксированные значки над прокручиваемым контентом с градиентом защиты.',
+					Component: StatusBarScrollPage,
 				}),
 				defineScreen({
 					id: 'fullscreen-image',
