@@ -1,51 +1,52 @@
-import { Icon, IconName } from '../ui/Icon';
 import './statusbar.scss';
 
-type StatusIcon = {
-	name: IconName;
-	dimmed?: boolean;
-};
+/*
+ * Статус-бар по макету StatusBar.svg (docs/system-bars/assets), 360×40.
+ * Положение слоёв из docs/system-bars/system-bars.tokens.json: время x 52,
+ * сеть x 276, Wi-Fi x 298, батарея x 320. Значки рисуются currentColor,
+ * цвет задаёт приложение через data-status-bar-icons (см. statusbar.scss).
+ */
 
-type StaticStatusState = {
-	extras: StatusIcon[];
-	cellular: StatusIcon;
-	wifi: StatusIcon;
-	battery: StatusIcon;
-	batteryPercent: number;
-	batteryTone?: 'default' | 'warning' | 'critical';
-};
-
-const STATIC_STATUS: StaticStatusState = {
-	extras: [],
-	cellular: { name: 'signal-cellular-100' },
-	wifi: { name: 'wifi' },
-	battery: { name: 'battery-charge-medium' },
-	batteryPercent: 96,
-};
+const NETWORK_PATH =
+	'M291.5 24.75C291.5 25.4404 290.94 26 290.25 26C289.56 26 289 25.4404 289 24.75L289 15.25C289 14.5596 289.56 14 290.25 14C290.94 14 291.5 14.5596 291.5 15.25L291.5 24.75ZM287.5 24.75C287.5 25.4404 286.94 26 286.25 26C285.56 26 285 25.4404 285 24.75L285 18.25C285 17.5596 285.56 17 286.25 17C286.94 17 287.5 17.5596 287.5 18.25L287.5 24.75ZM283.5 24.75C283.5 25.4404 282.94 26 282.25 26C281.56 26 281 25.4404 281 24.75L281 21.25C281 20.5596 281.56 20 282.25 20C282.94 20 283.5 20.5596 283.5 21.25L283.5 24.75ZM279.5 24.75C279.5 25.4404 278.94 26 278.25 26C277.56 26 277 25.4404 277 24.75L277 24.25C277 23.5596 277.56 23 278.25 23C278.94 23 279.5 23.5596 279.5 24.25L279.5 24.75Z';
+const WIFI_ARC_SMALL =
+	'M305.5 20C304.635 20 303.848 20.324 303.25 20.8591C302.787 21.2735 302.076 21.2341 301.662 20.7711C301.247 20.3082 301.287 19.5969 301.75 19.1826C302.744 18.2925 304.06 17.75 305.5 17.75C306.94 17.75 308.256 18.2925 309.25 19.1826C309.713 19.5969 309.753 20.3082 309.338 20.7711C308.924 21.2341 308.213 21.2735 307.75 20.8591C307.152 20.324 306.365 20 305.5 20Z';
+const WIFI_ARC_LARGE =
+	'M305.5 16.25C303.482 16.25 301.644 17.0073 300.25 18.255C299.787 18.6693 299.076 18.6299 298.662 18.167C298.247 17.704 298.287 16.9928 298.75 16.5784C300.54 14.9758 302.908 14 305.5 14C308.092 14 310.46 14.9758 312.25 16.5784C312.713 16.9928 312.753 17.704 312.338 18.167C311.924 18.6299 311.213 18.6693 310.75 18.255C309.356 17.0073 307.518 16.25 305.5 16.25Z';
+const BATTERY_PATH =
+	'M346 13L320 13L320 27L346 27L346 13ZM331.108 24.6561C328.924 24.6561 327.442 23.0181 327.442 19.9501C327.442 16.8821 328.924 15.2441 331.108 15.2441C333.292 15.2441 334.774 16.8821 334.774 19.9501C334.774 23.0181 333.292 24.6561 331.108 24.6561ZM335.529 19.9501C335.529 23.0181 337.011 24.6561 339.195 24.6561C341.379 24.6561 342.861 23.0181 342.861 19.9501C342.861 16.8821 341.379 15.2441 339.195 15.2441C337.011 15.2441 335.529 16.8821 335.529 19.9501ZM324.762 24.5001L326.335 24.5001L326.335 15.4001L325.022 15.4001L322.825 16.6871L322.825 18.3121L324.606 17.3111L324.762 17.3111L324.762 24.5001ZM331.108 23.1611C332.317 23.1611 333.11 22.1601 333.11 19.9501C333.11 17.7401 332.317 16.7391 331.108 16.7391C329.886 16.7391 329.106 17.7401 329.106 19.9501C329.106 22.1601 329.886 23.1611 331.108 23.1611ZM341.197 19.9501C341.197 22.1601 340.404 23.1611 339.195 23.1611C337.973 23.1611 337.193 22.1601 337.193 19.9501C337.193 17.7401 337.973 16.7391 339.195 16.7391C340.404 16.7391 341.197 17.7401 341.197 19.9501Z';
 
 export function StatusBar() {
-	const state = STATIC_STATUS;
 	const clock = '09:41';
 	return (
 		<div className="device-statusbar device-statusbar--default" aria-hidden="true">
 			<span className="device-statusbar__time">{clock}</span>
-			<div className="device-statusbar__indicators">
-				{state.extras.map((icon) => (
-					<Icon name={icon.name} alt="" width={16} height={16} />
-				))}
-
-				<Icon name={state.cellular.name} alt="" width={16} height={16} />
-				<Icon name={state.wifi.name} alt="" width={16} height={16} />
-				<Icon name={state.battery.name} alt="" width={16} height={16} />
-
-				<span
-					className={`device-statusbar__battery-value${
-						state.batteryTone ? ` is-${state.batteryTone}` : ''
-					}`}
-				>
-					{state.batteryPercent}%
-				</span>
-			</div>
+			<svg
+				className="device-statusbar__glyph device-statusbar__network"
+				viewBox="276 12 16 16"
+				width={16}
+				height={16}
+			>
+				<path d={NETWORK_PATH} fill="currentColor" fillRule="evenodd" />
+			</svg>
+			<svg
+				className="device-statusbar__glyph device-statusbar__wifi"
+				viewBox="298 12 16 16"
+				width={16}
+				height={16}
+			>
+				<circle cx="305.5" cy="23.375" r="1.5" fill="currentColor" />
+				<path d={WIFI_ARC_SMALL} fill="currentColor" fillRule="evenodd" />
+				<path d={WIFI_ARC_LARGE} fill="currentColor" fillRule="evenodd" />
+			</svg>
+			<svg
+				className="device-statusbar__glyph device-statusbar__battery"
+				viewBox="320 13 26 14"
+				width={26}
+				height={14}
+			>
+				<path d={BATTERY_PATH} fill="currentColor" fillRule="evenodd" />
+			</svg>
 		</div>
 	);
 }

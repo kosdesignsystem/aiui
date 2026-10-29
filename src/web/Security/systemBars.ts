@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type DependencyList, type RefObject } from 'react';
-import systemBarTokens from '../../../docs/system-bars.tokens.json';
+import systemBarTokens from '../../../docs/system-bars/system-bars.tokens.json';
 
 /**
- * Цвет значков системных баров по правилам docs/system-bars.md:
+ * Цвет значков системных баров по правилам docs/system-bars/README.md:
  * бары прозрачные, приложение красит то, что под ними, и сообщает ОС,
  * светлые или тёмные значки нужны (контракт statusBar.icons / navBar.icons).
  */

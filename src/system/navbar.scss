@@ -37,9 +37,9 @@
 }
 
 /*
- * Контракт приложение → ОС (docs/system-bars.md): data-nav-bar-icons="light|dark"
+ * Контракт приложение → ОС (docs/system-bars/README.md): data-nav-bar-icons="light|dark"
  * на корне приложения. Значки «Назад» и «Домой» с прозрачностью 0.52
- * (navBar.back/home.opacity в docs/system-bars.tokens.json).
+ * (navBar.back/home.opacity в docs/system-bars/system-bars.tokens.json).
  */
 .device-mockup:has([data-nav-bar-icons='dark']) > .device-navbar,
 .layout:has([data-nav-bar-icons='dark']) > .device-navbar--mobile {

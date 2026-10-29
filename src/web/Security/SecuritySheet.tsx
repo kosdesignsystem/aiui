@@ -12,7 +12,7 @@ import { Cell } from '../../ui/Cell';
 import { Text } from '../../ui/Fonts';
 import { Icon, type IconName } from '../../ui/Icon';
 import './SecuritySheet.scss';
-import systemBarTokens from '../../../docs/system-bars.tokens.json';
+import systemBarTokens from '../../../docs/system-bars/system-bars.tokens.json';
 import { typograph } from './typography';
 
 export type SecurityTone = 'danger' | 'warning' | 'info' | 'success';

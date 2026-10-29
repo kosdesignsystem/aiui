@@ -16,16 +16,11 @@
 .device-camera {
 	z-index: 2;
 	position: absolute;
-	top: 8px;
-	left: 18px;
-	width: 24px;
-	height: 24px;
+	top: 4px;
+	left: 14px;
+	width: 32px;
+	height: 32px;
 	border-radius: 50%;
-	background: radial-gradient(
-		circle at 30% 30%,
-		#5c6b82 0%,
-		#1b2331 45%,
-		#0c111b 100%
-	);
-	box-shadow: 0 0 0 2px rgba(6, 9, 14, 0.9);
+	/* Подложка выреза по макету: цвет значков при 12% */
+	background: color-mix(in srgb, var(--content-primary) 12%, transparent);
 }

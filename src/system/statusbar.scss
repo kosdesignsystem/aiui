@@ -2,81 +2,50 @@
 	z-index: 1;
 	width: 360px;
 	height: 40px;
-	padding: 0 24px 0 48px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 10px;
 	position: absolute;
 	top: 0;
 	left: 0;
+	color: var(--content-primary);
+	background: transparent;
 }
 
 .device-statusbar__time {
+	position: absolute;
+	left: 52px;
+	top: 10px;
 	font-family: var(--font-family-base);
 	font-size: 14px;
 	font-weight: 500;
 	line-height: 20px;
-	color: var(--system-bar-icon, var(--content-primary));
+	color: inherit;
 }
 
-.device-statusbar__indicators {
-	display: inline-flex;
-	align-items: center;
-	gap: 4px;
-	margin-left: auto;
-	min-width: 0;
-}
-
-.device-statusbar__icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 14px;
-	height: 14px;
-	filter: brightness(0) invert(1);
-	opacity: 0.94;
-	flex: 0 0 auto;
-}
-
-.device-statusbar__icon > img {
+.device-statusbar__glyph {
+	position: absolute;
 	display: block;
-	width: 14px;
-	height: 14px;
-	object-fit: contain;
 }
 
-.device-statusbar__icon--dimmed {
-	opacity: 0.58;
+.device-statusbar__network {
+	left: 276px;
+	top: 12px;
 }
 
-.device-statusbar__battery-value {
-	font-family: var(--font-family-base);
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 20px;
-	color: var(--system-bar-icon, var(--content-primary));
-	min-width: 30px;
-	text-align: right;
+.device-statusbar__wifi {
+	left: 298px;
+	top: 12px;
 }
 
-.device-statusbar__battery-value.is-warning {
-	color: var(--system-warning-primary);
-}
-
-.device-statusbar__battery-value.is-critical {
-	color: var(--system-error-primary);
-}
-
-.device-statusbar--power-save {
-	background: var(--overlay-light);
+.device-statusbar__battery {
+	left: 320px;
+	top: 13px;
+	border-radius: 4px;
 }
 
 /*
- * Контракт приложение → ОС (docs/system-bars.md): приложение объявляет цвет
+ * Контракт приложение → ОС (docs/system-bars/README.md): приложение объявляет цвет
  * значков атрибутом data-status-bar-icons="light|dark" на своём корне.
  * Без атрибута — auto, по теме системы. Цвета — icons.onLight / icons.onDark
- * из docs/system-bars.tokens.json.
+ * из docs/system-bars/system-bars.tokens.json.
  */
 .device-mockup:has([data-status-bar-icons='dark']) > .device-statusbar {
 	--system-bar-icon: #212529;
