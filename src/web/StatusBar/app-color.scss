@@ -43,3 +43,14 @@
 .sb-appcolor__row p {
 	margin: 0;
 }
+
+/* Зона навбара залита цветом контента, список под неё не заходит. */
+.sb-appcolor::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 52px;
+	background: var(--background-secondary);
+}
