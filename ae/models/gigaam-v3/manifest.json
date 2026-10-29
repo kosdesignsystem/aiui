@@ -1,0 +1,74 @@
+{
+  "model": "v3_e2e_ctc",
+  "revision": "7447938d791c4f3e643386ee22c33777004293a5",
+  "quantization": "INT8 MatMul",
+  "parts": [
+    {
+      "path": "model-00.bin",
+      "bytes": 25165824,
+      "sha256": "1975a23b4f30666831fecb72c9640143c2d2334bd39b65cd303091bb3ffa1add"
+    },
+    {
+      "path": "model-01.bin",
+      "bytes": 25165824,
+      "sha256": "6947398120fc284a7144469bfcf4aa1e1b540ade14ccc52a110cd3d0cd7c9eea"
+    },
+    {
+      "path": "model-02.bin",
+      "bytes": 25165824,
+      "sha256": "9c2c1f87b85590a6ace575f8507b2bb7c6e1ecd5ea82e9fefe106646fdf31aa5"
+    },
+    {
+      "path": "model-03.bin",
+      "bytes": 25165824,
+      "sha256": "481da33e1a5feda1f7e32d287d6ced24535d8ede826b53898e5668aa167d5c8b"
+    },
+    {
+      "path": "model-04.bin",
+      "bytes": 25165824,
+      "sha256": "7294db17f931e32437dae3d4053e713eb4fa06655eae5f0a6f8ba934f80c385f"
+    },
+    {
+      "path": "model-05.bin",
+      "bytes": 25165824,
+      "sha256": "9f755a0f6f93fbef6c37fc9e9a8eb6235b80e5991dd08930b763baadfc3c0198"
+    },
+    {
+      "path": "model-06.bin",
+      "bytes": 25165824,
+      "sha256": "7f6e24b54811152a8986a71454bd06bce89be7b86a1974e0a0108016471d0e82"
+    },
+    {
+      "path": "model-07.bin",
+      "bytes": 25165824,
+      "sha256": "cc4bf5c4c34c65c8e699016eb1ed0d0718292c62a034bcc6b55bec6beb6cebc5"
+    },
+    {
+      "path": "model-08.bin",
+      "bytes": 25165824,
+      "sha256": "b4632dd0df90859b2b8fdfa53dab8774166713aa72724b5fadca71f3c3ffcbff"
+    },
+    {
+      "path": "model-09.bin",
+      "bytes": 25165824,
+      "sha256": "742b185f390c8006783253792448bc2afce00b71fe754a41421665dedd314ff2"
+    },
+    {
+      "path": "model-10.bin",
+      "bytes": 25165824,
+      "sha256": "f3a65aa7d2e8c2ab044273f411754a12001e184cb86540fb5fd076370a39b983"
+    },
+    {
+      "path": "model-11.bin",
+      "bytes": 25165824,
+      "sha256": "c71ef2965bb55e87732b1b5085f3f12144581cc754371b3fcee1cadc2171f2b9"
+    },
+    {
+      "path": "model-12.bin",
+      "bytes": 19408170,
+      "sha256": "c66e91ecaa15fb5342e65e1210bf3a26cd930d6a897397f60f349b24e0020a34"
+    }
+  ],
+  "bytes": 321398058,
+  "referenceOnnx": "Ничьих, не требуя похвал, счастлив уж я надеждой сладкой, Что дева с трепетом любви посмотрит, может быть украдкой На песни грешные мои. У лукоморья дуб зелёный,"
+}
