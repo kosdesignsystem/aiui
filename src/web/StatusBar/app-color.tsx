@@ -31,7 +31,6 @@ export default function StatusBarAppColorPage() {
 	return (
 		<div
 			className="sb-appcolor"
-			data-status-bar-icons={icons}
 			data-nav-bar-icons={icons}
 			style={{ background: palette.color, color: palette.ink }}
 		>

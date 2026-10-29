@@ -5,13 +5,14 @@ import { Switch } from '../../ui/Switch';
 import { BarProtection } from './protection';
 import './fullscreen-image.scss';
 
-type Photo = { id: string; label: string; background: string; title: string };
+type Photo = { id: string; label: string; background: string; title: string; ink: string };
 
 const photos: ReadonlyArray<Photo> = [
 	{
 		id: 'night',
 		label: 'Тёмное',
 		title: 'Ночное море',
+		ink: '#ffffff',
 		background:
 			'radial-gradient(circle at 74% 20%, #f4f1de 0 22px, transparent 24px), linear-gradient(180deg, #0b1d3a 0%, #1d4e6b 55%, #0e2a2f 100%)',
 	},
@@ -19,6 +20,7 @@ const photos: ReadonlyArray<Photo> = [
 		id: 'day',
 		label: 'Светлое',
 		title: 'Дневное небо',
+		ink: '#212529',
 		background:
 			'radial-gradient(circle at 26% 22%, #fff7d6 0 30px, transparent 32px), linear-gradient(180deg, #bfe3ff 0%, #fdf0d5 60%, #f7d9a8 100%)',
 	},
@@ -26,14 +28,15 @@ const photos: ReadonlyArray<Photo> = [
 		id: 'sunset',
 		label: 'Закат',
 		title: 'Закат',
+		ink: '#ffffff',
 		background:
 			'radial-gradient(circle at 50% 62%, #ffe8a3 0 34px, transparent 36px), linear-gradient(180deg, #e76f51 0%, #f4a261 48%, #264653 100%)',
 	},
 ];
 
 /**
- * P2 + P3: изображение идёт под оба бара. Значки фиксированные (#FFFFFF) и
- * не подстраиваются под кадр. Читаемость держит градиент под барами.
+ * P2: изображение идёт под оба бара. Статус-бар с белыми значками и своим
+ * градиентом под кадр не подстраивается.
  */
 export default function StatusBarFullscreenImagePage() {
 	const [photoId, setPhotoId] = useState('day');
@@ -45,7 +48,7 @@ export default function StatusBarFullscreenImagePage() {
 			className="sb-photo"
 			data-status-bar-icons="light"
 			data-nav-bar-icons="light"
-			style={{ background: photo.background }}
+			style={{ background: photo.background, color: photo.ink }}
 		>
 			<BarProtection enabled={protect} />
 			<div className="sb-photo__caption">
@@ -53,13 +56,13 @@ export default function StatusBarFullscreenImagePage() {
 					{photo.title}
 				</Text>
 				<Text as="p" variant="regular-14">
-					Значки всегда белые, кадр их не меняет
+					Статус-бар не зависит от кадра
 				</Text>
 			</div>
 			<div className="sb-panel">
 				<div className="sb-panel__row">
-					<Text variant="medium-16">Градиент под барами</Text>
-					<Switch aria-label="Градиент под барами" checked={protect} onChange={(event) => setProtect(event.target.checked)} />
+					<Text variant="medium-16">Градиент под навбаром</Text>
+					<Switch aria-label="Градиент под навбаром" checked={protect} onChange={(event) => setProtect(event.target.checked)} />
 				</div>
 				<SegmentedTabs
 					tabs={[

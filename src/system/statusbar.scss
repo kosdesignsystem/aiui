@@ -5,8 +5,12 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	color: var(--content-primary);
-	background: transparent;
+	/*
+	 * По макету StatusBar.svg: значки всегда белые и не зависят от цвета
+	 * контента, читаемость держит собственный градиент бара 40 dp.
+	 */
+	color: #ffffff;
+	background: linear-gradient(to bottom, rgb(0 0 0 / 0.4), rgb(0 0 0 / 0));
 }
 
 .device-statusbar__left {
@@ -45,22 +49,4 @@
 
 .device-statusbar__battery {
 	border-radius: 4px;
-}
-
-/*
- * Контракт приложение → ОС (docs/system-bars/README.md): приложение объявляет цвет
- * значков атрибутом data-status-bar-icons="light|dark" на своём корне.
- * Без атрибута — auto, по теме системы. Цвета — icons.onLight / icons.onDark
- * из docs/system-bars/system-bars.tokens.json.
- */
-.device-mockup:has([data-status-bar-icons='dark']) > .device-statusbar {
-	--system-bar-icon: #212529;
-
-	color: var(--system-bar-icon);
-}
-
-.device-mockup:has([data-status-bar-icons='light']) > .device-statusbar {
-	--system-bar-icon: #ffffff;
-
-	color: var(--system-bar-icon);
 }

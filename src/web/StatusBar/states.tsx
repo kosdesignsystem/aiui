@@ -28,15 +28,15 @@ type Group = { id: string; title: string; description: string; items: Specimen[]
 const groups: Group[] = [
 	{
 		id: 'color',
-		title: 'Цвет значков',
-		description: 'Два цвета: #212529 на светлом фоне и #FFFFFF на тёмном. Выбирает приложение.',
+		title: 'Фон под баром',
+		description: 'Значки всегда #FFFFFF. Читаемость держит градиент бара: чёрный 40% → 0 на 40 dp.',
 		items: [
-			{ id: 'light', title: 'Светлый фон', note: 'Значки #212529', tone: 'light', background: LIGHT_BG },
-			{ id: 'dark', title: 'Тёмный фон', note: 'Значки #FFFFFF', tone: 'dark', background: DARK_BG },
+			{ id: 'light', title: 'Светлый фон', note: 'Значки #FFFFFF, градиент поверх', tone: 'light', background: LIGHT_BG },
+			{ id: 'dark', title: 'Тёмный фон', note: 'Градиент почти не виден', tone: 'dark', background: DARK_BG },
 			{
 				id: 'image',
 				title: 'Картинка под баром',
-				note: 'Фон тёмный, значки #FFFFFF',
+				note: 'Значки #FFFFFF',
 				tone: 'dark',
 				background: IMAGE_BG,
 			},
@@ -95,7 +95,7 @@ const groups: Group[] = [
 function SpecimenCard({ item }: { item: Specimen }) {
 	const stageStyle: CSSProperties = {
 		background: item.background,
-		color: item.tone === 'dark' ? '#ffffff' : '#212529',
+		color: '#ffffff',
 	};
 	let scrimLayer: ReactNode = null;
 	if (item.scrim) {

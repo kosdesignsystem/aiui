@@ -49,12 +49,11 @@
 	width: 32px;
 	height: 32px;
 	border-radius: 50%;
-	background: color-mix(in srgb, currentColor 12%, transparent);
+	background: rgb(255 255 255 / 0.16);
 }
 
 .device-statusbar--specimen {
 	z-index: 2;
-	color: inherit;
 }
 
 .sb-specimen__caption {

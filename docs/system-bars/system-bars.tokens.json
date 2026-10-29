@@ -10,8 +10,8 @@
       "diameter": 32,
       "x": 14,
       "y": 4,
-      "fill": "#212529",
-      "fillOpacity": 0.12
+      "fill": "#FFFFFF",
+      "fillOpacity": 0.16
     },
     "time": {
       "w": 33,
@@ -76,6 +76,12 @@
       "x": 294,
       "y": 12,
       "hiddenByDefault": true
+    },
+    "icons": "#FFFFFF",
+    "gradient": {
+      "from": "rgb(0 0 0 / 0.4)",
+      "to": "rgb(0 0 0 / 0)",
+      "height": 40
     }
   },
   "navBar": {

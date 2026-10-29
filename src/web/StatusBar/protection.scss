@@ -12,28 +12,10 @@
 	opacity: 1;
 }
 
-.sb-protect--top {
-	top: 0;
-	height: 96px;
-	background: linear-gradient(
-		to bottom,
-		rgb(0 0 0 / 0.6) 0,
-		rgb(0 0 0 / 0.6) 40px,
-		rgb(0 0 0 / 0.3) 70px,
-		rgb(0 0 0 / 0) 96px
-	);
-}
-
 .sb-protect--bottom {
 	bottom: 0;
-	height: 108px;
-	background: linear-gradient(
-		to top,
-		rgb(0 0 0 / 0.72) 0,
-		rgb(0 0 0 / 0.72) 52px,
-		rgb(0 0 0 / 0.36) 82px,
-		rgb(0 0 0 / 0) 108px
-	);
+	height: 52px;
+	background: linear-gradient(to top, rgb(0 0 0 / 0.4), rgb(0 0 0 / 0));
 }
 
 .sb-panel {

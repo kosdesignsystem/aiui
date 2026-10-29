@@ -21,6 +21,6 @@
 	width: 32px;
 	height: 32px;
 	border-radius: 50%;
-	/* Подложка выреза по макету: цвет значков при 12% */
-	background: color-mix(in srgb, var(--content-primary) 12%, transparent);
+	/* Подложка выреза по макету: белый при 16% */
+	background: rgb(255 255 255 / 0.16);
 }
