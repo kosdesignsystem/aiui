@@ -2,6 +2,7 @@ import { callsAppDefinition } from './Calls';
 import { componentsAppDefinition } from './Components';
 import { alertAppDefinition } from './Alert';
 import { securityAppDefinition } from './Security';
+import { statusBarAppDefinition } from './StatusBar';
 
 export {
 	createAppScreenPath,
@@ -20,4 +21,5 @@ export const appRegistry = [
 	callsAppDefinition,
 	alertAppDefinition,
 	securityAppDefinition,
+	statusBarAppDefinition,
 ];

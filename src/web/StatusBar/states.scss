@@ -1,0 +1,65 @@
+.sb-app {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	padding: 8px 0 24px;
+}
+
+.sb-group {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.sb-group > p {
+	margin: 0;
+	padding: 0 16px;
+}
+
+.sb-group__list {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	margin-top: 10px;
+}
+
+.sb-specimen {
+	margin: 0;
+}
+
+.sb-specimen__stage {
+	position: relative;
+	height: 40px;
+	overflow: hidden;
+	border-top: 1px solid var(--content-border);
+	border-bottom: 1px solid var(--content-border);
+}
+
+.sb-specimen__scrim {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+}
+
+.sb-specimen__camera {
+	position: absolute;
+	z-index: 1;
+	top: 4px;
+	left: 14px;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.device-statusbar--specimen {
+	z-index: 2;
+	color: inherit;
+}
+
+.sb-specimen__caption {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 6px 16px 0;
+}
