@@ -4,6 +4,7 @@ export type GigaamPhase = 'starting' | 'listening' | 'processing';
 export type GigaamCallbacks = {
   onPhase: (phase: GigaamPhase, message: string) => void;
   onText: (text: string) => void;
+  onPartial?: (text: string) => void;
   onError: (message: string) => void;
 };
 export const canRunBrowserGigaam = () => typeof Worker !== 'undefined' && typeof WebAssembly !== 'undefined';
@@ -28,7 +29,12 @@ export function encodeWav(chunks: Float32Array[], sampleRate: number): Blob {
 export class GigaamRecording {
   private cancelled = false;
   private stopped = false;
-  private controller = new AbortController();
+  private failed = false;
+  private sampleRate = 0;
+  private lastRequested = 0;
+  private lastCompleted = 0;
+  private lastResult = '';
+  private inFlight?: Promise<void>;
   private stream?: MediaStream;
   private context?: AudioContext;
   private processor?: ScriptProcessorNode;
@@ -55,6 +61,7 @@ export class GigaamRecording {
       if (this.cancelled) { stream.getTracks().forEach(track => track.stop()); return; }
       this.stream = stream;
       const context = this.context;
+      this.sampleRate = context.sampleRate;
       this.limit = context.sampleRate * 20;
       this.source = context.createMediaStreamSource(stream);
       this.processor = context.createScriptProcessor(4096, 1, 1);
@@ -65,9 +72,15 @@ export class GigaamRecording {
         const chunk = event.inputBuffer.getChannelData(0).slice(0, Math.max(0, remaining));
         this.chunks.push(chunk); this.samples += chunk.length;
         if (this.samples >= this.limit) void this.stop();
+        else if (!this.inFlight && this.samples - this.lastRequested >= this.sampleRate * 0.9) {
+          // Keep only one inference in flight. Skip obsolete snapshots on slow devices.
+          this.inFlight = this.recognizeSnapshot()
+            .catch(error => this.fail(error))
+            .finally(() => { this.inFlight = undefined; });
+        }
       };
       this.source.connect(this.processor); this.processor.connect(this.mute); this.mute.connect(context.destination);
-      this.callbacks.onPhase('listening', 'Говорите до 20 с. Нажмите микрофон для завершения');
+      this.callbacks.onPhase('listening', 'Говорите — текст появляется во время речи');
       this.timer = setTimeout(() => void this.stop(), 20000);
     } catch (error) { this.fail(error); }
   }
@@ -76,26 +89,38 @@ export class GigaamRecording {
     if (this.stopped || this.cancelled) return;
     if (!this.stream) { this.cancel(); this.callbacks.onText(''); return; }
     this.stopped = true;
-    const sampleRate = this.context!.sampleRate;
-    const audio = new Float32Array(this.samples);
-    let offset = 0;
-    for (const chunk of this.chunks) { audio.set(chunk, offset); offset += chunk.length; }
-    this.release(); this.chunks = [];
-    if (audio.length < sampleRate * 0.2) { this.callbacks.onError('Запись слишком короткая. Попробуйте ещё раз'); return; }
-    this.callbacks.onPhase('processing', 'GigaAM распознаёт запись…');
+    this.release();
+    if (this.samples < this.sampleRate * 0.2) { this.callbacks.onError('Запись слишком короткая. Попробуйте ещё раз'); return; }
+    this.callbacks.onPhase('processing', 'Уточняем последние слова…');
     try {
-      const offline = new OfflineAudioContext(1, Math.ceil(audio.length * 16000 / sampleRate), 16000);
-      const buffer = offline.createBuffer(1, audio.length, sampleRate);
-      buffer.copyToChannel(audio, 0);
-      const source = offline.createBufferSource(); source.buffer = buffer; source.connect(offline.destination); source.start();
-      const converted = await offline.startRendering();
-      if (this.cancelled) return;
-      const text = await transcribeBrowserGigaam(converted.getChannelData(0).slice());
-      if (!this.cancelled) this.callbacks.onText(text);
+      // Finish the current partial before requesting the final, full snapshot.
+      await this.inFlight;
+      if (this.cancelled || this.failed) return;
+      if (this.lastCompleted !== this.samples) await this.recognizeSnapshot();
+      if (!this.cancelled && !this.failed) this.callbacks.onText(this.lastResult);
     } catch (error) { this.fail(error); }
+    finally { this.chunks = []; }
   }
 
-  cancel() { this.cancelled = true; this.controller.abort(); cancelBrowserGigaam(); this.release(); this.chunks = []; }
+  private async recognizeSnapshot() {
+    const sampleCount = this.samples;
+    this.lastRequested = sampleCount;
+    const audio = new Float32Array(sampleCount);
+    let offset = 0;
+    for (const chunk of this.chunks) { audio.set(chunk, offset); offset += chunk.length; }
+    const offline = new OfflineAudioContext(1, Math.ceil(audio.length * 16000 / this.sampleRate), 16000);
+    const buffer = offline.createBuffer(1, audio.length, this.sampleRate);
+    buffer.copyToChannel(audio, 0);
+    const source = offline.createBufferSource(); source.buffer = buffer; source.connect(offline.destination); source.start();
+    const converted = await offline.startRendering();
+    if (this.cancelled || this.failed) return;
+    const text = await transcribeBrowserGigaam(converted.getChannelData(0).slice());
+    if (this.cancelled || this.failed) return;
+    this.lastCompleted = sampleCount; this.lastResult = text;
+    this.callbacks.onPartial?.(text);
+  }
+
+  cancel() { this.cancelled = true; cancelBrowserGigaam(); this.release(); this.chunks = []; }
   private release() {
     clearTimeout(this.timer);
     if (this.processor) { this.processor.onaudioprocess = null; this.processor.disconnect(); }
@@ -105,7 +130,8 @@ export class GigaamRecording {
   }
   private fail(error: unknown) {
     this.release();
-    if (this.cancelled) return;
+    if (this.cancelled || this.failed) return;
+    this.failed = true;
     const name = error instanceof Error ? error.name : '';
     const message = name === 'NotAllowedError' ? 'Разрешите доступ к микрофону в настройках сайта'
       : name === 'NotFoundError' ? 'Микрофон не найден'

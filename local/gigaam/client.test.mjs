@@ -7,13 +7,14 @@ const { GigaamRecording, cancelBrowserGigaam, encodeWav } = await import(`data:t
 function setup({ getStream, holdResult=false }={}) {
   cancelBrowserGigaam();
   globalThis.document={baseURI:'https://kosdesignsystem.github.io/aiui/ae/'};
-  let stopped=false, sent;
+  let stopped=false, sent, instance; const history=[];
   const stream={getTracks:()=>[{stop(){stopped=true;}}]};
   Object.defineProperty(globalThis,'navigator',{configurable:true,value:{mediaDevices:{getUserMedia:getStream|| (async()=>stream)}}});
   globalThis.Worker=class {
+    constructor(){instance=this;}
     postMessage(message) {
       if(message.type==='init')queueMicrotask(()=>this.onmessage?.({data:{type:'ready'}}));
-      else { sent=message; if(!holdResult)queueMicrotask(()=>this.onmessage?.({data:{type:'result',id:message.id,text:'Привет, мир!'}})); }
+      else { sent=message; history.push(message); if(!holdResult)queueMicrotask(()=>this.onmessage?.({data:{type:'result',id:message.id,text:'Привет, мир!'}})); }
     }
     terminate(){this.terminated=true;}
   };
@@ -30,9 +31,9 @@ function setup({ getStream, holdResult=false }={}) {
     createBufferSource(){return {connect(){},start(){}};}
     async startRendering(){return {getChannelData:()=>new Float32Array(this.length)};}
   };
-  const phases=[],texts=[],errors=[];
-  const recording=new GigaamRecording({onPhase:p=>phases.push(p),onText:t=>texts.push(t),onError:e=>errors.push(e)});
-  return {recording,phases,texts,errors,stream,stopped:()=>stopped,sent:()=>sent};
+  const phases=[],texts=[],errors=[],partials=[];
+  const recording=new GigaamRecording({onPhase:p=>phases.push(p),onText:t=>texts.push(t),onPartial:t=>partials.push(t),onError:e=>errors.push(e)});
+  return {recording,phases,texts,errors,stream,stopped:()=>stopped,sent:()=>sent,history,partials,reply:(text)=>instance.onmessage({data:{type:'result',id:sent.id,text}})};
 }
 const feed=()=>globalThis.audioNode.onaudioprocess({inputBuffer:{getChannelData:()=>new Float32Array(48000)}});
 test('WAV helper remains compatible with optional Python experiments',async()=>{
@@ -53,4 +54,21 @@ test('late microphone permission after cancellation releases stream',async()=>{
 });
 test('denied microphone permission is visible',async()=>{
  const s=setup({getStream:async()=>{throw new DOMException('denied','NotAllowedError');}});await s.recording.start();assert.match(s.errors[0],/Разрешите/);cancelBrowserGigaam();
+});
+
+test('partial text arrives while microphone keeps recording; final replaces the same hypothesis',async()=>{
+ const s=setup();await s.recording.start();feed();
+ while(!s.partials.length)await new Promise(resolve=>setImmediate(resolve));
+ assert.deepEqual(s.partials,['Привет, мир!']);assert.deepEqual(s.texts,[]);assert.equal(s.stopped(),false);
+ await s.recording.stop();assert.deepEqual(s.texts,['Привет, мир!']);assert.equal(s.history.length,1);cancelBrowserGigaam();
+});
+test('slow inference skips stale snapshots and final includes audio captured during processing',async()=>{
+ const s=setup({holdResult:true});await s.recording.start();feed();
+ while(s.history.length<1)await new Promise(resolve=>setImmediate(resolve));
+ feed();feed();assert.equal(s.history.length,1);
+ const finished=s.recording.stop();s.reply('Первый фрагмент');
+ while(s.history.length<2)await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(s.sent().audio.byteLength,3*16000*4);
+ s.reply('Полная фраза');await finished;
+ assert.deepEqual(s.texts,['Полная фраза']);assert.deepEqual(s.partials,['Первый фрагмент','Полная фраза']);cancelBrowserGigaam();
 });

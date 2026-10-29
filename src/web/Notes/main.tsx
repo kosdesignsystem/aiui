@@ -40,12 +40,17 @@ export default function NotesMainPage() {
 
   const toggleMicrophone = () => {
     if (engine.current) { void engine.current.stop(); return; }
+    const baseText = latestText.current;
     const current = new GigaamRecording({
       onPhase: (phase, status) => { setVoiceState(phase); setMessage(status); },
+      onPartial: result => {
+        if (engine.current !== current) return;
+        setText(join(baseText, result));
+      },
       onText: result => {
         if (engine.current !== current) return;
         engine.current = null; setVoiceState('idle');
-        setText(previous => join(previous, result));
+        setText(join(baseText, result));
         setMessage(result ? 'GigaAM · текст добавлен' : 'Речь не распознана. Попробуйте ещё раз');
       },
       onError: error => {
