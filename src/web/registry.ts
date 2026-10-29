@@ -1,3 +1,4 @@
+import { notesAppDefinition } from './Notes';
 import { componentsAppDefinition } from './Components';
 import { testAppDefinition } from './Test';
 
@@ -16,4 +17,5 @@ export {
 export const appRegistry = [
 	testAppDefinition,
 	componentsAppDefinition,
+	notesAppDefinition,
 ];
