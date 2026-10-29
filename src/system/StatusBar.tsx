@@ -1,4 +1,5 @@
 import { CSSProperties } from 'react';
+import { useStatusBarState } from './statusBarStore';
 import './statusbar.scss';
 
 /*
@@ -131,5 +132,9 @@ export function StatusBarView({
 }
 
 export function StatusBar() {
-	return <StatusBarView />;
+	const { hidden, ...indicators } = useStatusBarState();
+	if (hidden) {
+		return null;
+	}
+	return <StatusBarView {...indicators} />;
 }
