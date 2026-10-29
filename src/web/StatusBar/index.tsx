@@ -1,6 +1,7 @@
 import { defineApp, defineFlow, defineScreen } from '../definition';
 import StatusBarLivePage from './live';
-import StatusBarScrollPage from './scroll';
+import StatusBarAppColorPage from './app-color';
+import StatusBarFullscreenImagePage from './fullscreen-image';
 import StatusBarStatesPage from './states';
 
 export const statusBarAppDefinition = defineApp({
@@ -25,7 +26,7 @@ export const statusBarAppDefinition = defineApp({
 		defineFlow({
 			id: 'status-bar-dynamics',
 			title: 'Динамика статус-бара',
-			businessGoal: 'Увидеть, как бар меняется во времени и при прокрутке контента под ним.',
+			businessGoal: 'Увидеть, как бар меняется во времени и как он выглядит над цветом приложения и над изображением.',
 			screens: [
 				defineScreen({
 					id: 'live',
@@ -35,11 +36,18 @@ export const statusBarAppDefinition = defineApp({
 					Component: StatusBarLivePage,
 				}),
 				defineScreen({
-					id: 'scroll',
-					title: 'Скролл и цвет',
+					id: 'app-color',
+					title: 'Цвет приложения',
 					scenario: 'browse',
-					businessGoal: 'Прокручивать цветной контент под прозрачными барами и видеть выбор цвета значков.',
-					Component: StatusBarScrollPage,
+					businessGoal: 'Показать зону баров, закрашенную цветом приложения, при прокрутке контента.',
+					Component: StatusBarAppColorPage,
+				}),
+				defineScreen({
+					id: 'fullscreen-image',
+					title: 'Изображение на весь экран',
+					scenario: 'preview',
+					businessGoal: 'Показать значки поверх изображения под обоими барами.',
+					Component: StatusBarFullscreenImagePage,
 				}),
 			],
 		}),

@@ -1,0 +1,45 @@
+.sb-appcolor {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding-top: 40px;
+	padding-bottom: 52px;
+	box-sizing: border-box;
+}
+
+.sb-appcolor__header {
+	flex: 0 0 auto;
+	padding: 12px 20px 16px;
+}
+
+.sb-appcolor__header p {
+	margin: 0;
+}
+
+.sb-appcolor__scroll {
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow-y: auto;
+	border-radius: 22px 22px 0 0;
+	background: var(--background-secondary);
+	color: var(--content-primary);
+	scrollbar-width: none;
+}
+
+.sb-appcolor__scroll::-webkit-scrollbar {
+	display: none;
+}
+
+.sb-appcolor__tabs {
+	padding: 16px;
+}
+
+.sb-appcolor__row {
+	padding: 12px 20px;
+	border-top: 1px solid var(--content-border);
+}
+
+.sb-appcolor__row p {
+	margin: 0;
+}
