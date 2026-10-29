@@ -3,7 +3,7 @@ import { Icon } from './Icon';
 import { cn } from './lib/cn';
 import './Keyboard.scss';
 
-export type VoiceInputState = 'idle' | 'starting' | 'listening' | 'error' | 'unavailable';
+export type VoiceInputState = 'idle' | 'starting' | 'listening' | 'error' | 'unavailable' | 'processing';
 export type KeyboardProps = {
   voiceState?: VoiceInputState;
   status?: string;
@@ -53,7 +53,7 @@ export function Keyboard({ voiceState = 'idle', status, onMicrophone, onDelete, 
     <div className="ui-keyboard__voice">
       <button type="button" className={cn('ui-keyboard__microphone', active && 'is-active')}
         aria-label={active ? 'Остановить диктовку' : 'Начать диктовку'} aria-pressed={active}
-        disabled={voiceState === 'unavailable' || !onMicrophone} onClick={onMicrophone}>
+        disabled={voiceState === 'unavailable' || voiceState === 'processing' || !onMicrophone} onClick={onMicrophone}>
         <Icon name="microphone" width={28} height={28} aria-hidden />
       </button>
     </div>

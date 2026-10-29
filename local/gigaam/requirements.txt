@@ -1,0 +1,5 @@
+# Versions used by the real CPU inference smoke test.
+torch==2.6.0
+torchaudio==2.6.0
+# Official upstream code pinned to the revision used for this integration.
+gigaam @ git+https://github.com/salute-developers/GigaAM.git@7447938d791c4f3e643386ee22c33777004293a5

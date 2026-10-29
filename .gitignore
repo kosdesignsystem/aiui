@@ -2,3 +2,8 @@ node_modules
 .DS_Store
 dist
 .vite
+
+# Local GigaAM environment and model files
+.venv-gigaam/
+__pycache__/
+*.ckpt
