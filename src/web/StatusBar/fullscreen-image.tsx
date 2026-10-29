@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Text } from '../../ui/Fonts';
 import { SegmentedTabs } from '../../ui/SegmentedTabs';
-import { Switch } from '../../ui/Switch';
-import { BarProtection } from './protection';
+import './panel.scss';
 import './fullscreen-image.scss';
 
-type Photo = { id: string; label: string; background: string; title: string; ink: string };
+type Photo = { id: string; label: string; background: string; title: string; ink: string; icons: 'light' | 'dark' };
 
 const photos: ReadonlyArray<Photo> = [
 	{
@@ -13,6 +12,7 @@ const photos: ReadonlyArray<Photo> = [
 		label: 'Тёмное',
 		title: 'Ночное море',
 		ink: '#ffffff',
+		icons: 'light',
 		background:
 			'radial-gradient(circle at 74% 20%, #f4f1de 0 22px, transparent 24px), linear-gradient(180deg, #0b1d3a 0%, #1d4e6b 55%, #0e2a2f 100%)',
 	},
@@ -21,6 +21,7 @@ const photos: ReadonlyArray<Photo> = [
 		label: 'Светлое',
 		title: 'Дневное небо',
 		ink: '#212529',
+		icons: 'dark',
 		background:
 			'radial-gradient(circle at 26% 22%, #fff7d6 0 30px, transparent 32px), linear-gradient(180deg, #bfe3ff 0%, #fdf0d5 60%, #f7d9a8 100%)',
 	},
@@ -29,41 +30,38 @@ const photos: ReadonlyArray<Photo> = [
 		label: 'Закат',
 		title: 'Закат',
 		ink: '#ffffff',
+		icons: 'light',
 		background:
 			'radial-gradient(circle at 50% 62%, #ffe8a3 0 34px, transparent 36px), linear-gradient(180deg, #e76f51 0%, #f4a261 48%, #264653 100%)',
 	},
 ];
 
 /**
- * P2: изображение идёт под оба бара. Статус-бар с белыми значками и своим
- * градиентом под кадр не подстраивается.
+ * Режим «наложение»: изображение идёт под оба бара, ОС рисует градиент.
+ * Цвет значков для кадра выбрал приложение заранее и при прокрутке он не меняется.
  */
 export default function StatusBarFullscreenImagePage() {
-	const [photoId, setPhotoId] = useState('day');
-	const [protect, setProtect] = useState(true);
+	const [photoId, setPhotoId] = useState('night');
 	const photo = photos.find((item) => item.id === photoId) ?? photos[0];
 
 	return (
 		<div
 			className="sb-photo"
-			data-status-bar-icons="light"
-			data-nav-bar-icons="light"
+			data-status-bar-mode="overlay"
+			data-status-bar-icons={photo.icons}
+			data-nav-bar-mode="overlay"
+			data-nav-bar-icons={photo.icons}
 			style={{ background: photo.background, color: photo.ink }}
 		>
-			<BarProtection enabled={protect} />
 			<div className="sb-photo__caption">
 				<Text as="p" variant="semiBold-24">
 					{photo.title}
 				</Text>
 				<Text as="p" variant="regular-14">
-					Статус-бар не зависит от кадра
+					Значки выбраны для кадра заранее, градиент рисует ОС
 				</Text>
 			</div>
 			<div className="sb-panel">
-				<div className="sb-panel__row">
-					<Text variant="medium-16">Градиент под навбаром</Text>
-					<Switch aria-label="Градиент под навбаром" checked={protect} onChange={(event) => setProtect(event.target.checked)} />
-				</div>
 				<SegmentedTabs
 					tabs={[
 						{ id: photos[0].id, label: photos[0].label },

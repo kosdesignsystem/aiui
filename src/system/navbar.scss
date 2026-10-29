@@ -1,4 +1,6 @@
 .device-navbar {
+	--system-bar-gradient-alpha: 0;
+
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -7,6 +9,11 @@
 	display: flex;
 	gap: 50px;
 	padding-left: 52px;
+	background: linear-gradient(
+		to top,
+		rgb(var(--system-bar-scrim, 0 0 0) / var(--system-bar-gradient-alpha)),
+		rgb(var(--system-bar-scrim, 0 0 0) / 0)
+	);
 }
 
 .device-navbar--mobile {
@@ -37,6 +44,17 @@
 }
 
 /*
+ * Режим «наложение» навбара: градиент 0.4 → 0 снизу вверх, как у статус-бара
+ * (data-nav-bar-mode="overlay"); значки по умолчанию белые. Под затемнением
+ * шита градиента нет.
+ */
+.device-mockup:has([data-nav-bar-mode='overlay']) > .device-navbar {
+	--system-bar-gradient-alpha: 0.4;
+	--system-bar-scrim: 0 0 0;
+	--content-secondary: rgb(255 255 255 / 52%);
+}
+
+/*
  * Контракт приложение → ОС (docs/system-bars/README.md): data-nav-bar-icons="light|dark"
  * на корне приложения. Значки «Назад» и «Домой» с прозрачностью 0.52
  * (navBar.back/home.opacity в docs/system-bars/system-bars.tokens.json).
@@ -44,9 +62,14 @@
 .device-mockup:has([data-nav-bar-icons='dark']) > .device-navbar,
 .layout:has([data-nav-bar-icons='dark']) > .device-navbar--mobile {
 	--content-secondary: rgb(33 37 41 / 52%);
+	--system-bar-scrim: 255 255 255;
 }
 
 .device-mockup:has([data-nav-bar-icons='light']) > .device-navbar,
 .layout:has([data-nav-bar-icons='light']) > .device-navbar--mobile {
 	--content-secondary: rgb(255 255 255 / 52%);
+}
+
+.device-mockup:has(.flow-page__overlay) > .device-navbar {
+	--system-bar-gradient-alpha: 0;
 }

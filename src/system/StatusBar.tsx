@@ -5,7 +5,7 @@ import './statusbar.scss';
 /*
  * Статус-бар по макету StatusBar.svg (docs/system-bars/assets), 360×40.
  * Все слои макета собраны в одном компоненте. Значки рисуются currentColor.
- * Значки всегда белые, поверх градиента бара: чёрный 40% → 0 сверху вниз.
+ * Режим «наложение»: градиент 0.4 → 0 сверху вниз, значки выбирает приложение.
  *
  * Раскладка воспроизводит координаты макета: слева время (x 52), дальше
  * индикаторы звонка и таймера с шагом 6; справа ряд, прижатый к x 346:
@@ -47,6 +47,12 @@ export type StatusBarViewProps = {
 	airplane?: boolean;
 	/** Сеть 2G: подпись GPRS вместо Wi-Fi. */
 	gprs?: boolean;
+	/** «Наложение»: контент под баром, ОС рисует градиент. «Заливка» — без градиента. */
+	mode?: 'surface' | 'overlay';
+	/** Цвет значков выбирает приложение: light — #FFFFFF, dark — #212529. */
+	icons?: 'light' | 'dark';
+	/** Затемнение шита поверх бара: градиент не рисуется. */
+	scrimmed?: boolean;
 	className?: string;
 	style?: CSSProperties;
 };
@@ -59,6 +65,9 @@ export function StatusBarView({
 	alarm = false,
 	airplane = false,
 	gprs = false,
+	mode = 'surface',
+	icons,
+	scrimmed = false,
 	className,
 	style,
 }: StatusBarViewProps) {
@@ -66,7 +75,15 @@ export function StatusBarView({
 	const showWifi = !airplane && !gprs;
 	return (
 		<div
-			className={`device-statusbar device-statusbar--default${className ? ` ${className}` : ''}`}
+			className={[
+				'device-statusbar device-statusbar--default',
+				mode === 'overlay' ? 'device-statusbar--overlay' : '',
+				icons ? `device-statusbar--icons-${icons}` : '',
+				scrimmed ? 'device-statusbar--scrimmed' : '',
+				className ?? '',
+			]
+				.filter(Boolean)
+				.join(' ')}
 			style={style}
 			aria-hidden="true"
 		>

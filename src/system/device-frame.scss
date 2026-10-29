@@ -21,6 +21,14 @@
 	width: 32px;
 	height: 32px;
 	border-radius: 50%;
-	/* Подложка выреза по макету: белый при 16% */
+	/* Подложка выреза: цвет значков при 12–16% */
+	background: color-mix(in srgb, var(--content-primary) 12%, transparent);
+}
+
+.device-mockup:has([data-status-bar-icons='light'], [data-status-bar-mode='overlay']) .device-camera {
 	background: rgb(255 255 255 / 0.16);
+}
+
+.device-mockup:has([data-status-bar-icons='dark']) .device-camera {
+	background: rgb(33 37 41 / 0.12);
 }

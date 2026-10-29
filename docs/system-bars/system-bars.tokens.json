@@ -10,8 +10,8 @@
       "diameter": 32,
       "x": 14,
       "y": 4,
-      "fill": "#FFFFFF",
-      "fillOpacity": 0.16
+      "fillLightIcons": "rgb(255 255 255 / 0.16)",
+      "fillDarkIcons": "rgb(33 37 41 / 0.12)"
     },
     "time": {
       "w": 33,
@@ -77,11 +77,11 @@
       "y": 12,
       "hiddenByDefault": true
     },
-    "icons": "#FFFFFF",
     "gradient": {
-      "from": "rgb(0 0 0 / 0.4)",
-      "to": "rgb(0 0 0 / 0)",
-      "height": 40
+      "alpha": 0.4,
+      "height": 40,
+      "direction": "top-to-bottom",
+      "color": "inverse-of-icons"
     }
   },
   "navBar": {
@@ -100,6 +100,12 @@
       "radius": 12,
       "iconCenterX": 180,
       "iconOpacity": 0.52
+    },
+    "gradient": {
+      "alpha": 0.4,
+      "height": 52,
+      "direction": "bottom-to-top",
+      "color": "inverse-of-icons"
     }
   },
   "icons": {
@@ -117,6 +123,14 @@
     "scrimOpacity": 0.5
   },
   "transientReveal": {
-    "scrimOpacity": 0.6
+    "gradientAlpha": 0.4
+  },
+  "modes": [
+    "surface",
+    "overlay"
+  ],
+  "sheet": {
+    "maxHeightInsetTop": 40,
+    "gradientUnderScrim": false
   }
 }

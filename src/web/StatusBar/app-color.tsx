@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Text } from '../../ui/Fonts';
 import { SegmentedTabs } from '../../ui/SegmentedTabs';
-import { parseColor, pickBarIcons } from '../Security/systemBars';
 import './app-color.scss';
 
 type Palette = { id: string; label: string; color: string; ink: string };
@@ -20,17 +19,18 @@ const rows = Array.from({ length: 16 }, (_, index) => ({
 
 /**
  * P1: приложение закрашивает зону статус-бара и зону навбара своим цветом.
- * Контент прокручивается между этими зонами и под бары не заходит, поэтому
- * цвет значков выбирается один раз по цвету приложения и при прокрутке не меняется.
+ * Режим «заливка»: контент прокручивается между зонами и под бары не заходит,
+ * градиента нет. Цвет значков выбирает приложение по своему цвету, при прокрутке он не меняется.
  */
 export default function StatusBarAppColorPage() {
 	const [paletteId, setPaletteId] = useState('blue');
 	const palette = palettes.find((item) => item.id === paletteId) ?? palettes[0];
-	const icons = pickBarIcons(parseColor(palette.color));
+	const icons = palette.ink === '#ffffff' ? 'light' : 'dark';
 
 	return (
 		<div
 			className="sb-appcolor"
+			data-status-bar-icons={icons}
 			data-nav-bar-icons={icons}
 			style={{ background: palette.color, color: palette.ink }}
 		>

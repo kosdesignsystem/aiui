@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Text } from '../../ui/Fonts';
 import { Switch } from '../../ui/Switch';
-import { BarProtection } from './protection';
+import './panel.scss';
 import './scroll.scss';
 
 type Band = { id: string; title: string; text: string; background: string; ink: string };
@@ -13,7 +13,7 @@ const bands: ReadonlyArray<Band> = [
 	{ id: 'sea', title: 'Картинка', text: 'Тёмный градиент', background: 'linear-gradient(180deg, #0b3c49, #2a9d8f)', ink: '#ffffff' },
 	{ id: 'mint', title: 'Светлая мята', text: 'Светлый фон', background: '#d9f5ea', ink: '#212529' },
 	{ id: 'violet', title: 'Фиолетовый', text: 'Средняя яркость', background: '#6a1fa8', ink: '#ffffff' },
-	{ id: 'white2', title: 'Снова белая', text: 'Белая страница под баром', background: '#ffffff', ink: '#212529' },
+	{ id: 'white2', title: 'Снова белая', text: 'Чистый белый: для таких экранов нужна заливка', background: '#ffffff', ink: '#212529' },
 	{ id: 'black', title: 'Чёрный экран', text: 'Видео и камера', background: '#000000', ink: '#ffffff' },
 ];
 
@@ -22,11 +22,17 @@ const bands: ReadonlyArray<Band> = [
  * цвет контента их не меняет. Градиент под навбаром держит читаемость.
  */
 export default function StatusBarScrollPage() {
-	const [protect, setProtect] = useState(true);
+	const [darkIcons, setDarkIcons] = useState(false);
+	const icons = darkIcons ? 'dark' : 'light';
 
 	return (
-		<div className="sb-scroll" data-nav-bar-icons="light">
-			<BarProtection enabled={protect} />
+		<div
+			className="sb-scroll"
+			data-status-bar-mode="overlay"
+			data-status-bar-icons={icons}
+			data-nav-bar-mode="overlay"
+			data-nav-bar-icons={icons}
+		>
 			<div className="sb-scroll__list">
 				{bands.map((band) => (
 					<section
@@ -41,8 +47,8 @@ export default function StatusBarScrollPage() {
 			</div>
 			<div className="sb-panel">
 				<div className="sb-panel__row">
-					<Text variant="medium-16">Градиент под навбаром</Text>
-					<Switch aria-label="Градиент под навбаром" checked={protect} onChange={(event) => setProtect(event.target.checked)} />
+					<Text variant="medium-16">Чёрные значки</Text>
+					<Switch aria-label="Чёрные значки" checked={darkIcons} onChange={(event) => setDarkIcons(event.target.checked)} />
 				</div>
 			</div>
 		</div>
