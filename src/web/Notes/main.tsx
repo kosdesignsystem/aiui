@@ -87,9 +87,8 @@ export default function NotesMainPage() {
       <IconButton variant="secondary" disabled aria-label="Ещё"><Icon name="more-vertical" width={24} height={24} aria-hidden /></IconButton>
     </header>
     <main className="notes-content">
-      <h1>Название</h1>
       <div className="notes-editor">
-        {!visibleText && <span className="notes-editor__placeholder" aria-hidden>Описание<span className="notes-editor__caret" /></span>}
+        {!visibleText && <span className="notes-editor__placeholder" aria-hidden><span className="notes-editor__caret" /></span>}
         <textarea ref={body} aria-label="Текст заметки" value={visibleText} readOnly inputMode="none" onKeyDown={event => {
           if (event.key === 'Backspace' || event.key === 'Delete') { event.preventDefault(); deleteCharacter(); }
         }} />
