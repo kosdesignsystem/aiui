@@ -3,7 +3,8 @@ import { App } from '../../ui/App';
 import { Icon } from '../../ui/Icon';
 import { IconButton } from '../../ui/IconButton';
 import { Keyboard, type VoiceInputState } from '../../ui/Keyboard';
-import { GigaamRecording, isLocalGigaamPage } from './gigaam';
+import { GigaamRecording, canRunBrowserGigaam } from './gigaam';
+import { cancelBrowserGigaam } from './gigaam-web-engine';
 import './main.scss';
 
 const storageKey = 'aiui-notes-draft-v1';
@@ -12,8 +13,8 @@ const join = (left: string, right: string) => left + (left && right && !/\s$/.te
 
 export default function NotesMainPage() {
   const [text, setText] = useState(loadDraft);
-  const [voiceState, setVoiceState] = useState<VoiceInputState>(() => isLocalGigaamPage() ? 'idle' : 'unavailable');
-  const [message, setMessage] = useState(isLocalGigaamPage() ? 'GigaAM · локальная модель' : 'Для GigaAM запустите локальную версию: localhost:8765');
+  const [voiceState, setVoiceState] = useState<VoiceInputState>(() => canRunBrowserGigaam() ? 'idle' : 'unavailable');
+  const [message, setMessage] = useState(canRunBrowserGigaam() ? 'GigaAM · распознавание в браузере' : 'В этом браузере недоступен запуск GigaAM');
   const engine = useRef<GigaamRecording | null>(null);
   const body = useRef<HTMLTextAreaElement>(null);
   const visibleText = text;
@@ -25,7 +26,7 @@ export default function NotesMainPage() {
     const current = engine.current; engine.current = null;
     current?.cancel();
   };
-  useEffect(() => () => detach(), []);
+  useEffect(() => () => { detach(); cancelBrowserGigaam(); }, []);
   useEffect(() => { if (body.current) body.current.scrollTop = body.current.scrollHeight; }, [visibleText]);
   useEffect(() => {
     const hide = () => {
@@ -55,12 +56,12 @@ export default function NotesMainPage() {
     engine.current = current; void current.start();
   };
   const deleteCharacter = () => {
-    // Cancel pending local inference so its late response cannot restore deleted text.
-    detach(); setVoiceState(isLocalGigaamPage() ? 'idle' : 'unavailable'); setMessage('');
+    // Cancel pending browser inference so its late response cannot restore deleted text.
+    detach(); setVoiceState(canRunBrowserGigaam() ? 'idle' : 'unavailable'); setMessage('');
     const characters = Array.from(latestText.current); characters.pop();
     latestText.current = characters.join(''); setText(latestText.current);
   };
-  const status = voiceState === 'unavailable' ? 'Для GigaAM запустите локальную версию: localhost:8765' : message;
+  const status = voiceState === 'unavailable' ? 'В этом браузере недоступен запуск GigaAM' : message;
   return <App className="notes-app" aria-label="Заметки">
     <header className="notes-toolbar">
       <IconButton variant="secondary" disabled aria-label="Назад"><Icon name="arrow-left" width={24} height={24} aria-hidden /></IconButton>

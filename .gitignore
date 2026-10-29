@@ -7,3 +7,6 @@ dist
 .venv-gigaam/
 __pycache__/
 *.ckpt
+
+# Generated browser model files (built by CI)
+public/models/

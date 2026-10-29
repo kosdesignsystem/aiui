@@ -1,11 +1,12 @@
-/** The only recognizer used by Notes: same-origin, local GigaAM Python service. */
+/** Real GigaAM inference runs in a browser Worker; audio is never uploaded. */
+import { loadBrowserGigaam, transcribeBrowserGigaam, cancelBrowserGigaam } from './gigaam-web-engine';
 export type GigaamPhase = 'starting' | 'listening' | 'processing';
 export type GigaamCallbacks = {
   onPhase: (phase: GigaamPhase, message: string) => void;
   onText: (text: string) => void;
   onError: (message: string) => void;
 };
-export const isLocalGigaamPage = () => ['localhost', '127.0.0.1'].includes(location.hostname);
+export const canRunBrowserGigaam = () => typeof Worker !== 'undefined' && typeof WebAssembly !== 'undefined';
 
 export function encodeWav(chunks: Float32Array[], sampleRate: number): Blob {
   const samples = chunks.reduce((total, chunk) => total + chunk.length, 0);
@@ -41,17 +42,13 @@ export class GigaamRecording {
 
   async start() {
     try {
-      if (!isLocalGigaamPage()) throw new Error('Для GigaAM запустите локальную версию: localhost:8765');
-      if (!navigator.mediaDevices?.getUserMedia) throw new Error('Микрофон недоступен. Откройте локальную страницу в браузере');
-      this.callbacks.onPhase('starting', 'Проверяем GigaAM…');
+      if (!canRunBrowserGigaam()) throw new Error('В этом браузере недоступен запуск модели GigaAM');
+      if (!navigator.mediaDevices?.getUserMedia) throw new Error('Микрофон недоступен. Откройте страницу по HTTPS');
+      this.callbacks.onPhase('starting', 'Загружаем GigaAM в браузер…');
       this.context = new AudioContext();
       await this.context.resume();
       if (this.cancelled) return;
-      const healthResponse = await fetch('/api/health', { signal: this.controller.signal });
-      if (!healthResponse.ok) throw new Error('Локальный сервис GigaAM не запущен');
-      const health = await healthResponse.json();
-      if (health.engine !== 'gigaam') throw new Error('Откройте локальную версию на localhost:8765');
-      if (health.status !== 'ready') throw new Error(health.error || 'GigaAM загружается. Дождитесь ready в терминале и нажмите снова');
+      await loadBrowserGigaam(message => { if (!this.cancelled) this.callbacks.onPhase('starting', message); });
       if (this.cancelled) return;
       this.callbacks.onPhase('starting', 'Разрешите доступ к микрофону');
       const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true } });
@@ -80,24 +77,25 @@ export class GigaamRecording {
     if (!this.stream) { this.cancel(); this.callbacks.onText(''); return; }
     this.stopped = true;
     const sampleRate = this.context!.sampleRate;
-    const blob = encodeWav(this.chunks, sampleRate);
+    const audio = new Float32Array(this.samples);
+    let offset = 0;
+    for (const chunk of this.chunks) { audio.set(chunk, offset); offset += chunk.length; }
     this.release(); this.chunks = [];
-    if (blob.size <= 44 + sampleRate * 0.2) { this.callbacks.onError('Запись слишком короткая. Попробуйте ещё раз'); return; }
+    if (audio.length < sampleRate * 0.2) { this.callbacks.onError('Запись слишком короткая. Попробуйте ещё раз'); return; }
     this.callbacks.onPhase('processing', 'GigaAM распознаёт запись…');
-    const timeout = setTimeout(() => this.controller.abort(), 180000);
     try {
-      const response = await fetch('/api/transcribe', { method: 'POST', headers: { 'Content-Type': 'audio/wav' }, body: blob, signal: this.controller.signal });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Ошибка GigaAM');
-      if (!this.cancelled) {
-        if (result.model && typeof result.text === 'string') this.callbacks.onText(result.text);
-        else throw new Error('Некорректный ответ GigaAM');
-      }
+      const offline = new OfflineAudioContext(1, Math.ceil(audio.length * 16000 / sampleRate), 16000);
+      const buffer = offline.createBuffer(1, audio.length, sampleRate);
+      buffer.copyToChannel(audio, 0);
+      const source = offline.createBufferSource(); source.buffer = buffer; source.connect(offline.destination); source.start();
+      const converted = await offline.startRendering();
+      if (this.cancelled) return;
+      const text = await transcribeBrowserGigaam(converted.getChannelData(0).slice());
+      if (!this.cancelled) this.callbacks.onText(text);
     } catch (error) { this.fail(error); }
-    finally { clearTimeout(timeout); }
   }
 
-  cancel() { this.cancelled = true; this.controller.abort(); this.release(); this.chunks = []; }
+  cancel() { this.cancelled = true; this.controller.abort(); cancelBrowserGigaam(); this.release(); this.chunks = []; }
   private release() {
     clearTimeout(this.timer);
     if (this.processor) { this.processor.onaudioprocess = null; this.processor.disconnect(); }
@@ -111,8 +109,8 @@ export class GigaamRecording {
     const name = error instanceof Error ? error.name : '';
     const message = name === 'NotAllowedError' ? 'Разрешите доступ к микрофону в настройках сайта'
       : name === 'NotFoundError' ? 'Микрофон не найден'
-      : name === 'AbortError' ? 'GigaAM не ответил за 3 минуты. Проверьте терминал'
-      : error instanceof TypeError ? 'Нет связи с локальным GigaAM. Проверьте терминал'
+      : name === 'AbortError' ? 'Обработка GigaAM прервана'
+      : error instanceof TypeError ? 'Не удалось загрузить GigaAM. Проверьте соединение и повторите'
       : error instanceof Error ? error.message : 'Не удалось распознать запись';
     this.callbacks.onError(message);
   }

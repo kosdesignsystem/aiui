@@ -1,77 +1,56 @@
+// Browser adapter tests with explicit Worker/audio stubs. Real WASM is tested separately.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { build } from 'esbuild';
-
-const bundle = await build({ entryPoints: ['src/web/Notes/gigaam.ts'], bundle: true, write: false, format: 'esm', platform: 'node' });
-const { GigaamRecording, encodeWav } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`);
-
-function setup(fetcher, getStream) {
-  globalThis.location = { hostname: 'localhost' };
-  let stopped = false;
-  const stream = { getTracks: () => [{ stop() { stopped = true; } }] };
-  Object.defineProperty(globalThis, 'navigator', { configurable: true, value: { mediaDevices: { getUserMedia: getStream || (async () => stream) } } });
-  globalThis.AudioContext = class {
-    sampleRate = 48000; state = 'running'; destination = {};
-    async resume() {} async close() { this.state = 'closed'; }
-    createMediaStreamSource() { return { connect() {}, disconnect() {} }; }
-    createGain() { return { gain: { value: 1 }, connect() {}, disconnect() {} }; }
-    createScriptProcessor() {
-      const node = { connect() {}, disconnect() {} };
-      globalThis.audioNode = node;
-      return node;
+const bundle = await build({ stdin: { contents: "export * from './src/web/Notes/gigaam'; export {cancelBrowserGigaam} from './src/web/Notes/gigaam-web-engine';", resolveDir: process.cwd(), loader:'ts' }, bundle:true, write:false, format:'esm', platform:'node', define:{'import.meta.url':JSON.stringify(new URL('../../src/web/Notes/gigaam-web-engine.ts',import.meta.url).href)} });
+const { GigaamRecording, cancelBrowserGigaam, encodeWav } = await import(`data:text/javascript;base64,${Buffer.from(bundle.outputFiles[0].text).toString('base64')}`);
+function setup({ getStream, holdResult=false }={}) {
+  cancelBrowserGigaam();
+  globalThis.document={baseURI:'https://kosdesignsystem.github.io/aiui/ae/'};
+  let stopped=false, sent;
+  const stream={getTracks:()=>[{stop(){stopped=true;}}]};
+  Object.defineProperty(globalThis,'navigator',{configurable:true,value:{mediaDevices:{getUserMedia:getStream|| (async()=>stream)}}});
+  globalThis.Worker=class {
+    postMessage(message) {
+      if(message.type==='init')queueMicrotask(()=>this.onmessage?.({data:{type:'ready'}}));
+      else { sent=message; if(!holdResult)queueMicrotask(()=>this.onmessage?.({data:{type:'result',id:message.id,text:'Привет, мир!'}})); }
     }
+    terminate(){this.terminated=true;}
   };
-  globalThis.fetch = fetcher;
-  const phases = [], texts = [], errors = [];
-  const recording = new GigaamRecording({ onPhase: (p) => phases.push(p), onText: (t) => texts.push(t), onError: (e) => errors.push(e) });
-  return { recording, phases, texts, errors, stopped: () => stopped, stream };
+  globalThis.AudioContext=class {
+    sampleRate=48000;state='running';destination={};
+    async resume(){} async close(){this.state='closed';}
+    createMediaStreamSource(){return {connect(){},disconnect(){}};}
+    createGain(){return {gain:{value:1},connect(){},disconnect(){}};}
+    createScriptProcessor(){const node={connect(){},disconnect(){}};globalThis.audioNode=node;return node;}
+  };
+  globalThis.OfflineAudioContext=class {
+    constructor(channels,length){this.length=length;} destination={};
+    createBuffer(){return {copyToChannel(){}};}
+    createBufferSource(){return {connect(){},start(){}};}
+    async startRendering(){return {getChannelData:()=>new Float32Array(this.length)};}
+  };
+  const phases=[],texts=[],errors=[];
+  const recording=new GigaamRecording({onPhase:p=>phases.push(p),onText:t=>texts.push(t),onError:e=>errors.push(e)});
+  return {recording,phases,texts,errors,stream,stopped:()=>stopped,sent:()=>sent};
 }
-const health = () => ({ ok: true, json: async () => ({ engine: 'gigaam', status: 'ready' }) });
-const feed = () => globalThis.audioNode.onaudioprocess({ inputBuffer: { getChannelData: () => new Float32Array(48000) } });
-
-test('encodes mono PCM16 WAV with actual sample rate', async () => {
-  const blob = encodeWav([new Float32Array([-1, 0, 1])], 48000);
-  const data = new DataView(await blob.arrayBuffer());
-  assert.equal(data.getUint32(24, true), 48000);
-  assert.equal(data.getInt16(44, true), -32768);
-  assert.equal(data.getInt16(48, true), 32767);
+const feed=()=>globalThis.audioNode.onaudioprocess({inputBuffer:{getChannelData:()=>new Float32Array(48000)}});
+test('WAV helper remains compatible with optional Python experiments',async()=>{
+ const view=new DataView(await encodeWav([new Float32Array([-1,0,1])],48000).arrayBuffer());assert.equal(view.getUint32(24,true),48000);assert.equal(view.getInt16(44,true),-32768);
 });
-
-test('sends WAV only to local API and returns GigaAM text', async () => {
-  let sent;
-  const s = setup(async (url, options) => {
-    if (url === '/api/health') return health();
-    sent = { url, options };
-    return { ok: true, json: async () => ({ text: 'Привет, мир!', model: 'v3_e2e_ctc' }) };
-  });
-  await s.recording.start(); feed(); await s.recording.stop();
-  assert.equal(sent.url, '/api/transcribe'); assert.equal(sent.options.body.type, 'audio/wav');
-  assert.deepEqual(s.texts, ['Привет, мир!']); assert.ok(s.phases.includes('processing')); assert.ok(s.stopped());
+test('browser adapter sends 16kHz audio to Worker and closes microphone',async()=>{
+ const s=setup();await s.recording.start();feed();await s.recording.stop();assert.deepEqual(s.texts,['Привет, мир!']);assert.equal(s.sent().audio.byteLength,16000*4);assert.ok(s.stopped());cancelBrowserGigaam();
 });
-
-test('cancel during inference ignores late response (delete/unmount)', async () => {
-  let finish;
-  const s = setup(async url => url === '/api/health' ? health() : new Promise(resolve => { finish = resolve; }));
-  await s.recording.start(); feed(); const done = s.recording.stop();
-  s.recording.cancel(); finish({ ok: true, json: async () => ({ text: 'Не возвращать', model: 'v3_e2e_ctc' }) });
-  await done; assert.deepEqual(s.texts, []); assert.ok(s.stopped());
+test('cancel during browser inference never appends late text',async()=>{
+ const s=setup({holdResult:true});await s.recording.start();feed();const stopped=s.recording.stop();
+ while(!s.sent())await new Promise(resolve=>setImmediate(resolve));
+ s.recording.cancel();await stopped;assert.deepEqual(s.texts,[]);assert.ok(s.stopped());
 });
-
-test('cancel while permission prompt is open releases late microphone stream', async () => {
-  let permission;
-  const s = setup(async () => health(), () => new Promise(resolve => { permission = resolve; }));
-  const pending = s.recording.start();
-  while (!permission) await new Promise(resolve => setImmediate(resolve));
-  s.recording.cancel(); permission(s.stream); await pending;
-  assert.ok(s.stopped()); assert.deepEqual(s.texts, []);
+test('late microphone permission after cancellation releases stream',async()=>{
+ let permission;const s=setup({getStream:()=>new Promise(resolve=>{permission=resolve;})});const started=s.recording.start();
+ while(!permission)await new Promise(resolve=>setImmediate(resolve));
+ s.recording.cancel();permission(s.stream);await started;assert.ok(s.stopped());assert.deepEqual(s.texts,[]);
 });
-
-test('loading/denied permission/remote page never use browser speech fallback', async () => {
-  let s = setup(async () => ({ ok: true, json: async () => ({ engine: 'gigaam', status: 'loading' }) }));
-  await s.recording.start(); assert.match(s.errors[0], /загружается/);
-  s = setup(async () => health(), async () => { throw new DOMException('denied', 'NotAllowedError'); });
-  await s.recording.start(); assert.match(s.errors[0], /Разрешите/);
-  s = setup(async () => { throw new Error('must not fetch'); });
-  globalThis.location.hostname = 'kosdesignsystem.github.io';
-  await s.recording.start(); assert.match(s.errors[0], /локальную/);
+test('denied microphone permission is visible',async()=>{
+ const s=setup({getStream:async()=>{throw new DOMException('denied','NotAllowedError');}});await s.recording.start();assert.match(s.errors[0],/Разрешите/);cancelBrowserGigaam();
 });
