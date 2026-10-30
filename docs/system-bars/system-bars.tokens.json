@@ -83,8 +83,7 @@
     "y": 752,
     "paddingX": 30,
     "icon": {
-      "size": 24,
-      "opacity": 0.52
+      "size": 24
     },
     "back": {
       "buttonWidth": 100,

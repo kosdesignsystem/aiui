@@ -6,7 +6,7 @@
 	height: var(--system-navbar-height, 48px);
 	display: flex;
 	padding: 0 30px;
-	color: var(--content-secondary);
+	color: var(--system-bar-icon, var(--content-primary));
 }
 
 .device-navbar--mobile {
@@ -40,22 +40,21 @@
  * (data-nav-bar-mode="overlay"); значки по умолчанию белые.
  */
 .device-mockup:has([data-nav-bar-mode='overlay']) > .device-navbar {
-	--content-secondary: rgb(255 255 255 / 52%);
+	--system-bar-icon: #ffffff;
 }
 
 /*
  * Контракт приложение → ОС (docs/system-bars/README.md): data-nav-bar-icons="light|dark"
- * на корне приложения. Значки «Назад» и «Домой» с прозрачностью 0.52
- * (navBar.back/home.opacity в docs/system-bars/system-bars.tokens.json).
+ * на корне приложения. Цвет значков тот же, что у статус-бара, без прозрачности.
  */
 .device-mockup:has([data-nav-bar-icons='dark']) > .device-navbar,
 .layout:has([data-nav-bar-icons='dark']) > .device-navbar--mobile {
-	--content-secondary: rgb(33 37 41 / 52%);
+	--system-bar-icon: #212529;
 }
 
 .device-mockup:has([data-nav-bar-icons='light']) > .device-navbar,
 .layout:has([data-nav-bar-icons='light']) > .device-navbar--mobile {
-	--content-secondary: rgb(255 255 255 / 52%);
+	--system-bar-icon: #ffffff;
 }
 
 /*
@@ -65,12 +64,12 @@
  */
 .device-mockup:has([data-status-bar-icons='light']):not(:has([data-nav-bar-icons])) > .device-navbar,
 .layout:has([data-status-bar-icons='light']):not(:has([data-nav-bar-icons])) > .device-navbar--mobile {
-	--content-secondary: rgb(255 255 255 / 52%);
+	--system-bar-icon: #ffffff;
 }
 
 .device-mockup:has([data-status-bar-icons='dark']):not(:has([data-nav-bar-icons])) > .device-navbar,
 .layout:has([data-status-bar-icons='dark']):not(:has([data-nav-bar-icons])) > .device-navbar--mobile {
-	--content-secondary: rgb(33 37 41 / 52%);
+	--system-bar-icon: #212529;
 }
 
 
@@ -83,9 +82,9 @@
 }
 
 .device-navbar--icons-dark {
-	--content-secondary: rgb(33 37 41 / 52%);
+	--system-bar-icon: #212529;
 }
 
 .device-navbar--icons-light {
-	--content-secondary: rgb(255 255 255 / 52%);
+	--system-bar-icon: #ffffff;
 }

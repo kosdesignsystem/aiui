@@ -11,7 +11,7 @@ type NavBarProps = {
 
 /*
  * Значки из дизайна Navbar.svg (docs/system-bars/assets/Navbar.svg): 24×24,
- * цвет — --content-secondary (в SVG 33 37 41 при непрозрачности 0.52).
+ * цвет — как у статус-бара (--system-bar-icon, по умолчанию --content-primary).
  */
 export function BackGlyph() {
 	return (
