@@ -53,3 +53,35 @@
 .sb-hub .sb-panel {
 	bottom: 108px;
 }
+
+/*
+ * Заголовок сцен «Состояния» и «Живой бар»: от 40 px с отступом 40 сверху
+ * к 20 px с отступом 4 под статус-баром (--sb-collapse 0 → 1 по скроллу).
+ * Высота липкой полосы постоянная (38), заголовок внутри позиционируется абсолютно,
+ * поэтому размер не двигает раскладку и прокрутка не дребезжит.
+ */
+.sb-title {
+	--sb-collapse: 0;
+
+	position: relative;
+	height: 38px;
+	background: var(--background-secondary);
+}
+
+.sb-title__text {
+	position: absolute;
+	left: 24px;
+	right: 24px;
+	top: calc(4px + 36px * (1 - var(--sb-collapse)));
+	margin: 0;
+	font-size: calc(40px - 20px * var(--sb-collapse));
+	line-height: calc(40px - 14px * var(--sb-collapse));
+	font-weight: 600;
+	color: var(--content-primary);
+	white-space: nowrap;
+}
+
+/* Место под крупный заголовок: 96 − 38. Поле снаружи липкой полосы, уезжает вместе с контентом. */
+.ui-screen-scaffold__top-actions:has(.sb-title) {
+	margin-bottom: 58px;
+}

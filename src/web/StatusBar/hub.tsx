@@ -1,4 +1,4 @@
-import { useState, type ComponentType } from 'react';
+import { useEffect, useRef, useState, type ComponentType } from 'react';
 import { FlowPage } from '../FlowPage';
 import StatusBarAppColorPage from './app-color';
 import StatusBarBlurPage from './blur';
@@ -25,6 +25,36 @@ const scenes: ReadonlyArray<Scene> = [
 	{ id: 'image', label: 'Изображение', fullBleed: true, Component: StatusBarFullscreenImagePage },
 ];
 
+const COLLAPSE_DISTANCE = 58;
+
+/**
+ * Крупный заголовок, который при прокрутке уменьшается, теряет отступ сверху
+ * и прижимается к верху под статус-баром (sticky внутри прокручиваемой области).
+ */
+function CollapsingTitle({ title }: { title: string }) {
+	const ref = useRef<HTMLDivElement | null>(null);
+
+	useEffect(() => {
+		const element = ref.current;
+		const viewport = element?.closest('.ui-screen-scaffold__viewport');
+		if (!element || !viewport) {
+			return;
+		}
+		const update = () => {
+			element.style.setProperty('--sb-collapse', String(Math.min(1, viewport.scrollTop / COLLAPSE_DISTANCE)));
+		};
+		update();
+		viewport.addEventListener('scroll', update, { passive: true });
+		return () => viewport.removeEventListener('scroll', update);
+	}, []);
+
+	return (
+		<div className="sb-title" ref={ref}>
+			<h1 className="sb-title__text">{title}</h1>
+		</div>
+	);
+}
+
 /**
  * Одно приложение про статус-бар и навбар: все состояния и сцены переключаются
  * внутри одного экрана, без отдельных страниц.
@@ -40,7 +70,7 @@ export default function StatusBarHub() {
 				{scene.fullBleed ? (
 					<SceneComponent />
 				) : (
-					<FlowPage title={scene.label}>
+					<FlowPage key={scene.id} topActions={<CollapsingTitle title={scene.label} />}>
 						<SceneComponent />
 					</FlowPage>
 				)}
