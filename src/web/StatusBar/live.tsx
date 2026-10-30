@@ -10,7 +10,6 @@ import { Cell } from '../../ui/Cell';
 import { Text } from '../../ui/Fonts';
 import { List, ListContainer } from '../../ui/List';
 import { Switch } from '../../ui/Switch';
-import { FlowPage } from '../FlowPage';
 import './live.scss';
 
 type ToggleKey = keyof StatusBarState;
@@ -85,7 +84,7 @@ export default function StatusBarLivePage() {
 	const running = stepIndex !== null;
 
 	return (
-		<FlowPage title="Живой бар">
+		<>
 			<div className="sb-live" data-status-bar-icons="dark" data-nav-bar-icons="dark">
 				<div className="sb-live__scenario">
 					<Text as="p" variant="semiBold-16">
@@ -125,6 +124,6 @@ export default function StatusBarLivePage() {
 					</List>
 				</ListContainer>
 			</div>
-		</FlowPage>
+		</>
 	);
 }

@@ -58,3 +58,19 @@
 	--content-secondary: rgb(255 255 255 / 52%);
 }
 
+
+/* Образцы навбара в приложении «Статус-бар»: те же правила, что у контракта, но на самом элементе. */
+.device-navbar--specimen {
+	position: relative;
+	width: 100%;
+	z-index: 2;
+	justify-content: center;
+}
+
+.device-navbar--icons-dark {
+	--content-secondary: rgb(33 37 41 / 52%);
+}
+
+.device-navbar--icons-light {
+	--content-secondary: rgb(255 255 255 / 52%);
+}

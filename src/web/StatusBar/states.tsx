@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
+import { NavBarView } from '../../system/NavBar';
 import { StatusBarView, type StatusBarViewProps } from '../../system/StatusBar';
 import { Text } from '../../ui/Fonts';
-import { FlowPage } from '../FlowPage';
 import './states.scss';
 
 type Specimen = {
@@ -15,6 +15,8 @@ type Specimen = {
 	scrim?: string;
 	/** Бар скрыт, остаётся камера. */
 	hidden?: boolean;
+	/** Образец навбара: цвет значков. */
+	nav?: 'light' | 'dark';
 };
 
 const LIGHT = '#f1f2f7';
@@ -49,6 +51,18 @@ const groups: Group[] = [
 			{ id: 'o-night', title: 'Тёмное изображение', note: 'Белые значки', background: NIGHT, bar: { mode: 'overlay', icons: 'light' } },
 			{ id: 'o-day', title: 'Светлое изображение', note: 'Чёрные значки', background: DAY, bar: { mode: 'overlay', icons: 'dark' } },
 			{ id: 'o-video', title: 'Видео', note: 'Белые значки', background: VIDEO, bar: { mode: 'overlay', icons: 'light' } },
+		],
+	},
+	{
+		id: 'navbar',
+		title: 'Навбар',
+		description: 'Высота 48, кнопки «Назад», «Домой», «Обзор». Градиента нет. Режимы и цвет значков те же, что у статус-бара.',
+		items: [
+			{ id: 'n-light', title: 'Заливка, светлый', note: 'Зона цвета контента, значки #212529', background: LIGHT, nav: 'dark' },
+			{ id: 'n-dark', title: 'Заливка, тёмный', note: 'Значки #FFFFFF', background: DARK, nav: 'light' },
+			{ id: 'n-night', title: 'Наложение на тёмное', note: 'Значки #FFFFFF', background: NIGHT, nav: 'light' },
+			{ id: 'n-day', title: 'Наложение на светлое', note: 'Значки #212529', background: DAY, nav: 'dark' },
+			{ id: 'n-sheet', title: 'Под шитом', note: 'Затемнение 0.5, значки #FFFFFF', background: LIGHT, scrim: 'rgb(0 0 0 / 0.5)', nav: 'light' },
 		],
 	},
 	{
@@ -112,10 +126,16 @@ function SpecimenCard({ item }: { item: Specimen }) {
 	}
 	return (
 		<figure className="sb-specimen">
-			<div className="sb-specimen__stage" style={stageStyle}>
+			<div className={`sb-specimen__stage${item.nav ? ' sb-specimen__stage--nav' : ''}`} style={stageStyle}>
 				{scrimLayer}
-				<div className="sb-specimen__camera" style={{ background: cameraBackground(item) }} />
-				{item.hidden ? null : <StatusBarView {...item.bar} className="device-statusbar--specimen" />}
+				{item.nav ? (
+					<NavBarView icons={item.nav} />
+				) : (
+					<>
+						<div className="sb-specimen__camera" style={{ background: cameraBackground(item) }} />
+						{item.hidden ? null : <StatusBarView {...item.bar} className="device-statusbar--specimen" />}
+					</>
+				)}
 			</div>
 			<figcaption className="sb-specimen__caption">
 				<Text variant="medium-14">{item.title}</Text>
@@ -129,7 +149,7 @@ function SpecimenCard({ item }: { item: Specimen }) {
 
 export default function StatusBarStatesPage() {
 	return (
-		<FlowPage title="Статус-бар">
+		<>
 			<div className="sb-app" data-status-bar-icons="dark" data-nav-bar-icons="dark">
 				{groups.map((group) => (
 					<section className="sb-group" key={group.id}>
@@ -147,6 +167,6 @@ export default function StatusBarStatesPage() {
 					</section>
 				))}
 			</div>
-		</FlowPage>
+		</>
 	);
 }

@@ -1,0 +1,55 @@
+.sb-hub {
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+}
+
+.sb-hub__scene {
+	position: absolute;
+	inset: 0;
+}
+
+/* Переключатель сцен плавает над навбаром. */
+.sb-hub__tabs {
+	position: absolute;
+	left: 8px;
+	right: 8px;
+	bottom: 56px;
+	z-index: 5;
+	display: flex;
+	gap: 4px;
+	padding: 4px;
+	overflow-x: auto;
+	border-radius: 24px;
+	background: var(--background-primary);
+	box-shadow: 0 2px 12px rgb(0 0 0 / 14%);
+	scrollbar-width: none;
+}
+
+.sb-hub__tabs::-webkit-scrollbar {
+	display: none;
+}
+
+.sb-hub__tab {
+	flex: 0 0 auto;
+	height: 36px;
+	padding: 0 14px;
+	border: 0;
+	border-radius: 20px;
+	background: transparent;
+	color: var(--content-secondary);
+	font: inherit;
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.sb-hub__tab.is-active {
+	background: var(--background-secondary);
+	color: var(--content-primary);
+}
+
+/* Панели сцен поднимаются над переключателем. */
+.sb-hub .sb-panel {
+	bottom: 108px;
+}
