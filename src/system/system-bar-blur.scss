@@ -1,0 +1,82 @@
+/* Прогрессивный блюр под барами. Токены: docs/system-bars/system-bars.tokens.json (blur). */
+.system-blur {
+	--system-blur-top-height: 40px;
+
+	position: absolute;
+	left: 0;
+	right: 0;
+	z-index: 1;
+	display: none;
+	pointer-events: none;
+}
+
+.system-blur__layer {
+	position: absolute;
+	inset: 0;
+}
+
+.system-blur--top {
+	top: 0;
+	height: var(--system-blur-top-height);
+}
+
+.system-blur--bottom {
+	bottom: 0;
+	height: 48px;
+}
+
+/* Включение: режим «наложение». Высоту верхней зоны задаёт приложение: bar (40) или header (96). */
+.device-mockup:has([data-status-bar-mode='overlay']) .system-blur--top,
+.device-mockup:has([data-nav-bar-mode='overlay']) .system-blur--bottom {
+	display: block;
+}
+
+.device-mockup:has([data-status-bar-blur='header']) .system-blur--top {
+	--system-blur-top-height: 96px;
+}
+
+/* Под затемнением шита блюра нет. */
+.device-mockup:has(.flow-page__overlay) .system-blur {
+	display: none;
+}
+
+.system-blur--top .system-blur__layer--1 {
+	backdrop-filter: blur(1.3px);
+	mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+}
+
+.system-blur--top .system-blur__layer--2 {
+	backdrop-filter: blur(2.6px);
+	mask-image: linear-gradient(to bottom, #000 60%, transparent 80%);
+}
+
+.system-blur--top .system-blur__layer--3 {
+	backdrop-filter: blur(5px);
+	mask-image: linear-gradient(to bottom, #000 40%, transparent 60%);
+}
+
+.system-blur--top .system-blur__layer--4 {
+	backdrop-filter: blur(10px);
+	mask-image: linear-gradient(to bottom, #000 20%, transparent 40%);
+}
+
+.system-blur--top .system-blur__layer--5 {
+	backdrop-filter: blur(20px);
+	mask-image: linear-gradient(to bottom, #000 0%, transparent 20%);
+}
+
+.system-blur--bottom .system-blur__layer--1 {
+	backdrop-filter: blur(2px);
+	mask-image: linear-gradient(to top, #000 67%, transparent 100%);
+}
+
+.system-blur--bottom .system-blur__layer--2 {
+	backdrop-filter: blur(4px);
+	mask-image: linear-gradient(to top, #000 33%, transparent 66%);
+}
+
+.system-blur--bottom .system-blur__layer--3 {
+	backdrop-filter: blur(6px);
+	mask-image: linear-gradient(to top, #000 0%, transparent 33%);
+}
+

@@ -36,6 +36,8 @@ const photos: ReadonlyArray<Photo> = [
 	},
 ];
 
+const cards = ['Заметка 1', 'Заметка 2', 'Заметка 3', 'Заметка 4', 'Заметка 5', 'Заметка 6', 'Заметка 7'];
+
 /**
  * Режим «наложение»: изображение идёт под оба бара, градиента нет.
  * Цвет значков для кадра выбрал приложение заранее и при прокрутке он не меняется.
@@ -53,13 +55,21 @@ export default function StatusBarFullscreenImagePage() {
 			data-nav-bar-icons={photo.icons}
 			style={{ background: photo.background, color: photo.ink }}
 		>
-			<div className="sb-photo__caption">
+			<div className="sb-photo__scroll">
+				<div className="sb-photo__caption">
 				<Text as="p" variant="semiBold-24">
 					{photo.title}
 				</Text>
 				<Text as="p" variant="regular-14">
-					Значки выбраны для кадра заранее, градиента нет
+					Потяни вверх: карточки уходят под бары с блюром
 				</Text>
+				</div>
+				{cards.map((card) => (
+					<div className="sb-photo__card" key={card}>
+						<Text as="p" variant="medium-16">{card}</Text>
+						<Text as="p" variant="regular-14">Описание карточки</Text>
+					</div>
+				))}
 			</div>
 			<div className="sb-panel">
 				<SegmentedTabs

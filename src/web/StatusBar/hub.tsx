@@ -1,6 +1,7 @@
 import { useState, type ComponentType } from 'react';
 import { FlowPage } from '../FlowPage';
 import StatusBarAppColorPage from './app-color';
+import StatusBarBlurPage from './blur';
 import StatusBarFullscreenImagePage from './fullscreen-image';
 import StatusBarLivePage from './live';
 import StatusBarScrollPage from './scroll';
@@ -19,6 +20,7 @@ const scenes: ReadonlyArray<Scene> = [
 	{ id: 'states', label: 'Состояния', fullBleed: false, Component: StatusBarStatesPage },
 	{ id: 'live', label: 'Живой бар', fullBleed: false, Component: StatusBarLivePage },
 	{ id: 'app-color', label: 'Цвет приложения', fullBleed: true, Component: StatusBarAppColorPage },
+	{ id: 'blur', label: 'Блюр', fullBleed: true, Component: StatusBarBlurPage },
 	{ id: 'scroll', label: 'Скролл под баром', fullBleed: true, Component: StatusBarScrollPage },
 	{ id: 'image', label: 'Изображение', fullBleed: true, Component: StatusBarFullscreenImagePage },
 ];

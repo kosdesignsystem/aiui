@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { NavBar } from "./NavBar";
+import { SystemBarBlur } from "./SystemBarBlur";
 import { StatusBar } from "./StatusBar";
 import "./device-frame.scss";
 
@@ -13,6 +14,7 @@ export function DeviceFrame({ children }: DeviceFrameProps) {
 			<div className="device-camera" aria-hidden="true" />
 			<StatusBar />
 			<div className="device-screen">{children}</div>
+			<SystemBarBlur />
 			<NavBar />
 		</div>
 	);

@@ -125,5 +125,24 @@
   ],
   "sheet": {
     "maxHeightInsetTop": 40
+  },
+  "blur": {
+    "mode": "progressive",
+    "enabledIn": "overlay",
+    "top": {
+      "height": {
+        "bar": 40,
+        "header": 96
+      },
+      "maxRadius": 24,
+      "direction": "strongest-at-top-edge",
+      "minRadius": 0
+    },
+    "bottom": {
+      "height": 48,
+      "maxRadius": 8,
+      "direction": "strongest-at-bottom-edge",
+      "minRadius": 0
+    }
   }
 }

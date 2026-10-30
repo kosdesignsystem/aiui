@@ -1,0 +1,159 @@
+.sb-blur {
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+	background: linear-gradient(180deg, #1f7ae0 0%, #2f8df0 45%, #58a8f8 100%);
+	color: #ffffff;
+}
+
+/* Шапка лежит выше слоя блюра: значки чёткие, под ними размытый контент. */
+.sb-blur__header {
+	position: absolute;
+	z-index: 3;
+	top: 40px;
+	left: 0;
+	right: 0;
+	height: 56px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 20px;
+}
+
+.sb-blur__menu {
+	width: 20px;
+	height: 14px;
+	background: linear-gradient(#fff 0 2px, transparent 2px 6px, #fff 6px 8px, transparent 8px 12px, #fff 12px 14px);
+	opacity: 0.85;
+}
+
+.sb-blur__dots {
+	display: flex;
+	gap: 10px;
+}
+
+.sb-blur__dots i {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: rgb(255 255 255 / 0.4);
+}
+
+.sb-blur__dots i.is-active {
+	background: #fff;
+}
+
+.sb-blur__refresh {
+	width: 20px;
+	height: 20px;
+	box-sizing: border-box;
+	border: 2px solid #fff;
+	border-right-color: transparent;
+	border-radius: 50%;
+	opacity: 0.85;
+}
+
+.sb-blur__scroll {
+	height: 100%;
+	overflow-y: auto;
+	box-sizing: border-box;
+	padding: 96px 16px 64px;
+	scrollbar-width: none;
+}
+
+.sb-blur__scroll::-webkit-scrollbar {
+	display: none;
+}
+
+.sb-blur__hero {
+	padding: 12px 8px 24px;
+}
+
+.sb-blur__hero p,
+.sb-blur__card p {
+	margin: 0;
+}
+
+.sb-blur__updated {
+	font-size: 14px;
+	opacity: 0.7;
+}
+
+.sb-blur__city {
+	margin-top: 4px;
+	font-size: 22px;
+	font-weight: 500;
+}
+
+.sb-blur__temp {
+	margin-top: 24px;
+	font-size: 112px;
+	font-weight: 500;
+	line-height: 112px;
+}
+
+.sb-blur__feels {
+	margin-top: 8px;
+	font-size: 16px;
+}
+
+.sb-blur__sky {
+	margin-top: 4px;
+	font-size: 28px;
+	font-weight: 600;
+}
+
+.sb-blur__card {
+	margin-top: 16px;
+	padding: 16px;
+	border-radius: 20px;
+	background: rgb(10 60 140 / 0.35);
+}
+
+.sb-blur__card--tall {
+	min-height: 220px;
+}
+
+.sb-blur__card-title {
+	font-size: 14px;
+	font-weight: 500;
+	opacity: 0.85;
+}
+
+.sb-blur__note {
+	margin-top: 12px;
+	font-size: 15px;
+	line-height: 22px;
+}
+
+.sb-blur__hours {
+	display: flex;
+	gap: 22px;
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+
+.sb-blur__hours div {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+}
+
+.sb-blur__hours b {
+	font-size: 16px;
+}
+
+.sb-blur__day {
+	display: grid;
+	grid-template-columns: 1fr auto auto auto;
+	gap: 14px;
+	align-items: center;
+	padding: 12px 0 0;
+	font-size: 15px;
+}
+
+.sb-blur__day span:last-child {
+	opacity: 0.6;
+}
