@@ -85,3 +85,25 @@
 .ui-screen-scaffold__top-actions:has(.sb-title) {
 	margin-bottom: 58px;
 }
+
+/* Прямой разделитель не нужен: границу даёт скругление контентной области. */
+.ui-screen-scaffold__top-actions.is-stuck:has(.sb-title) {
+	border-bottom: 0;
+}
+
+/*
+ * Скругления остаются над контентной областью: под закреплённым заголовком
+ * лежат обратные углы радиусом 24 (как у .ui-view), контент уходит под них.
+ */
+.sb-title::after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	height: 24px;
+	pointer-events: none;
+	background:
+		radial-gradient(circle at 24px 24px, transparent 23.5px, var(--background-secondary) 24px) left top / 24px 24px no-repeat,
+		radial-gradient(circle at 0 24px, transparent 23.5px, var(--background-secondary) 24px) right top / 24px 24px no-repeat;
+}
