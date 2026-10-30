@@ -47,7 +47,7 @@ export const statusBarAppDefinition = defineApp({
 					id: 'scroll',
 					title: 'Скролл под баром',
 					scenario: 'browse',
-					businessGoal: 'Показать фиксированные значки над прокручиваемым контентом с градиентом защиты.',
+					businessGoal: 'Показать фиксированные значки над прокручиваемым контентом.',
 					Component: StatusBarScrollPage,
 				}),
 				defineScreen({

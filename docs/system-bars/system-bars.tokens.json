@@ -76,27 +76,33 @@
       "x": 294,
       "y": 12,
       "hiddenByDefault": true
-    },
-    "gradient": {
-      "alpha": 0.4,
-      "height": 40,
-      "direction": "top-to-bottom",
-      "color": "inverse-of-icons"
     }
   },
   "navBar": {
     "height": 48,
     "y": 752,
     "paddingX": 30,
-    "icon": { "size": 24, "opacity": 0.52 },
-    "back": { "buttonWidth": 100, "buttonHeight": 48, "x": 30, "iconCenterX": 80 },
-    "home": { "buttonWidth": 100, "buttonHeight": 48, "x": 130, "iconCenterX": 180 },
-    "overview": { "buttonWidth": 100, "buttonHeight": 48, "x": 230, "iconCenterX": 280 },
-    "gradient": {
-      "alpha": 0.4,
-      "height": 48,
-      "direction": "bottom-to-top",
-      "color": "inverse-of-icons"
+    "icon": {
+      "size": 24,
+      "opacity": 0.52
+    },
+    "back": {
+      "buttonWidth": 100,
+      "buttonHeight": 48,
+      "x": 30,
+      "iconCenterX": 80
+    },
+    "home": {
+      "buttonWidth": 100,
+      "buttonHeight": 48,
+      "x": 130,
+      "iconCenterX": 180
+    },
+    "overview": {
+      "buttonWidth": 100,
+      "buttonHeight": 48,
+      "x": 230,
+      "iconCenterX": 280
     }
   },
   "icons": {
@@ -113,15 +119,12 @@
   "overlay": {
     "scrimOpacity": 0.5
   },
-  "transientReveal": {
-    "gradientAlpha": 0.4
-  },
+  "transientReveal": {},
   "modes": [
     "surface",
     "overlay"
   ],
   "sheet": {
-    "maxHeightInsetTop": 40,
-    "gradientUnderScrim": false
+    "maxHeightInsetTop": 40
   }
 }

@@ -1,6 +1,4 @@
 .device-statusbar {
-	--system-bar-gradient-alpha: 0;
-
 	z-index: 1;
 	width: 100%;
 	height: 40px;
@@ -8,11 +6,6 @@
 	top: 0;
 	left: 0;
 	color: var(--system-bar-icon, var(--content-primary));
-	background: linear-gradient(
-		to bottom,
-		rgb(var(--system-bar-scrim, 0 0 0) / var(--system-bar-gradient-alpha)),
-		rgb(var(--system-bar-scrim, 0 0 0) / 0)
-	);
 }
 
 .device-statusbar__left {
@@ -58,31 +51,22 @@
  *  data-status-bar-mode="overlay"  контент под баром: ОС рисует градиент 0.4 → 0
  *                                  (без атрибута — «заливка»: бар закрашивает приложение, градиента нет);
  *  data-status-bar-icons="light|dark"  цвет значков выбирает приложение (#FFFFFF / #212529).
- * Градиент берёт цвет, обратный значкам: белые значки → чёрный, чёрные → белый.
+ * Градиента нет.
  * Без data-status-bar-icons значки по теме системы, в режиме overlay белые.
- * Под затемнением шита (.flow-page__overlay) градиент не рисуется.
  * Те же правила для класса на самом баре (StatusBarView) нужны образцам в приложении «Статус-бар».
  */
 .device-statusbar--overlay,
 .device-mockup:has([data-status-bar-mode='overlay']) > .device-statusbar {
-	--system-bar-gradient-alpha: 0.4;
 	--system-bar-icon: #ffffff;
-	--system-bar-scrim: 0 0 0;
 }
 
 .device-statusbar--icons-dark,
 .device-mockup:has([data-status-bar-icons='dark']) > .device-statusbar {
 	--system-bar-icon: #212529;
-	--system-bar-scrim: 255 255 255;
 }
 
 .device-statusbar--icons-light,
 .device-mockup:has([data-status-bar-icons='light']) > .device-statusbar {
 	--system-bar-icon: #ffffff;
-	--system-bar-scrim: 0 0 0;
 }
 
-.device-statusbar--scrimmed,
-.device-mockup:has(.flow-page__overlay) > .device-statusbar {
-	--system-bar-gradient-alpha: 0;
-}

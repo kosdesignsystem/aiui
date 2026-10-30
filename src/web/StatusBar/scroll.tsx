@@ -19,7 +19,7 @@ const bands: ReadonlyArray<Band> = [
 
 /**
  * P3: контент едет под прозрачные бары. Значки фиксированные (#FFFFFF),
- * цвет контента их не меняет. Градиент под навбаром держит читаемость.
+ * цвет контента их не меняет. Градиента нет.
  */
 export default function StatusBarScrollPage() {
 	const [darkIcons, setDarkIcons] = useState(false);

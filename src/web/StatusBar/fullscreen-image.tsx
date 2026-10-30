@@ -37,7 +37,7 @@ const photos: ReadonlyArray<Photo> = [
 ];
 
 /**
- * Режим «наложение»: изображение идёт под оба бара, ОС рисует градиент.
+ * Режим «наложение»: изображение идёт под оба бара, градиента нет.
  * Цвет значков для кадра выбрал приложение заранее и при прокрутке он не меняется.
  */
 export default function StatusBarFullscreenImagePage() {
@@ -58,7 +58,7 @@ export default function StatusBarFullscreenImagePage() {
 					{photo.title}
 				</Text>
 				<Text as="p" variant="regular-14">
-					Значки выбраны для кадра заранее, градиент рисует ОС
+					Значки выбраны для кадра заранее, градиента нет
 				</Text>
 			</div>
 			<div className="sb-panel">

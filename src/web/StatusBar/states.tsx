@@ -44,10 +44,10 @@ const groups: Group[] = [
 		id: 'overlay',
 		title: 'Наложение',
 		description:
-			'Контент идёт под бар. ОС рисует градиент 0.4 → 0 на 40 dp цветом, обратным значкам: к белым значкам чёрный, к чёрным белый.',
+			'Контент идёт под бар. Градиента нет, значки выбирает приложение.',
 		items: [
-			{ id: 'o-night', title: 'Тёмное изображение', note: 'Белые значки, чёрный градиент', background: NIGHT, bar: { mode: 'overlay', icons: 'light' } },
-			{ id: 'o-day', title: 'Светлое изображение', note: 'Чёрные значки, белый градиент', background: DAY, bar: { mode: 'overlay', icons: 'dark' } },
+			{ id: 'o-night', title: 'Тёмное изображение', note: 'Белые значки', background: NIGHT, bar: { mode: 'overlay', icons: 'light' } },
+			{ id: 'o-day', title: 'Светлое изображение', note: 'Чёрные значки', background: DAY, bar: { mode: 'overlay', icons: 'dark' } },
 			{ id: 'o-video', title: 'Видео', note: 'Белые значки', background: VIDEO, bar: { mode: 'overlay', icons: 'light' } },
 		],
 	},
@@ -84,14 +84,14 @@ const groups: Group[] = [
 			{
 				id: 'reveal',
 				title: 'Показан свайпом',
-				note: 'Тот же градиент 0.4, значки #FFFFFF',
+				note: 'Значки #FFFFFF',
 				background: VIDEO,
 				bar: { mode: 'overlay', icons: 'light' },
 			},
 			{
 				id: 'sheet',
 				title: 'Под шитом',
-				note: 'Затемнение 0.5, градиента нет, значки #FFFFFF',
+				note: 'Затемнение 0.5, значки #FFFFFF',
 				background: LIGHT,
 				scrim: 'rgb(0 0 0 / 0.5)',
 				bar: { icons: 'light', scrimmed: true },
