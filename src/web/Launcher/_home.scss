@@ -58,7 +58,7 @@
 
 .launcher-lock {
 	position: absolute;
-	inset: 40px 0 52px;
+	inset: 40px 0 48px;
 	z-index: 2;
 	display: flex;
 	flex-direction: column;
@@ -77,7 +77,7 @@
 
 .launcher-pin {
 	position: absolute;
-	inset: 40px 0 52px;
+	inset: 40px 0 48px;
 	z-index: 1;
 	display: flex;
 	flex-direction: column;
@@ -111,7 +111,7 @@
 
 .launcher-home {
 	position: absolute;
-	inset: 40px 0 52px;
+	inset: 40px 0 48px;
 	display: flex;
 	align-items: stretch;
 	padding: 0;

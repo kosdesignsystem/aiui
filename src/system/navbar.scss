@@ -5,10 +5,10 @@
 	bottom: 0;
 	left: 0;
 	width: 360px;
-	height: 52px;
+	height: var(--system-navbar-height, 48px);
 	display: flex;
-	gap: 50px;
-	padding-left: 52px;
+	padding: 0 30px;
+	color: var(--content-secondary);
 	background: linear-gradient(
 		to top,
 		rgb(var(--system-bar-scrim, 0 0 0) / var(--system-bar-gradient-alpha)),
@@ -23,7 +23,7 @@
 	z-index: 40;
 	justify-content: center;
 	padding-left: 0;
-	height: calc(52px + env(safe-area-inset-bottom, 0px));
+	height: calc(48px + env(safe-area-inset-bottom, 0px));
 	padding-bottom: env(safe-area-inset-bottom, 0px);
 	background: var(--background-primary);
 	border-top: 1px solid var(--content-border);
@@ -31,9 +31,8 @@
 }
 
 .nav-button {
-	display: inline-block;
-	width: 52px;
-	height: 52px;
+	width: 100px;
+	height: 48px;
 	display: flex;
 	align-items: center;
 	justify-content: center;

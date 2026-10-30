@@ -282,6 +282,7 @@ export default function App() {
 				{isMobile ? (
 					<NavBar
 						isMobileViewport
+						onOverview={() => setIsNavigationVisible(true)}
 						onHomeLongPress={() => {
 							if (!isNavigationVisible) {
 								setIsNavigationVisible(true);

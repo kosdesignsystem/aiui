@@ -1,15 +1,15 @@
 .gallery-screen {
 	--gallery-viewer-chrome-opacity: 1;
 	--gallery-screen-safe-top: 40px;
-	--gallery-screen-safe-bottom: 52px;
+	--gallery-screen-safe-bottom: 48px;
 	--gallery-screen-nav-height: 72px;
 
 	flex: 1 1 auto;
 	min-height: 0;
 	display: flex;
 	flex-direction: column;
-	margin: -40px 0 -52px;
-	padding: 40px 0 52px;
+	margin: -40px 0 -48px;
+	padding: 40px 0 48px;
 	overflow: hidden;
 	background: var(--background-primary);
 	color: var(--content-primary);

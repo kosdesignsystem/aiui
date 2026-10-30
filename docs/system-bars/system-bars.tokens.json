@@ -85,25 +85,16 @@
     }
   },
   "navBar": {
-    "height": 52,
-    "y": 748,
-    "back": {
-      "buttonSize": 52,
-      "x": 52,
-      "radius": 12,
-      "iconCenterX": 78,
-      "iconOpacity": 0.52
-    },
-    "home": {
-      "buttonSize": 52,
-      "x": 154,
-      "radius": 12,
-      "iconCenterX": 180,
-      "iconOpacity": 0.52
-    },
+    "height": 48,
+    "y": 752,
+    "paddingX": 30,
+    "icon": { "size": 24, "opacity": 0.52 },
+    "back": { "buttonWidth": 100, "buttonHeight": 48, "x": 30, "iconCenterX": 80 },
+    "home": { "buttonWidth": 100, "buttonHeight": 48, "x": 130, "iconCenterX": 180 },
+    "overview": { "buttonWidth": 100, "buttonHeight": 48, "x": 230, "iconCenterX": 280 },
     "gradient": {
       "alpha": 0.4,
-      "height": 52,
+      "height": 48,
       "direction": "bottom-to-top",
       "color": "inverse-of-icons"
     }
