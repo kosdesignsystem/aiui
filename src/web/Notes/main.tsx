@@ -3,8 +3,7 @@ import { App } from '../../ui/App';
 import { Icon } from '../../ui/Icon';
 import { IconButton } from '../../ui/IconButton';
 import { Keyboard, type VoiceInputState } from '../../ui/Keyboard';
-import { GigaamRecording, canRunBrowserGigaam } from './gigaam';
-import { cancelBrowserGigaam } from './gigaam-web-engine';
+import { GigaamRecording, canRunBrowserGigaam, recognitionLabel, unavailableMessage, releaseRecognizer } from './gigaam';
 import './main.scss';
 
 const storageKey = 'aiui-notes-draft-v1';
@@ -14,7 +13,7 @@ const join = (left: string, right: string) => left + (left && right && !/\s$/.te
 export default function NotesMainPage() {
   const [text, setText] = useState(loadDraft);
   const [voiceState, setVoiceState] = useState<VoiceInputState>(() => canRunBrowserGigaam() ? 'idle' : 'unavailable');
-  const [message, setMessage] = useState(canRunBrowserGigaam() ? 'GigaAM · распознавание в браузере' : 'В этом браузере недоступен запуск GigaAM');
+  const [message, setMessage] = useState(canRunBrowserGigaam() ? recognitionLabel : unavailableMessage);
   const engine = useRef<GigaamRecording | null>(null);
   const body = useRef<HTMLTextAreaElement>(null);
   const visibleText = text;
@@ -26,7 +25,7 @@ export default function NotesMainPage() {
     const current = engine.current; engine.current = null;
     current?.cancel();
   };
-  useEffect(() => () => { detach(); cancelBrowserGigaam(); }, []);
+  useEffect(() => () => { detach(); releaseRecognizer(); }, []);
   useEffect(() => { if (body.current) body.current.scrollTop = body.current.scrollHeight; }, [visibleText]);
   useEffect(() => {
     const hide = () => {
@@ -45,12 +44,12 @@ export default function NotesMainPage() {
       onPhase: (phase, status) => { setVoiceState(phase); setMessage(status); },
       onPartial: result => {
         if (engine.current !== current) return;
-        setText(join(baseText, result));
+        latestText.current = join(baseText, result); setText(latestText.current);
       },
       onText: result => {
         if (engine.current !== current) return;
         engine.current = null; setVoiceState('idle');
-        setText(join(baseText, result));
+        latestText.current = join(baseText, result); setText(latestText.current);
         setMessage(result ? 'GigaAM · текст добавлен' : 'Речь не распознана. Попробуйте ещё раз');
       },
       onError: error => {
@@ -61,12 +60,12 @@ export default function NotesMainPage() {
     engine.current = current; void current.start();
   };
   const deleteCharacter = () => {
-    // Cancel pending browser inference so its late response cannot restore deleted text.
+    // Cancel pending inference so its late response cannot restore deleted text.
     detach(); setVoiceState(canRunBrowserGigaam() ? 'idle' : 'unavailable'); setMessage('');
     const characters = Array.from(latestText.current); characters.pop();
     latestText.current = characters.join(''); setText(latestText.current);
   };
-  const status = voiceState === 'unavailable' ? 'В этом браузере недоступен запуск GigaAM' : message;
+  const status = voiceState === 'unavailable' ? unavailableMessage : message;
   return <App className="notes-app" aria-label="Заметки">
     <header className="notes-toolbar">
       <IconButton variant="secondary" disabled aria-label="Назад"><Icon name="arrow-left" width={24} height={24} aria-hidden /></IconButton>

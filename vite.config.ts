@@ -8,9 +8,16 @@ export default defineConfig(({ command }) => {
   return {
     base,
     worker: { format: 'es' },
-    plugins: [react(), {
+    plugins: [{
+      name: 'notes-local-backend', enforce: 'pre',
+      resolveId(source, importer) {
+        if (process.env.VITE_NOTES_ASR === 'local' && source === './gigaam' && importer?.endsWith('/Notes/main.tsx'))
+          return new URL('./src/web/Notes/gigaam-local.ts', import.meta.url).pathname;
+      },
+    }, react(), {
       name: 'copy-onnx-wasm',
       closeBundle() {
+        if (process.env.VITE_NOTES_ASR === 'local') return;
         const modelDir = 'dist/models/gigaam-v3';
         if (existsSync(`${modelDir}/manifest.json`)) {
           const manifest = JSON.parse(readFileSync(`${modelDir}/manifest.json`, 'utf-8'));

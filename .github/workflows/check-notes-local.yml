@@ -1,0 +1,56 @@
+name: Check local GigaAM dictation
+on:
+  workflow_dispatch:
+  push:
+    branches: [member/AE]
+    paths:
+      - 'local/gigaam/**'
+      - 'src/web/Notes/**'
+      - 'public/notes-pcm-worklet.js'
+      - 'scripts/start-gigaam.sh'
+      - 'vite.config.ts'
+      - '.github/workflows/check-notes-local.yml'
+  pull_request:
+    paths:
+      - 'local/gigaam/**'
+      - 'src/web/Notes/**'
+      - 'public/notes-pcm-worklet.js'
+      - 'scripts/start-gigaam.sh'
+      - 'vite.config.ts'
+      - '.github/workflows/check-notes-local.yml'
+permissions:
+  contents: read
+jobs:
+  local-dictation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: npm ci
+      - run: node --test local/gigaam/stream-client.test.mjs
+      - name: Check local transport types
+        run: npx tsc --target ES2020 --module ESNext --moduleResolution bundler --strict --skipLibCheck --noEmit --lib ES2020,DOM src/web/Notes/gigaam-local.ts
+      - name: Build local interface
+        run: VITE_NOTES_ASR=local VITE_BASE_PATH=/ npm run build
+      - name: Build browser interface
+        run: npm run build
+      - name: Install actual CPU recognizer and VAD
+        run: |
+          python -m pip install torch==2.6.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install -r local/gigaam/requirements.txt
+      - run: python -m unittest discover -s local/gigaam -p 'test_*.py' -v
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/gigaam
+          key: notes-local-gigaam-7447938d-v1
+      - name: Real GigaAM + Silero streaming over 30 seconds
+        run: |
+          curl --fail --location https://raw.githubusercontent.com/salute-developers/GigaAM/7447938d791c4f3e643386ee22c33777004293a5/example.wav -o /tmp/gigaam-example.wav
+          python local/gigaam/smoke_streaming.py /tmp/gigaam-example.wav

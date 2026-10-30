@@ -141,3 +141,7 @@ export class GigaamRecording {
     this.callbacks.onError(message);
   }
 }
+
+export const recognitionLabel = 'GigaAM · распознавание в браузере';
+export const unavailableMessage = 'В этом браузере недоступен запуск GigaAM';
+export const releaseRecognizer = cancelBrowserGigaam;
