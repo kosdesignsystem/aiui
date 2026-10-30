@@ -20,7 +20,7 @@ const rows = Array.from({ length: 16 }, (_, index) => ({
 /**
  * P1: приложение закрашивает зону статус-бара и зону навбара своим цветом.
  * Режим «заливка»: зона статус-бара закрашена цветом приложения, зона навбара
- * цветом контента (значки навбара по теме системы). Контент под статус-бар не заходит, градиента нет. Цвет значков выбирает приложение по своему цвету, при прокрутке он не меняется.
+ * тоже цветом приложения (значки навбара того же цвета, что у статус-бара). Контент под статус-бар не заходит, градиента нет. Цвет значков выбирает приложение по своему цвету, при прокрутке он не меняется.
  */
 export default function StatusBarAppColorPage() {
 	const [paletteId, setPaletteId] = useState('blue');
@@ -31,7 +31,6 @@ export default function StatusBarAppColorPage() {
 		<div
 			className="sb-appcolor"
 			data-status-bar-icons={icons}
-			data-nav-bar-icons="auto"
 			style={{ background: palette.color, color: palette.ink }}
 		>
 			<header className="sb-appcolor__header">

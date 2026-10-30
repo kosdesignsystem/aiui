@@ -21,7 +21,7 @@
 	flex: 1 1 auto;
 	min-height: 0;
 	overflow-y: auto;
-	border-radius: 22px 22px 0 0;
+	border-radius: 22px;
 	background: var(--background-secondary);
 	color: var(--content-primary);
 	scrollbar-width: none;
@@ -44,7 +44,7 @@
 	margin: 0;
 }
 
-/* Зона навбара залита цветом контента, список под неё не заходит. */
+/* Зона навбара залита цветом приложения, как и зона статус-бара; список под неё не заходит. */
 .sb-appcolor::after {
 	content: '';
 	position: absolute;
@@ -52,5 +52,5 @@
 	right: 0;
 	bottom: 0;
 	height: 48px;
-	background: var(--background-secondary);
+	background: inherit;
 }
