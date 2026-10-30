@@ -107,3 +107,8 @@
 		radial-gradient(circle at 24px 24px, transparent 23.5px, var(--background-secondary) 24px) left top / 24px 24px no-repeat,
 		radial-gradient(circle at 0 24px, transparent 23.5px, var(--background-secondary) 24px) right top / 24px 24px no-repeat;
 }
+
+/* Шапка всегда над контентом, что бы в нём ни лежало. */
+.ui-screen-scaffold__top-actions:has(.sb-title) {
+	z-index: 10;
+}
