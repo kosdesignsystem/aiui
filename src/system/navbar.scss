@@ -58,6 +58,21 @@
 	--content-secondary: rgb(255 255 255 / 52%);
 }
 
+/*
+ * Если приложение не задало data-nav-bar-icons, навбар повторяет цвет значков статус-бара:
+ * на тёмных приложениях (data-status-bar-icons="light") значки белые, на светлых тёмные.
+ * data-nav-bar-icons="auto" отключает повтор: значки по теме системы.
+ */
+.device-mockup:has([data-status-bar-icons='light']):not(:has([data-nav-bar-icons])) > .device-navbar,
+.layout:has([data-status-bar-icons='light']):not(:has([data-nav-bar-icons])) > .device-navbar--mobile {
+	--content-secondary: rgb(255 255 255 / 52%);
+}
+
+.device-mockup:has([data-status-bar-icons='dark']):not(:has([data-nav-bar-icons])) > .device-navbar,
+.layout:has([data-status-bar-icons='dark']):not(:has([data-nav-bar-icons])) > .device-navbar--mobile {
+	--content-secondary: rgb(33 37 41 / 52%);
+}
+
 
 /* Образцы навбара в приложении «Статус-бар»: те же правила, что у контракта, но на самом элементе. */
 .device-navbar--specimen {
