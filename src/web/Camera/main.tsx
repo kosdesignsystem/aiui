@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { App } from '../../ui/App';
+import { Button } from '../../ui/Button';
 import { Icon, type IconName } from '../../ui/Icon';
 import { IconButton } from '../../ui/IconButton';
 import { SegmentedTabs } from '../../ui/SegmentedTabs';
 import preview from '../../assets/camera/preview.png';
+import { ExposureControl, exposureLabel } from './exposure.parts';
 import './main.scss';
 
 const flashModes = [
@@ -22,14 +24,24 @@ export function CameraMainScreen() {
 	const [grid, setGrid] = useState(true);
 	const [frontCamera, setFrontCamera] = useState(false);
 	const [activeSetting, setActiveSetting] = useState<Setting | null>(null);
+	const [exposure, setExposure] = useState<number | null>(null);
 	const [capturing, setCapturing] = useState(false);
 	const [announcement, setAnnouncement] = useState('');
 	const captureTimer = useRef<number | undefined>();
 	const settingsButton = useRef<HTMLDivElement>(null);
 	useEffect(() => () => window.clearTimeout(captureTimer.current), []);
+	const exposureOpen = activeSetting === 'exposure';
+	const settingsChanged = exposure !== null || flash !== 0 || format !== 0 || !grid;
 
 	const closeSettings = () => {
 		setSettingsOpen(false);
+		setActiveSetting(null);
+		settingsButton.current?.querySelector('button')?.focus();
+	};
+	const resetSettings = () => {
+		setExposure(null); setFlash(0); setFormat(0); setGrid(true);
+		if (!exposureOpen) setActiveSetting(null);
+		setAnnouncement('Настройки камеры сброшены. Выдержка: Авто.');
 		settingsButton.current?.querySelector('button')?.focus();
 	};
 	const selectSetting = (setting: Setting, title: string) => {
@@ -50,16 +62,18 @@ export function CameraMainScreen() {
 			<span className="camera-setting__label">{title}</span>
 		</div>
 	);
+	const shutter = <IconButton size={60} className="camera-shutter" variant="secondary" aria-label="Сделать снимок" onClick={capture} disabled={capturing}><span className="camera-shutter__disc" /></IconButton>;
 
 	return (
 		<App className="camera-screen" data-theme="dark" aria-label="Камера" onKeyDown={(event) => {
-			if (event.key === 'Escape' && settingsOpen) { event.preventDefault(); closeSettings(); }
+			if (event.key === 'Escape' && (settingsOpen || exposureOpen)) { event.preventDefault(); closeSettings(); }
 		}}>
 			<header className="camera-toolbar">
-				<div ref={settingsButton}>
-					<IconButton size={32} variant="secondary" className="camera-toolbar__button" aria-label={settingsOpen ? 'Закрыть настройки камеры' : 'Открыть настройки камеры'} aria-expanded={settingsOpen} aria-controls="camera-settings" onClick={() => setSettingsOpen((open) => !open)}>
+				<div className="camera-toolbar__settings" ref={settingsButton}>
+					<IconButton size={32} variant="secondary" className={`camera-toolbar__button${settingsChanged ? ' is-modified' : ''}`} aria-label={settingsOpen ? 'Закрыть настройки камеры' : 'Открыть настройки камеры'} aria-expanded={settingsOpen} aria-controls="camera-settings" onClick={() => { setActiveSetting(null); setSettingsOpen((open) => !open); }}>
 						<Icon name="camera-controls" width={24} height={24} aria-hidden="true" />
 					</IconButton>
+					{settingsChanged && <Button size={32} variant="secondary" className="camera-reset" aria-label="Сбросить настройки камеры" leftIcon={<Icon name="arrow-repeat" width={20} height={20} aria-hidden="true" />} onClick={resetSettings}>Сбросить</Button>}
 				</div>
 				<IconButton size={32} variant="secondary" className={`camera-toolbar__button camera-flash camera-flash--${flashModes[flash].id}`} aria-label={`Вспышка: ${flashModes[flash].label}`} onClick={() => setFlash((value) => (value + 1) % flashModes.length)}>
 					<Icon name={flashModes[flash].icon} width={24} height={24} aria-hidden="true" />
@@ -68,15 +82,19 @@ export function CameraMainScreen() {
 			</header>
 
 			<div className={`camera-preview${frontCamera ? ' is-front' : ''}`} role="img" aria-label="Демонстрационный видоискатель: светящийся след в вечернем небе">
-				<img className="camera-preview__image" src={preview} alt="" draggable={false} />
+				<img className="camera-preview__image" src={preview} alt="" draggable={false} style={{ filter: `brightness(${2 ** (exposure ?? 0)})` }} />
 				{grid && !settingsOpen && <div className="camera-preview__grid" aria-hidden="true"><i /><i /><i /><i /></div>}
 				{capturing && <div className="camera-preview__flash" aria-hidden="true" />}
+				{exposureOpen && <span className="camera-exposure-value">{exposureLabel(exposure)}</span>}
 			</div>
 
 			<footer className="camera-bottom">
-				{settingsOpen ? <div className="camera-settings" id="camera-settings" role="group" aria-label="Быстрые настройки камеры">
+				{exposureOpen ? <div className="camera-exposure-controls">
+					<ExposureControl value={exposure} onChange={setExposure} onClose={closeSettings} onReset={() => setExposure(null)} />
+					<div className="camera-exposure-shutter">{shutter}</div>
+				</div> : settingsOpen ? <div className="camera-settings" id="camera-settings" role="group" aria-label="Быстрые настройки камеры">
 					{setting('warmth', 'Теплота', 'camera-temperature', () => selectSetting('warmth', 'Теплота'), activeSetting === 'warmth')}
-					{setting('exposure', 'Выдержка', 'camera-exposure', () => selectSetting('exposure', 'Выдержка'), activeSetting === 'exposure')}
+					{setting('exposure', 'Выдержка', 'camera-exposure', () => { setActiveSetting('exposure'); setSettingsOpen(false); }, exposure !== null)}
 					{setting('format', 'Формат', null, () => { setFormat((value) => (value + 1) % formats.length); setActiveSetting('format'); })}
 					{setting('grid', 'Сетка', 'camera-grid', () => { setGrid((value) => !value); setActiveSetting(null); }, grid)}
 				</div> : <div className="camera-shooting">
@@ -91,7 +109,7 @@ export function CameraMainScreen() {
 					</div>
 					<div className="camera-actions">
 						<IconButton size={60} className="camera-thumbnail" variant="secondary" aria-label="Последний снимок" onClick={() => setAnnouncement('Галерея будет добавлена на следующем этапе.')}><img src={preview} alt="" /></IconButton>
-						<IconButton size={60} className="camera-shutter" variant="secondary" aria-label="Сделать снимок" onClick={capture} disabled={capturing}><span className="camera-shutter__disc" /></IconButton>
+						{shutter}
 						<IconButton size={44} className="camera-switch" variant="secondary" aria-label="Переключить камеру" aria-pressed={frontCamera} onClick={() => setFrontCamera((front) => !front)}><Icon name="arrow-repeat" width={26} height={26} aria-hidden="true" /></IconButton>
 					</div>
 				</div>}
