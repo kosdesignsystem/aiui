@@ -68,7 +68,7 @@ export function ExposureControl({ value, onChange, onClose, onReset }: ExposureC
 				if (Math.abs(delta) >= pixelsPerStep / 2) start.moved = true;
 				if (start.moved) onChange(clamp(start.value + delta / pixelsPerStep * step));
 			}} onPointerUp={pointerEnd} onPointerCancel={pointerEnd} onLostPointerCapture={() => { drag.current = null; }}>
-				<div className="camera-exposure__ticks" aria-hidden="true" style={{ '--exposure-offset': `${(value ?? 0) / step * pixelsPerStep}px` } as CSSProperties}>{Array.from({ length: 101 }, (_, index) => <i key={index} className={index % 5 === 0 ? 'is-major' : undefined} />)}</div>
+				<div className="camera-exposure__ticks" aria-hidden="true" style={{ '--exposure-offset': `${(value ?? 0) / step * pixelsPerStep}px` } as CSSProperties}>{Array.from({ length: 101 }, (_, index) => <i key={index} />)}</div>
 				<span className="camera-exposure__marker" aria-hidden="true" />
 				<input ref={inputRef} type="range" className="camera-exposure__input" aria-label="Выдержка" aria-valuetext={value === null ? 'Авто' : `${exposureLabel(value)} EV`} min={minExposure} max={maxExposure} step={step} value={value ?? 0} onChange={(event) => onChange(clamp(Number(event.target.value)))} />
 			</div>

@@ -3,9 +3,9 @@ import { App } from '../../ui/App';
 import { Button } from '../../ui/Button';
 import { Icon, type IconName } from '../../ui/Icon';
 import { IconButton } from '../../ui/IconButton';
-import { SegmentedTabs } from '../../ui/SegmentedTabs';
 import preview from '../../assets/camera/preview.png';
 import { ExposureControl, exposureLabel } from './exposure.parts';
+import { CameraModeDrum } from './modes.parts';
 import './main.scss';
 
 const flashModes = [
@@ -31,7 +31,7 @@ export function CameraMainScreen() {
 	const settingsButton = useRef<HTMLDivElement>(null);
 	useEffect(() => () => window.clearTimeout(captureTimer.current), []);
 	const exposureOpen = activeSetting === 'exposure';
-	const settingsChanged = exposure !== null || flash !== 0 || format !== 0 || !grid;
+	const settingsChanged = exposure !== null || format !== 0 || !grid;
 
 	const closeSettings = () => {
 		setSettingsOpen(false);
@@ -39,7 +39,7 @@ export function CameraMainScreen() {
 		settingsButton.current?.querySelector('button')?.focus();
 	};
 	const resetSettings = () => {
-		setExposure(null); setFlash(0); setFormat(0); setGrid(true);
+		setExposure(null); setFormat(0); setGrid(true);
 		if (!exposureOpen) setActiveSetting(null);
 		setAnnouncement('Настройки камеры сброшены. Выдержка: Авто.');
 		settingsButton.current?.querySelector('button')?.focus();
@@ -98,15 +98,7 @@ export function CameraMainScreen() {
 					{setting('format', 'Формат', null, () => { setFormat((value) => (value + 1) % formats.length); setActiveSetting('format'); })}
 					{setting('grid', 'Сетка', 'camera-grid', () => { setGrid((value) => !value); setActiveSetting(null); }, grid)}
 				</div> : <div className="camera-shooting">
-					<div onKeyDown={(event) => {
-						if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-							event.preventDefault(); setMode((value) => value === 'photo' ? 'portrait' : 'photo');
-							const tabs = event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]');
-							tabs[mode === 'photo' ? 1 : 0]?.focus();
-						}
-					}}>
-						<SegmentedTabs className="camera-modes" ariaLabel="Режим съёмки" tabs={[{ id: 'photo', label: 'Фото' }, { id: 'portrait', label: 'Портрет' }]} value={mode} onChange={setMode} />
-					</div>
+					<CameraModeDrum value={mode} onChange={setMode} />
 					<div className="camera-actions">
 						<IconButton size={60} className="camera-thumbnail" variant="secondary" aria-label="Последний снимок" onClick={() => setAnnouncement('Галерея будет добавлена на следующем этапе.')}><img src={preview} alt="" /></IconButton>
 						{shutter}
