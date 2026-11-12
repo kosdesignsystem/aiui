@@ -6,7 +6,11 @@ import { SegmentedTabs } from '../../ui/SegmentedTabs';
 import preview from '../../assets/camera/preview.png';
 import './main.scss';
 
-const flashModes = ['Авто', 'Включена', 'Выключена'] as const;
+const flashModes = [
+	{ id: 'auto', label: 'Авто', icon: 'camera-flash' },
+	{ id: 'off', label: 'Выключена', icon: 'camera-flash-off' },
+	{ id: 'on', label: 'Включена', icon: 'camera-flash' },
+] as const;
 const formats = ['4:3', '16:9', '1:1'] as const;
 type Setting = 'warmth' | 'exposure' | 'format' | 'grid';
 
@@ -57,9 +61,9 @@ export function CameraMainScreen() {
 						<Icon name="camera-controls" width={24} height={24} aria-hidden="true" />
 					</IconButton>
 				</div>
-				<IconButton size={32} variant="secondary" className="camera-toolbar__button camera-flash" aria-label={`Вспышка: ${flashModes[flash]}`} onClick={() => setFlash((value) => (value + 1) % flashModes.length)}>
-					<Icon name="camera-flash" width={24} height={24} aria-hidden="true" />
-					<span className="camera-flash__mode" aria-hidden="true">{flash === 0 ? 'A' : flash === 2 ? '×' : ''}</span>
+				<IconButton size={32} variant="secondary" className={`camera-toolbar__button camera-flash camera-flash--${flashModes[flash].id}`} aria-label={`Вспышка: ${flashModes[flash].label}`} onClick={() => setFlash((value) => (value + 1) % flashModes.length)}>
+					<Icon name={flashModes[flash].icon} width={24} height={24} aria-hidden="true" />
+					{flashModes[flash].id === 'auto' && <span className="camera-flash__mode" aria-hidden="true">A</span>}
 				</IconButton>
 			</header>
 

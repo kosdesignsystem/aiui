@@ -475,9 +475,13 @@ export const iconDefinitions = {
 		"viewBox": "0 0 24 24",
 		"body": "<path d=\"M12 4v8M8 8h8M8 18h8\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\"/>"
 	},
+	"camera-flash-off": {
+		"viewBox": "0 0 24 24",
+		"body": "<defs><mask id=\"__ICON_ID__camera-flash-cut\" x=\"0\" y=\"0\" width=\"24\" height=\"24\" maskUnits=\"userSpaceOnUse\" style=\"mask-type:luminance\"><rect width=\"24\" height=\"24\" style=\"fill:#fff\"/><path d=\"m4.5 4.5 15 15\" style=\"stroke:#000\" stroke-width=\"6\"/></mask></defs><path d=\"m12.6 2.4-6.8 11.1c-.5.8-.2 1.5.7 1.5H10v6.1c0 .9.7 1.1 1.2.3l7-11.2c.5-.8.2-1.4-.7-1.4H14v-6c0-1-.8-1.2-1.4-.4Z\" fill=\"currentColor\" mask=\"url(#__ICON_ID__camera-flash-cut)\"/><path d=\"m4.5 4.5 15 15\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"square\"/>"
+	},
 	"camera-flash": {
 		"viewBox": "0 0 24 24",
-		"body": "<path d=\"M14.6 1.5 5.8 13a.9.9 0 0 0 .7 1.5h4.1l-1.2 8L18.2 11a.9.9 0 0 0-.7-1.5h-4.1z\" fill=\"currentColor\"/>"
+		"body": "<path d=\"m12.6 2.4-6.8 11.1c-.5.8-.2 1.5.7 1.5H10v6.1c0 .9.7 1.1 1.2.3l7-11.2c.5-.8.2-1.4-.7-1.4H14v-6c0-1-.8-1.2-1.4-.4Z\" fill=\"currentColor\"/>"
 	},
 	"camera-grid": {
 		"viewBox": "0 0 24 24",
