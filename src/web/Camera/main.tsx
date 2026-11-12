@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { App } from '../../ui/App';
 import { Button } from '../../ui/Button';
 import { Icon, type IconName } from '../../ui/Icon';
@@ -6,6 +6,7 @@ import { IconButton } from '../../ui/IconButton';
 import preview from '../../assets/camera/preview.png';
 import { ExposureControl, exposureLabel } from './exposure.parts';
 import { CameraModeDrum } from './modes.parts';
+import { WarmthControl } from './warmth.parts';
 import './main.scss';
 
 const flashModes = [
@@ -25,13 +26,19 @@ export function CameraMainScreen() {
 	const [frontCamera, setFrontCamera] = useState(false);
 	const [activeSetting, setActiveSetting] = useState<Setting | null>(null);
 	const [exposure, setExposure] = useState<number | null>(null);
+	const [warmth, setWarmth] = useState(0);
 	const [capturing, setCapturing] = useState(false);
 	const [announcement, setAnnouncement] = useState('');
 	const captureTimer = useRef<number | undefined>();
 	const settingsButton = useRef<HTMLDivElement>(null);
+	const instanceId = useId();
+	const warmthFilterId = `camera-warmth-${instanceId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
 	useEffect(() => () => window.clearTimeout(captureTimer.current), []);
 	const exposureOpen = activeSetting === 'exposure';
-	const settingsChanged = exposure !== null || format !== 0 || !grid;
+	const warmthOpen = activeSetting === 'warmth';
+	const adjustmentOpen = exposureOpen || warmthOpen;
+	const settingsChanged = warmth !== 0 || exposure !== null || format !== 0 || !grid;
+	const temperature = warmth / 100 * 0.3;
 
 	const closeSettings = () => {
 		setSettingsOpen(false);
@@ -39,14 +46,10 @@ export function CameraMainScreen() {
 		settingsButton.current?.querySelector('button')?.focus();
 	};
 	const resetSettings = () => {
-		setExposure(null); setFormat(0); setGrid(true);
-		if (!exposureOpen) setActiveSetting(null);
-		setAnnouncement('Настройки камеры сброшены. Выдержка: Авто.');
+		setWarmth(0); setExposure(null); setFormat(0); setGrid(true);
+		if (!adjustmentOpen) setActiveSetting(null);
+		setAnnouncement('Настройки камеры сброшены.');
 		settingsButton.current?.querySelector('button')?.focus();
-	};
-	const selectSetting = (setting: Setting, title: string) => {
-		setActiveSetting(setting);
-		setAnnouncement(`${title}: настройка выбрана`);
 	};
 	const capture = () => {
 		if (capturing) return;
@@ -66,8 +69,11 @@ export function CameraMainScreen() {
 
 	return (
 		<App className="camera-screen" data-theme="dark" aria-label="Камера" onKeyDown={(event) => {
-			if (event.key === 'Escape' && (settingsOpen || exposureOpen)) { event.preventDefault(); closeSettings(); }
+			if (event.key === 'Escape' && (settingsOpen || adjustmentOpen)) { event.preventDefault(); closeSettings(); }
 		}}>
+			<svg className="camera-filters" width="0" height="0" aria-hidden="true" focusable="false">
+				<defs><filter id={warmthFilterId} colorInterpolationFilters="sRGB"><feColorMatrix type="matrix" values={`${1 + temperature} 0 0 0 0 0 1 0 0 0 0 0 ${1 - temperature} 0 0 0 0 0 1 0`} /></filter></defs>
+			</svg>
 			<header className="camera-toolbar">
 				<div className="camera-toolbar__settings" ref={settingsButton}>
 					<IconButton size={32} variant="secondary" className={`camera-toolbar__button${settingsChanged ? ' is-modified' : ''}`} aria-label={settingsOpen ? 'Закрыть настройки камеры' : 'Открыть настройки камеры'} aria-expanded={settingsOpen} aria-controls="camera-settings" onClick={() => { setActiveSetting(null); setSettingsOpen((open) => !open); }}>
@@ -82,18 +88,18 @@ export function CameraMainScreen() {
 			</header>
 
 			<div className={`camera-preview${frontCamera ? ' is-front' : ''}`} role="img" aria-label="Демонстрационный видоискатель: светящийся след в вечернем небе">
-				<img className="camera-preview__image" src={preview} alt="" draggable={false} style={{ filter: `brightness(${2 ** (exposure ?? 0)})` }} />
+				<img className="camera-preview__image" src={preview} alt="" draggable={false} style={{ filter: `${warmth === 0 ? '' : `url("#${warmthFilterId}") `}brightness(${2 ** (exposure ?? 0)})` }} />
 				{grid && !settingsOpen && <div className="camera-preview__grid" aria-hidden="true"><i /><i /><i /><i /></div>}
 				{capturing && <div className="camera-preview__flash" aria-hidden="true" />}
 				{exposureOpen && <span className="camera-exposure-value">{exposureLabel(exposure)}</span>}
 			</div>
 
 			<footer className="camera-bottom">
-				{exposureOpen ? <div className="camera-exposure-controls">
-					<ExposureControl value={exposure} onChange={setExposure} onClose={closeSettings} onReset={() => setExposure(null)} />
-					<div className="camera-exposure-shutter">{shutter}</div>
+				{adjustmentOpen ? <div className="camera-adjustment-controls">
+					{exposureOpen ? <ExposureControl value={exposure} onChange={setExposure} onClose={closeSettings} onReset={() => setExposure(null)} /> : <WarmthControl value={warmth} onChange={setWarmth} onClose={closeSettings} onReset={() => setWarmth(0)} />}
+					<div className="camera-adjustment-shutter">{shutter}</div>
 				</div> : settingsOpen ? <div className="camera-settings" id="camera-settings" role="group" aria-label="Быстрые настройки камеры">
-					{setting('warmth', 'Теплота', 'camera-temperature', () => selectSetting('warmth', 'Теплота'), activeSetting === 'warmth')}
+					{setting('warmth', 'Теплота', 'camera-temperature', () => { setActiveSetting('warmth'); setSettingsOpen(false); }, warmth !== 0)}
 					{setting('exposure', 'Выдержка', 'camera-exposure', () => { setActiveSetting('exposure'); setSettingsOpen(false); }, exposure !== null)}
 					{setting('format', 'Формат', null, () => { setFormat((value) => (value + 1) % formats.length); setActiveSetting('format'); })}
 					{setting('grid', 'Сетка', 'camera-grid', () => { setGrid((value) => !value); setActiveSetting(null); }, grid)}
