@@ -467,6 +467,26 @@ export const iconDefinitions = {
 		"viewBox": "0 0 24 24",
 		"body": "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M8 2C8 1.44772 7.55228 1 7 1C6.44772 1 6 1.44772 6 2V3H5C3.34315 3 2 4.34315 2 6V19C2 20.6569 3.34315 22 5 22H19C20.6569 22 22 20.6569 22 19V6C22 4.34315 20.6569 3 19 3H18V2C18 1.44772 17.5523 1 17 1C16.4477 1 16 1.44772 16 2V3H8V2ZM19 5C19.5523 5 20 5.44772 20 6V8H4V6C4 5.44772 4.44772 5 5 5H19ZM7 12C6.44772 12 6 12.4477 6 13V16C6 16.5523 6.44772 17 7 17H10C10.5523 17 11 16.5523 11 16V13C11 12.4477 10.5523 12 10 12H7Z\" fill=\"currentColor\"/>"
 	},
+	"camera-controls": {
+		"viewBox": "0 0 24 24",
+		"body": "<path d=\"M4 7h16M4 17h16\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/><circle cx=\"15\" cy=\"7\" r=\"3\" fill=\"currentColor\"/><circle cx=\"9\" cy=\"17\" r=\"3\" fill=\"currentColor\"/>"
+	},
+	"camera-exposure": {
+		"viewBox": "0 0 24 24",
+		"body": "<path d=\"M12 4v8M8 8h8M8 18h8\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\"/>"
+	},
+	"camera-flash": {
+		"viewBox": "0 0 24 24",
+		"body": "<path d=\"M14.6 1.5 5.8 13a.9.9 0 0 0 .7 1.5h4.1l-1.2 8L18.2 11a.9.9 0 0 0-.7-1.5h-4.1z\" fill=\"currentColor\"/>"
+	},
+	"camera-grid": {
+		"viewBox": "0 0 24 24",
+		"body": "<path d=\"M9 4v16M15 4v16M4 9h16M4 15h16\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/>"
+	},
+	"camera-temperature": {
+		"viewBox": "0 0 24 24",
+		"body": "<path d=\"M9 14.1V5a3 3 0 0 1 6 0v9.1a5 5 0 1 1-6 0Z\" stroke=\"currentColor\" stroke-width=\"1.8\"/><path d=\"M12 7v10M12 7h2M12 10h2M12 13h2\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"18\" r=\"2\" fill=\"currentColor\"/>"
+	},
 	"caps-lock-active": {
 		"viewBox": "0 0 24 24",
 		"body": "<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M8.14053 11.4925L8.14053 19.9914H15.8638V11.4925L19.0004 11.4925L12.0022 4L5.00396 11.4925H8.14053ZM17.8638 13.4925H19.0004C20.7495 13.4925 21.656 11.4056 20.462 10.1274L13.4638 2.63482C12.6732 1.78839 11.3312 1.78839 10.5406 2.63482L3.54236 10.1274C2.34843 11.4056 3.25485 13.4925 5.00397 13.4925H6.14053L6.14053 19.9914C6.14053 21.096 7.03595 21.9914 8.14052 21.9914H15.8638C16.9683 21.9914 17.8638 21.096 17.8638 19.9914V13.4925Z\" fill=\"currentColor\"/>"

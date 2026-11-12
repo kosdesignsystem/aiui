@@ -11,6 +11,8 @@
 - `fade`
 - `slide-left`
 - `slide-right`
+- `camera-controls-in` — появление основных элементов камеры и панели настроек
+- `camera-shutter-flash` — короткая вспышка демонстрационного затвора; учитывает reduced motion
 - `vc-panel-in`, `vc-panel-out` — появление и закрытие панели VoiceControl
 - `vc-content-in`, `vc-fade-in`, `vc-fade-out` — смена содержимого и подложки помощника
 - `vc-wave`, `vc-dots` — демопрослушивание и обработка запроса; учитывают reduced motion

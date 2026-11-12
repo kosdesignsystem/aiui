@@ -1,8 +1,7 @@
 import { callsAppDefinition } from './Calls';
 import { componentsAppDefinition } from './Components';
-import { test1NTAppDefinition } from './test1NT';
+import { cameraAppDefinition } from './Camera';
 import { voiceControlAppDefinition } from './VoiceControl';
-import { voiceHelperAppDefinition } from './VoiceHelper';
 
 export {
 	createAppScreenPath,
@@ -19,7 +18,6 @@ export {
 export const appRegistry = [
 	componentsAppDefinition,
 	callsAppDefinition,
-	test1NTAppDefinition,
 	voiceControlAppDefinition,
-	voiceHelperAppDefinition,
+	cameraAppDefinition,
 ];
