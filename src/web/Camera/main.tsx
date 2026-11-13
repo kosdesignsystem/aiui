@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import { App } from '../../ui/App';
 import { Button } from '../../ui/Button';
 import { Icon, type IconName } from '../../ui/Icon';
@@ -14,7 +14,12 @@ const flashModes = [
 	{ id: 'off', label: 'Выключена', icon: 'camera-flash-off' },
 	{ id: 'on', label: 'Включена', icon: 'camera-flash' },
 ] as const;
-const formats = ['4:3', '16:9', '1:1'] as const;
+// Labels follow camera conventions; the viewfinder is oriented vertically.
+const formats = [
+	{ label: '4:3', ratio: 3 / 4, frame: 'standard' },
+	{ label: '1:1', ratio: 1, frame: 'square' },
+	{ label: '16:9', ratio: 9 / 16, frame: 'tall' },
+] as const;
 type Setting = 'warmth' | 'exposure' | 'format' | 'grid';
 
 export function CameraMainScreen() {
@@ -37,7 +42,8 @@ export function CameraMainScreen() {
 	const exposureOpen = activeSetting === 'exposure';
 	const warmthOpen = activeSetting === 'warmth';
 	const adjustmentOpen = exposureOpen || warmthOpen;
-	const settingsChanged = warmth !== 0 || exposure !== null || format !== 0 || !grid;
+	const settingsChanged = warmth !== 0 || exposure !== null;
+	const photoFormat = formats[format];
 	const temperature = warmth / 100 * 0.3;
 
 	const closeSettings = () => {
@@ -46,7 +52,7 @@ export function CameraMainScreen() {
 		settingsButton.current?.querySelector('button')?.focus();
 	};
 	const resetSettings = () => {
-		setWarmth(0); setExposure(null); setFormat(0); setGrid(true);
+		setWarmth(0); setExposure(null);
 		if (!adjustmentOpen) setActiveSetting(null);
 		setAnnouncement('Настройки камеры сброшены.');
 		settingsButton.current?.querySelector('button')?.focus();
@@ -57,18 +63,19 @@ export function CameraMainScreen() {
 		setAnnouncement('Демонстрация снимка. Реальная съёмка ещё не подключена.');
 		captureTimer.current = window.setTimeout(() => setCapturing(false), 220);
 	};
-	const setting = (id: Setting, title: string, icon: IconName | null, onClick: () => void, pressed?: boolean) => (
-		<div className={`camera-setting${activeSetting === id ? ' is-selected' : ''}`}>
-			<IconButton size={44} className="camera-setting__button" variant="secondary" aria-label={id === 'format' ? `Формат: ${formats[format]}` : title} aria-pressed={pressed} onClick={onClick}>
-				{icon ? <Icon name={icon} width={24} height={24} aria-hidden="true" /> : <span className="camera-setting__ratio">{formats[format]}</span>}
+	const setting = (id: Setting, title: string, icon: IconName | null, onClick: () => void, pressed?: boolean) => {
+		const highlighted = id === 'grid' ? grid : id === 'format' ? format !== 0 : activeSetting === id;
+		return <div className={`camera-setting${highlighted ? ' is-selected' : ''}`}>
+			<IconButton size={44} className="camera-setting__button" variant="secondary" aria-label={id === 'format' ? `Формат: ${photoFormat.label}` : title} aria-pressed={pressed} onClick={onClick}>
+				{icon ? <Icon name={icon} width={24} height={24} aria-hidden="true" /> : <span className="camera-setting__ratio">{photoFormat.label}</span>}
 			</IconButton>
 			<span className="camera-setting__label">{title}</span>
-		</div>
-	);
+		</div>;
+	};
 	const shutter = <IconButton size={60} className="camera-shutter" variant="secondary" aria-label="Сделать снимок" onClick={capture} disabled={capturing}><span className="camera-shutter__disc" /></IconButton>;
 
 	return (
-		<App className="camera-screen" data-theme="dark" aria-label="Камера" onKeyDown={(event) => {
+		<App className={`camera-screen camera-screen--format-${photoFormat.frame}`} style={{ '--camera-frame-ratio': photoFormat.ratio } as CSSProperties} data-theme="dark" aria-label="Камера" onKeyDown={(event) => {
 			if (event.key === 'Escape' && (settingsOpen || adjustmentOpen)) { event.preventDefault(); closeSettings(); }
 		}}>
 			<svg className="camera-filters" width="0" height="0" aria-hidden="true" focusable="false">
@@ -87,11 +94,13 @@ export function CameraMainScreen() {
 				</IconButton>
 			</header>
 
-			<div className={`camera-preview${frontCamera ? ' is-front' : ''}`} role="img" aria-label="Демонстрационный видоискатель: светящийся след в вечернем небе">
-				<img className="camera-preview__image" src={preview} alt="" draggable={false} style={{ filter: `${warmth === 0 ? '' : `url("#${warmthFilterId}") `}brightness(${2 ** (exposure ?? 0)})` }} />
-				{grid && !settingsOpen && <div className="camera-preview__grid" aria-hidden="true"><i /><i /><i /><i /></div>}
-				{capturing && <div className="camera-preview__flash" aria-hidden="true" />}
-				{exposureOpen && <span className="camera-exposure-value">{exposureLabel(exposure)}</span>}
+			<div className="camera-viewfinder">
+				<div className={`camera-preview${frontCamera ? ' is-front' : ''}`} role="img" aria-label={`Демонстрационный видоискатель ${photoFormat.label}: светящийся след в вечернем небе`}>
+					<img className="camera-preview__image" src={preview} alt="" draggable={false} style={{ filter: `${warmth === 0 ? '' : `url("#${warmthFilterId}") `}brightness(${2 ** (exposure ?? 0)})` }} />
+					{grid && <div className="camera-preview__grid" aria-hidden="true"><i /><i /><i /><i /></div>}
+					{capturing && <div className="camera-preview__flash" aria-hidden="true" />}
+					{exposureOpen && <span className="camera-exposure-value">{exposureLabel(exposure)}</span>}
+				</div>
 			</div>
 
 			<footer className="camera-bottom">
