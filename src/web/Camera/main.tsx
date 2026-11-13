@@ -64,7 +64,7 @@ export function CameraMainScreen() {
 		captureTimer.current = window.setTimeout(() => setCapturing(false), 220);
 	};
 	const setting = (id: Setting, title: string, icon: IconName | null, onClick: () => void, pressed?: boolean) => {
-		const highlighted = id === 'grid' ? grid : id === 'format' ? format !== 0 : activeSetting === id;
+		const highlighted = id === 'format' ? format !== 0 : pressed === true;
 		return <div className={`camera-setting${highlighted ? ' is-selected' : ''}`}>
 			<IconButton size={44} className="camera-setting__button" variant="secondary" aria-label={id === 'format' ? `Формат: ${photoFormat.label}` : title} aria-pressed={pressed} onClick={onClick}>
 				{icon ? <Icon name={icon} width={24} height={24} aria-hidden="true" /> : <span className="camera-setting__ratio">{photoFormat.label}</span>}
