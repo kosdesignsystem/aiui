@@ -11,7 +11,8 @@
 - `fade`
 - `slide-left`
 - `slide-right`
-- `camera-controls-in` — появление основных элементов камеры и панели настроек
+- `camera-controls-in`, `camera-controls-out` — плавное появление и закрытие панелей камеры
+- `camera-icon-in` — мягкая смена значка режима вспышки
 - `camera-shutter-flash` — короткая вспышка демонстрационного затвора; учитывает reduced motion
 - `vc-panel-in`, `vc-panel-out` — появление и закрытие панели VoiceControl
 - `vc-content-in`, `vc-fade-in`, `vc-fade-out` — смена содержимого и подложки помощника

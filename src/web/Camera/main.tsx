@@ -7,6 +7,7 @@ import preview from '../../assets/camera/preview.png';
 import { ExposureControl, exposureLabel } from './exposure.parts';
 import { CameraModeDrum } from './modes.parts';
 import { WarmthControl } from './warmth.parts';
+import { CameraPanelTransition, useCameraAnimatedNumber } from './transitions.parts';
 import './main.scss';
 
 const flashModes = [
@@ -44,7 +45,8 @@ export function CameraMainScreen() {
 	const adjustmentOpen = exposureOpen || warmthOpen;
 	const settingsChanged = warmth !== 0 || exposure !== null;
 	const photoFormat = formats[format];
-	const temperature = warmth / 100 * 0.3;
+	const animatedWarmth = useCameraAnimatedNumber(warmth);
+	const temperature = animatedWarmth / 100 * 0.3;
 
 	const closeSettings = () => {
 		setSettingsOpen(false);
@@ -86,28 +88,29 @@ export function CameraMainScreen() {
 					<IconButton size={32} variant="secondary" className={`camera-toolbar__button${settingsChanged ? ' is-modified' : ''}`} aria-label={settingsOpen ? 'Закрыть настройки камеры' : 'Открыть настройки камеры'} aria-expanded={settingsOpen} aria-controls="camera-settings" onClick={() => { setActiveSetting(null); setSettingsOpen((open) => !open); }}>
 						<Icon name="camera-controls" width={24} height={24} aria-hidden="true" />
 					</IconButton>
-					{settingsChanged && <Button size={32} variant="secondary" className="camera-reset" aria-label="Сбросить настройки камеры" leftIcon={<Icon name="arrow-repeat" width={20} height={20} aria-hidden="true" />} onClick={resetSettings}>Сбросить</Button>}
+					<Button size={32} variant="secondary" className={`camera-reset${settingsChanged ? ' is-visible' : ''}`} disabled={!settingsChanged} aria-hidden={!settingsChanged} tabIndex={settingsChanged ? 0 : -1} aria-label="Сбросить настройки камеры" leftIcon={<Icon name="arrow-repeat" width={20} height={20} aria-hidden="true" />} onClick={resetSettings}>Сбросить</Button>
 				</div>
 				<IconButton size={32} variant="secondary" className={`camera-toolbar__button camera-flash camera-flash--${flashModes[flash].id}`} aria-label={`Вспышка: ${flashModes[flash].label}`} onClick={() => setFlash((value) => (value + 1) % flashModes.length)}>
-					<Icon name={flashModes[flash].icon} width={24} height={24} aria-hidden="true" />
+					<Icon key={flashModes[flash].id} className="camera-flash__icon" name={flashModes[flash].icon} width={24} height={24} aria-hidden="true" />
 					{flashModes[flash].id === 'auto' && <span className="camera-flash__mode" aria-hidden="true">A</span>}
 				</IconButton>
 			</header>
 
 			<div className="camera-viewfinder">
 				<div className={`camera-preview${frontCamera ? ' is-front' : ''}`} role="img" aria-label={`Демонстрационный видоискатель ${photoFormat.label}: светящийся след в вечернем небе`}>
-					<img className="camera-preview__image" src={preview} alt="" draggable={false} style={{ filter: `${warmth === 0 ? '' : `url("#${warmthFilterId}") `}brightness(${2 ** (exposure ?? 0)})` }} />
-					{grid && <div className="camera-preview__grid" aria-hidden="true"><i /><i /><i /><i /></div>}
+					<img className="camera-preview__image" src={preview} alt="" draggable={false} style={{ filter: `${animatedWarmth === 0 ? '' : `url("#${warmthFilterId}") `}brightness(${2 ** (exposure ?? 0)})` }} />
+					<div className={`camera-preview__grid${grid ? ' is-visible' : ''}`} aria-hidden="true"><i /><i /><i /><i /></div>
 					{capturing && <div className="camera-preview__flash" aria-hidden="true" />}
-					{exposureOpen && <span className="camera-exposure-value">{exposureLabel(exposure)}</span>}
+					<span className={`camera-exposure-value${exposureOpen ? ' is-visible' : ''}`} aria-hidden={!exposureOpen}>{exposureLabel(exposure)}</span>
 				</div>
 			</div>
 
 			<footer className="camera-bottom">
-				{adjustmentOpen ? <div className="camera-adjustment-controls">
-					{exposureOpen ? <ExposureControl value={exposure} onChange={setExposure} onClose={closeSettings} onReset={() => setExposure(null)} /> : <WarmthControl value={warmth} onChange={setWarmth} onClose={closeSettings} onReset={() => setWarmth(0)} />}
+				<CameraPanelTransition view={exposureOpen ? 'exposure' : warmthOpen ? 'warmth' : settingsOpen ? 'settings' : 'shooting'}>{(panel) =>
+				panel === 'exposure' || panel === 'warmth' ? <div className="camera-adjustment-controls">
+					{panel === 'exposure' ? <ExposureControl value={exposure} onChange={setExposure} onClose={closeSettings} onReset={() => setExposure(null)} /> : <WarmthControl value={warmth} onChange={setWarmth} onClose={closeSettings} onReset={() => setWarmth(0)} />}
 					<div className="camera-adjustment-shutter">{shutter}</div>
-				</div> : settingsOpen ? <div className="camera-settings" id="camera-settings" role="group" aria-label="Быстрые настройки камеры">
+				</div> : panel === 'settings' ? <div className="camera-settings" id="camera-settings" role="group" aria-label="Быстрые настройки камеры">
 					{setting('warmth', 'Теплота', 'camera-temperature', () => { setActiveSetting('warmth'); setSettingsOpen(false); }, warmth !== 0)}
 					{setting('exposure', 'Выдержка', 'camera-exposure', () => { setActiveSetting('exposure'); setSettingsOpen(false); }, exposure !== null)}
 					{setting('format', 'Формат', null, () => { setFormat((value) => (value + 1) % formats.length); setActiveSetting('format'); })}
@@ -120,6 +123,7 @@ export function CameraMainScreen() {
 						<IconButton size={44} className="camera-switch" variant="secondary" aria-label="Переключить камеру" aria-pressed={frontCamera} onClick={() => setFrontCamera((front) => !front)}><Icon name="arrow-repeat" width={26} height={26} aria-hidden="true" /></IconButton>
 					</div>
 				</div>}
+				</CameraPanelTransition>
 			</footer>
 			<span className="camera-screen__announcement" role="status" aria-live="polite">{announcement}</span>
 		</App>
