@@ -1,3 +1,4 @@
+import { droSyncAppDefinition } from './DROSync';
 import { callsAppDefinition } from './Calls';
 import { componentsAppDefinition } from './Components';
 import { contactsAppDefinition } from './Contacts';
@@ -19,6 +20,7 @@ export {
 } from './definition';
 
 export const appRegistry = [
+	droSyncAppDefinition,
 	focusAppDefinition,
 	radioAppDefinition,
 	contactsAppDefinition,
