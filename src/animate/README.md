@@ -11,3 +11,4 @@
 - `fade`
 - `slide-left`
 - `slide-right`
+- `wave-hand` — циклическое приветственное движение руки с поддержкой reduced motion.
