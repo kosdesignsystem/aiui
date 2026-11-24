@@ -1,0 +1,15 @@
+@keyframes wave-hand {
+	0%, 100% { transform: rotate(0deg); }
+	25%, 75% { transform: rotate(22deg); }
+	50% { transform: rotate(-12deg); }
+}
+
+.wave-hand {
+	display: inline-block;
+	transform-origin: 75% 80%;
+	animation: wave-hand 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wave-hand { animation: none; }
+}
