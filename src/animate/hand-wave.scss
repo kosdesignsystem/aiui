@@ -1,0 +1,16 @@
+.animation-hand-wave {
+	transform-origin: 70% 75%;
+	animation: hand-wave 2.4s ease-in-out infinite;
+}
+
+@keyframes hand-wave {
+	0%, 60%, 100% { transform: rotate(0deg); }
+	10%, 30%, 50% { transform: rotate(18deg); }
+	20%, 40% { transform: rotate(-10deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.animation-hand-wave {
+		animation: none;
+	}
+}

@@ -1,3 +1,4 @@
+import { helloDROAppDefinition } from './HelloDRO';
 import { callsAppDefinition } from './Calls';
 import { componentsAppDefinition } from './Components';
 import { contactsAppDefinition } from './Contacts';
@@ -36,4 +37,5 @@ export const appRegistry = [
 	remindersAppDefinition,
 	testAppDefinition,
 	voiceAssistantAppDefinition,
+	helloDROAppDefinition,
 ];
